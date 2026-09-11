@@ -105,7 +105,7 @@ total = L_fail × 1e6 + A + I        （lexicographic：先保底，后求美）
 > 正文文字/词序/标点/公式/引用/图表内容一律严格；属「排版面」的 token
 > （手动分页、过大 `\vspace`、行内字号、断词点 `\-`、列表间距选项、表格
 > 环境名/列格式、浮动体位置参数、插图宽度）可被确定性动作删/改，不判违规。
-| **A** 排版质量/审美代理 | 越低越好 | 正文 overfull/underfull、页面垂直质量 vbox（孤行寡行代理）、浮动体警告、超宽图/表（含**相对超宽** `1.18\linewidth`）、其余编译 Warning、源码卫生问题（按能否自动修 + 影响程度加权：手动分页 1.0、标题字号 0.8、过大 vspace/列表间距/超长词 0.6、行内字号 0.5…）。**注意：A 是排版质量/审美代理指标，不是人类审美评分** |
+| **A** 排版质量/审美代理 | 越低越好 | ① LaTeX 层：overfull/underfull、vbox（孤行寡行代理）、浮动体警告、超宽图/表、其余编译 Warning；② 源码卫生/版面层（手动分页 1.0、标题字号 0.8、过大 vspace/列表间距/长词/图片过大 0.6、行内字号 0.5、页眉/段距/中途双栏…）；③ **页面视觉层（量自实际 PDF）**：巨大内容块、底部大面积空白、页面中部空洞、孤立内容、几乎空白页、页间密度失衡。**注意：A 是可复现的版面缺陷量，不是人类审美评分** |
 | **I** 干预代价 | 越低越好（最小干预） | 页边距偏离原稿 mm、字号降档、被改的浮动体参数/图片宽度处数 |
 
 **全局性（局部最优 ≠ 全局最优）**：每个候选修复都要先**整篇重编译、全局
@@ -137,6 +137,72 @@ total = L_fail × 1e6 + A + I        （lexicographic：先保底，后求美）
 | 8. 结构/版面规范（v2） | 目录页、页眉、标题着色、阅读辅助清理、WARNING 告示清理、图形保真 —— 见下节 |
 | 9. 超宽表格 | 检测（overfull 落在 tabular 区间）→ 改用 tabularx（\\linewidth 自适应列宽）；不用 \\resizebox 压缩，不改数据/顺序 |
 | 10. 页面平衡 | 删除手动分页/过大 vspace 后交给 LaTeX 全局断页；必要时注入 \\raggedbottom 抑制“为凑满页而拉伸” |
+
+## 页面级视觉量化与版面级修复（Phase 2，2026-09-11）
+
+### 为什么需要
+
+Phase 1 之后，A 仍然主要衡量「LaTeX warning + 源码违规」：`chaotic_layout_test.tex`
+能被压到 6 页并报 DONE，但生成的 PDF 里**仍有明显的大面积空白、巨大图片、窄表格、
+中途双栏、巨大标题、异常页眉** —— 也就是说**评分没有真正衡量视觉版面质量**，
+DONE 也结束得太早。Phase 2 的目标：让优化器**根据实际编译出的 PDF 的版面质量**优化。
+
+### 视觉量化（`texopt/visual.py`，全部量自编译后的 PDF）
+
+每页渲染低分辨率灰度图（默认 50dpi，`visual_dpi` 可调），逐页量取：
+
+| 指标 | 含义 |
+|---|---|
+| `ink_ratio` | 墨迹占比（页密度） |
+| `content_height` / `top_blank` / `bottom_blank` | 内容包围盒高度、顶部/底部空白比例 |
+| `max_gap` / `max_gap_at` | 最大连续空白带大小与位置（页中空洞） |
+| `band` / `band_at` | 最大「实在内容带」（行墨迹≥50%行宽）——巨大图/表的判据 |
+| `left_blank` / `right_blank` | 左右空白（内容宽度） |
+| `top_bottom_ratio` | 上/下半页墨迹比（视觉重心偏置） |
+
+由这些量判定**视觉缺陷**（`find_defects`，带 severity，阈值取「明显差」的粗档）：
+
+| 缺陷 | 判据 | 权重（high/moderate） |
+|---|---|---|
+| `giant_content` | 单一块内容 ≥ 40% 页高（巨大图/表） | 1.5 |
+| `stranded_block` | 几乎只有一块内容 + 底部大半空白 | 1.2 |
+| `bottom_blank` | 页底空白 ≥ 35%（high）/ ≥ 25%（moderate） | 1.0 / 0.6 |
+| `mid_gap` | 页面中部 ≥ 28% 页高连续空洞 | 0.8 |
+| `near_empty` | 墨迹 ≤ 2%（几乎空白页） | 0.6 |
+| `density_imbalance` | 页间密度相差 ≥ 10 倍或 ≥ 30 个百分点 | 1.0 |
+
+这些缺陷**已并入 A**（`aesthetic_score` = LaTeX 层 + 源码层 + 视觉层），
+并写入 `report.md` 的「视觉版面质量」表与 `state.json.visual`。
+`workbench/visual.md` 仍输出页面图给视觉模型（Level-3 补充判断）。
+
+### 新增版面级动作（同样走「应用→重编译→重评→接受/回滚」）
+
+| 动作 | 触发 | 做什么 |
+|---|---|---|
+| `normalize_title` | `title_size` | `\title{\Huge ...}` 压回上限（默认 ≤ `\LARGE`） |
+| `normalize_parskip` | `parskip` | 过大的 `\parskip` 收敛（默认 ≤ 8pt；整篇段距） |
+| `normalize_header` | `header_abnormal` | 清空过长/无意义页眉内容（保留 fancyhdr） |
+| `remove_mid_multicols` | `multicols_mid` | 移除正文中途的局部双栏（内容原样保留） |
+| `reduce_oversized_figures` | `fig_oversized` / `subfig_overfull` | 图高超限压到上限；并排子图宽度之和超版心时等比缩小 |
+| `fix_table_width`（扩展） | `table_narrow` / `tables_overwide` | `p{2cm}` 这类**明显窄于版心**的表格改 tabularx 自适应列宽 |
+| `balance_pages`（扩展） | 视觉缺陷 / vbox | `\raggedbottom` + 浮动体比例调优（`\floatpagefraction` 等），不给“半空浮动页”留机会 |
+
+诚实边界：这些都是**版面层**修改（不改正文/公式/引用/图表内容/图文件），
+每条都必须通过整篇重编译后的全局评分（含视觉分）才被接受，变差即回滚。
+若某项修正让视觉变差（例如缩图后仍是大块内容却新增底部空白），会被判负并回滚，
+如实留在报告中。
+
+### 出口状态（Phase 2 重新定义）
+
+| 状态 | 条件 |
+|---|---|
+| `DONE` | L 达标 + **无 high 级视觉缺陷** + 应用了 ≥1 个被接受的动作 |
+| `CONVERGED` | L 达标 + 无 high 级视觉缺陷 + **没有任何可动候选** |
+| `NEEDS_REVIEW` | L 达标但**仍有 high 级视觉缺陷**（或配置了 `done_max_a` 且 A 超限）—— 明确不判 DONE |
+| `NO_IMPROVEMENT` | L 达标 + 有候选但全部没改善（已回滚） |
+| `EXHAUSTED` / `FAILED` | 仍缺 L（通常超页）/ 基线编译不了 |
+
+另外：连续 `min_stall_rounds`（默认 2）轮无改善才停止，避免“一轮没吃到就收敛”。
 
 ## 确定性排版修复动作（2026-09-11 新增：检测必须进入 Act）
 
@@ -170,8 +236,13 @@ total = L_fail × 1e6 + A + I        （lexicographic：先保底，后求美）
 - 开关：`tidy_manual_pagebreaks` / `tidy_manual_vspace` / `vspace_min_mm` /
   `normalize_heading_size` / `normalize_local_font_size` / `reduce_list_spacing` /
   `list_spacing_max_pt` / `break_long_words` / `break_long_urls` /
-  `fix_overwide_tables` / `balance_pages` / `free_floating_H`（均为 Requirement
-  字段，可写在 `--require` / `settings.json` 里单独关闭）。
+  `fix_overwide_tables` / `balance_pages` / `free_floating_H`；Phase 2：
+  `visual_metrics` / `visual_dpi` / `normalize_title` / `title_size_cap` /
+  `normalize_parskip` / `parskip_max_pt` / `normalize_header` / `header_max_chars` /
+  `remove_mid_multicols` / `reduce_oversized_figures` / `max_fig_height_frac` /
+  `subfig_max_sum` / `narrow_table_min_frac` / `tune_float_placement` /
+  `done_max_a` / `min_stall_rounds`（均为 Requirement 字段，可写在
+  `--require` / `settings.json` 里单独关闭）。
 
 ## 结构 / 版面规范（2026-09-10 新增）
 
@@ -343,8 +414,8 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | **Phase 1** 确定性优化 | Perceive→Score→Action→Compile→Verify→Rollback 闭环 | ✅ 已实现（`optimize.py` / `texopt/core.py`） |
 | **Phase 2** LLM advisory | 残余问题→结构化建议（severity/line/suggestion/suggested_actions） | ✅ 已实现（`texopt/advise.py`） |
 | **Phase 3** LLM 提案入环 | 白名单提案→程序执行→编译→验收→保留/回滚→下一轮 | ✅ 已实现（`texopt/whitelist.py` + `texopt/proposal.py` + `Optimizer.apply_proposals` + CLI `--proposals`） |
-| **Phase 4** 页面图像 | PDF→逐页 PNG，交给视觉模型；附实验像素代理 | 🟡 部分实现：页面图✅；像素代理为**实验性**且**未并入 A** |
-| **Phase 5** 视觉审美量化 | whitespace/content density/visual balance 等并入 A | ⬜ 尚未实现（研究项） |
+| **Phase 4** 页面图像 | PDF→逐页 PNG + 页面级像素量化，交给视觉模型 | ✅ 已实现（`texopt/visual.py`：render + `page_metrics`） |
+| **Phase 5** 视觉审美量化 | whitespace/content density/visual balance 等并入 A | ✅ 已实现（2026-09-11 起 `page_metrics`/`find_defects` 并入 A；阈值化、可审计，仍非人类审美评分） |
 | **Phase 6** 高级语义优化 | 物理排版↔语义压缩/重构 + 更强语义保持验证 | ⬜ 尚未实现（需用户在场审批） |
 
 **接口/placeholder（已预留但未落地）**：`Requirement.microtype`（None=不干预）；

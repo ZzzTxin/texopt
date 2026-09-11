@@ -38,6 +38,13 @@ SUGGESTED_ACTIONS = {
     "missing_caption": [],
     "unbreakable": ["add_hyphenation_points"],
     "long_url": ["break_long_urls", "add_hyphenation_points"],
+    "title_size": ["normalize_title"],
+    "parskip": ["normalize_parskip"],
+    "header_abnormal": ["normalize_header"],
+    "multicols_mid": ["remove_mid_multicols"],
+    "fig_oversized": ["reduce_oversized_figures", "set_fig_width"],
+    "subfig_overfull": ["reduce_oversized_figures"],
+    "table_narrow": ["fix_table_width"],
     "dollar_math": [],
     "overfull_hbox": ["normalize_fig_width", "set_fig_width",
                       "add_hyphenation_points", "fix_table_width",
@@ -84,6 +91,27 @@ HYGIENE_ADVICE = {
     "long_url": ("cosmetic",
                  "超长 URL 默认断行点少，容易顶出版心；建议用 \\url{} 包裹并加载 "
                  "xurl 允许任意位置断行（闭环已自动注入 xurl），不要手工拆 URL 文字"),
+    "title_size": ("cosmetic",
+                   "文档标题字号超出层级上限；标题字号应交给文档类"
+                   "（闭环已自动压回上限）"),
+    "parskip": ("moderate",
+                "\\parskip 过大（整篇段距）——每页都会显得松散、留白偏多；"
+                "建议收敛到 ≤ 8pt 或交给文档类默认（闭环已自动收敛）"),
+    "header_abnormal": ("cosmetic",
+                        "页眉内容过长/无信息价值（挤占版心且不美观）；"
+                        "建议只保留短标题或页码（闭环已自动清空过长部分）"),
+    "multicols_mid": ("moderate",
+                      "正文中途切换双栏会打断版面节奏（栏宽骤变、图表错位）；"
+                      "若非必要建议移除（闭环已自动移除，内容保留）"),
+    "fig_oversized": ("moderate",
+                      "图片高度占页高比例过大，会把整页撑成“图占满”的版面；"
+                      "建议压到 ≤ 40% 版心高（闭环已自动收敛）"),
+    "subfig_overfull": ("moderate",
+                        "并排子图宽度之和超过版心（含间距），容易被挤成畸形行；"
+                        "建议等比缩小（闭环已自动等比缩放）"),
+    "table_narrow": ("moderate",
+                     "表格列宽合计明显小于版心，页面留白突兀；建议改用 "
+                     "tabularx 自适应列宽（闭环已自动改用 tabularx）"),
     "unbreakable": ("moderate",
                     "超长不可断词造成溢出；可在合适位置插入断词点（URL 用 \\url 或 \\path 宏包），或改写为可断行的表述"),
     "reading_aid": ("cosmetic",

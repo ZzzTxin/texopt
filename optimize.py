@@ -54,7 +54,17 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 def _print_status_detail(result: dict) -> None:
     """按出口状态打印人读摘要（不伪造“优化成功”：没改动就直说）。"""
     st = result.get("status")
-    if st == "DONE":
+    if st == "NEEDS_REVIEW":
+        ds = result.get("visual_defects") or []
+        hi = [d for d in ds if d.get("severity") == "high"]
+        print(f"  -> NEEDS_REVIEW：仍有 {len(ds)} 项视觉缺陷（{len(hi)} 项 high）"
+              "未消除，未判定 DONE")
+        for d in ds[:8]:
+            pag = f"第{d['page']}页 " if d.get("page") else ""
+            print(f"     [{d['severity']}] {pag}{d['kind']}：{d['detail']}")
+        if len(ds) > 8:
+            print(f"     …另 {len(ds) - 8} 项见 report.md / state.json")
+    elif st == "DONE":
         print(f"  -> DONE：应用了 {result.get('accepted', 0)} 个被接受的动作"
               f"（尝试 {result.get('attempts', 0)} 个候选）")
         print(f"     A: {result.get('a_before')} -> {result.get('a')}；"
@@ -144,6 +154,9 @@ def main() -> int:
                     help="--emit-request 时是否渲染页面图（默认开，供视觉模型）")
     ap.add_argument("--visual-dpi", type=int, default=110,
                     help="页面图渲染 DPI（默认 110）")
+    ap.add_argument("--visual-metrics", dest="visual_metrics",
+                    action=argparse.BooleanOptionalAction, default=None,
+                    help="从编译后的 PDF 量取页面级视觉指标并并入 A（默认开）")
     ap.add_argument("--list-actions", action="store_true",
                     help="列出模型在环可用白名单动作后退出")
     ap.add_argument("--json", action="store_true",
@@ -222,7 +235,8 @@ def main() -> int:
                       ("heading_color", args.heading_color),
                       ("strip_reading_aids", args.strip_aids),
                       ("remove_warning_boxes", args.warning_boxes),
-                      ("preserve_figures", args.preserve_figures)):
+                      ("preserve_figures", args.preserve_figures),
+                      ("visual_metrics", args.visual_metrics)):
         if val is not None:
             setattr(req, attr, val)
     outdir = args.outdir or os.path.join(os.path.dirname(

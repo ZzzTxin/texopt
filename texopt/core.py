@@ -50,6 +50,8 @@ class Optimizer:
         self.attempts = 0                # 本轮实际编译验证过的候选动作数
         self.accepted = 0                # 本轮被接受的动作数
         self.baseline = None             # 基线评分快照（报告「A: old -> new」用）
+        self._defects: list = []         # 当前视觉缺陷（出口状态判定用）
+        self._state = None               # 上一次接受后的 (Perception, 评分)
 
     # ------------------------------------------------------------- 工具
     def _log(self, msg):
@@ -245,14 +247,60 @@ class Optimizer:
             add("table_width",
                 lambda s, ln=_tlines: actions.fix_table_width(s, ln),
                 "超宽表格改用 tabularx（\\linewidth 自适应列宽）")
-        if req.balance_pages and per.issues.get("vbox"):
+        # 2.6) Phase 2：版面/页面级缺陷 -> 动作（阈值与检测同源）
+        if req.normalize_title and "title_size" in hyg_kinds:
+            add("title_size",
+                lambda s, c=req.title_size_cap: actions.normalize_title(s, c),
+                f"文档标题字号压回上限（≤ \\{req.title_size_cap}）")
+        if req.normalize_parskip and "parskip" in hyg_kinds:
+            add("parskip",
+                lambda s, m=req.parskip_max_pt: actions.normalize_parskip(s, m),
+                f"收敛过大的 \\parskip（≤ {req.parskip_max_pt:g}pt）")
+        if req.normalize_header and "header_abnormal" in hyg_kinds:
+            add("header_norm",
+                lambda s, m=req.header_max_chars: actions.normalize_header(s, m),
+                f"清空过长页眉（> {req.header_max_chars} 字符）")
+        if req.remove_mid_multicols and "multicols_mid" in hyg_kinds:
+            add("multicols", actions.remove_mid_multicols,
+                "移除正文中途的局部双栏（内容保留）")
+        if req.reduce_oversized_figures and \
+                ({"fig_oversized", "subfig_overfull"} & hyg_kinds):
+            add("fig_size",
+                lambda s, h=req.max_fig_height_frac, t=req.subfig_max_sum:
+                    actions.reduce_oversized_figures(s, h, t),
+                "收敛过大图片（height/子图并排超版心）")
+        # 表格列宽：超宽（overfull 落在 tabular）或明显窄于版心
+        _tlines = [t["line"] for t in per.issues.get("tables_overwide", [])
+                   if t.get("line")]
+        _tlines += [h["line"] for h in per.issues.get("hygiene", [])
+                    if h["kind"] == "table_narrow"]
+        if req.fix_overwide_tables and _tlines:
+            add("table_width",
+                lambda s, ln=_tlines: actions.fix_table_width(s, ln),
+                "表格改用 tabularx（超宽/窄表 -> \\linewidth 自适应列宽）")
+        # 视觉信号驱动：明显「巨大内容块 / 内容孤立」-> 缩小满宽大图
+        _vdef = S.visual_defects(per)
+        if req.shrink_oversized_figures and any(
+                d["kind"] in ("giant_content", "stranded_block") for d in _vdef):
+            add("fig_shrink",
+                lambda s, f=req.fig_shrink_factor:
+                    actions.shrink_oversized_figures(s, f),
+                f"按视觉信号缩小满宽大图（x{req.fig_shrink_factor:g}）")
+        # 页面平衡 / 浮动体放置：有视觉缺陷或页面垂直质量问题时尝试
+        if req.balance_pages and req.tune_float_placement \
+                and (per.issues.get("vbox") or _vdef):
             add("page_balance", actions.balance_pages,
-                "注入 \\raggedbottom（页面底部自然收底，减少留白/拉伸）")
+                "浮动体放置/页面平衡调优（raggedbottom + float fraction）")
         return cands
 
     # ------------------------------------------------------------- 单步执行
     def _step(self, per: P.Perception, cur: dict) -> bool:
-        """执行一个正收益候选；返回是否接受。"""
+        """执行一个正收益候选；返回是否接受。
+
+        接受时把该状态的 (Perception, 评分) 存进 self._state，供主循环复用
+        —— 免去“接受后再感知一次”的重复整篇编译。
+        """
+        self._state = None
         src = self._read()
         cur_lv = cur["l"]
         cur_pages = per.pages
@@ -265,7 +313,7 @@ class Optimizer:
             self.iter += 1
             self.attempts += 1
             self._write(new_src)
-            nper = P.perceive(self.work_tex)
+            nper = P.perceive(self.work_tex, self.req)
             ncur = S.total_score(nper, self.req, self.orig_per)
             accepted = nper.ok and self._accept(ncur, cur, nper.pages,
                                                 cur_pages, cur_lv)
@@ -276,6 +324,7 @@ class Optimizer:
                           f"I={ncur['i']} 总分 {cur['total']} -> {ncur['total']}"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(note_ok, nper, ncur, True, True, "rule")
+                self._state = (nper, ncur)
                 return True
             # 回滚
             self._write(src)
@@ -322,7 +371,7 @@ class Optimizer:
         else:
             shutil.copyfile(self.original, self.work_tex)   # 原件只读，工作副本
 
-        per = P.perceive(self.work_tex)
+        per = P.perceive(self.work_tex, self.req)
         if not per.ok:
             self._save_state("FAILED")
             return {"status": "FAILED", "reason": "基线文档无法编译",
@@ -344,11 +393,20 @@ class Optimizer:
         if not cur["l"]:
             self._log("  L 达标（编译 ✓ 渲染 ✓ 内容零改动 ✓ 页数 ✓ 硬性规范 ✓）")
 
+        # 连续无改善轮数达标才停（避免“一轮没吃到就收敛”）
+        stall = 0
         while self.iter < self.req.max_iterations:
             if not self._step(per, cur):
-                break
-            per = P.perceive(self.work_tex)
-            cur = S.total_score(per, self.req, self.orig_per)
+                stall += 1
+                if stall >= max(1, int(self.req.min_stall_rounds)):
+                    break
+                continue
+            stall = 0
+            if self._state is not None:               # 复用接受态（免重复编译）
+                per, cur = self._state
+            else:
+                per = P.perceive(self.work_tex, self.req)
+                cur = S.total_score(per, self.req, self.orig_per)
         else:
             self._log(f"[!] 达到迭代上限 {self.req.max_iterations}")
         return self.finalize()
@@ -367,7 +425,7 @@ class Optimizer:
         """
         result = {"applied": [], "rejected": [], "blocked": [], "skipped": []}
         self._ensure_orig()
-        per = P.perceive(self.work_tex)
+        per = P.perceive(self.work_tex, self.req)
         if not per.ok:
             return {"error": "工作副本无法编译，无法执行提案"}
         cur = S.total_score(per, self.req, self.orig_per)
@@ -403,7 +461,7 @@ class Optimizer:
             self.iter += 1
             self.attempts += 1
             self._write(res["new_src"])
-            nper = P.perceive(self.work_tex)
+            nper = P.perceive(self.work_tex, self.req)
             ncur = S.total_score(nper, self.req, self.orig_per)
             accepted = nper.ok and self._accept(ncur, cur, nper.pages,
                                                 per.pages, cur["l"])
@@ -438,7 +496,7 @@ class Optimizer:
                      visual_dpi: int = 110) -> dict:
         """把当前状态 + 残余问题 + 白名单 + 页面图像 打包给 LLM。"""
         self._ensure_orig()
-        per = P.perceive(self.work_tex)
+        per = P.perceive(self.work_tex, self.req)
         cur = S.total_score(per, self.req, self.orig_per)
         with open(self.original, encoding="utf-8", errors="replace") as f:
             orig_src = f.read()
@@ -478,11 +536,12 @@ class Optimizer:
         """
         self._ensure_orig()
         if per is None:
-            per = P.perceive(self.work_tex)
+            per = P.perceive(self.work_tex, self.req)
         if cur is None:
             cur = S.total_score(per, self.req, self.orig_per)
+        self._defects = S.visual_defects(per)          # 供 exit_status 复用
         if status is None:
-            status = self.exit_status(cur)
+            status = self.exit_status(cur, self._defects)
         self._save_state(status, per, cur)
         self._write_report(status, per, cur)
         with open(self.original, encoding="utf-8", errors="replace") as f:
@@ -509,14 +568,25 @@ class Optimizer:
                 "pdf": per.compile.pdf_path if per and per.ok else None,
                 "advisory_count": len(adv),
                 "accepted": self.accepted, "attempts": self.attempts,
+                "visual_defects": list(self._defects),
+                "ink_mean": (per.visual or {}).get("ink_mean") if per else None,
                 "a_before": base["a"], "pages_before": base["pages"],
                 "total": cur["total"], "total_before": base.get("total"),
                 "blocked": sorted(self._blocked)}
 
-    def exit_status(self, cur: dict) -> str:
-        """出口状态判定（L 与 A 分开考虑，不用 L=0 代替“已优化”）。"""
+    def exit_status(self, cur: dict, defects: list | None = None) -> str:
+        """出口状态判定（Phase 2：不只看 L，也不只看 A 数字）。
+
+        DONE / CONVERGED 需要：L 达标 + 无 high 级视觉缺陷（+ 可选 A 上限）。
+        仍有明显视觉缺陷时，如实报 NEEDS_REVIEW，而不是 DONE。
+        """
         if cur["l"]:
             return "EXHAUSTED"
+        defects = self._defects if defects is None else defects
+        if any(d.get("severity") == "high" for d in (defects or [])):
+            return "NEEDS_REVIEW"       # 仍存在明显视觉缺陷（已尽力/或需人工）
+        if self.req.done_max_a is not None and cur["a"] > self.req.done_max_a:
+            return "NEEDS_REVIEW"       # A 高于配置阈值
         if self.attempts == 0:
             return "CONVERGED"          # 无可动候选：文档本就达标
         if self.accepted == 0:
@@ -564,6 +634,9 @@ class Optimizer:
             },
             "blocked_actions": sorted(self._blocked),
             "llm_failed_proposals": sorted(self._llm_failed),
+            "visual": (per.visual if per and per.visual else None),
+            "visual_defects": (per.visual.get("defects") if per and per.visual
+                               else None),
             "steps": self.records,
             "note": "steps 中 source=rule 为确定性闭环，source=llm 为模型在环提案；"
                     "全部经整篇重编译后全局重评，accepted=false 即已回滚。",
@@ -588,6 +661,13 @@ class Optimizer:
         elif status == "CONVERGED":
             headline = ("✅ CONVERGED：L 全部达标，且没有可动的候选“动作”"
                         "（文档本身已无可自动修的排版问题）")
+        elif status == "NEEDS_REVIEW":
+            ds = self._defects
+            hi = [d for d in ds if d.get("severity") == "high"]
+            headline = (f"⚠ NEEDS_REVIEW：排版已尽量优化，但仍有 {len(ds)} 项视觉缺陷"
+                        f"（其中 {len(hi)} 项 high）未消除 —— 未判定为 DONE，"
+                        "请人工/后续阶段复核（见下「视觉版面质量」与"
+                        "「仍需人工处理的问题」）")
         elif status == "EXHAUSTED":
             headline = ("⚠ EXHAUSTED：纯排版手段已穷尽，仍缺 L 硬约束"
                         f"（L 违规 {len(cur['l'])} 项）")
@@ -676,11 +756,9 @@ class Optimizer:
                 "missing_caption": "缺题注", "unbreakable": "超长不可断词",
                 "reading_aid": "阅读辅助内容", "warning_box": "WARNING 告示块",
             }
-            for h in iss.get("hygiene", [])[:30]:
-                lab = hygiene_label.get(h["kind"], h["kind"])
-                resid.append(f"[卫生] {lab}（第 {h['line']} 行）：{h['detail']}")
+            # 卫生项统一放在「仍需人工/后续处理的问题」一节（避免重复列出）
             if resid:
-                L += ["## 残余问题清单（未能/不自动修复）\n"]
+                L += ["## 残余日志层问题（未能/不自动修复）\n"]
                 for x in resid:
                     L.append(f"- {x}")
                 L.append("")
@@ -703,6 +781,93 @@ class Optimizer:
                   "1. LLM 语义保意精简（SRTP 后续阶段，受『内容保留率下限』约束）；",
                   "2. 作者人工精简 / 压缩合并图表（需作者决策，Agent 不擅动内容）。"]
             L.append("")
+
+        # ---- 视觉版面质量（Phase 2：来自实际编译后的 PDF） ----
+        vis = per.visual if per else None
+        if vis and not vis.get("error") and vis.get("pages"):
+            L += ["## 视觉版面质量（量自实际编译后的 PDF）\n",
+                  f"- 页面数：{vis.get('n')}；墨迹占比 均值 {vis.get('ink_mean')} "
+                  f"（最低 {vis.get('ink_min')}，最高 {vis.get('ink_max')}）",
+                  f"- 视觉缺陷：{len(self._defects)} 项"
+                  + ("" if self._defects else "（无）"),
+                  "",
+                  "| 页 | 墨迹占比 | 顶部空白 | 底部空白 | 内容高度 | 最大空白带 | "
+                  "位置 | 最大内容带 | 上/下半墨迹比 |",
+                  "|---|---|---|---|---|---|---|---|---|"]
+            for m in vis["pages"]:
+                if "error" in m:
+                    L.append(f"| {m.get('page')} | — | — | — | — | — | — | — | — |")
+                    continue
+                L.append(f"| {m['page']} | {m['ink_ratio']} | {m['top_blank']} | "
+                         f"{m['bottom_blank']} | {m['content_height']} | "
+                         f"{m['max_gap']} | {m['max_gap_at']} | {m['band']} | "
+                         f"{m['top_bottom_ratio']} |")
+            L.append("")
+            if self._defects:
+                L.append("视觉缺陷清单（程序判定，已计入 A）：\n")
+                for d in self._defects:
+                    pag = f"第{d['page']}页 " if d.get("page") else ""
+                    L.append(f"- [{d['severity']}] {pag}{d['kind']}：{d['detail']}")
+                L.append("")
+        elif vis and vis.get("error"):
+            L += ["## 视觉版面质量\n",
+                  f"- 视觉量化不可用：{vis.get('error')}", ""]
+
+        # ---- 仍需人工处理的问题（不伪造“已完成”） ----
+        todo = []
+        for d in self._defects:
+            pag = f"第{d['page']}页 " if d.get("page") else ""
+            todo.append(f"[视觉/{d['severity']}] {pag}{d['kind']}：{d['detail']}")
+        hy_label = {
+            "dollar_math": "裸 $$ 数学", "manual_pagebreak": "手动分页",
+            "manual_vspace": "手动垂直间距", "underline_abuse": "下划线滥用",
+            "noindent": "\\noindent", "size_switch": "字号乱标",
+            "hard_linebreak": "硬换行", "center_text": "center 包裹正文",
+            "missing_caption": "缺题注", "unbreakable": "超长不可断词",
+            "reading_aid": "阅读辅助内容", "warning_box": "WARNING 告示块",
+            "long_url": "超长 URL", "title_size": "标题字号", "parskip": "段间距",
+            "header_abnormal": "页眉异常", "multicols_mid": "中途双栏",
+            "fig_oversized": "图片过大", "subfig_overfull": "子图超版心",
+            "table_narrow": "表格过窄", "heading_size": "标题字号",
+            "list_spacing": "列表间距",
+        }
+        kind2key = {
+            "manual_pagebreak": "pagebreak_rm", "manual_vspace": "vspace_rm",
+            "size_switch": "local_font", "heading_size": "heading_size",
+            "list_spacing": "list_spacing", "unbreakable": "hyphenate",
+            "long_url": "url_break", "title_size": "title_size",
+            "parskip": "parskip", "header_abnormal": "header_norm",
+            "multicols_mid": "multicols", "fig_oversized": "fig_size",
+            "subfig_overfull": "fig_size", "table_narrow": "table_width",
+            "dollar_math": "math_cleanup",
+        }
+        for h in (per.issues.get("hygiene", []) if per and per.ok else []):
+            key = kind2key.get(h["kind"])
+            note = ("（已进入闭环尝试，被视觉/全局评分判负已回滚 → 说明改它反而更差；"
+                    "需作者决策）" if key and key in self._blocked else
+                    ("（暂无对应确定性动作，需作者决策）"
+                     if key is None else ""))
+            todo.append(f"[卫生/{h['kind']}] 第{h['line']}行：{h['detail']}{note}")
+        if per and per.ok:
+            for o in per.issues.get("overfull", [])[:10]:
+                todo.append(f"[日志] 正文行溢出 {o['detail']}（第 {o['lines']} 行）")
+            for v in per.issues.get("vbox", [])[:10]:
+                todo.append(f"[日志] {v['kind']} vbox（{v['detail']}）")
+            for w in per.issues.get("floats", [])[:10]:
+                todo.append(f"[日志] 浮动体警告：{w}")
+            for w in per.issues.get("warnings", [])[:10]:
+                todo.append(f"[日志] 编译警告：{w}")
+        if todo:
+            L += ["## 仍需人工/后续处理的问题\n",
+                  f"共 {len(todo)} 项（含已尝试但被全局/视觉评分判负回滚的项）：\n"]
+            for x in todo[:40]:
+                L.append(f"- {x}")
+            if len(todo) > 40:
+                L.append(f"- …另 {len(todo) - 40} 项见 advisory.json / state.json")
+            L.append("")
+        else:
+            L += ["## 仍需人工/后续处理的问题\n",
+                  "- 无（视觉缺陷 + 源码卫生 + 编译日志均无残余项）", ""]
 
         L.append("> 内容完整性：正文内容（文字/公式/引用/图表内容）全程零改动（机器"
                  "diff 校验，白名单排版参数除外）；原文件只读，结果在工作副本 "
@@ -731,7 +896,7 @@ def verify(work_tex: str, orig_tex: str, req: Requirement,
     """模型在环验证：只读。编译工作副本 -> 全局评分 -> 内容完整性 ->
     建议清单。绝不修改任何文件；每步编辑后用它与原稿对照。
     """
-    per = P.perceive(work_tex)
+    per = P.perceive(work_tex, req)
     if not per.ok:
         return {"status": "COMPILE_FAIL", "ok": False,
                 "pages": None, "first_error": per.compile.first_error,

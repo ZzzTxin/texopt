@@ -61,10 +61,15 @@ def _have(*names):
 # 超宽相对图宽/长词），用于验证「检测 -> 动作」链路，不依赖 examples/。
 UNIT_SRC = r"""\documentclass[10pt,a4paper]{article}
 \usepackage[margin=0.55in]{geometry}
-\usepackage{graphicx,float,titlesec,enumitem}
+\usepackage{graphicx,float,titlesec,enumitem,multicol,fancyhdr,caption,subcaption}
+\setlength{\parskip}{14pt}
 \titleformat{\section}{\Huge\bfseries}{\thesection}{0.2em}{}
 \titleformat{\subsection}{\Large\bfseries}{\thesubsection}{0.1em}{}
+\pagestyle{fancy}\lhead{This header is far too long and carries no information whatsoever}
+\title{\Huge A Very Long and Poorly Designed Title That Takes Too Much Space}
+\author{A. Student}
 \begin{document}
+\maketitle
 \section{Introduction}
 This paragraph mentions a pseudopseudohypoparathyroidismcounterrevolutionarieselectroencephalographicallyincomprehensibilities word.
 \begin{itemize}[leftmargin=1pt,itemsep=18pt,topsep=15pt]
@@ -72,6 +77,15 @@ This paragraph mentions a pseudopseudohypoparathyroidismcounterrevolutionariesel
 \end{itemize}
 \begin{figure}[H]\centering\includegraphics[width=1.18\linewidth]{example-image}\caption{A wide figure.}\end{figure}
 \begin{table}[h]\centering\begin{tabular}{ll}a&b\\c&d\\\end{tabular}\end{table}
+\begin{table}[h]\centering\begin{tabular}{p{2.0cm}p{2.0cm}}a&b\\c&d\\\end{tabular}\end{table}
+\begin{figure}[H]\centering\includegraphics[height=0.6\textheight,keepaspectratio]{example-image}\caption{A tall figure.}\end{figure}
+\begin{figure}[H]\centering
+\begin{subfigure}{0.49\textwidth}\includegraphics[width=\linewidth]{example-image}\caption{p1}\end{subfigure}\hspace{0.8cm}
+\begin{subfigure}{0.49\textwidth}\includegraphics[width=\linewidth]{example-image}\caption{p2}\end{subfigure}
+\caption{Two panels.}\end{figure}
+\begin{multicols}{2}
+Text inside a mid-document two-column region.
+\end{multicols}
 {\Large This paragraph is oversized compared with the body text.}
 \newpage
 \vspace{3cm}
@@ -114,7 +128,8 @@ def unit_tests():
     # 2) 定点动作按正序编号
     tg = actions.list_float_targets(src)
     check("action/target-index-order",
-          [t["kind"] for t in tg] == ["figure", "table"], str(tg))
+          [t["kind"] for t in tg][:2] == ["figure", "table"]
+          and [t["index"] for t in tg] == list(range(1, len(tg) + 1)), str(tg))
     new, ok, note, n = actions.set_float_spec(src, "tbp", "figure#1")
     check("action/set_float_spec-single",
           ok and r"\begin{figure}[tbp]" in new
@@ -200,8 +215,9 @@ def unit_tests():
           actions.sanitize_float_specs(r"\begin{figure}[H]x\end{figure}",
                                        "tbp")[1] is False)
     check("action/heading-size-capped",
-          r"\Large\bfseries" in actions.normalize_heading_size(src)[0]
-          and r"\Huge" not in actions.normalize_heading_size(src)[0])
+          r"\titleformat{\section}{\Large\bfseries}" in
+          actions.normalize_heading_size(src)[0]
+          and r"\Huge\bfseries" not in actions.normalize_heading_size(src)[0])
     check("action/list-spacing-dropped",
           "itemsep" not in actions.reduce_list_spacing(src)[0]
           and r"\begin{itemize}" in actions.reduce_list_spacing(src)[0])
@@ -244,6 +260,115 @@ def unit_tests():
           S._overwide_figs(_FakePer(), _req()) == ["1.18\\linewidth"],
           str(S._overwide_figs(_FakePer(), _req())))
 
+    # 9b) Phase 2：页面级视觉量化（纯像素量，合成 PGM 校验）
+    def _mk_pgm(path, w, h, rows_ink):
+        """rows_ink: 每行的墨迹像素数（list，长度 h）。"""
+        px = bytearray()
+        for r in range(h):
+            k = rows_ink[r]
+            px += bytes([0] * k) + bytes([255] * (w - k))
+        with open(path, "wb") as f:
+            f.write(b"P5\n%d %d\n255\n" % (w, h) + bytes(px))
+    pg = os.path.join(OUT, "metrics.pgm")
+    os.makedirs(OUT, exist_ok=True)
+    # 上半页有内容、下半页全空 -> 底部大量空白
+    _mk_pgm(pg, 20, 100, [10] * 20 + [0] * 80)
+    m = visual.page_metrics(pg)
+    check("visual/page-metrics-blank-bottom",
+          m["top_blank"] == 0.0 and m["bottom_blank"] >= 0.75
+          and m["ink_ratio"] > 0, str(m))
+    check("visual/page-metrics-content-height",
+          abs(m["content_height"] - 0.2) < 0.03, str(m))
+    ds = visual.find_defects([dict(m, page=1)])
+    check("visual/defect-detected", any(d["kind"] == "bottom_blank" for d in ds),
+          str(ds))
+    # 巨大内容带（连续 50% 页高满行）-> giant_content
+    _mk_pgm(pg, 20, 100, [0] * 10 + [20] * 50 + [0] * 40)
+    m2 = visual.page_metrics(pg)
+    ds2 = visual.find_defects([dict(m2, page=1)])
+    check("visual/giant-content-detected",
+          abs(m2["band"] - 0.5) < 0.03
+          and any(d["kind"] == "giant_content" for d in ds2), str(m2))
+    check("visual/defect-penalty-positive",
+          visual.defect_penalty(ds2) > 0 and visual.defect_penalty([]) == 0)
+    # 几乎空白页（极少墨迹）-> high 级缺陷
+    _mk_pgm(pg, 20, 100, [1] + [0] * 99)
+    m4 = visual.page_metrics(pg)
+    ds4 = visual.find_defects([dict(m4, page=3)])
+    check("visual/near-empty-is-high",
+          any(d["kind"] == "near_empty" and d["severity"] == "high" for d in ds4),
+          str(ds4))
+    # 中部巨大空洞（>=50% 页高）-> high
+    _mk_pgm(pg, 20, 100, [5] * 20 + [0] * 60 + [5] * 20)
+    m5 = visual.page_metrics(pg)
+    ds5 = visual.find_defects([dict(m5, page=2)])
+    check("visual/big-mid-gap-high",
+          any(d["kind"] == "mid_gap" and d["severity"] == "high" for d in ds5),
+          str(m5))
+    # 空白页（无墨迹）
+    _mk_pgm(pg, 20, 100, [0] * 100)
+    m3 = visual.page_metrics(pg)
+    check("visual/empty-page", m3["ink_ratio"] == 0.0
+          and m3["bottom_blank"] >= 0.99, str(m3))
+    os.remove(pg)
+
+    # 9c) Phase 2：版面级检测（标题/段距/页眉/双栏/图高/子图/窄表）
+    kinds = {h["kind"] for h in P.scan_hygiene(src)}
+    check("hygiene/detects-phase2-kinds",
+          {"title_size", "parskip", "header_abnormal", "multicols_mid",
+           "fig_oversized", "subfig_overfull", "table_narrow"} <= kinds,
+          str(sorted(kinds)))
+
+    # 9d) Phase 2：新动作生效 + 幂等 + 内容归一后不变
+    cases2 = [
+        ("normalize_title", lambda s: actions.normalize_title(s)),
+        ("normalize_parskip", lambda s: actions.normalize_parskip(s)),
+        ("normalize_header", lambda s: actions.normalize_header(s)),
+        ("remove_mid_multicols", lambda s: actions.remove_mid_multicols(s)),
+        ("reduce_oversized_figures", lambda s: actions.reduce_oversized_figures(s)),
+        ("fix_table_width", lambda s: actions.fix_table_width(s, [])),
+    ]
+    cur2 = src
+    for name, fn in cases2:
+        out = fn(cur2)
+        ok = out[1] and out[0] is not None
+        keep = S.body_unchanged(src, out[0], _req()) if ok else False
+        again = fn(out[0])[1] if ok else True
+        check(f"action/{name}-applies+idempotent+content-safe",
+              ok and keep and (again is False),
+              f"ok={ok} content_safe={keep} idempotent={again}")
+        if ok:
+            cur2 = out[0]
+    check("action/multicols-keeps-text",
+          "Text inside a mid-document two-column region." in cur2
+          and "\\begin{multicols}" not in cur2)
+    check("action/title-size-capped",
+          r"\title{\LARGE" in actions.normalize_title(src)[0]
+          and r"\title{\Huge" not in actions.normalize_title(src)[0])
+    check("action/parskip-clamped",
+          "14pt" not in actions.normalize_parskip(src)[0])
+    check("action/header-emptied",
+          "\\lhead{}" in actions.normalize_header(src)[0])
+    check("action/tall-figure-capped",
+          "height=0.6" not in actions.reduce_oversized_figures(src)[0])
+    check("action/subfigs-scaled",
+          "0.49\\textwidth" not in actions.reduce_oversized_figures(src)[0])
+    check("action/narrow-p-table-to-tabularx",
+          "tabularx}{\\linewidth}{XX}" in actions.fix_table_width(src)[0])
+    o_shrink = actions.shrink_oversized_figures(src)
+    check("action/shrink-oversized-figures",
+          o_shrink[1] and "1.18\\linewidth" not in o_shrink[0]
+          and "0.85\\linewidth" in actions.shrink_oversized_figures(
+              src.replace("1.18", "1.0"))[0]
+          and S.body_unchanged(src, o_shrink[0], _req())
+          and "\\begin{subfigure}{0.49\\textwidth}\\includegraphics"
+              "[width=\\linewidth]{example-image}" in o_shrink[0],
+          "应缩小满宽图但不动子图内部图")
+    check("action/fig-fingerprint-normalizes-layout",
+          P.fig_fingerprint(r"\includegraphics[width=0.9\linewidth,height=0.3\textheight]{a.png}\caption{c}")
+          == P.fig_fingerprint(r"\includegraphics[width=\linewidth,height=0.4\textheight]{a.png}\caption{c}"),
+          "宽度/高度参数应被归一")
+
     # 10) 出口状态：不再"L=0 就 CONVERGED"
     opt = Optimizer(os.path.join(EX, "nonexistent.tex"), _req(), OUT)
     opt.attempts, opt.accepted = 0, 0
@@ -253,6 +378,12 @@ def unit_tests():
           opt.exit_status({"l": []}) == "NO_IMPROVEMENT")
     opt.attempts, opt.accepted = 3, 2
     check("exit/applied->DONE", opt.exit_status({"l": []}) == "DONE")
+    severe = [{"kind": "giant_content", "severity": "high", "page": 2, "detail": "d"}]
+    check("exit/high-visual-defect->NEEDS_REVIEW",
+          opt.exit_status({"l": []}, severe) == "NEEDS_REVIEW")
+    opt.attempts, opt.accepted = 0, 0
+    check("exit/no-candidate-but-defect->NEEDS_REVIEW",
+          opt.exit_status({"l": []}, severe) == "NEEDS_REVIEW")
     check("exit/L-violation->EXHAUSTED",
           opt.exit_status({"l": ["页数 9 超出限制 8"]}) == "EXHAUSTED")
 
@@ -287,7 +418,7 @@ def integration_mitl():
         os.makedirs(OUT, exist_ok=True)
         with open(src_path, "w", encoding="utf-8") as f:
             f.write(UNIT_SRC)
-    opt = Optimizer(src_path, _req(), outdir)
+    opt = Optimizer(src_path, _req(visual_metrics=False), outdir)
     base = opt.run()
     check("mitl/closure-baseline",
           base["status"] in ("CONVERGED", "DONE", "NO_IMPROVEMENT"),
@@ -309,9 +440,11 @@ def integration_mitl():
     check("mitl/one-blocked", len(res.get("blocked", [])) == 1)
     fin = opt.finalize()
     check("mitl/final-L0", not fin["l"], str(fin["l"]))
-    v = verify(os.path.join(outdir, "paper.tex"), src_path, _req())
+    v = verify(os.path.join(outdir, "paper.tex"), src_path,
+               _req(visual_metrics=False))
     check("mitl/content-preserved",
-          v["content_preserved"] and v["semantic"]["preserved"], str(v["l"]))
+          bool(v.get("content_preserved")) and
+          bool((v.get("semantic") or {}).get("preserved")), str(v.get("l")))
     req = opt.emit_request(2, with_visual=False)
     check("mitl/request-emitted",
           req["schema"] == proposal.REQUEST_SCHEMA and req["round"] == 2)

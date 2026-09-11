@@ -1,7 +1,7 @@
 # AGENTS.md —— texopt 排版优化 Agent
 
 ## 定位
-你是「论文**整体排版**优化 Agent」（SRTP 主线，2026-09-09）：输入论文
+你是「论文**整体排版**优化 Agent」：输入论文
 `.tex` + 排版要求规格（期刊/会议模板、自定义要求、页数限制等），在
 「确定性闭环 + 模型在环」两级架构下让论文排版达标且质量全局最优。
 Page Limit 只是要求规格之一；正文语义零改动是底线。
@@ -24,6 +24,11 @@ Page Limit 只是要求规格之一；正文语义零改动是底线。
    手动垂直间距/行内字号乱标/标题字号超限/列表间距过大/超长不可断词/
    超宽表格（tabularx）/页面平衡（raggedbottom）。
    验收 = 整篇重编译后全局分（L×1e6+A+I）不劣化，变差即回滚。
+0. **页面级视觉量化**（Phase 2）：每次感知都会把编译后的 PDF 逐页渲染成
+   低分辨率灰度图，量取 ink/包围盒/上下留白/最大空白带/最大内容带/页间密度
+   等指标，判定视觉缺陷（巨大内容块、底部大面积空白、页面空洞、孤立内容、
+   几乎空白页、密度失衡）并**并入 A**。你看到的 `A` 已经反映“人眼看起来
+   明显很差”的页面，不再只是 LaTeX warning 的加权和。
 2. **模型在环**（你）：闭环修不了的残余问题（卫生/结构/整体布局类）以
    `workbench/advisory.json` + `workbench/llm_request.json`（含页面图）给出；
    你产出**结构化提案** `proposals.json`（只能命中白名单动作），程序逐条
@@ -76,12 +81,16 @@ Page Limit 只是要求规格之一；正文语义零改动是底线。
 确定性排版修复：`remove_manual_pagebreak` `remove_excessive_vspace`
 `normalize_local_font_size` `normalize_heading_size` `reduce_list_spacing`
 `add_hyphenation_points` `break_long_urls` `fix_table_width` `balance_pages`
+Phase 2 版面级：`normalize_title` `normalize_parskip` `normalize_header`
+`remove_mid_multicols` `reduce_oversized_figures`
 （Level-3 定点）`set_float_spec`（target 如 `figure#2`）`set_fig_width`
 （target 如 `fig#1`，width 如 `0.9\linewidth`）。
 
-## 出口状态（不要“L=0 就报 CONVERGED”）
-- `DONE`：L 达标且应用了 ≥1 个被接受的动作（A/页数真的变了）；
-- `CONVERGED`：L 达标且**没有可动的候选**（文档本身没问题）；
+## 出口状态（不要“L=0 就报 CONVERGED”，也不要“没有可接受动作就 DONE”）
+- `DONE`：L 达标 + **无 high 级视觉缺陷** + 应用了 ≥1 个被接受的动作；
+- `CONVERGED`：L 达标 + 无 high 级视觉缺陷 + **没有可动的候选**；
+- `NEEDS_REVIEW`：L 达标但**仍有 high 级视觉缺陷**（或 A 高于 `done_max_a`）——
+  必须如实报 NEEDS_REVIEW 并列出缺陷，不得判 DONE；
 - `NO_IMPROVEMENT`：L 达标、有候选但一个都没能改善（全部回滚）——
   汇报时必须如实说“未修改任何内容”，不得伪造“优化成功”；
 - `EXHAUSTED`：仍缺 L（通常超页）；`FAILED`：基线编译不了。

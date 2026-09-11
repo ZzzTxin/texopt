@@ -29,7 +29,7 @@ from __future__ import annotations
 import re
 
 from . import perceive as P
-from . import actions
+from . import actions, visual
 from .requirements import Requirement
 
 L_PENALTY = 1e6          # L 每项违规的权重（远大于 A/I，保证先满足硬约束）
@@ -42,6 +42,14 @@ HYGIENE_WEIGHT = {
     "list_spacing": 0.6,          # reduce_list_spacing
     "unbreakable": 0.6,           # add_hyphenation_points
     "long_url": 0.5,               # break_long_urls (xurl)
+    # Phase 2：页面/版面级缺陷（有确定性动作，且人眼明显可见）
+    "title_size": 0.8,            # normalize_title
+    "multicols_mid": 0.8,         # remove_mid_multicols
+    "parskip": 0.6,               # normalize_parskip
+    "fig_oversized": 0.6,         # reduce_oversized_figures
+    "subfig_overfull": 0.6,       # reduce_oversized_figures
+    "table_narrow": 0.6,          # fix_table_width
+    "header_abnormal": 0.5,       # normalize_header
     "size_switch": 0.5,           # normalize_local_font_size
     "missing_caption": 0.5,
     "dollar_math": 0.4,
@@ -58,7 +66,12 @@ BODY_RE = re.compile(
 # 白名单排版 token（可被修复动作改动，不算内容）：浮动体位置参数、图片宽度
 _FLOAT_SPEC_RE = re.compile(
     r"(\\begin\{(figure|table)(\*?)\})(\[[^\]]*\])?")
-_FIG_WIDTH_RE = re.compile(r"width\s*=\s*[^,\]]+")
+# 插图长度参数（width/height）——属排版面（缩图动作会改）
+_FIG_WIDTH_RE = re.compile(r"(?:width|height)\s*=\s*[^,\]]+")
+# 相对长度参数（子图/小页宽度 {0.49\textwidth} 等）——属排版面
+_REL_LEN_ARG_RE = re.compile(
+    r"\{\s*[0-9]*\.?[0-9]+\s*\\(?:textwidth|linewidth|columnwidth|"
+    r"textheight|paperheight|hsize)\s*\}")
 
 
 # texopt 自己注入的标记块（质量宏/页眉/标题着色/目录页）——内容校验时整体忽略
@@ -97,6 +110,8 @@ _FMT_TOKEN_RES = [
     re.compile(r"\\(?:tiny|scriptsize|footnotesize|small|normalsize|"
                r"large|Large|LARGE|huge|Huge)\b"),
     re.compile(r"\\-"),
+    re.compile(r"\\begin\{multicols\*?\}(\s*\[[^\]]*\])?(\s*\{[^}]*\})?"),
+    re.compile(r"\\end\{multicols\*?\}"),
 ]
 _LIST_OPT_RE = re.compile(
     r"(\\begin\{(?:itemize|enumerate|description)\})\s*\[([^\]]*)\]")
@@ -129,7 +144,8 @@ def _norm_body(b: str, req=None) -> str:
     """
     b = _meta_strip(b, req)
     b = _FLOAT_SPEC_RE.sub(lambda m: m.group(1), b)   # 抹掉 [h]/[tbp] 等参数
-    b = _FIG_WIDTH_RE.sub("width=W", b)              # 抹掉 width 的具体值
+    b = _FIG_WIDTH_RE.sub("width=W", b)              # 抹掉 width/height 的值
+    b = _REL_LEN_ARG_RE.sub("{LEN}", b)              # 抹掉相对长度参数
     b = re.sub(r"\$\$.+?\$\$", "MATH", b, flags=re.S)   # 裸 $$ 数学
     b = re.sub(r"\\\[.+?\\\]", "MATH", b, flags=re.S)  # displaymath
     b = _norm_body_fmt(b)                             # 排版命令可动面
@@ -142,43 +158,8 @@ def content_body(src: str) -> str:
     return m.group(1) if m else ""
 
 
-def _norm_tabular_envs(b: str) -> str:
-    r"""表格环境归一：\begin{tabular}{...}（可含嵌套 {p{40mm}...} 列格式、
-    tabularx 的 {width}{cols}、[..] 参数）整组归为 \begin{TAB}{COLS}；
-    \end{tabularx} 等归为 \end{TAB}。列格式属排版面（换 tabularx/调列宽
-    允许）；表格内数据词不归一，仍严格比较。
-    """
-    _TAB_RE = re.compile('\\\\(begin|end)\\{(?:tabularx|tabular\\*?|longtable|array)\\}')
-    out, i = [], 0
-    while True:
-        m = _TAB_RE.search(b, i)
-        if not m:
-            out.append(b[i:])
-            break
-        out.append(b[i:m.start()])
-        if m.group(1) == "begin":
-            j = m.end()
-            while j < len(b):
-                if b[j] == "[":
-                    k = b.find("]", j)
-                    j = k + 1 if k >= 0 else j + 1
-                elif b[j] == "{":
-                    depth, k = 0, j
-                    while k < len(b):
-                        depth += (b[k] == "{") - (b[k] == "}")
-                        if depth == 0:
-                            break
-                        k += 1
-                    j = k + 1
-                else:
-                    break
-            out.append("\\begin{TAB}{COLS}")
-            i = j
-        else:
-            out.append("\\end{TAB}")
-            i = m.end()
-    return "".join(out)
-
+# 表格环境/列格式归一：实现已下沉到 perceive（fig_fingerprint 也要用同源规则）
+_norm_tabular_envs = P.norm_tabular_specs
 
 
 def _norm_body_ext(b: str, req=None) -> str:
@@ -331,6 +312,9 @@ def aesthetic_score(per: P.Perception, req: Requirement) -> float:
     # 源码层排版卫生问题（各自可被确定性动作修复，权重按可修性与影响度）
     a += sum(HYGIENE_WEIGHT.get(h["kind"], DEFAULT_HYGIENE_WEIGHT)
              for h in per.issues.get("hygiene", []))
+    # Phase 2：页面级视觉缺陷（量自实际 PDF：巨大图/大面积空白/空洞/密度失衡…）
+    # —— A 不再只是 LaTeX warning 的加权和，而是真的能反映“看起来明显很差”的页面
+    a += visual.defect_penalty(visual.visual_defects(getattr(per, "visual", None)))
     # 结构规范：要求目录/页眉/标题着色却未落实
     if req.toc and not per.source.get("has_toc") \
             and per.source.get("sections", 0) >= req.toc_min_sections:
@@ -371,3 +355,8 @@ def total_score(per: P.Perception, req: Requirement,
     i = intervention_cost(per, orig)
     total = L_PENALTY * len(lv) + a + i
     return {"l": lv, "a": a, "i": i, "total": round(total, 3), "ok": not lv}
+
+
+def visual_defects(per: P.Perception) -> list:
+    """当前文档的页面级视觉缺陷清单（无视觉信息时为空）。"""
+    return visual.visual_defects(getattr(per, "visual", None))

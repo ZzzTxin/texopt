@@ -182,6 +182,33 @@ def _wrap_hyphenate(src, p):
                                           int(p.get("step", 12)))
 
 
+def _wrap_title(src, p):
+    return actions.normalize_title(src, p.get("cap", "LARGE"))
+
+
+def _wrap_parskip(src, p):
+    return actions.normalize_parskip(src, float(p.get("max_pt", 8.0)))
+
+
+def _wrap_header_norm(src, p):
+    return actions.normalize_header(src, int(p.get("max_chars", 40)))
+
+
+def _wrap_multicols(src, p):
+    return actions.remove_mid_multicols(src)
+
+
+def _wrap_fig_size(src, p):
+    return actions.reduce_oversized_figures(
+        src, float(p.get("max_height_frac", 0.40)),
+        float(p.get("subfig_max_sum", 0.95)))
+
+
+def _wrap_fig_shrink(src, p):
+    return actions.shrink_oversized_figures(
+        src, float(p.get("factor", 0.85)), float(p.get("min_frac", 0.5)))
+
+
 def _wrap_url_break(src, p):
     return actions.break_long_urls(src)
 
@@ -332,13 +359,52 @@ _reg(ActionSpec(
      Param("step", "int", "断点间隔（字符数，默认 12）", False, 12,
            validator=lambda v: _v_int(v, 2, 60)))))
 _reg(ActionSpec(
+    "normalize_title", 2, "A",
+    "把 \\title{...} 里超限的字号压回上限（如 \\Huge -> \\LARGE）；只改字号命令",
+    _wrap_title,
+    (Param("cap", "str", "标题允许的最大字号（默认 LARGE）", False, "LARGE",
+           _v_str),)))
+_reg(ActionSpec(
+    "normalize_parskip", 2, "A",
+    "把过大的 \\parskip 收敛到合理值（默认上限 8pt）——整篇段距过大会让每页都松散",
+    _wrap_parskip,
+    (Param("max_pt", "float", "允许的最大段间距（pt，默认 8）", False, 8.0,
+           validator=lambda v: _v_float(v, 0.0, 40.0)),)))
+_reg(ActionSpec(
+    "normalize_header", 2, "A",
+    "清空过长/无意义的页眉内容（超过 max_chars，如整句说明文字），保留 fancyhdr 设置",
+    _wrap_header_norm,
+    (Param("max_chars", "int", "页眉允许的最大字符数（默认 40）", False, 40,
+           validator=lambda v: _v_int(v, 5, 500)),)))
+_reg(ActionSpec(
+    "remove_mid_multicols", 2, "A",
+    "移除正文中途的局部双栏（\\begin{multicols}），内容原样保留，交回单栏版心",
+    _wrap_multicols))
+_reg(ActionSpec(
+    "reduce_oversized_figures", 2, "A",
+    "收敛过大图片：height 超过比例上限压到上限；多个子图宽度之和超版心时等比缩小",
+    _wrap_fig_size,
+    (Param("max_height_frac", "float", "图片高度占版心上限（默认 0.4）", False,
+           0.40, validator=lambda v: _v_float(v, 0.05, 1.0)),
+     Param("subfig_max_sum", "float", "子图宽度之和上限（默认 0.95）", False,
+           0.95, validator=lambda v: _v_float(v, 0.1, 1.0)))))
+_reg(ActionSpec(
+    "shrink_oversized_figures", 3, "A",
+    "按页面视觉信号缩小「满宽且无高度约束」的图片（width 降一档），"
+    "用于消除“巨大图片占据整页”这类视觉缺陷",
+    _wrap_fig_shrink,
+    (Param("factor", "float", "缩放系数（默认 0.85）", False, 0.85,
+           validator=lambda v: _v_float(v, 0.5, 1.0)),
+     Param("min_frac", "float", "可缩到的最小相对宽度（默认 0.5）", False, 0.5,
+           validator=lambda v: _v_float(v, 0.1, 1.0)))))
+_reg(ActionSpec(
     "break_long_urls", 2, "A",
     "给超长 URL（\\url/\\href/\\path 形式）注入 \\usepackage{xurl}，允许在"
     "任意位置断行；不改动 URL 文字",
     _wrap_url_break))
 _reg(ActionSpec(
     "fix_table_width", 2, "A",
-    "把列格式简单的超宽 tabular 改为 tabularx（\\linewidth 自适应列宽）；"
+    "把超宽 / 明显窄于版心的 tabular 改为 tabularx（\\linewidth 自适应列宽）；"
     "不使用 \\resizebox 压缩，不改表格数据/顺序/内容",
     _wrap_table_width))
 _reg(ActionSpec(

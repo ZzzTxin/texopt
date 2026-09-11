@@ -39,8 +39,14 @@ Model-in-the-loop = LLM 真正进入「感知→判断→修改→编译→验�
    - `add_hyphenation_points`：超长不可断词插 `\-` 断点
    - `break_long_urls`：长 URL 注入 `xurl`（允许任意位置断行）
    - `fix_table_width`：超宽表格改 tabularx（自适应列宽）
-   - `balance_pages`：注入 `\raggedbottom` 改善页面平衡
+   - `balance_pages`：注入 `\raggedbottom` + 浮动体比例调优改善页面平衡
+   - `normalize_title` / `normalize_parskip` / `normalize_header` /
+     `remove_mid_multicols` / `reduce_oversized_figures`：Phase 2 版面级修复
+     （巨大标题、过大段距、超长页眉、中途双栏、过大/超版心图片）
    每条都整篇重编译后全局重评，变差即回滚。
+   评分 A 现在还包含**页面级视觉缺陷**（量自实际编译的 PDF：巨大内容块、
+   底部大面积空白、页面空洞、孤立内容、几乎空白页、页间密度失衡），
+   因此“页数少了但版面明显变差”的改动不会被接受。
 3. 读 `llm_request.json`（状态 + 残余问题 + 可用动作 + 页面图）与
    `advisory.json`。对**难以用规则决定**的问题（留白/视觉重心/图该浮到哪或多大/
    图文关系）写成 `proposals.json`：
@@ -57,10 +63,12 @@ Model-in-the-loop = LLM 真正进入「感知→判断→修改→编译→验�
    ```bash
    python3 optimize.py paper.tex --proposals proposals.json --emit-request
    ```
-5. 多轮往返直到 `DONE` / `CONVERGED` / `NO_IMPROVEMENT` / `EXHAUSTED` / `BLOCKED`；
-最多 5 轮失败后停下来汇报。出口状态含义：`DONE`= 应用了被接受的动作；
-`CONVERGED`= 无可动候选；`NO_IMPROVEMENT`= 有候选但全都没改善（未改任何内容，
-不伪造“优化成功”）；`EXHAUSTED`= 仍缺 L。
+5. 多轮往返直到 `DONE` / `CONVERGED` / `NEEDS_REVIEW` / `NO_IMPROVEMENT` /
+`EXHAUSTED` / `BLOCKED`；最多 5 轮失败后停下来汇报。出口状态含义：
+`DONE`= L 达标且无 high 级视觉缺陷且应用了被接受的动作；`CONVERGED`= 无 high 级
+视觉缺陷且无可动候选；`NEEDS_REVIEW`= 仍有 high 级视觉缺陷（**不得报 DONE**，
+要如实列出）；`NO_IMPROVEMENT`= 有候选但全都没改善（未改任何内容，不伪造
+“优化成功”）；`EXHAUSTED`= 仍缺 L。
    只想核对某次手工编辑时用：
    ```bash
    python3 optimize.py workbench/paper.tex --verify --original <原稿.tex>

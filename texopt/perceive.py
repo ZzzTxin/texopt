@@ -16,7 +16,7 @@ import os
 import re
 from dataclasses import dataclass
 
-from . import engine
+from . import engine, visual
 
 # ---------------------------------------------------------------- 源码解析
 
@@ -167,11 +167,58 @@ def env_spans(src: str, names: set) -> list:
     return spans
 
 
+def norm_tabular_specs(b: str) -> str:
+    r"""表格环境归一：\begin{tabular}{...}（可含嵌套 {p{40mm}...} 列格式、
+    tabularx 的 {width}{cols}、[..] 参数）整组归为 \begin{TAB}{COLS}；
+    \end{tabularx} 等归为 \end{TAB}。列格式属排版面（换 tabularx/调列宽
+    允许）；表格内数据词不归一，仍严格比较。
+    """
+    _TAB_RE = re.compile('\\\\(begin|end)\\{(?:tabularx|tabular\\*?|longtable|array)\\}')
+    out, i = [], 0
+    while True:
+        m = _TAB_RE.search(b, i)
+        if not m:
+            out.append(b[i:])
+            break
+        out.append(b[i:m.start()])
+        if m.group(1) == "begin":
+            j = m.end()
+            while j < len(b):
+                if b[j] == "[":
+                    k = b.find("]", j)
+                    j = k + 1 if k >= 0 else j + 1
+                elif b[j] == "{":
+                    depth, k = 0, j
+                    while k < len(b):
+                        depth += (b[k] == "{") - (b[k] == "}")
+                        if depth == 0:
+                            break
+                        k += 1
+                    j = k + 1
+                else:
+                    break
+            out.append("\\begin{TAB}{COLS}")
+            i = j
+        else:
+            out.append("\\end{TAB}")
+            i = m.end()
+    return "".join(out)
+
+
+
 def fig_fingerprint(inner: str) -> str:
-    """图形/表格内容指纹：宽度等排版面差异归一，其余逐字比较。"""
+    """图形/表格内容指纹：排版面参数（宽/高/相对长度/浮动参数）归一，其余逐字比较。
+
+    归一的是**尺寸与位置参数**（缩图/改图宽动作会动它们），
+    图文件、题注、label、数据、TikZ 代码等仍逐字比较 —— 重绘/改写图
+    内容依然会被判为「图形/表格内容被改动」。
+    """
     s = re.sub(r"(?<!\\)%.*$", "", inner, flags=re.M)
-    s = re.sub(r"width\s*=\s*[^,\]]+", "width=W", s)      # 宽度值
+    s = re.sub(r"(?:width|height)\s*=\s*[^,\]]+", "LEN=W", s)   # 宽/高值
+    s = re.sub(r"\{\s*[0-9]*\.?[0-9]+\s*\\(?:textwidth|linewidth|"
+               r"columnwidth|textheight|paperheight|hsize)\s*\}", "{LEN}", s)
     s = re.sub(r"(\\begin\{(?:figure|table)\*?\})\[[^\]]*\]", r"\1", s)  # 位置参数
+    s = norm_tabular_specs(s)          # 表格环境名/列格式（tabular<->tabularx）
     return re.sub(r"\s+", " ", s).strip()
 
 
@@ -373,6 +420,7 @@ class Perception:
     pages: int | None          # 交叉验证后的权威页数
     pdf_pages: int | None
     pdf_info: str = ""
+    visual: dict | None = None  # Phase 2：页面级视觉量化（来自实际 PDF）
 
     @property
     def ok(self) -> bool:
@@ -383,8 +431,12 @@ class Perception:
         return len(self.issues["overfull"])
 
 
-def perceive(tex_path: str) -> Perception:
-    """对给定 tex 执行一次完整感知（L1+L2+L3），返回快照。"""
+def perceive(tex_path: str, req=None) -> Perception:
+    """对给定 tex 执行一次完整感知（L1+L2+L3+页面视觉），返回快照。
+
+    req 可选：用于把「要求规格」里的阈值传给源码层检测（标题字号上限、
+    parskip/图高/窄表阈值等）；不传则用与 Requirement 相同的默认值。
+    """
     with open(tex_path, encoding="utf-8", errors="replace") as f:
         src = f.read()
     source = parse_source(src)
@@ -392,7 +444,7 @@ def perceive(tex_path: str) -> Perception:
     result = engine.compile_tex(tex_path)
     issues = parse_log(result.log)
     split_table_overfull(issues, source["tabular_spans"])
-    issues["hygiene"] = scan_hygiene(src)   # 源码层卫生/风格静态清单
+    issues["hygiene"] = scan_hygiene(src, **_hygiene_opts(req))
 
     pdf_pages = None
     if result.pdf_path:
@@ -407,11 +459,203 @@ def perceive(tex_path: str) -> Perception:
     elif pdf_pages is not None:
         pages = pdf_pages
 
+    # Phase 2：页面级视觉量化（来自实际编译后的 PDF；失败则降级为 None）
+    vis = None
+    want_visual = bool(result.pdf_path) and (
+        req is None or getattr(req, "visual_metrics", True))
+    if want_visual:
+        try:
+            tmp = os.path.join(os.path.dirname(os.path.abspath(tex_path)),
+                               ".texopt-gray")
+            vis = visual.analyze_pdf(result.pdf_path, tmp,
+                                     dpi=getattr(req, "visual_dpi", 50) if req else 50)
+        except Exception as exc:                      # 视觉层失败不影响主链路
+            vis = {"error": f"视觉量化失败：{exc}", "pages": [], "defects": []}
+
     return Perception(
         src=src, source=source, compile=result,
         issues=issues, pages=pages, pdf_pages=pdf_pages,
-        pdf_info=cross,
+        pdf_info=cross, visual=vis,
     )
+
+
+def _hygiene_opts(req) -> dict:
+    """把要求规格里的阈值转成 scan_hygiene 的关键字参数。"""
+    g = lambda k, d: getattr(req, k, d) if req is not None else d
+    return dict(title_cap=g("title_size_cap", "LARGE"),
+                parskip_max_pt=g("parskip_max_pt", 8.0),
+                header_max_chars=g("header_max_chars", 40),
+                fig_max_height_frac=g("max_fig_height_frac", 0.40),
+                narrow_table_min_frac=g("narrow_table_min_frac", 0.6),
+                subfig_max_sum=g("subfig_max_sum", 0.95),
+                text_width_mm=None)
+
+
+# ---------------------------------------------------------------- 版心估算
+# Phase 2：纸张/版心尺寸（用于判断“巨大图”“窄表格”这类与页面相关的缺陷）。
+PAPER_SIZES_MM = {
+    "a4paper": (210.0, 297.0), "a5paper": (148.0, 210.0),
+    "b5paper": (176.0, 250.0), "letterpaper": (215.9, 279.4),
+    "legalpaper": (215.9, 355.6), "executivepaper": (184.15, 266.7),
+}
+
+
+def paper_size_mm(class_options) -> tuple:
+    for o in class_options or []:
+        if o in PAPER_SIZES_MM:
+            return PAPER_SIZES_MM[o]
+    return PAPER_SIZES_MM["letterpaper"]      # LaTeX 标准类默认 letterpaper
+
+
+def text_area_mm(source: dict) -> tuple:
+    """估算版心 (width_mm, height_mm) = 纸张 - 页边距。"""
+    w, h = paper_size_mm(source.get("class_options") or [])
+    m = source.get("geometry_margin_mm")
+    if m is None:
+        m = 25.4
+    return (max(w - 2 * m, 20.0), max(h - 2 * m, 20.0))
+
+
+# ---------------------------------------------------------------- 新增静态检测
+_TITLE_RE = re.compile(r"\\title\s*(?=\{)")
+_PARSKIP_RE = re.compile(r"\\setlength\s*\{\s*\\parskip\s*\}\s*\{([^}]*)\}")
+_HEADER_CMD_RE = re.compile(
+    r"\\(?:lhead|rhead|chead|fancyhead(?:\s*\[[^\]]*\])?)\s*(?=\{)")
+_MULTICOLS_RE = re.compile(r"\\begin\{(multicols\*?)\}\s*\{(\d+)\}")
+_HEIGHT_OPT_RE = re.compile(r"(?:^|,)\s*height\s*=\s*([^,\]]+)")
+_SUBFIG_W_RE = re.compile(
+    r"\\begin\{(?:subfigure|subfloat|minipage)\}\s*\{([0-9]*\.?[0-9]+)\s*\\"
+    r"(?:textwidth|linewidth|columnwidth)")
+_PWIDTH_RE = re.compile(r"[pmb]\s*\{\s*([0-9]*\.?[0-9]+)\s*(mm|cm|in|pt)\s*\}")
+_TABSPEC_RE = re.compile(r"\\begin\{(tabular\*?|tabularx|longtable)\}")
+
+
+def title_size_violations(src: str, cap: str = "LARGE") -> list:
+    """\\title{...} 内超出上限的字号命令（{cmd, line, cap}）。"""
+    m = _TITLE_RE.search(src)
+    if not m:
+        return []
+    got = tex_braced_arg(src, m.end())
+    if not got:
+        return []
+    body, start = got[0], got[1]
+    out = []
+    for sm in SIZE_CMD_RE.finditer(body):
+        cmd = sm.group(1)
+        if SIZE_ORDER.index(cmd) > SIZE_ORDER.index(cap):
+            out.append({"cmd": cmd, "cap": cap,
+                        "line": src.count("\n", 0, start + sm.start()) + 1})
+    return out
+
+
+def parskip_violation(src: str, max_pt: float = 8.0):
+    """\\setlength{\\parskip}{X} 中过大的 X（> max_pt）。"""
+    m = _PARSKIP_RE.search(src)
+    if not m:
+        return None
+    pt = _len_to_pt(m.group(1))
+    if pt is None or pt <= max_pt:
+        return None
+    return {"pt": round(pt, 2), "expr": m.group(1).strip(),
+            "line": src.count("\n", 0, m.start()) + 1}
+
+
+def header_arg_violations(src: str, max_chars: int = 40) -> list:
+    """页眉命令里过长/无意义的参数（如超长左页眉、\\today 之类）。"""
+    out = []
+    for m in _HEADER_CMD_RE.finditer(src):
+        got = tex_braced_arg(src, m.end())
+        if not got:
+            continue
+        arg = got[0].strip()
+        if len(arg) > max_chars:
+            out.append({"cmd": src[m.start():m.end()].strip(), "arg": arg,
+                        "line": src.count("\n", 0, m.start()) + 1})
+    return out
+
+
+def multicols_local_spans(src: str) -> list:
+    """局部（文档中途）双栏：multicols 环境且未覆盖整个正文。"""
+    spans = env_spans(src, {"multicols", "multicols*"})
+    if not spans:
+        return []
+    b0, b1 = -1, -1
+    mb = re.search(r"\\begin\{document\}", src)
+    if mb:
+        b0 = mb.end()
+        me = re.search(r"\\end\{document\}", src)
+        b1 = me.start() if me else len(src)
+    body_len = max(b1 - b0, 1)
+    out = []
+    for a, b in spans:
+        if b0 >= 0 and not (b0 <= a < b1):
+            continue
+        m = _MULTICOLS_RE.search(src, max(a - 8, 0))
+        cols = int(m.group(2)) if m else 2
+        if (b - a) < 0.8 * body_len:               # 未覆盖正文 -> 局部双栏
+            out.append({"line": src.count("\n", 0, a) + 1, "cols": cols})
+    return out
+
+
+def oversized_fig_heights(src: str, max_frac: float = 0.40,
+                          text_h_mm: float | None = None) -> list:
+    """\\includegraphics 里过大的 height（相对页高比例 > max_frac）。"""
+    if text_h_mm is None:
+        text_h_mm = text_area_mm(parse_source(src))[1]
+    out = []
+    for m in INCLUDEGRAPHICS_RE.finditer(src):
+        opt = m.group(1) or ""
+        hm = _HEIGHT_OPT_RE.search("," + opt)
+        if not hm:
+            continue
+        expr = hm.group(1).strip()
+        frac = None
+        rm = re.fullmatch(r"([0-9]*\.?[0-9]+)\s*\\"
+                          r"(?:textheight|paperheight|pageheight)", expr)
+        if rm:
+            frac = float(rm.group(1))
+        else:
+            mm = _len_to_mm(expr)
+            if mm is not None:
+                frac = mm / text_h_mm
+        if frac is not None and frac > max_frac:
+            out.append({"expr": expr, "frac": round(frac, 3),
+                        "line": _lineno(src, m)})
+    return out
+
+
+def overfull_subfig_rows(src: str, max_sum: float = 0.98) -> list:
+    """同一 figure 内多个子图/小页宽度之和超过版心（如 0.49+0.49+hspace）。"""
+    out = []
+    for a, b in env_spans(src, {"figure", "figure*"}):
+        seg = src[a:b]
+        vals = [float(m.group(1)) for m in _SUBFIG_W_RE.finditer(seg)]
+        if len(vals) >= 2 and sum(vals) > max_sum:
+            out.append({"sum": round(sum(vals), 3), "n": len(vals),
+                        "line": src.count("\n", 0, a) + 1})
+    return out
+
+
+def narrow_tables(src: str, text_w_mm: float | None = None,
+                  min_frac: float = 0.6) -> list:
+    """列宽总和明显窄于版心的表格（如 p{2cm}p{2cm}p{2cm}p{2cm}）。"""
+    if text_w_mm is None:
+        text_w_mm = text_area_mm(parse_source(src))[0]
+    out = []
+    for m in _TABSPEC_RE.finditer(src):
+        got = tex_braced_arg(src, m.end())
+        if not got:
+            continue
+        spec = got[0]
+        widths = [_len_to_mm(f"{v}{u}") for v, u in _PWIDTH_RE.findall(spec)]
+        widths = [x for x in widths if x]
+        if not widths:
+            continue
+        total = sum(widths)
+        if total < min_frac * text_w_mm:
+            out.append({"total_mm": round(total, 1), "line": _lineno(src, m),
+                        "spec": spec.strip()})
+    return out
 
 
 # ---------------------------------------------------------------- 卫生/风格静态检测
@@ -448,8 +692,16 @@ def _env_ranges(src: str, wanted: set) -> list:
     return ranges
 
 
-def scan_hygiene(src: str) -> list:
-    """源码层静态扫描，返回卫生问题清单 [{kind, line, detail}]。"""
+def scan_hygiene(src: str, *, title_cap: str = "LARGE",
+                 parskip_max_pt: float = 8.0, header_max_chars: int = 40,
+                 fig_max_height_frac: float = 0.40,
+                 narrow_table_min_frac: float = 0.6,
+                 subfig_max_sum: float = 0.95,
+                 text_width_mm: float | None = None) -> list:
+    """源码层静态扫描，返回卫生问题清单 [{kind, line, detail}]。
+
+    阈值由要求规格（Requirement）传入；默认值与 Requirement 默认一致。
+    """
     out: list = []
     # 去注释后的逐行代码（行数不变，行号映射仍准确；忽略 \% 转义）
     code_lines = [re.sub(r"(?<!\\)%.*$", "", ln) for ln in src.split("\n")]
@@ -565,6 +817,43 @@ def scan_hygiene(src: str) -> list:
             out.append({"kind": "warning_box", "line": i,
                         "detail": f"WARNING 类告示：{ln.strip()[:60]}"
                                   f"（编辑性提示，非正文，建议删除）"})
+
+    # 13) 文档标题字号异常（如 \title{\Huge ...}）
+    for tv in title_size_violations(src, title_cap):
+        out.append({"kind": "title_size", "line": tv["line"],
+                    "detail": f"文档标题字号 {tv['cmd']} 过大"
+                              f"（建议不超过 {tv['cap']}）"})
+    # 14) 过大的段间距 \setlength{\parskip}{...}
+    ps = parskip_violation(src, parskip_max_pt)
+    if ps:
+        out.append({"kind": "parskip", "line": ps["line"],
+                    "detail": f"\\parskip={ps['expr']}（{ps['pt']}pt）过大，"
+                              f"整篇段落间距失衡"})
+    # 15) 异常/超长页眉
+    for hv in header_arg_violations(src, header_max_chars):
+        out.append({"kind": "header_abnormal", "line": hv["line"],
+                    "detail": f"页眉 {hv['cmd']} 内容过长（{len(hv['arg'])} 字符）："
+                              f"{hv['arg'][:40]}…"})
+    # 16) 文档中途的局部双栏（multicols）
+    for mv in multicols_local_spans(src):
+        out.append({"kind": "multicols_mid", "line": mv["line"],
+                    "detail": f"正文中途进入 {mv['cols']} 栏（multicols），"
+                              f"版面节奏被打断"})
+    # 17) 过大的图片高度（height=0.48\textheight 等）
+    for fv in oversized_fig_heights(src, fig_max_height_frac):
+        out.append({"kind": "fig_oversized", "line": fv["line"],
+                    "detail": f"图片 height={fv['expr']} 占页高 "
+                              f"{fv['frac'] * 100:.0f}%（过大）"})
+    # 18) 子图并排宽度之和超版心
+    for sv in overfull_subfig_rows(src, subfig_max_sum):
+        out.append({"kind": "subfig_overfull", "line": sv["line"],
+                    "detail": f"{sv['n']} 个子图宽度之和 {sv['sum']} 行宽，"
+                              f"超出/顶满版心"})
+    # 19) 明显窄于版心的表格（p{2cm} 之类固定窄列）
+    for nv in narrow_tables(src, text_width_mm, narrow_table_min_frac):
+        out.append({"kind": "table_narrow", "line": nv["line"],
+                    "detail": f"表格列宽合计 {nv['total_mm']}mm，明显窄于版心"
+                              f"（{nv['spec'][:30]}）"})
 
     # texopt 自己注入的块（质量宏/页眉/标题着色/目录页）不算作者卫生问题
     # 注意：标记行是注释行，需用原文（未剔注释）才能识别

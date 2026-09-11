@@ -6,7 +6,7 @@
 \setlength{\parindent}{0pt}\setlength{\parskip}{14pt}\setlength{\textfloatsep}{2pt}\setlength{\intextsep}{1pt}\setlength{\abovedisplayskip}{2pt}\setlength{\belowdisplayskip}{2pt}\setlength{\columnsep}{3pt}\setlength{\headheight}{8pt}
 \titleformat{\section}{\Large\bfseries\color{red}}{\thesection}{0.2em}{}
 \titleformat{\subsection}{\large\bfseries\color{blue}}{\thesubsection}{0.1em}{}
-\pagestyle{fancy}\fancyhf{}\lhead{\tiny A Very Long Header That Is Completely Unnecessary and May Collide With Other Material}\rhead{\tiny \today}\cfoot{\thepage}
+\pagestyle{fancy}\fancyhf{}\lhead{}\rhead{\tiny \today}\cfoot{\thepage}
 \title{\Huge A Very Long and Poorly Designed Title That Takes Too Much Space and Makes the First Page Look Ridiculous}
 \author{A. Student \and B. Student}\date{}
 
@@ -20,6 +20,8 @@
 % ===== texopt end =====
 
 \usepackage{xurl}  % texopt: 允许超长 URL 断行
+
+\usepackage{tabularx}
 
 \begin{document}\maketitle
 This introductory paragraph is intentionally long enough to create an awkward block of text near the top of the page. It contains unnecessary repetition, strange spacing decisions, and several words that may interact badly with line breaking. The purpose of this document is not to communicate beautiful typography but to stress-test an automatic LaTeX layout optimization system. We want to observe what happens when headings, equations, figures, tables, lists, margins, and page breaks all behave badly at the same time.
@@ -46,13 +48,13 @@ z &= \frac{\alpha+\beta+\gamma+\delta+\epsilon+\zeta+\eta+\theta}{1+\alpha^2+\be
 Here is inline math that is too dense and too close to ordinary prose: $x_1+x_2+x_3+x_4+x_5+x_6+x_7+x_8+x_9+x_{10}=0$.
 \section{Figures}
 The figure is deliberately too wide and placed using an aggressive float specification.
-\begin{figure}[tbp]\centering\includegraphics[width=\linewidth]{example-image-a}\caption{An oversized figure that can overflow the text area and create poor page balance.}\label{fig:oversized}\end{figure}
+\begin{figure}[tbp]\centering\includegraphics[width=0.85\linewidth]{example-image-a}\caption{An oversized figure that can overflow the text area and create poor page balance.}\label{fig:oversized}\end{figure}
 The next figure uses a large amount of vertical space.
-\begin{figure}[!htbp]\centering\includegraphics[width=0.92\textwidth,height=0.48\textheight,keepaspectratio]{example-image-b}\caption{A large figure competing with surrounding text and floats.}\label{fig:large}\end{figure}
+\begin{figure}[!htbp]\centering\includegraphics[width=0.92\textwidth,height=0.4\textheight,keepaspectratio]{example-image-b}\caption{A large figure competing with surrounding text and floats.}\label{fig:large}\end{figure}
 Figure~\ref{fig:oversized} and Figure~\ref{fig:large} are referenced here, but their placement may be far from the references.
 \begin{figure}[tbp]\centering
-\begin{subfigure}{0.49\textwidth}\includegraphics[width=\linewidth]{example-image-c}\caption{First panel}\end{subfigure}\hspace{0.8cm}
-\begin{subfigure}{0.49\textwidth}\includegraphics[width=\linewidth]{example-image}\caption{Second panel}\end{subfigure}
+\begin{subfigure}{0.470\textwidth}\includegraphics[width=\linewidth]{example-image-c}\caption{First panel}\end{subfigure}\hspace{0.8cm}
+\begin{subfigure}{0.470\textwidth}\includegraphics[width=\linewidth]{example-image}\caption{Second panel}\end{subfigure}
 \caption{Two subfigures that nearly fill the page width and leave awkward spacing.}\end{figure}
 \section{Tables}
 The following table is intentionally too wide for the page.
@@ -63,15 +65,15 @@ Method B & 0.901234 & 0.923456 & 0.889012 & 0.905432 & 234.56 & 2048 & 91.456 & 
 Method C & 0.893210 & 0.912345 & 0.876543 & 0.894321 & 345.67 & 4096 & 87.789 & 3\\
 Method D & 0.882345 & 0.901234 & 0.865432 & 0.882345 & 456.78 & 8192 & 81.234 & 4\\\bottomrule\end{tabular}\end{table}
 Another table is deliberately split badly.
-\begin{table}[!ht]\centering\caption{Another dense table}\begin{tabular}{p{2.0cm}p{2.0cm}p{2.0cm}p{2.0cm}}\hline Very long heading that wraps & Another long heading & Third heading & Fourth heading\\\hline A large amount of text in a cell that may produce excessive row height & More text that is intentionally verbose & Additional information & Yet another verbose cell\\\hline\end{tabular}\end{table}
+\begin{table}[!ht]\centering\caption{Another dense table}\begin{tabularx}{\linewidth}{XXXX}\hline Very long heading that wraps & Another long heading & Third heading & Fourth heading\\\hline A large amount of text in a cell that may produce excessive row height & More text that is intentionally verbose & Additional information & Yet another verbose cell\\\hline\end{tabularx}\end{table}
 \section{Columns and Page Balance}
 Now we switch into two-column mode in the middle of the document.
-\begin{multicols}{2}
+
 This paragraph begins a two-column region without a clear typographic reason. The columns are extremely narrow and may create many hyphenated words and visually noisy line endings. We intentionally add several long technical terms such as hyperparameteroptimizationframework and incomprehensibility to stress line breaking.
 \subsection{A Small Subsection} Short text.
 \[A=\begin{bmatrix}1&2&3\\4&5&6\\7&8&9\end{bmatrix}\]
 More text after the equation. More text after the equation. More text after the equation. More text after the equation.
-\end{multicols}
+
 \section{Manual Page Breaks}
 This paragraph exists mainly to force bad pagination.
 

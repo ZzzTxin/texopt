@@ -26,7 +26,8 @@ from __future__ import annotations
 
 import re
 
-from .perceive import (_len_to_mm, _fmt_mm, DOC_CLASS_RE, GEOMETRY_USE_RE,
+from .perceive import (parse_source as _parse_source, text_area_mm,
+                       _len_to_mm, _fmt_mm, DOC_CLASS_RE, GEOMETRY_USE_RE,
                        READING_AID_RE, WARNING_RE, CALLOUT_ENVS,
                        ANY_ENV_RE, SIZE_ORDER, HEADING_SIZE_CAP, SIZE_CMD_RE,
                        LIST_ENV_RE, LIST_SPACING_KEYS, _len_to_pt,
@@ -495,6 +496,14 @@ def normalize_dollar_math(src: str) -> tuple[str | None, bool, str]:
 # =====================================================================
 
 _BODY_BEGIN_RE = re.compile(r"\\begin\{document\}")
+_SUBFIG_W_ARG_RE = re.compile(
+    r"\\begin\{(?:subfigure|subfloat|minipage)\}\s*\{([0-9]*\.?[0-9]+)\s*\\"
+    r"(?:textwidth|linewidth|columnwidth)")
+
+
+def _source_of(src: str) -> dict:
+    """当前源码的解析快照（供需要版心尺寸的动作复用）。"""
+    return _parse_source(src)
 _BODY_END_RE = re.compile(r"\\end\{document\}")
 
 # verbatim / 数学 / 表格环境内部：这些区域的排版命令不自动改写（保护内容）
@@ -771,18 +780,31 @@ def break_long_urls(src: str) -> tuple[str | None, bool, str]:
 
 # ---------------------------------------------------------------- 7) 超宽表格
 
-_TAB_BEGIN_RE = re.compile(r"\\begin\{tabular\}\s*(\{[^{}]*\})")
+# 只匹配环境名；列格式用 tex_braced_arg 取（可能含 p{2cm} 这类嵌套花括号）
+_TAB_BEGIN_RE = re.compile(r"\\begin\{(tabular)\}\s*(?=\{)")
+_PWIDTH_COL_RE = re.compile(r"[pmb]\s*\{[^{}]*\}")
 _SIMPLE_COLS_RE = re.compile(r"^[\s|lcr]*$")
 
 
 def _xify_cols(spec: str) -> str | None:
-    """把列格式改成含一个 X 列（tabularx 自适应列）；无 l/c/r 列则不动。"""
-    inner = spec.strip().strip("{}")
-    if not _SIMPLE_COLS_RE.fullmatch(inner) or not re.search(r"[lcr]", inner):
-        return None
-    if "l" in inner:                       # 首列常为文字列 -> 换成自适应 X
-        return inner.replace("l", "X", 1)
-    return inner[:-1] + "X"                # 否则末列换 X
+    r"""把列格式改成含 X 列（tabularx 自适应列）；无法安全转换时 None。
+
+    两类输入：
+      * 纯 l/c/r 组合（如 {lrrrr}）-> 首列（或末列）换 X；
+      * p{2cm}/m{...}/b{...} 固定窄列（如 {p{2cm}p{2cm}}）-> 全部换 X，
+        配合 tabularx{\linewidth} 让窄表撑满版心（Phase 2）。
+    """
+    inner = spec.strip()
+    if inner.startswith("{") and inner.endswith("}"):   # 去掉最外层花括号
+        inner = inner[1:-1].strip()
+    if _SIMPLE_COLS_RE.fullmatch(inner) and re.search(r"[lcr]", inner):
+        if "l" in inner:                   # 首列常为文字列 -> 换成自适应 X
+            return inner.replace("l", "X", 1)
+        return inner[:-1] + "X"            # 否则末列换 X
+    if _PWIDTH_COL_RE.search(inner):       # p/m/b{...} 固定窄列
+        new = _PWIDTH_COL_RE.sub("X", inner)
+        return new if re.fullmatch(r"[X\s|]*", new) else None
+    return None
 
 
 def fix_table_width(src: str, lines: list | None = None
@@ -794,53 +816,74 @@ def fix_table_width(src: str, lines: list | None = None
 
     仅处理列格式简单的（l/c/r 组合）tabular；p{...}/已 tabularx/longtable
     等复杂情形不自动改（列宽策略需作者决定）。
-    lines 给出具体行号（通常是编译报出的超宽行）时只改覆盖这些行的表格；
-    缺省则处理所有列格式简单的 tabular。
+    lines 给出具体行号（编译报出的超宽行，或源码层判定的窄表行）时只改
+    覆盖这些行的表格；缺省则处理所有列格式简单的 tabular。
+    Phase 2：同时覆盖 p{2cm} 这类**明显窄于版心**的固定列宽表格。
     """
     mask = _code_mask(src)
-    edits, n = [], 0
+    edits, n, notes = [], 0, []
     for a, b in _env_ranges(mask, {"tabular"}):
-        m = _TAB_BEGIN_RE.match(mask, a)
-        if not m:
+        bm = _TAB_BEGIN_RE.match(mask, a)
+        if not bm:
             continue
+        # 列格式可能含嵌套花括号（p{2cm}），用括号感知取参
+        got = tex_braced_arg(mask, bm.end())
+        if not got:
+            continue
+        spec, _s0, _s1 = got
         if lines:
             l0 = mask.count("\n", 0, a) + 1
             l1 = mask.count("\n", 0, b) + 2      # b 为 \end{tabular} 起始
             if not any(l0 <= ln <= l1 for ln in lines):
                 continue
-        cols = _xify_cols(m.group(1))
+        cols = _xify_cols(spec)
         if cols is None:
             continue
         # 注意：perceive._env_ranges 返回的 b 是 \end{tabular} 的“起始”位置
         e = mask.find("\\end{tabular}", a, b + 20)
         if e < 0:
             continue
-        edits.append((m.start(), m.end(),
+        # 只替换环境名与列格式：\begin{tabular}{spec} -> \begin{tabularx}{\linewidth}{cols}
+        edits.append((bm.start(), got[2] + 1,
                       "\\begin{tabularx}{\\linewidth}{" + cols + "}"))
         edits.append((e, e + len("\\end{tabular}"), "\\end{tabularx}"))
+        notes.append(spec.strip()[:24] + " -> " + cols[:24])
         n += 1
     if not n:
-        return src, False, "无列格式简单的超宽 tabular，跳过"
+        return src, False, "无超宽/窄表可换算的 tabular，跳过"
     new = _apply(src, edits)
     if "\\usepackage{tabularx}" not in new \
             and not re.search(r"\{tabularx\}", new.split("\\begin{document}")[0]):
         new = _preamble_insert(new, "\\usepackage{tabularx}")
-    return new, True, f"{n} 个超宽表格改用 tabularx（\\linewidth 自适应列宽）"
+    return new, True, \
+        f"{n} 个表格改用 tabularx（\\linewidth 自适应列宽）：{'; '.join(notes[:3])}"
 
 
 # ---------------------------------------------------------------- 8) 页面平衡
 
-RAGGED_BOTTOM_BLOCK = ("% ===== texopt: 页面平衡 ====\n"
-                       "\\raggedbottom\n"
-                       "% ===== texopt end ====\n")
+RAGGED_BOTTOM_BLOCK = (r"""% ===== texopt: 页面平衡 ====
+% 浮动体放置与页面平衡调优（只影响浮动体分配/底部对齐，不改内容）
+\raggedbottom
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.7}
+% ===== texopt end ====
+""")
 
 
 def balance_pages(src: str) -> tuple[str | None, bool, str]:
-    """注入 \\raggedbottom，抑制“为凑满页而拉长页面”的垂直伸展。
+    r"""注入页面平衡块：\raggedbottom + 浮动体放置比例调优。
 
-    页面底部垂直质量（Underfull \\vbox / 过大的页面空白带）常来自 \\flushbottom
-    的强制拉伸；\\raggedbottom 让短页自然收底，不删任何内容、也不用手动
-    分页凑页。是否真的改善由全局评分仲裁（变差即回滚）。
+    解决两类**页面级**视觉缺陷（量自 PDF）：
+      * 页面底部大面积空白 / 内容孤零零（浮动体被挤成半空浮动页）；
+      * 页面为凑满而垂直拉伸（Underfull \vbox）。
+    手段：\raggedbottom（短页自然收底）+ \floatpagefraction/\topfraction/
+    \textfraction（不给“半空的浮动页”留机会）。不删内容、不手动分页凑页；
+    是否真的改善由整篇重编译后的视觉/全局评分仲裁（变差即回滚）。
     """
     if "texopt: 页面平衡" in src or "\\raggedbottom" in src:
         return src, False, "已是 raggedbottom 或已注入，跳过"
@@ -849,6 +892,211 @@ def balance_pages(src: str) -> tuple[str | None, bool, str]:
         return None, False, "找不到 \\begin{document}"
     new = src[:body.start()] + RAGGED_BOTTOM_BLOCK + "\n" + src[body.start():]
     return new, True, "注入 \\raggedbottom（页面底部自然收底，减少留白/拉伸）"
+
+
+# =====================================================================
+# Phase 2（2026-09-11）动作：把「页面级视觉缺陷 / 版面级问题」落到源码
+#   normalize_title          \\title{\\Huge ...} 压回层级上限
+#   normalize_parskip        过大的 \\parskip 收敛
+#   normalize_header         过长/无意义页眉内容清空
+#   remove_mid_multicols     正文中途的局部双栏（保留内容，只去环境）
+#   reduce_oversized_figures 过大图片高度 / 子图并排超版心
+#   fix_table_width 扩展      p{2cm} 窄表格 -> tabularx 自适应列宽
+# 全部仍走「应用→整篇重编译→视觉/全局重评→接受或回滚」。
+# =====================================================================
+
+_TITLE_ARG_RE = re.compile(r"\\title\s*(?=\{)")
+_PARSKIP_SET_RE = re.compile(r"\\setlength\s*(\{\s*\\parskip\s*\})\s*(\{([^}]*)\})")
+_PARSKIP_EQ_RE = re.compile(r"(\\parskip\s*=\s*)([0-9]*\.?[0-9]+)\s*(pt|mm|cm|in)")
+_HEADER_CMD_ARG_RE = re.compile(
+    r"\\(?:lhead|rhead|chead|fancyhead(?:\s*\[[^\]]*\])?)\s*(?=\{)")
+_MULTICOLS_END_RE = re.compile(r"\\end\{multicols\*?\}")
+
+
+def normalize_title(src: str, cap: str = "LARGE") -> tuple[str | None, bool, str]:
+    r"""把 \title{...} 里超限的字号压回上限（\Huge -> \LARGE）。
+
+    标题字号应交给文档类；这里只改字号命令，标题文字一字不动。
+    """
+    m = _TITLE_ARG_RE.search(src)
+    if not m:
+        return src, False, "无 \\title，跳过"
+    got = tex_braced_arg(src, m.end())
+    if not got:
+        return src, False, "\\title 参数解析失败，跳过"
+    body, a0, _a1 = got
+    edits = []
+    for sm in SIZE_CMD_RE.finditer(body):
+        cmd = sm.group(1)
+        if SIZE_ORDER.index(cmd) > SIZE_ORDER.index(cap):
+            edits.append((a0 + sm.start(), a0 + sm.end(), "\\" + cap))
+    if not edits:
+        return src, False, f"标题字号未见异常（≤ {cap}），跳过"
+    return _apply(src, edits), True, \
+        f"标题字号规范化 {len(edits)} 处（-> \\{cap}）"
+
+
+def normalize_parskip(src: str, max_pt: float = 8.0
+                      ) -> tuple[str | None, bool, str]:
+    r"""把过大的 \parskip 收敛到合理值（默认上限 8pt）。
+
+    \parskip 是**整篇**段落间距，过大时每一页都会显得松散、留白过多；
+    正文里没有额外段距需求时应收回到接近默认。只改长度值，不动任何文字。
+    """
+    for m in _PARSKIP_SET_RE.finditer(src):
+        val = m.group(3)
+        pt = _len_to_pt(val)
+        if pt is not None and pt > max_pt:
+            new = src[:m.start(2)] + ("{%gpt}" % max_pt) + src[m.end(2):]
+            return new, True, \
+                f"\\parskip {val.strip()} -> {max_pt:g}pt（整篇段距收敛）"
+    for m in _PARSKIP_EQ_RE.finditer(src):
+        pt = _len_to_pt(f"{m.group(2)}{m.group(3)}")
+        if pt is not None and pt > max_pt:
+            new = src[:m.start(2)] + f"{max_pt:g}pt" + src[m.end(3):]
+            return new, True, \
+                f"\\parskip {m.group(2)}{m.group(3)} -> {max_pt:g}pt"
+    return src, False, "\\parskip 未设置或已在合理范围，跳过"
+
+
+def normalize_header(src: str, max_chars: int = 40
+                     ) -> tuple[str | None, bool, str]:
+    r"""清空过长/无意义的页眉内容（保留 fancyhdr 设置本身）。
+
+    页眉超过 max_chars 字符时既挤占版心又无信息价值（如整句说明文字）；
+    这里只把该页眉的参数置空，不改文档其它任何部分。
+    """
+    edits, notes = [], []
+    for m in _HEADER_CMD_ARG_RE.finditer(src):
+        got = tex_braced_arg(src, m.end())
+        if not got:
+            continue
+        arg, a0, a1 = got
+        if len(arg.strip()) > max_chars:
+            edits.append((a0, a1, ""))
+            notes.append(f"{src[m.start():m.end()].strip()}({len(arg.strip())}字)")
+    if not edits:
+        return src, False, "页眉未见异常，跳过"
+    return _apply(src, edits), True, f"清空 {len(edits)} 处过长页眉（{', '.join(notes)}）"
+
+
+def remove_mid_multicols(src: str) -> tuple[str | None, bool, str]:
+    r"""删除正文中途的局部双栏（multicols），内容原样保留。
+
+    文档中途切双栏会让版面节奏断裂（栏宽骤变、断行噪声、图表错位）；
+    只删 \begin{multicols}{N}/\end{multicols} 标记，中间内容不变。
+    """
+    from .perceive import multicols_local_spans
+    spans = multicols_local_spans(src)
+    if not spans:
+        return src, False, "无正文中途双栏，跳过"
+    mask = _code_mask(src)
+    edits = []
+    for a, b in _env_ranges(mask, {"multicols", "multicols*"}):
+        bm = re.match(r"\\begin\{multicols\*?\}(\s*\{[^}]*\})?", mask[a:a + 60])
+        if not bm:
+            continue
+        edits.append((a, a + bm.end(), ""))
+        em = _MULTICOLS_END_RE.search(mask, max(b - 40, 0))
+        if em:
+            edits.append((em.start(), em.end(), ""))
+    if not edits:
+        return src, False, "无正文中途双栏，跳过"
+    return _apply(src, edits), True, \
+        f"移除 {len(spans)} 处正文中途双栏（内容保留，交回单栏版心）"
+
+
+def reduce_oversized_figures(src: str, max_height_frac: float = 0.40,
+                             subfig_max_sum: float = 0.95
+                             ) -> tuple[str | None, bool, str]:
+    r"""收敛过大的图片：高度超限 -> 压到上限；子图并排超版心 -> 等比缩小。
+
+    只改 \includegraphics 的 height 值与 \begin{subfigure}{0.49\textwidth}
+    这类相对宽度，图片文件、题注、内容一律不动。
+    """
+    edits, notes = [], []
+    # (a) 过大的 height
+    for m in _INC_RE.finditer(_code_mask(src)):
+        opt = m.group(2) or ""
+        hm = re.search(r"(height\s*=\s*)([^,\]]+)", opt)
+        if not hm:
+            continue
+        expr = hm.group(2).strip()
+        frac = None
+        rm = re.fullmatch(r"([0-9]*\.?[0-9]+)\s*\\"
+                          r"(?:textheight|paperheight|pageheight)", expr)
+        if rm:
+            frac = float(rm.group(1))
+        else:
+            mm = _len_to_mm(expr)
+            if mm is not None:
+                frac = mm / text_area_mm(_source_of(src))[1]
+        if frac is not None and frac > max_height_frac:
+            new_opt = (opt[:hm.start(2)]
+                       + ("%g\\textheight" % max_height_frac) + opt[hm.end(2):])
+            edits.append((m.start(2), m.end(2), new_opt))
+            notes.append(f"height {expr} -> {max_height_frac:g}\\textheight")
+    # (b) 子图并排宽度之和超版心 -> 等比缩小
+    for a, b in _env_ranges(_code_mask(src), {"figure", "figure*"}):
+        seg = src[a:b]
+        ms = list(_SUBFIG_W_ARG_RE.finditer(seg))
+        vals = [float(x.group(1)) for x in ms]
+        if len(vals) >= 2 and sum(vals) > subfig_max_sum:
+            factor = (subfig_max_sum - 0.01) / sum(vals)
+            for x in ms:
+                nv = float(x.group(1)) * factor
+                edits.append((a + x.start(1), a + x.end(1), f"{nv:.3f}"))
+            notes.append(f"{len(vals)} 子图 x{factor:.2f}")
+    if not edits:
+        return src, False, "无过大图片/超版心子图，跳过"
+    return _apply(src, edits), True, f"收敛图片尺寸 {len(notes)} 处（{'; '.join(notes[:3])}）"
+
+
+def shrink_oversized_figures(src: str, factor: float = 0.85,
+                             min_frac: float = 0.5
+                             ) -> tuple[str | None, bool, str]:
+    r"""按视觉信号缩小「满宽级」图片（width=\linewidth / 0.9\textwidth 且无高度约束）。
+
+    页面级视觉量发现「巨大内容块」（单块 ≥ 40% 页高）时，最有效的确定性手段
+    是把该图的相对宽度降一档（等比缩小 -> 高度同步下降）。
+    只改 width= 的系数；子图/小页内部的 \includegraphics 由父容器定宽，不动。
+    是否真的改善由整篇重编译后的视觉/全局评分仲裁（变差即回滚）。
+    """
+    mask = _code_mask(src)
+    protected = []
+    for a, b in _env_ranges(mask, {"subfigure", "subfloat", "minipage"}):
+        protected.append((a, b))
+    edits, notes = [], []
+    for m in _INC_RE.finditer(mask):
+        if any(a <= m.start() < b for a, b in protected):
+            continue
+        opt = m.group(2) or ""
+        if re.search(r"(?:^|,)\s*height\s*=", opt):        # 已有高度约束，跳过
+            continue
+        wm = re.search(r"(width\s*=\s*)([^,\]]+)", opt)
+        if not wm:
+            continue
+        expr = wm.group(2).strip()
+        rm = re.fullmatch(r"(?:([0-9]*\.?[0-9]+))?\s*\\"
+                          r"(?:linewidth|textwidth|columnwidth|hsize)", expr)
+        if not rm:
+            continue
+        f = float(rm.group(1)) if rm.group(1) else 1.0
+        if f < 0.8:                                        # 本来就不大
+            continue
+        nf = max(f * factor, min_frac)
+        if abs(nf - f) < 1e-6:
+            continue
+        unit = re.search(r"\\(?:linewidth|textwidth|columnwidth|hsize)",
+                         expr).group(0)
+        val = ("%g" % nf) + unit
+        new_opt = opt[:wm.start(2)] + val + opt[wm.end(2):]
+        edits.append((m.start(2), m.end(2), new_opt))
+        notes.append(f"{expr} -> {val}")
+    if not edits:
+        return src, False, "无「满宽且无高度约束」的图片可缩，跳过"
+    return _apply(src, edits), True, \
+        f"缩小满宽图片 {len(edits)} 处（{'; '.join(notes[:3])}）"
 
 
 # =====================================================================

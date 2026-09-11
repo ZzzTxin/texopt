@@ -102,6 +102,25 @@ class Requirement:
     fix_overwide_tables: bool = True       # 超宽表格改 tabularx 自适应
     balance_pages: bool = True             # 注入 \raggedbottom（页面平衡）
     free_floating_H: bool = True           # [H] 强排 -> [tbp]（交给全局放置）
+    # ---- Phase 2：页面级视觉量化与版面级修复（2026-09-11 新增） ----
+    visual_metrics: bool = True            # 从编译后的 PDF 量取页面视觉指标（并入 A）
+    visual_dpi: int = 50                   # 视觉量化渲染 DPI（越低越快）
+    normalize_title: bool = True           # \title{\Huge ...} 压回层级上限
+    title_size_cap: str = "LARGE"          # 标题允许的最大字号
+    normalize_parskip: bool = True         # 收敛过大的 \parskip
+    parskip_max_pt: float = 8.0
+    normalize_header: bool = True          # 清空过长页眉内容
+    header_max_chars: int = 40
+    remove_mid_multicols: bool = True      # 移除正文中途的局部双栏
+    reduce_oversized_figures: bool = True  # 过大图片高度/子图并排超版心
+    max_fig_height_frac: float = 0.40
+    subfig_max_sum: float = 0.95
+    narrow_table_min_frac: float = 0.6     # 列宽合计 < 该比例×版心 -> 判为窄表
+    tune_float_placement: bool = True      # 浮动体放置/页面平衡调优
+    shrink_oversized_figures: bool = True   # 按视觉信号缩小满宽大图（巨大内容块）
+    fig_shrink_factor: float = 0.85         # 每次缩放系数
+    done_max_a: float | None = None        # A 绝对上限（None=不设，靠视觉缺陷清单判定）
+    min_stall_rounds: int = 2              # 连续无改善轮数达到才停（避免过早收敛）
 
     # ------------------------------------------------------------ 来源合并
     @classmethod
