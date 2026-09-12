@@ -1,0 +1,1024 @@
+{
+ "schema_version": "1.0",
+ "id": "eccv",
+ "conference": "ECCV",
+ "edition": "ECCV 2026",
+ "family": "cv",
+ "generated_by": "tools/build_templates.py (from analysis/template-inputs.json)",
+ "data_basis": {
+  "n_samples": 6,
+  "n_measurements": 6,
+  "focus_editions": [
+   "2022",
+   "2024",
+   "2026"
+  ],
+  "measurement_method": "tools/measure_pdf.py (pdfminer.six 字形级几何)",
+  "robust_stats_only": true
+ },
+ "sources": [
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-submissionpolicies",
+   "url": "https://eccv.ecva.net/Conferences/2026/SubmissionPolicies",
+   "note": "ECCV 2026 Submission Policies and Author's Paper Kit"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-cfp",
+   "url": "https://eccv.ecva.net/Conferences/2026/CallForPapers",
+   "note": "ECCV 2026 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-authorguide",
+   "url": "https://eccv.ecva.net/Conferences/2026/AuthorGuide",
+   "note": "ECCV 2026 Author Submission Guide"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-eccvsty",
+   "url": "/tmp/eccv26/paper-template-Latest/eccv.sty",
+   "note": "ECCV 2026 LaTeX style file (eccv.sty)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-llncs",
+   "url": "/tmp/eccv26/paper-template-Latest/llncs.cls",
+   "note": "Springer LNCS class file (llncs.cls)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2026-maintex",
+   "url": "/tmp/eccv26/paper-template-Latest/main.tex",
+   "note": "ECCV 2026 author kit - main.tex (Author Guidelines for ECCV Submission)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-lncs-instructions",
+   "url": "https://cms-resources.apps.public.k8s.springernature.io/springer-cms/rest/v1/content/27852130/data/Instructions%20for%20Authors%20PDF",
+   "note": "Springer - Instructions for Authors (LNCS)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2024-submissionpolicies",
+   "url": "https://eccv.ecva.net/Conferences/2024/SubmissionPolicies",
+   "note": "ECCV 2024 Submission Policies"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-2022-cfp",
+   "url": "https://eccv2022.ecva.net/submission/call-for-papers/",
+   "note": "ECCV 2022 Call for Papers & Submission Instructions"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-eccv-papers-list",
+   "url": "https://www.ecva.net/papers.php",
+   "note": "ECVA ECCV Conference Papers index (ECCV 2018-2024)"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-001",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00147.pdf",
+   "note": "SMooDi: Stylized Motion Diffusion Model"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-002",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00019.pdf",
+   "note": "4D Contrastive Superflows are Dense 3D Representation Learners"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-003",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00010.pdf",
+   "note": "FunQA: Towards Surprising Video Comprehension"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-004",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00022.pdf",
+   "note": "ItTakesTwo: Leveraging Peer Representations for Semi-supervised LiDAR Semantic Segmentation"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-005",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00006.pdf",
+   "note": "Octopus: Embodied Vision-Language Programmer from Environmental Feedback"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-eccv-2024-006",
+   "url": "https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/00072.pdf",
+   "note": "CLR-GAN: Improving GANs Stability and Quality via Consistent Latent Representation and Reconstruction"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-01",
+   "url": null,
+   "note": "页数上限针对“正文/技术内容页”，参考文献（多数会议）与附录不计入；不能简单地把上限当成 PDF 总页数。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-03",
+   "url": null,
+   "note": "全部 16 个会议均为双盲评审：稿件（含附录、补充材料）不得含身份信息。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-04",
+   "url": null,
+   "note": "纸张/栏数是模板固定的（letter 与 a4 混用；多数 2 栏，NeurIPS/ICLR/ECCV 为 1 栏）。"
+  },
+  {
+   "kind": "rule",
+   "ref": "A-03",
+   "url": null,
+   "note": "题注位置按会议区分：图题在下是主流；表题在 CVPR/NeurIPS/ECCV 为下→上不一致（CVPR/NeurIPS 在上、ICCV/ACL/EMNLP/IJCAI 在下）。必须按目标会议取规则。"
+  },
+  {
+   "kind": "rule",
+   "ref": "R-01",
+   "url": null,
+   "note": "Requirement 缺少“栏数”字段；16/16 会议都隐含栏数约束（1 或 2 栏）。"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "analysis/template-inputs.json",
+   "url": null,
+   "note": "稳健统计（median/P25/P75）来源"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "samples/_measurements/*.json",
+   "url": null,
+   "note": "单篇论文实测几何"
+  }
+ ],
+ "traceability": {
+  "basis_definitions": {
+   "official": "官方指南/CFP/模板说明的明文字面值",
+   "template-implied": "从官方 .sty/.cls 源码或官方模板文件读出（无文字明文）",
+   "inferred": "由多源交叉推断（官方无明文，但模板行为 + 样本实测一致），可信度低于 template-implied",
+   "sample-stat": "真实论文 PDF 实测的稳健统计（median/P25/P75），不是规则",
+   "derived": "由前述值按固定公式推导（如 版心宽 = 行尾众数 − 行首最小值）"
+  },
+  "field_basis": {
+   "hard_constraints.anonymity": "official",
+   "hard_constraints.appendix_allowed": "official",
+   "hard_constraints.bib_style": "template-implied",
+   "hard_constraints.body_font_family": "official",
+   "hard_constraints.body_font_size_pt": "template-implied",
+   "hard_constraints.camera_ready_extra_pages": "official",
+   "hard_constraints.columns": "template-implied",
+   "hard_constraints.margins_mm": "template-implied",
+   "hard_constraints.page_limit_content": "official",
+   "hard_constraints.references_counted": "official",
+   "hard_constraints.text_height_mm": "template-implied",
+   "hard_constraints.text_width_mm": "template-implied",
+   "hard_constraints.title_format": "official",
+   "geometry.page_size": "template-implied",
+   "geometry.page_width_mm": "derived",
+   "geometry.page_height_mm": "derived",
+   "geometry.columns": "official",
+   "geometry.text_width_mm": "template-implied",
+   "geometry.margin_floor_mm": "official",
+   "geometry.margins.left_mm": "template-implied",
+   "geometry.margins.right_mm": "template-implied",
+   "geometry.margins.top_mm": "template-implied",
+   "geometry.margins.bottom_mm": "template-implied",
+   "geometry.text_height_mm": "template-implied",
+   "typography.body_font_pt": "template-implied",
+   "typography.caption_font_pt": "sample-stat",
+   "typography.body_font_family": "official",
+   "typography.caption_position.figure": "official",
+   "typography.caption_position.table": "official",
+   "float_policy.float_spec": "derived",
+   "float_policy.figure_width.overwide_threshold_mm": "derived",
+   "density_targets.figures": "sample-stat",
+   "density_targets.tables": "sample-stat",
+   "density_targets.equations": "sample-stat",
+   "density_targets.algorithms": "sample-stat",
+   "density_targets.footnotes": "sample-stat",
+   "density_targets.refs": "sample-stat",
+   "density_targets.lines_per_page": "sample-stat",
+   "density_targets.content_pages": "sample-stat"
+  }
+ },
+ "hard_constraints": {
+  "anonymity": {
+   "value": "double-blind",
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-submissionpolicies",
+     "quote": "ECCV reviewing is double blind, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material."
+    }
+   ],
+   "note": "双盲评审；不得在正文/补充材料泄露身份或放置可识别链接"
+  },
+  "appendix_allowed": {
+   "value": false,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-submissionpolicies",
+     "quote": "Note that no Appendices are permitted in the main submission."
+    }
+   ],
+   "note": "主文不允许附录；附录/证明内容须放入补充材料"
+  },
+  "bib_style": {
+   "value": "splncs04",
+   "unit": null,
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-eccvsty",
+     "quote": "\\bibliographystyle{splncs04}"
+    }
+   ],
+   "note": "官方 sty 指定 \\bibliographystyle{splncs04}"
+  },
+  "body_font_family": {
+   "value": "CMR (Computer Modern Roman)",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-maintex",
+     "quote": "Springer's templates for \\LaTeX{} are based on CMR, and the XML templates for Word are based on Times."
+    }
+   ],
+   "note": "LaTeX 模板用 CMR，不得改用 Times（改用字体可能被视为规避页数）"
+  },
+  "body_font_size_pt": {
+   "value": 10,
+   "unit": "pt",
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-llncs",
+     "quote": "\\LoadClass[twoside]{article}"
+    }
+   ],
+   "note": "llncs 基于 article 10pt 基础类（未传字号选项），正文即 10pt；LNCS 说明中标题字号体系（一级 12pt/二级 10pt）亦按此"
+  },
+  "camera_ready_extra_pages": {
+   "value": 0,
+   "unit": "pages",
+   "scope": "camera_ready",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-maintex",
+     "quote": "Papers accepted for the conference will be allocated 14 pages (plus additional pages for references) in the proceedings."
+    }
+   ],
+   "note": "录用后仍为 14 页 + 参考文献（proceedings 分配 14 页，参考文献另计），无额外加页"
+  },
+  "columns": {
+   "value": 1,
+   "unit": null,
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-llncs",
+     "quote": "\\setlength{\\textwidth}{12.2cm}"
+    }
+   ],
+   "note": "LNCS 单栏；llncs.cls 未加载 twocolumn，版心宽 12.2cm 即整栏宽"
+  },
+  "margins_mm": {
+   "value": {
+    "top": 12,
+    "bottom": 12,
+    "left": 12,
+    "right": 12
+   },
+   "unit": "mm",
+   "scope": "submission",
+   "confidence": "template-implied",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-eccvsty",
+     "quote": "\\RequirePackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}"
+    }
+   ],
+   "note": "ECCV 2026 送审版 geometry 裁剪：paperwidth 146mm、paperheight 217mm、top/left=12mm、版心 122x193mm → 四边等效 12mm"
+  },
+  "page_limit_content": {
+   "value": 14,
+   "unit": "pages",
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-submissionpolicies",
+     "quote": "Papers are limited to 14 pages, including figures and tables, in the LNCS style of Springer. Additional pages containing only cited references are allowed."
+    }
+   ],
+   "note": "正文（含全部图、表）上限 14 页；仅含参考文献的额外页不计入"
+  },
+  "references_counted": {
+   "value": false,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-maintex",
+     "quote": "Papers accepted for the conference will be allocated 14 pages (plus additional pages for references) in the proceedings."
+    }
+   ],
+   "note": "参考文献不计入 14 页正文"
+  },
+  "text_height_mm": {
+   "value": 193,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-llncs",
+     "quote": "\\setlength{\\textheight}{19.3cm}"
+    }
+   ],
+   "note": "19.3cm = 193mm 版心高"
+  },
+  "text_width_mm": {
+   "value": 122,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-2026-llncs",
+     "quote": "\\setlength{\\textwidth}{12.2cm}"
+    }
+   ],
+   "note": "12.2cm = 122mm 版心宽"
+  },
+  "title_format": {
+   "value": "14pt bold, centered",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-eccv-lncs-instructions",
+     "quote": "Title (centered) Lecture Notes 14 point, bold"
+    }
+   ],
+   "note": "标题 14 point 粗体、居中"
+  }
+ },
+ "geometry": {
+  "page_size": {
+   "value": "lncs",
+   "basis": "template-implied",
+   "note": "官方 LNCS(splncs04) 版式；Springer LNCS 单行本页面 155×235mm。实测样本 PDF 页面为 letter（ECVA 发布版把 LNCS 版心放在 letter 页面内），两者并存，模板取官方 LNCS 页面，实测页宽作为冲突保留。"
+  },
+  "page_width_mm": {
+   "value": 155.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 lncs 宽度（439.37pt）"
+  },
+  "page_height_mm": {
+   "value": 235.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 lncs 高度（666.14pt）"
+  },
+  "columns": {
+   "value": 1,
+   "basis": "official",
+   "note": "单栏"
+  },
+  "text_width_mm": {
+   "value": 122,
+   "basis": "template-implied",
+   "unit": "mm"
+  },
+  "margins": {
+   "left_mm": {
+    "value": 12,
+    "basis": "template-implied",
+    "unit": "mm"
+   },
+   "right_mm": {
+    "value": 12,
+    "basis": "template-implied",
+    "unit": "mm"
+   },
+   "top_mm": {
+    "value": 12,
+    "basis": "template-implied",
+    "unit": "mm"
+   },
+   "bottom_mm": {
+    "value": 12,
+    "basis": "template-implied",
+    "unit": "mm"
+   }
+  },
+  "margin_floor_mm": {
+   "value": 12,
+   "basis": "official",
+   "unit": "mm",
+   "derivation": "取四边最小值（texopt 压页时不得低于此值）"
+  },
+  "observed": {
+   "text_width_mm": {
+    "n": 6,
+    "min": 345.8,
+    "p25": 345.8,
+    "median": 345.8,
+    "p75": 345.8,
+    "max": 347.6,
+    "unit": "pt"
+   },
+   "text_height_mm": {
+    "n": 6,
+    "min": 568.9,
+    "p25": 570.65,
+    "median": 572.95,
+    "p75": 573.9,
+    "max": 573.9,
+    "unit": "pt"
+   },
+   "margins_left_mm": {
+    "n": 6,
+    "min": 12.0,
+    "p25": 47.15,
+    "median": 47.6,
+    "p75": 47.6,
+    "max": 47.6,
+    "unit": "mm"
+   },
+   "margins_right_mm": {
+    "n": 6,
+    "min": 12.0,
+    "p25": 46.325,
+    "median": 46.4,
+    "p75": 46.4,
+    "max": 46.4,
+    "unit": "mm"
+   },
+   "margins_top_mm": {
+    "n": 6,
+    "min": 3.2,
+    "p25": 32.1,
+    "median": 32.1,
+    "p75": 32.55,
+    "max": 33.3,
+    "unit": "mm"
+   },
+   "margins_bottom_mm": {
+    "n": 6,
+    "min": 11.3,
+    "p25": 44.9,
+    "median": 44.9,
+    "p75": 45.35,
+    "max": 45.5,
+    "unit": "mm"
+   }
+  },
+  "text_height_mm": {
+   "value": 193,
+   "basis": "template-implied",
+   "unit": "mm"
+  }
+ },
+ "typography": {
+  "body_font_pt": {
+   "value": 10,
+   "basis": "template-implied",
+   "unit": "pt",
+   "n": 6,
+   "observed": {
+    "n": 6,
+    "min": 9.0,
+    "p25": 10.0,
+    "median": 10.0,
+    "p75": 10.0,
+    "max": 10.0,
+    "unit": "pt"
+   }
+  },
+  "caption_font_pt": {
+   "value": 9.0,
+   "basis": "sample-stat",
+   "unit": "pt",
+   "stat": "median",
+   "n": 6,
+   "reliable": true,
+   "observed": {
+    "n": 6,
+    "min": 9.0,
+    "p25": 9.0,
+    "median": 9.0,
+    "p75": 9.0,
+    "max": 9.0,
+    "unit": "pt"
+   }
+  },
+  "body_font_family": {
+   "value": "CMR (Computer Modern Roman)",
+   "basis": "official"
+  },
+  "caption_position": {
+   "figure": {
+    "value": "below",
+    "basis": "official",
+    "evidence": [
+     {
+      "source_id": "src-eccv-lncs-instructions",
+      "quote": "in contrast to the caption belonging to a table, which should always appear above the table."
+     }
+    ]
+   },
+   "table": {
+    "value": "above",
+    "basis": "official",
+    "evidence": [
+     {
+      "source_id": "src-eccv-lncs-instructions",
+      "quote": "Table captions should always be positioned above the tables."
+     }
+    ]
+   }
+  },
+  "caption_align_observed": {
+   "n": 6,
+   "median": 0.758,
+   "unit": "left_ratio",
+   "left": 47,
+   "center": 15
+  },
+  "notes": [
+   "标题格式官方有明文，见 hard_constraints.title_format",
+   "题注位置图/表不同：图 below / 表 above"
+  ]
+ },
+ "float_policy": {
+  "float_spec": {
+   "value": "tbp",
+   "basis": "derived",
+   "derivation": "texopt 白名单动作 sanitize_float_specs 的目标档；[h]/[h!] 属不稳定写法（通用规则 A-04），真实论文以 t/b 为主",
+   "note": "实测全宽浮动体位置 top=0.957 bottom=0.0 mid=0.043"
+  },
+  "figure_width": {
+   "typical_frac": {
+    "n": 6,
+    "min": 0.306,
+    "p25": 0.822,
+    "median": 0.945,
+    "p75": 0.998,
+    "max": 1.0
+   },
+   "denominator": "版心全宽（单栏=版心；双栏=两栏+栏间距）",
+   "overwide_threshold_mm": {
+    "value": 122,
+    "basis": "derived",
+    "unit": "mm",
+    "derivation": "= 官方/实测版心宽（texopt normalize_fig_width 阈值）"
+   },
+   "spanning_note": "单栏会议 fig_width_frac 即“图宽/版心宽”，>1 的个别值表示图块略超版心（孤例）。"
+  },
+  "full_width_figure": {
+   "frac": {
+    "n": 6,
+    "min": 0.176,
+    "p25": 0.417,
+    "median": 0.762,
+    "p75": 0.964,
+    "max": 1.0
+   },
+   "count_per_paper": {
+    "n": 6,
+    "min": 1,
+    "p25": 3.25,
+    "median": 4.0,
+    "p75": 4.75,
+    "max": 6
+   }
+  },
+  "position_prior": {
+   "full_width_float_ratio": {
+    "top": 0.957,
+    "bottom": 0.0,
+    "mid": 0.043
+   },
+   "figure_ratio": {
+    "top": 0.881,
+    "bottom": 0.0,
+    "mid": 0.119
+   }
+  },
+  "official_rules": [],
+  "notes": [
+   "浮动体以顶部为主（实测全宽浮动体 top=96%），texopt 应优先把浮动体推到页顶/跨栏页顶，而不是底部。"
+  ]
+ },
+ "density_targets": {
+  "figures": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 6,
+    "min": 4,
+    "p25": 4.5,
+    "median": 6.0,
+    "p75": 6.0,
+    "max": 7
+   },
+   "target_range": [
+    4.5,
+    6.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 6,
+    "min": 0.267,
+    "p25": 0.3,
+    "median": 0.4,
+    "p75": 0.4,
+    "max": 0.467
+   }
+  },
+  "tables": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 6,
+    "min": 3,
+    "p25": 4.0,
+    "median": 4.5,
+    "p75": 6.5,
+    "max": 8
+   },
+   "target_range": [
+    4.0,
+    6.5
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 6,
+    "min": 0.2,
+    "p25": 0.267,
+    "median": 0.3,
+    "p75": 0.433,
+    "max": 0.533
+   }
+  },
+  "equations": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 6,
+    "min": 0,
+    "p25": 4.5,
+    "median": 9.5,
+    "p75": 10.75,
+    "max": 15
+   },
+   "target_range": [
+    4.5,
+    10.75
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 6,
+    "min": 0.0,
+    "p25": 0.3,
+    "median": 0.633,
+    "p75": 0.717,
+    "max": 1.0
+   }
+  },
+  "algorithms": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 6,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 1
+   },
+   "target_range": [
+    0.0,
+    0.0
+   ],
+   "note": "算法环境极少（多数会议中位数 0），不作优化目标",
+   "per_content_page": {
+    "n": 6,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 0.067
+   }
+  },
+  "footnotes": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 6,
+    "min": 0,
+    "p25": 0.25,
+    "median": 2.0,
+    "p75": 3.0,
+    "max": 3
+   },
+   "target_range": [
+    0.25,
+    3.0
+   ],
+   "note": null
+  },
+  "refs": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 6,
+    "min": 0,
+    "p25": 0.25,
+    "median": 1.0,
+    "p75": 1.75,
+    "max": 2
+   },
+   "target_range": [
+    0.25,
+    1.75
+   ],
+   "note": "参考文献条数为测量伪影：检测式只认 [n] 数字引用/短作者串，author-year 风格长作者列表漏检（见 confidence.conflicts）。该字段不可用。",
+   "per_content_page": {
+    "n": 6,
+    "min": 0.0,
+    "p25": 0.017,
+    "median": 0.067,
+    "p75": 0.117,
+    "max": 0.133
+   }
+  },
+  "lines_per_page": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 6,
+    "min": 48.6,
+    "p25": 50.725,
+    "median": 58.35,
+    "p75": 62.375,
+    "max": 68.5
+   },
+   "note": "定义=正文页全部文本行数/正文页数（双栏会议为两栏之和），噪声大且跨栏不可比，仅作同会议内部参考，不作优化目标。"
+  },
+  "content_pages": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 6,
+    "min": 15,
+    "p25": 15.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15
+   },
+   "target_range": [
+    15.0,
+    15.0
+   ],
+   "note": "content_pages = 参考文献首页之前的部分；与官方上限并不相等（见 confidence.conflicts），不得强行统一。"
+  }
+ },
+ "optimization_policy": {
+  "priority": [
+   {
+    "rank": 1,
+    "direction": "L 层硬性合规修复（页数/字号/边距/纸张/栏数，先于一切审美优化）",
+    "why": "官方硬约束共 8 项被判为不合规风险项（含 anonymity、body_font_size_pt、camera_ready_extra_pages、columns、margins_mm、page_limit_content、text_width_mm、title_format）；texopt 的 L 项是字典序首项，A 的收益不能换 L。",
+    "evidence": [
+     "hard_constraints.page_limit_content=14",
+     "hard_constraints.body_font_size_pt=10",
+     "geometry.margin_floor_mm=12",
+     "hard_constraints.columns=1"
+    ],
+    "texopt_actions": [
+     "set_fontsize",
+     "set_margin",
+     "drop_fleqn"
+    ]
+   },
+   {
+    "rank": 2,
+    "direction": "页数控制（压页）：纯排版手段优先，避免语义抛光",
+    "why": "样本 content_pages 中位数 15.0，官方正文上限 14（差 -1.0 页）。注意口径：content_pages = 参考文献首页之前（含该页），参考文献与附录不计入，与官方“正文页上限”不能直接等同，真实余量需按目标模板重编译确认。",
+    "evidence": [
+     "density_targets.content_pages.per_paper.median=15.0",
+     "hard_constraints.page_limit_content=14"
+    ],
+    "texopt_actions": [
+     "set_margin",
+     "reduce_list_spacing",
+     "remove_excessive_vspace",
+     "normalize_fig_width"
+    ]
+   },
+   {
+    "rank": 3,
+    "direction": "浮动体位置与跨栏占比：把图/表推到页顶、消除页面中部的浮动体",
+    "why": "每页图数中位数 0.40（每篇 6.0 张）、满宽图占比 0.76、全宽浮动体出现位置 top=96%/bottom=0%/mid=4%；浮动体位置是这类会议最主要的版面噪声来源。",
+    "evidence": [
+     "float_policy.position_prior",
+     "density_targets.figures.per_content_page"
+    ],
+    "texopt_actions": [
+     "sanitize_float_specs",
+     "set_float_spec"
+    ]
+   },
+   {
+    "rank": 4,
+    "direction": "窄版心断行质量（overfull/underfull、连字符、孤行寡行）",
+    "why": "单栏版心仅 122mm（实测中位 122.0mm），行短词长，断行质量比双栏更容易恶化。",
+    "evidence": [
+     "geometry.observed.text_width_mm",
+     "通用规则 A-04"
+    ],
+    "texopt_actions": [
+     "inject_quality_macros",
+     "add_hyphenation_points"
+    ]
+   },
+   {
+    "rank": 5,
+    "direction": "页边距可压缩空间极小：压页需转向字号档/行距/浮动体与列表间距",
+    "why": "官方最小边距仅 12mm（低于 20mm），已无合法压缩余地，继续压边距会直接踩硬约束。",
+    "evidence": [
+     "geometry.margin_floor_mm"
+    ],
+    "texopt_actions": [
+     "reduce_list_spacing",
+     "remove_excessive_vspace",
+     "sanitize_float_specs"
+    ]
+   }
+  ],
+  "avoid": [
+   "不得为压页而删改正文文字/公式/引用（L 项内容保持率为硬下限）",
+   "不得把样本统计值当硬约束（例如按中位数强制改变字号或页边距）",
+   "不得用全局手段抹平跨会议差异：单栏/双栏、参考文献计页规则、纸型逐会不同",
+   "不得以 refs_per_paper 为目标：该会议该指标为测量伪影",
+   "页数临界时不得先动用语义抛光（必须排版手段穷尽）"
+  ],
+  "actions": {
+   "normalize_fig_width": {
+    "threshold_mm": 122,
+    "note": "阈值=版心全宽；双栏下栏内图目标为栏宽，需视觉层支持"
+   },
+   "sanitize_float_specs": {
+    "req_spec": "tbp"
+   },
+   "set_margin": {
+    "min_mm": 12.0,
+    "note": "下限 = 官方最小边距 −6mm（保守），低于 margin_floor_mm 需人工确认"
+   },
+   "inject_quality_macros": {
+    "enable": true
+   },
+   "drop_fleqn": {
+    "enable": true
+   }
+  },
+  "unsupported": [
+   {
+    "key": "paper_size",
+    "value": "146x217mm (review crop)",
+    "why": "Requirement 无纸张尺寸字段；ECCV 送审版尺寸非 letter/A4"
+   },
+   {
+    "key": "columns",
+    "value": 1,
+    "why": "Requirement 无栏数字段"
+   },
+   {
+    "key": "bib_style",
+    "value": "splncs04",
+    "why": "texopt 不校验参考文献样式"
+   },
+   {
+    "key": "appendix_allowed",
+    "value": false,
+    "why": "texopt 无“正文禁附录”结构约束"
+   },
+   {
+    "key": "anonymity",
+    "value": "double-blind",
+    "why": "texopt 不处理匿名化"
+   }
+  ],
+  "applicable_rules": [
+   "L-01",
+   "L-03",
+   "L-04",
+   "A-03",
+   "R-01"
+  ]
+ },
+ "confidence": {
+  "sample_n": 6,
+  "level": "low",
+  "reliable_fields": [
+   "body_font_pt",
+   "caption_font_pt",
+   "columns",
+   "density_targets.algorithms",
+   "density_targets.content_pages",
+   "density_targets.equations",
+   "density_targets.figures",
+   "density_targets.tables",
+   "float_policy.figure_width.typical_frac",
+   "full_width_figure.frac",
+   "margin_floor_mm",
+   "margins",
+   "page_size",
+   "text_width_mm"
+  ],
+  "unreliable_fields": [
+   "density_targets.footnotes",
+   "density_targets.lines_per_page",
+   "density_targets.refs"
+  ],
+  "conflicts": [
+   {
+    "type": "refs_zero",
+    "sample_id": "s-eccv-2024-001",
+    "detail": "refs=0 → 参考文献区未被识别（多为 PDF 缺 bookmarks/线条），非论文真的没有参考文献",
+    "resolution": "判为测量伪影，refs 字段标记不可靠，不作为模板值"
+   },
+   {
+    "type": "refs_zero",
+    "sample_id": "s-eccv-2024-002",
+    "detail": "refs=0 → 参考文献区未被识别（多为 PDF 缺 bookmarks/线条），非论文真的没有参考文献",
+    "resolution": "判为测量伪影，refs 字段标记不可靠，不作为模板值"
+   },
+   {
+    "type": "official_vs_sample_page_size",
+    "sample_id": null,
+    "detail": "官方 LNCS 页面 155×235mm，实测样本页面为 letter（ECVA 发布版）",
+    "resolution": "模板取官方 LNCS 页面；实测页宽只作观测"
+   },
+   {
+    "type": "refs_measurement_artifact",
+    "sample_id": null,
+    "detail": "refs 中位数 1.0 与真实引用量级不符（ref_style=author-year）",
+    "resolution": "正则只认 [n]/短作者串，长作者列表漏检；该字段不可用"
+   },
+   {
+    "type": "content_pages_vs_official_limit",
+    "sample_id": null,
+    "detail": "实测 content_pages 中位数 15.0 > 官方正文上限 14（口径不同：含参考文献首页，且部分样本把附录并入正文区）",
+    "resolution": "保留冲突，不修改官方上限；模板以官方值为 L 约束，实测值仅供观测"
+   }
+  ],
+  "notes": [
+   "样本仅 6 篇：所有 sample-stat 字段为低可信度，仅作参考区间，不得升格为规则"
+  ]
+ },
+ "texopt_flat": {
+  "page_limit": 14,
+  "font_pt": 10,
+  "margin_mm": 12,
+  "float_spec": "tbp",
+  "overwide_fig_threshold_mm": 122,
+  "eq_fleqn_allowed": false,
+  "enable_quality_macros": true
+ }
+}

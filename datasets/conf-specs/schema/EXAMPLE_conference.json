@@ -1,0 +1,98 @@
+{
+  "_comment": "骨架示例：复制结构到 conferences/<id>.json 后替换内容。字段名必须与 schema/KEY_VOCAB.md 一致；此文件不参与校验。",
+  "schema_version": "1.0",
+  "id": "example",
+  "name": "Example Conference on Layout Studies",
+  "abbr": "EXAMPLE",
+  "family": "ml",
+  "official_site": "https://example.org/",
+  "current_edition": "EXAMPLE 2026",
+  "focus_editions": ["2022", "2023", "2024", "2025"],
+  "template_basis": {
+    "class": "example_2026.sty",
+    "inherits": "article",
+    "url": "https://example.org/2026/style.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "技术内容（含图、表、公式）；参考文献不计入",
+      "evidence": [
+        { "source_id": "src-example-2026-cfp", "quote": "The main text may be at most 8 pages, excluding references." }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方模板 example_2026.sty 使用 twocolumn",
+      "evidence": [
+        { "source_id": "src-example-2026-sty", "quote": "\\documentclass[twocolumn,10pt]{article}" }
+      ]
+    }
+  },
+  "recommended": {},
+  "statistics": {},
+  "history": [
+    { "key": "page_limit_content", "edition": "EXAMPLE 2022", "year": 2022, "value": 7,
+      "source_id": "src-example-2022-cfp", "note": "2023 年起由 7 页增至 8 页" },
+    { "key": "page_limit_content", "edition": "EXAMPLE 2023", "year": 2023, "value": 8,
+      "source_id": "src-example-2023-cfp", "note": "现行规则起始年" }
+  ],
+  "texopt_requirement_map": {
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 10,
+      "margin_mm": 19.05,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 120.0
+    },
+    "unsupported_constraints": [
+      { "key": "columns", "value": 2, "why": "Requirement 无栏数字段，texopt 当前不重排栏数" }
+    ],
+    "recommended_field_suggestions": [
+      { "field": "columns", "type": "int", "example": 2, "rationale": "用于校验与跨模板迁移" }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-example-2026-cfp",
+      "kind": "official-guidelines",
+      "title": "EXAMPLE 2026 Call For Papers",
+      "url": "https://example.org/2026/cfp",
+      "fetched_at": "2026-09-12T11:00:00+08:00",
+      "http_status": 200,
+      "raw_file": "sources/raw/src-example-2026-cfp.html",
+      "sha256": "0000…",
+      "note": "官方 CFP 页"
+    },
+    {
+      "id": "src-example-2026-sty",
+      "kind": "official-template",
+      "title": "EXAMPLE 2026 LaTeX style",
+      "url": "https://example.org/2026/example_2026.sty",
+      "fetched_at": "2026-09-12T11:01:00+08:00",
+      "http_status": 200,
+      "raw_file": "sources/raw/src-example-2026-sty.sty",
+      "sha256": "1111…"
+    },
+    {
+      "id": "src-example-2025-sample-001",
+      "kind": "sample-paper",
+      "title": "A Representative Paper",
+      "url": "https://arxiv.org/abs/2501.00001",
+      "pdf_url": "https://arxiv.org/pdf/2501.00001",
+      "venue": "EXAMPLE 2025",
+      "year": 2025,
+      "fetched_at": "2026-09-12T11:05:00+08:00",
+      "http_status": 200,
+      "raw_file": "sources/raw/src-example-2025-sample-001.html",
+      "sha256": "2222…"
+    }
+  ],
+  "open_questions": ["模板 zip 中的 checklist 是否为强制提交未确认"]
+}

@@ -1,0 +1,1124 @@
+{
+  "schema_version": "1.0",
+  "id": "ijcai",
+  "name": "International Joint Conference on Artificial Intelligence",
+  "abbr": "IJCAI",
+  "family": "ai",
+  "official_site": "https://www.ijcai.org/",
+  "current_edition": "IJCAI 2025",
+  "focus_editions": [
+    "2026",
+    "2025",
+    "2024",
+    "2023"
+  ],
+  "template_basis": {
+    "class": "ijcai26.sty",
+    "inherits": "article",
+    "url": "https://www.ijcai.org/sites/default/files/Guidelines/FormattingGuidelines-IJCAI-ECAI-26.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 7,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "正文（含全部图表）上限 7 页；参考文献/致谢/贡献声明/伦理声明另占最多 2 页",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "Papers must be no longer than 9 pages in total: 7 pages for the body of the paper (including all figures/tables), plus up to 2 additional pages with references"
+        }
+      ]
+    },
+    "page_limit_total": {
+      "value": 9,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "总页数上限 9 页（7 正文 + 2 参考文献页）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "Papers must be no longer than 9 pages in total: 7 pages for the body of the paper and 2 pages for references"
+        }
+      ]
+    },
+    "references_counted": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献计入总页数（占专用的 2 页）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "plus up to 2 additional pages with references"
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 2,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后可付费加页（最多 2 页，按页收费）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "for accepted papers, up to two additional pages may be purchased at an additional cost per page"
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "美式 Letter（8.5in × 11in）；A4 需按规则调整下/右边距",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "All measurements assume an 8-1/2\" x 11\" page size."
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文双栏",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "Print manuscripts two columns to a page, in the manner in which these instructions are printed."
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 19.05,
+        "bottom": 31.75,
+        "left": 19.05,
+        "right": 19.05
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "等效单边页边距：左右 0.75in=19.05mm；上 0.75in=19.05mm；下 1.25in=31.75mm（官方指南明列 .75\"/1.25\"；sty 用 topmargin=-0.25in + 内置 1in 得 0.75in）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "left and right margins: .75\""
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 6.35,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "栏间距 0.25in = 6.35mm",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "gap between columns: .25\""
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 177.8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "版心总宽 7.0in = 177.8mm（sty textwidth=7.0in）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-sty",
+          "quote": "\\setlength\\textwidth{7.0in}"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 10pt（10 on 11 leading）；Times Roman",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "Use 10-point type in a clear, readable font with 1point leading (10 on 11)."
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "Times Roman",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "建议使用 Adobe Times Roman（\\usepackage{times}）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "For reasons of uniformity, use of Adobe’s Times Roman font is strongly suggested."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "主赛道双盲；不得含作者名/单位/致谢及 PDF 元数据身份信息；自引用第三人称",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "From the authors’ perspective, reviewing for IJCAI 2025 is double-blind."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "CMT",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿系统为 CMT3",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "Submission site : https://cmt3.research.microsoft.com/IJCAI2025"
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "≤ 50MB; PDF or ZIP; must be anonymized; reviewers may consult at discretion",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料上限 50MB、PDF/ZIP、须匿名；审稿人可自行决定是否查阅",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "Authors may submit up to 50MB of supplementary material, such as appendices, proofs, derivations, data, or source code; all supplementary material must be in PDF or ZIP format."
+        }
+      ]
+    },
+    "checklist_required": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿时须遵循可复现性指南与 checklist",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-cfp",
+          "quote": "Authors must follow the reproducibility guidelines (available here) and checklist at the time of paper submission."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "none (line numbers required for review)",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "template-implied",
+      "note": "官方 sty 关闭页码与页眉页脚；送审版须加行号",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-sty",
+          "quote": "\\thispagestyle{empty}        \\pagestyle{empty}"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "named (author-year)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方提供 named.bst：author-year 引用（如 [Gottlob, 1992]）",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2025-sty",
+          "quote": "% This file implements citations for the ``named'' bibliography style."
+        }
+      ]
+    },
+    "title_format": {
+      "value": "14pt bold; Title Case",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题 14pt 粗体、Title Case；作者名 12pt 粗体",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "Center the title on the entire width of the page in a 14-point bold font."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图号与题注位于图下方；题注 9pt",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "Captions should always appear below the illustration."
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表格题注同样位于下方",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "they should also appear floated to the top (preferably) or bottom of the page, and with the captions below them."
+        }
+      ]
+    },
+    "float_placement_rules": {
+      "value": "float to top (preferred) or bottom; wide floats may span both columns when not inline",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "浮动体优先置顶，其次置底；跨栏仅限非行内浮动体",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "They should be floated to the top (preferred) or bottom of the page, unless they are an integral part of your narrative flow."
+        }
+      ]
+    },
+    "table_style_hint": {
+      "value": "no vertical lines; three horizontal rules (1.5pt top/bottom, 1pt below header); right-align numeric columns",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "出版级表格规范",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "where there are no vertical lines and only three horizontal ones"
+        }
+      ]
+    },
+    "algorithm_style_hint": {
+      "value": "algorithms are special floats; caption in header, left-justified between horizontal lines",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "算法/代码清单排版",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "their caption should appear in the header, left-justified and enclosed between horizontal lines"
+        }
+      ]
+    },
+    "equation_style_hint": {
+      "value": "equation numbers same font/size as body (10pt); main symbols ≥ 9pt",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "公式编号与主符号字号",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "equation numbers should be typeset with the same font and size than the main text (10pt). Main symbols of the formula should not be smaller than 9pt."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "author-year citations, e.g. [Gottlob, 1992]; references title unnumbered",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "引用风格",
+      "evidence": [
+        {
+          "source_id": "src-ijcai-2026-guidelines",
+          "quote": "Citations within the text should include the author’s last name and the year of publication, for example [Gottlob, 1992]."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "content_pages": {
+      "mean": 8.0,
+      "median": 8.0,
+      "p10": 8.0,
+      "p90": 8.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 8.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 504.657,
+      "median": 504.0,
+      "p10": 504.0,
+      "p90": 507.9,
+      "n": 7,
+      "unit": "pt",
+      "min": 504.0,
+      "max": 507.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 18.0,
+      "median": 18.0,
+      "p10": 18.0,
+      "p90": 18.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 18.0,
+      "max": 18.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 18.786,
+      "median": 19.0,
+      "p10": 17.7,
+      "p90": 19.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 17.7,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 19.0,
+      "median": 19.0,
+      "p10": 19.0,
+      "p90": 19.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 19.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 19.671,
+      "median": 19.6,
+      "p10": 19.3,
+      "p90": 20.2,
+      "n": 7,
+      "unit": "mm",
+      "min": 19.3,
+      "max": 20.2,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 31.0,
+      "median": 31.0,
+      "p10": 31.0,
+      "p90": 31.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 31.0,
+      "max": 31.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "figures": {
+      "mean": 2.714,
+      "median": 3.0,
+      "p10": 1.0,
+      "p90": 5.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 5.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "tables": {
+      "mean": 3.286,
+      "median": 3.0,
+      "p10": 0.0,
+      "p90": 7.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 7.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "equations": {
+      "mean": 6.571,
+      "median": 6.0,
+      "p10": 0.0,
+      "p90": 18.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 18.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.286,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "refs": {
+      "mean": 2.143,
+      "median": 2.0,
+      "p10": 1.0,
+      "p90": 3.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 0.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.339,
+      "median": 0.375,
+      "p10": 0.125,
+      "p90": 0.625,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.125,
+      "max": 0.625,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.411,
+      "median": 0.375,
+      "p10": 0.0,
+      "p90": 0.875,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 0.875,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.821,
+      "median": 0.75,
+      "p10": 0.0,
+      "p90": 2.25,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 2.25,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 1.213,
+      "median": 1.214,
+      "p10": 1.205,
+      "p90": 1.214,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.205,
+      "max": 1.214,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 128.257,
+      "median": 124.2,
+      "p10": 103.6,
+      "p90": 150.4,
+      "n": 7,
+      "unit": "per_page",
+      "min": 103.6,
+      "max": 150.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-ijcai-2025-001",
+        "s-ijcai-2025-002",
+        "s-ijcai-2025-003",
+        "s-ijcai-2025-004",
+        "s-ijcai-2025-005",
+        "s-ijcai-2025-006",
+        "s-ijcai-2025-007"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "IJCAI 2025",
+      "year": 2025,
+      "value": 7,
+      "source_id": "src-ijcai-2025-cfp",
+      "note": "主赛道正文 7 页（含图表），参考文献占 2 页；总 9 页"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "IJCAI 2025",
+      "year": 2025,
+      "value": 9,
+      "source_id": "src-ijcai-2025-cfp",
+      "note": "总页数上限 9 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "IJCAI 2025",
+      "year": 2025,
+      "value": true,
+      "source_id": "src-ijcai-2025-cfp",
+      "note": "参考文献计入总页数（专用 2 页）"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "IJCAI 2025",
+      "year": 2025,
+      "value": 2,
+      "source_id": "src-ijcai-2025-cfp",
+      "note": "录用后可付费加页，最多 2 页"
+    },
+    {
+      "key": "columns",
+      "edition": "IJCAI 2024",
+      "year": 2024,
+      "value": 2,
+      "source_id": "src-ijcai-2024-sty",
+      "note": "2024 版 sty 与 2025/2026 完全相同（同一 sha256），双栏版式未变"
+    },
+    {
+      "key": "columns",
+      "edition": "IJCAI 2026",
+      "year": 2026,
+      "value": 2,
+      "source_id": "src-ijcai-2026-sty",
+      "note": "2026 版样式仍为双栏；版式沿用"
+    },
+    {
+      "key": "paper_size",
+      "edition": "IJCAI 2026",
+      "year": 2026,
+      "value": "letter",
+      "source_id": "src-ijcai-2026-guidelines",
+      "note": "2026 官方排版指南明列 8.5in×11in（Letter）"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取官方正文 10pt；margin_mm 取等效单边 19.05mm（左右/上 .75in，下 1.25in 更大，压缩时以下限约束）；overwide_fig_threshold_mm 取版心总宽 177.8mm",
+    "requirement_fields": {
+      "page_limit": 9,
+      "font_pt": 10,
+      "margin_mm": 19.05,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 177.8
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 19.05,
+          "bottom": 31.75,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "why": "Requirement.margin_mm 为单一等效值，无法表达非对称边距"
+      },
+      {
+        "key": "references_counted",
+        "value": true,
+        "why": "texopt 无法表达「参考文献占专用 2 页」的计数结构"
+      },
+      {
+        "key": "checklist_required",
+        "value": true,
+        "why": "texopt 不生成/校验 checklist"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译栏数是否与官方模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "body_plus_refs",
+        "rationale": "IJCAI 为 7 正文 + 2 参考文献，需区分计数范围"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "top": 19.05,
+          "bottom": 31.75,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "rationale": "IJCAI 下边距大于其余三边"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-ijcai-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "IJCAI 2025 Call for Papers (Main Track)",
+      "url": "https://2025.ijcai.org/call-for-papers-main-track/",
+      "fetched_at": "2026-09-12T10:22:39+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-cfp.html",
+      "sha256": "bef26040fbee191248efb333e255d37bac39c1ea2e83de26f3008d284f696405",
+      "note": "官方 CFP：9 页(7+2)、双盲、CMT、补充材料 50MB、checklist"
+    },
+    {
+      "id": "src-ijcai-2026-guidelines",
+      "kind": "official-guidelines",
+      "title": "IJCAI-ECAI 2026 Formatting Instructions (ijcai26.docx 文本层)",
+      "url": "https://www.ijcai.org/sites/default/files/Guidelines/FormattingGuidelines-IJCAI-ECAI-26.zip",
+      "fetched_at": "2026-09-12T10:40:46+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-ijcai-2026-guidelines.md",
+      "sha256": "ce57f469b5a89b2306488be7fc09ec16d60c770a565aae0498bccd6df8663055",
+      "note": "官方排版指南：Letter、双栏、边距 .75in、字号/题注/浮动体。raw_file 为官方 FormattingGuidelines-IJCAI-ECAI-26.zip 内 ijcai26.docx 的文本层抽取（docx 由 totext 无法直接解析，故先转纯文本再归档）"
+    },
+    {
+      "id": "src-ijcai-2025-sty",
+      "kind": "official-template",
+      "title": "IJCAI 2025 LaTeX style file (ijcai25.sty)",
+      "url": "/tmp/ij25/FormattingGuidelines-IJCAI-25/ijcai25.sty",
+      "fetched_at": "2026-09-12T10:22:39+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-ijcai-2025-sty.sty",
+      "sha256": "cdf7ca9a28c6b1ba60cde0f42019ccea3722838242b69471db572d21f879d3b2",
+      "note": "官方 sty：双栏/7in 版心/10pt/关页码"
+    },
+    {
+      "id": "src-ijcai-2024-sty",
+      "kind": "official-template",
+      "title": "IJCAI 2024 LaTeX style file (ijcai24.sty)",
+      "url": "/tmp/ij24/FormattingGuidelines-IJCAI-24/ijcai24.sty",
+      "fetched_at": "2026-09-12T10:22:40+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-ijcai-2024-sty.sty",
+      "sha256": "cdf7ca9a28c6b1ba60cde0f42019ccea3722838242b69471db572d21f879d3b2",
+      "note": "history：2024 sty（与 2025/2026 相同）"
+    },
+    {
+      "id": "src-ijcai-2026-sty",
+      "kind": "official-template",
+      "title": "IJCAI 2026 LaTeX style file (ijcai26.sty)",
+      "url": "/tmp/ij26/FormattingGuidelines-IJCAI-ECAI-26/ijcai26.sty",
+      "fetched_at": "2026-09-12T10:22:40+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-ijcai-2026-sty.sty",
+      "sha256": "cdf7ca9a28c6b1ba60cde0f42019ccea3722838242b69471db572d21f879d3b2",
+      "note": "现行 sty（author kit）"
+    },
+    {
+      "id": "src-ijcai-authorskit",
+      "kind": "official-guidelines",
+      "title": "IJCAI Author's Kit",
+      "url": "https://www.ijcai.org/authors_kit",
+      "fetched_at": "2026-09-12T10:22:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-authorskit.html",
+      "sha256": "7e199538e3c947798f862b84996aa598f7453be62bec9c71f45538b93c6c00aa",
+      "note": "官方作者工具包入口，指向最新排版指南 zip"
+    },
+    {
+      "id": "src-ijcai-2025-proceedings",
+      "kind": "official-guidelines",
+      "title": "IJCAI 2025 Proceedings (official)",
+      "url": "https://www.ijcai.org/proceedings/2025/",
+      "fetched_at": "2026-09-12T10:27:13+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-proceedings.html",
+      "sha256": "f876316abb5d44b33ba83db7cf8b20b68c3ebe3ac782f0cfe31da379c9b12462",
+      "note": "官方 proceedings 索引（用于定位 IJCAI 2025 样本论文）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-1",
+      "kind": "sample-paper",
+      "title": "Synthesising Minimum Cost Dynamic Norms",
+      "url": "https://www.ijcai.org/proceedings/2025/1",
+      "fetched_at": "2026-09-12T10:36:58+08:00",
+      "http_status": "cached",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-1.html",
+      "sha256": "9564ec6da548c75b8075cdfbc361a7d2995c51556d390c6de76c7ff730330fca",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0001.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（形式化/逻辑，公式密集）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-50",
+      "kind": "sample-paper",
+      "title": "FADE: Towards Fairness-aware Data Generation for Domain Generalization via Classifier-Guided Score-based Diffusion Models",
+      "url": "https://www.ijcai.org/proceedings/2025/50",
+      "fetched_at": "2026-09-12T10:37:00+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-50.html",
+      "sha256": "a14d5e5a076254ce51f159886a40607d49410616c7f1c30bd58d13873ebbab07",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0050.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（扩散模型方法+实验）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-300",
+      "kind": "sample-paper",
+      "title": "Empowering Multimodal Road Traffic Profiling with Vision Language Models and Frequency Spectrum Fusion",
+      "url": "https://www.ijcai.org/proceedings/2025/300",
+      "fetched_at": "2026-09-12T10:37:01+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-300.html",
+      "sha256": "e9e8a269b1d32c553b330933a708b101ff543729460a306ccecdc09af659cb36",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0300.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（多模态应用，含图）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-500",
+      "kind": "sample-paper",
+      "title": "Facets in Argumentation: A Formal Approach to Argument Significance",
+      "url": "https://www.ijcai.org/proceedings/2025/500",
+      "fetched_at": "2026-09-12T10:37:03+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-500.html",
+      "sha256": "5827474ac19f18be15a6ed6d2d8392802f93342ad24be52032f77437a32442cd",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0500.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（论辩理论，形式化）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-700",
+      "kind": "sample-paper",
+      "title": "Diffuse&Refine: Intrinsic Knowledge Generation and Aggregation for Incremental Object Detection",
+      "url": "https://www.ijcai.org/proceedings/2025/700",
+      "fetched_at": "2026-09-12T10:37:04+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-700.html",
+      "sha256": "97cc36e6b61ae089af469fe27f5130936c402e85b0c9bcb3bd16f9bc4a9dcebe",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0700.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（目标检测方法，算法+表）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-900",
+      "kind": "sample-paper",
+      "title": "Efficient Dynamic Ensembling for Multiple LLM Experts",
+      "url": "https://www.ijcai.org/proceedings/2025/900",
+      "fetched_at": "2026-09-12T10:37:06+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-900.html",
+      "sha256": "bc6c14bb7f227af11cdff2e60cacc4bf1065ed89bd1d75868c1c84dcd52eeee5",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/0900.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（LLM 集成，实验表密集）"
+    },
+    {
+      "id": "src-ijcai-2025-paper-1100",
+      "kind": "sample-paper",
+      "title": "DECASTE: Unveiling Caste Stereotypes in Large Language Models Through Multi-Dimensional Bias Analysis",
+      "url": "https://www.ijcai.org/proceedings/2025/1100",
+      "fetched_at": "2026-09-12T10:37:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-ijcai-2025-paper-1100.html",
+      "sha256": "c5a6439a5839732fcd12cbe5f121e9cd4b7e4500ae30f49176eb71432bb2e393",
+      "pdf_url": "https://www.ijcai.org/proceedings/2025/1100.pdf",
+      "venue": "IJCAI 2025",
+      "year": 2025,
+      "note": "IJCAI 官方 proceedings 论文落地页，证明属 IJCAI 2025 主赛道（偏差分析，图表多）"
+    }
+  ],
+  "open_questions": [
+    "IJCAI 2023/2024 官方 CFP 页面已不可用（ijcai-24.org 已被无关站点接管），故 2023/2024 的页数规则未逐字确认；仅能证明 2024/2025/2026 的 sty 完全相同。",
+    "IJCAI 2026 官方排版指南 docx 的年份字段在文档中渲染异常（部分显示为 IJCAI-ECAI 265/256），引用时已避开这些行。",
+    "IJCAI 主赛道正文页数与参考文献页数在 2026 指南与 2025 CFP 一致（7+2），但 2026 CFP 本身未归档。",
+    "paper_size：官方指南明列 8.5×11in；sty 未显式设纸型（依赖 article 默认 letterpaper）。"
+  ]
+}

@@ -1,0 +1,974 @@
+{
+  "schema_version": "1.0",
+  "id": "eccv",
+  "name": "European Conference on Computer Vision",
+  "abbr": "ECCV",
+  "family": "cv",
+  "official_site": "https://eccv.ecva.net/",
+  "current_edition": "ECCV 2026",
+  "focus_editions": [
+    "2022",
+    "2024",
+    "2026"
+  ],
+  "template_basis": {
+    "class": "eccv.sty (based on llncs.cls)",
+    "inherits": "llncs",
+    "url": "https://github.com/paolo-favaro/paper-template"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 14,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "正文（含全部图、表）上限 14 页；仅含参考文献的额外页不计入",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-submissionpolicies",
+          "quote": "Papers are limited to 14 pages, including figures and tables, in the LNCS style of Springer. Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 14 页正文",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-maintex",
+          "quote": "Papers accepted for the conference will be allocated 14 pages (plus additional pages for references) in the proceedings."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "主文不允许附录；附录/证明内容须放入补充材料",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-submissionpolicies",
+          "quote": "Note that no Appendices are permitted in the main submission."
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 0,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后仍为 14 页 + 参考文献（proceedings 分配 14 页，参考文献另计），无额外加页",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-maintex",
+          "quote": "Papers accepted for the conference will be allocated 14 pages (plus additional pages for references) in the proceedings."
+        }
+      ]
+    },
+    "columns": {
+      "value": 1,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "LNCS 单栏；llncs.cls 未加载 twocolumn，版心宽 12.2cm 即整栏宽",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-llncs",
+          "quote": "\\setlength{\\textwidth}{12.2cm}"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 122,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "12.2cm = 122mm 版心宽",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-llncs",
+          "quote": "\\setlength{\\textwidth}{12.2cm}"
+        }
+      ]
+    },
+    "text_height_mm": {
+      "value": 193,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "19.3cm = 193mm 版心高",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-llncs",
+          "quote": "\\setlength{\\textheight}{19.3cm}"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 12,
+        "bottom": 12,
+        "left": 12,
+        "right": 12
+      },
+      "unit": "mm",
+      "scope": "submission",
+      "confidence": "template-implied",
+      "note": "ECCV 2026 送审版 geometry 裁剪：paperwidth 146mm、paperheight 217mm、top/left=12mm、版心 122x193mm → 四边等效 12mm",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-eccvsty",
+          "quote": "\\RequirePackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "llncs 基于 article 10pt 基础类（未传字号选项），正文即 10pt；LNCS 说明中标题字号体系（一级 12pt/二级 10pt）亦按此",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-llncs",
+          "quote": "\\LoadClass[twoside]{article}"
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "CMR (Computer Modern Roman)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "LaTeX 模板用 CMR，不得改用 Times（改用字体可能被视为规避页数）",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-maintex",
+          "quote": "Springer's templates for \\LaTeX{} are based on CMR, and the XML templates for Word are based on Times."
+        }
+      ]
+    },
+    "title_format": {
+      "value": "14pt bold, centered",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题 14 point 粗体、居中",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "Title (centered) Lecture Notes 14 point, bold"
+        }
+      ]
+    },
+    "section_numbering": {
+      "value": "arabic (only first two heading levels numbered)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "仅一、二级标题编号；标题左对齐",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "Only the first two levels of section headings should be numbered, as shown in Table 1."
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "splncs04",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 指定 \\bibliographystyle{splncs04}",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-eccvsty",
+          "quote": "\\bibliographystyle{splncs04}"
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "双盲评审；不得在正文/补充材料泄露身份或放置可识别链接",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-submissionpolicies",
+          "quote": "ECCV reviewing is double blind, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "ECCV 2026 使用 OpenReview（2022/2024 用 CMT）",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-submissionpolicies",
+          "quote": "ECCV 2026 will be using OpenReview to manage submissions."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional supplementary (videos, proofs, extra figures/tables/analyses); main paper must stand alone",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料可选、独立提交；正文须自洽",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-submissionpolicies",
+          "quote": "By the supplementary material deadline (Mar 12, 2026, at 11:00 PM CET), the authors may optionally submit additional material that was ready at the time of paper submission but could not be included due to constraints of format or space."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "table_caption_position": {
+      "value": "above",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表题在表格上方（Springer LNCS 规范）",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "Table captions should always be positioned above the tables."
+        }
+      ]
+    },
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图题在图下方（与表题相反）",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "in contrast to the caption belonging to a table, which should always appear above the table."
+        }
+      ]
+    },
+    "caption_style_hint": {
+      "value": "9-point; short captions centered between margins",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注 9 point，短题注居中",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "Captions are set in 9 -point type."
+        }
+      ]
+    },
+    "equation_style_hint": {
+      "value": "displayed equations centered on separate line, numbered consecutively in parentheses at right margin",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "公式独立成行居中、按顺序编号（右对齐括号）",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "Equations should be numbered for reference."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "splncs04 (Springer LNCS) numbered style",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献用 Springer LNCS (splncs04) 编号制",
+      "evidence": [
+        {
+          "source_id": "src-eccv-2026-eccvsty",
+          "quote": "\\bibliographystyle{splncs04}"
+        }
+      ]
+    },
+    "color_policy": {
+      "value": "no color in text/tables/equations; vector graphics preferred; figure lettering >= 6pt",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文/表格/公式不用彩色；图注字号不小于 6pt",
+      "evidence": [
+        {
+          "source_id": "src-eccv-lncs-instructions",
+          "quote": "We do not support color in text, tables, or in equations."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 19.0,
+      "median": 18.5,
+      "p10": 17.0,
+      "p90": 23.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 17.0,
+      "max": 23.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 15.0,
+      "median": 15.0,
+      "p10": 15.0,
+      "p90": 15.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 15.0,
+      "max": 15.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.833,
+      "median": 10.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 346.1,
+      "median": 345.8,
+      "p10": 345.8,
+      "p90": 347.6,
+      "n": 6,
+      "unit": "pt",
+      "min": 345.8,
+      "max": 347.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 41.567,
+      "median": 47.6,
+      "p10": 12.0,
+      "p90": 47.6,
+      "n": 6,
+      "unit": "mm",
+      "min": 12.0,
+      "max": 47.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 40.65,
+      "median": 46.4,
+      "p10": 12.0,
+      "p90": 46.4,
+      "n": 6,
+      "unit": "mm",
+      "min": 12.0,
+      "max": 46.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 27.583,
+      "median": 32.1,
+      "p10": 3.2,
+      "p90": 33.3,
+      "n": 6,
+      "unit": "mm",
+      "min": 3.2,
+      "max": 33.3,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 39.5,
+      "median": 44.9,
+      "p10": 11.3,
+      "p90": 45.5,
+      "n": 6,
+      "unit": "mm",
+      "min": 11.3,
+      "max": 45.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "figures": {
+      "mean": 5.5,
+      "median": 6.0,
+      "p10": 4.0,
+      "p90": 7.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 4.0,
+      "max": 7.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "tables": {
+      "mean": 5.167,
+      "median": 4.5,
+      "p10": 3.0,
+      "p90": 8.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 3.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "equations": {
+      "mean": 8.0,
+      "median": 9.5,
+      "p10": 0.0,
+      "p90": 15.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 15.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.167,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "refs": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 2.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 1.667,
+      "median": 2.0,
+      "p10": 0.0,
+      "p90": 3.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.367,
+      "median": 0.4,
+      "p10": 0.267,
+      "p90": 0.467,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.267,
+      "max": 0.467,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.344,
+      "median": 0.3,
+      "p10": 0.2,
+      "p90": 0.533,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.2,
+      "max": 0.533,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.533,
+      "median": 0.633,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.832,
+      "median": 0.945,
+      "p10": 0.306,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.306,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.167,
+      "median": 0.172,
+      "p10": 0.067,
+      "p90": 0.258,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.067,
+      "max": 0.258,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.672,
+      "median": 0.762,
+      "p10": 0.176,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.176,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 57.617,
+      "median": 58.35,
+      "p10": 48.6,
+      "p90": 68.5,
+      "n": 6,
+      "unit": "per_page",
+      "min": 48.6,
+      "max": 68.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-eccv-2024-001",
+        "s-eccv-2024-002",
+        "s-eccv-2024-003",
+        "s-eccv-2024-004",
+        "s-eccv-2024-005",
+        "s-eccv-2024-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "ECCV 2022",
+      "year": 2022,
+      "value": 14,
+      "source_id": "src-eccv-2022-cfp",
+      "note": "14 页正文（含图/表），仅参考文献可额外；模板自 ECCV 2020 起变更"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ECCV 2022",
+      "year": 2022,
+      "value": "CMT",
+      "source_id": "src-eccv-2022-cfp",
+      "note": "ECCV 2022 使用 CMT 投稿"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ECCV 2024",
+      "year": 2024,
+      "value": 14,
+      "source_id": "src-eccv-2024-submissionpolicies",
+      "note": "14 页 LNCS；模板自 ECCV 2022 起变更（新建 eccv.sty）"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ECCV 2024",
+      "year": 2024,
+      "value": "CMT",
+      "source_id": "src-eccv-2024-submissionpolicies",
+      "note": "ECCV 2024 仍用 CMT"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ECCV 2026",
+      "year": 2026,
+      "value": 14,
+      "source_id": "src-eccv-2026-submissionpolicies",
+      "note": "现行：14 页 LNCS，参考文献不计；模板自 ECCV 2024 起再次变更"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ECCV 2026",
+      "year": 2026,
+      "value": "OpenReview",
+      "source_id": "src-eccv-2026-submissionpolicies",
+      "note": "ECCV 2026 改用 OpenReview"
+    },
+    {
+      "key": "appendix_allowed",
+      "edition": "ECCV 2026",
+      "year": 2026,
+      "value": false,
+      "source_id": "src-eccv-2026-submissionpolicies",
+      "note": "ECCV 2026 明文禁止正文附录，须放入补充材料"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取正文 10pt；margin_mm 取送审版等效单边 12mm（版心 122mm）；单栏",
+    "requirement_fields": {
+      "page_limit": 14,
+      "font_pt": 10,
+      "margin_mm": 12,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 122.0,
+      "margin_min_mm": 12
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "146x217mm (review crop)",
+        "why": "Requirement 无纸张尺寸字段；ECCV 送审版尺寸非 letter/A4"
+      },
+      {
+        "key": "columns",
+        "value": 1,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "bib_style",
+        "value": "splncs04",
+        "why": "texopt 不校验参考文献样式"
+      },
+      {
+        "key": "appendix_allowed",
+        "value": false,
+        "why": "texopt 无“正文禁附录”结构约束"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不处理匿名化"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 1,
+        "rationale": "ECCV 单栏，与 CVPR/ICCV 双栏不同，需按会议区分"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "14 页仅指正文，参考文献另计"
+      },
+      {
+        "field": "caption_position_policy",
+        "type": "obj",
+        "example": {
+          "figure": "below",
+          "table": "above"
+        },
+        "rationale": "Springer LNCS 明文规定"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-eccv-2026-submissionpolicies",
+      "kind": "official-guidelines",
+      "title": "ECCV 2026 Submission Policies and Author's Paper Kit",
+      "url": "https://eccv.ecva.net/Conferences/2026/SubmissionPolicies",
+      "fetched_at": "2026-09-12T10:20:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-2026-submissionpolicies.html",
+      "sha256": "8286560e998525865c39a3cf8ceddff2c48be21946e42d17a148ec5beb7c6419",
+      "note": "官方投稿政策：14 页 LNCS（含图/表）、仅参考文献可额外、禁止正文附录、双盲、OpenReview"
+    },
+    {
+      "id": "src-eccv-2026-cfp",
+      "kind": "official-guidelines",
+      "title": "ECCV 2026 Call for Papers",
+      "url": "https://eccv.ecva.net/Conferences/2026/CallForPapers",
+      "fetched_at": "2026-09-12T10:20:49+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-2026-cfp.html",
+      "sha256": "a5ae22ff961eb5f86ef6f59422d6c63f4c4a81c73c81525e7dd52014460bf503",
+      "note": "官方 CFP 页（主题/重要日期/OpenReview 入口）"
+    },
+    {
+      "id": "src-eccv-2026-authorguide",
+      "kind": "official-guidelines",
+      "title": "ECCV 2026 Author Submission Guide",
+      "url": "https://eccv.ecva.net/Conferences/2026/AuthorGuide",
+      "fetched_at": "2026-09-12T10:20:43+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-2026-authorguide.html",
+      "sha256": "e089937a4e6dc3de0e3f28fc63abb59a2b97cdd207cca88eee232c1e5dcb1b06",
+      "note": "官方投稿指引（OpenReview 提交系统、政策清单）"
+    },
+    {
+      "id": "src-eccv-2026-eccvsty",
+      "kind": "official-template",
+      "title": "ECCV 2026 LaTeX style file (eccv.sty)",
+      "url": "/tmp/eccv26/paper-template-Latest/eccv.sty",
+      "fetched_at": "2026-09-12T10:22:27+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-eccv-2026-eccvsty.sty",
+      "sha256": "07785f87dd4741a761e5064d6752e59dbca308b7999de35df983e70dc0a33d80",
+      "note": "官方 ECCV 2026 kit 的 eccv.sty：基于 llncs，review 版 geometry 裁剪 146x217mm、正文宽 122mm，splncs04 参考文献"
+    },
+    {
+      "id": "src-eccv-2026-llncs",
+      "kind": "official-template",
+      "title": "Springer LNCS class file (llncs.cls)",
+      "url": "/tmp/eccv26/paper-template-Latest/llncs.cls",
+      "fetched_at": "2026-09-12T10:22:26+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-eccv-2026-llncs.sty",
+      "sha256": "8152fe7afa929cbd3f3679d6f7c1d562525414ed9c5940a69e86cd923416cb2b",
+      "note": "ECCV 2026 kit 内 llncs.cls：textwidth 12.2cm / textheight 19.3cm / 单栏"
+    },
+    {
+      "id": "src-eccv-2026-maintex",
+      "kind": "official-template",
+      "title": "ECCV 2026 author kit - main.tex (Author Guidelines for ECCV Submission)",
+      "url": "/tmp/eccv26/paper-template-Latest/main.tex",
+      "fetched_at": "2026-09-12T10:22:27+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-eccv-2026-maintex.sty",
+      "sha256": "ac91a7eb6d0991301bca2b1879177495f176dfc7737c77f5d1079852f33fd7e9",
+      "note": "官方模板正文：LNCS 模板、CMR 字体、14 页 + 参考文献、图题在下/表题在上"
+    },
+    {
+      "id": "src-eccv-lncs-instructions",
+      "kind": "official-guidelines",
+      "title": "Springer - Instructions for Authors (LNCS)",
+      "url": "https://cms-resources.apps.public.k8s.springernature.io/springer-cms/rest/v1/content/27852130/data/Instructions%20for%20Authors%20PDF",
+      "fetched_at": "2026-09-12T10:22:14+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-lncs-instructions.pdf",
+      "sha256": "b6a56391a68e64c06d2d9f4173f5260d123a3277eb9cd1a36d0e74b4702ca385",
+      "note": "Springer LNCS 官方作者说明：题注位置、字号体系、公式、页数建议"
+    },
+    {
+      "id": "src-eccv-2024-submissionpolicies",
+      "kind": "official-guidelines",
+      "title": "ECCV 2024 Submission Policies",
+      "url": "https://eccv.ecva.net/Conferences/2024/SubmissionPolicies",
+      "fetched_at": "2026-09-12T10:21:22+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-2024-submissionpolicies.html",
+      "sha256": "3cc557958b92d3eddc1bb6124c95c0d38224fded88e5af346523845c3899e95d",
+      "note": "history：ECCV 2024 14 页 LNCS、CMT 投稿、模板自 2022 起变更"
+    },
+    {
+      "id": "src-eccv-2022-cfp",
+      "kind": "official-guidelines",
+      "title": "ECCV 2022 Call for Papers & Submission Instructions",
+      "url": "https://eccv2022.ecva.net/submission/call-for-papers/",
+      "fetched_at": "2026-09-12T10:21:40+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-2022-cfp.html",
+      "sha256": "b14e11d75ad180605d0d4f8ab610a701d2c5da212d4c0b2a9e6042ae406b816c",
+      "note": "history：ECCV 2022 14 页、CMT 投稿"
+    },
+    {
+      "id": "src-eccv-papers-list",
+      "kind": "sample-paper",
+      "title": "ECVA ECCV Conference Papers index (ECCV 2018-2024)",
+      "url": "https://www.ecva.net/papers.php",
+      "fetched_at": "2026-09-12T10:39:15+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-eccv-papers-list.html",
+      "sha256": "bd1d0d3897a5f57f767b43c1bfdb874028adb14be06fde09ad299866663c1406",
+      "pdf_url": "https://www.ecva.net/eccv_2024/papers_ECCV/papers/04927.pdf",
+      "venue": "ECCV 2024",
+      "year": 2024,
+      "note": "ECVA 官方论文索引页（papers.php），逐篇列出 ECCV 各届论文标题/作者/PDF 直链，用于证明样本归属"
+    }
+  ],
+  "open_questions": [
+    "ECCV/LNCS 的 camera-ready 纸张尺寸未在模板明文（llncs.cls 未设 papersize）；送审版被裁剪为 146x217mm，proceedings 实际开版未确认。",
+    "ECCV 正文基础字号无模板明文（llncs 继承 article 10pt），标 template-implied；LNCS 说明仅给出标题字号。",
+    "ECCV 2026 论文集（proceedings）尚未在 ECVA 发布，样本取 ECCV 2022/2024；ECCV 2026 样本待发布后补充。",
+    "ECCV 2026 模板 eccv.sty 的 caption 选项 tableposition=bottom 与 LNCS“表题在上”表述并存，实际渲染以模板示例（表题在上）为准，未逐步核实。"
+  ]
+}

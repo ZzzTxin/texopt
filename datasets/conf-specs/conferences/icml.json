@@ -1,0 +1,1064 @@
+{
+  "schema_version": "1.0",
+  "id": "icml",
+  "name": "International Conference on Machine Learning",
+  "abbr": "ICML",
+  "family": "ml",
+  "official_site": "https://icml.cc/",
+  "current_edition": "ICML 2025",
+  "focus_editions": [
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "template_basis": {
+    "class": "icml2025.sty",
+    "inherits": "article",
+    "url": "https://media.icml.cc/Conferences/ICML2025/Styles/icml2025.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿正文（main paper，含全部图、表、算法）上限 8 页；参考文献、impact statement、附录不限页",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-cfp",
+          "quote": "Papers must be prepared and submitted as a single file: 8 pages for the main paper, with unlimited pages for references, the impact statement, and appendices."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 8 页正文上限（不限页）",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-authorinstructions",
+          "quote": "Submitted papers are composed of a main body, which can be up to eight pages long, followed by any number of pages for references and appendices, all in a single PDF file."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许正文内无限量附录（technical appendices），可随投稿一并提交，也可作补充材料",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-authorinstructions",
+          "quote": "unlimited appendices are allowed in the main submission file of a paper"
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "附录与 impact statement 不计入正文页数",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-cfp",
+          "quote": "8 pages for the main paper, with unlimited pages for references, the impact statement, and appendices."
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 1,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后正文可在 8 页基础上 +1 页（即 9 页）",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-cfp",
+          "quote": "The final versions of accepted papers will be allowed one extra page for the main paper."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿须匿名；自引需第三人称；补充材料同样匿名",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-cfp",
+          "quote": "All submissions must be anonymized and may not contain any information with the intention or consequence of violating the double-blind reviewing policy."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿与审稿讨论均在 OpenReview 进行",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-cfp",
+          "quote": "Abstracts and papers can be submitted through OpenReview: https://openreview.net/group?id=ICML.cc/2025/Conference"
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 设 \\paperwidth=8.5in、\\paperheight=11in（US letter）；camera-ready 亦明文要求 US letter",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\paperwidth=8.5in\n\\paperheight=11in"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 声明为 two-column，且以 \\twocolumn 排版",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\flushbottom \\twocolumn"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "模板正文 10pt、行距(baselineskip) 11pt；sty 中 \\@normalsize 的 \\xpt 为 10pt（article 10pt 基类）",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\def\\@normalsize{\\@setsize\\normalsize{11pt}\\xpt\\@xpt}"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 25.4,
+        "left": 22.225,
+        "right": 22.225
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "由 sty 换算：上=下=(11in−9in)/2=1in=25.4mm；左=右=(8.5in−6.75in)/2=0.875in=22.225mm（等效单边）",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\setlength\\textheight{9.0in}\n\\setlength\\textwidth{6.75in}\n\\setlength\\columnsep{0.25in}"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 171.45,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "6.75in = 171.45mm；版心总宽（双栏合计）",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\setlength\\textwidth{6.75in}"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 6.35,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "0.25in = 6.35mm；栏间距",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\setlength\\columnsep{0.25in}"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "author-year",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 自动载入 natbib 并设 authoryear 风格",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\setcitestyle{authoryear,round,citesep={;},aysep={,},yysep={;}}"
+        }
+      ]
+    },
+    "title_format": {
+      "value": "content words capitalized, not all caps",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题与章节标题采用内容词首字母大写（Title Case），不得全大写",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-authorinstructions",
+          "quote": "The title and section headings should have content words capitalized, not all caps."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "icml2025.sty",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方模板主样式文件名",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\ProvidesPackage{icml2025}[2023/11/23 v2.0 ICML Conference Style File]"
+        }
+      ]
+    },
+    "template_url": {
+      "value": "https://media.icml.cc/Conferences/ICML2025/Styles/icml2025.zip",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方 Style zip 下载地址；camera-ready 用 \\usepackage[accepted]{icml2025}",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-authorinstructions",
+          "quote": "The camera-ready version should be prepared using the LaTeX style file from https://media.icml.cc/Conferences/ICML2025/Styles/icml2025.zip with the \\usepackage[accepted]{icml2025} option."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "reference_style_hint": {
+      "value": "replace arXiv citations with peer-reviewed papers where possible",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方建议尽量以同行评审论文替换 arXiv 引用",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-authorinstructions",
+          "quote": "Carefully check your references and **replace arXiv citations with peer-reviewed papers** where possible (arXiv is generally not peer-reviewed)."
+        }
+      ]
+    },
+    "algorithm_style_hint": {
+      "value": "官方 sty 载入 algorithm 与 algorithmic，支持算法伪代码浮动体",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 预载 algorithm/algorithmic 宏包",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "\\RequirePackage{algorithm}\n\\RequirePackage{algorithmic}"
+        }
+      ]
+    },
+    "color_policy": {
+      "value": "hyperref 链接启用彩色（mydarkblue）；正文文本不使用颜色",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 设置 colorlinks=true，链接色为 mydarkblue",
+      "evidence": [
+        {
+          "source_id": "src-icml-2025-sty",
+          "quote": "colorlinks=true,\n    linkcolor=mydarkblue,"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 26.0,
+      "median": 25.0,
+      "p10": 24.0,
+      "p90": 30.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 24.0,
+      "max": 30.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.333,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 487.0,
+      "median": 487.15,
+      "p10": 486.0,
+      "p90": 487.5,
+      "n": 6,
+      "unit": "pt",
+      "min": 486.0,
+      "max": 487.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 17.567,
+      "median": 17.6,
+      "p10": 17.5,
+      "p90": 17.6,
+      "n": 6,
+      "unit": "pt",
+      "min": 17.5,
+      "max": 17.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 19.25,
+      "median": 19.2,
+      "p10": 19.1,
+      "p90": 19.5,
+      "n": 6,
+      "unit": "mm",
+      "min": 19.1,
+      "max": 19.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 24.883,
+      "median": 24.9,
+      "p10": 24.8,
+      "p90": 24.9,
+      "n": 6,
+      "unit": "mm",
+      "min": 24.8,
+      "max": 24.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 16.6,
+      "median": 16.6,
+      "p10": 16.6,
+      "p90": 16.6,
+      "n": 6,
+      "unit": "mm",
+      "min": 16.6,
+      "max": 16.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 17.6,
+      "median": 17.6,
+      "p10": 17.6,
+      "p90": 17.6,
+      "n": 6,
+      "unit": "mm",
+      "min": 17.6,
+      "max": 17.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "figures": {
+      "mean": 11.833,
+      "median": 13.5,
+      "p10": 3.0,
+      "p90": 21.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 3.0,
+      "max": 21.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "tables": {
+      "mean": 6.667,
+      "median": 4.5,
+      "p10": 1.0,
+      "p90": 15.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 15.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "equations": {
+      "mean": 56.833,
+      "median": 43.0,
+      "p10": 2.0,
+      "p90": 172.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 2.0,
+      "max": 172.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 1.167,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 3.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "refs": {
+      "mean": 2.667,
+      "median": 2.0,
+      "p10": 1.0,
+      "p90": 6.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 6.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 1.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 5.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 5.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 1.265,
+      "median": 1.35,
+      "p10": 0.333,
+      "p90": 2.333,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.333,
+      "max": 2.333,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.704,
+      "median": 0.467,
+      "p10": 0.111,
+      "p90": 1.667,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.111,
+      "max": 1.667,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 6.272,
+      "median": 4.661,
+      "p10": 0.2,
+      "p90": 19.111,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.2,
+      "max": 19.111,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.754,
+      "median": 0.891,
+      "p10": 0.259,
+      "p90": 0.998,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.259,
+      "max": 0.998,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.194,
+      "median": 0.185,
+      "p10": 0.154,
+      "p90": 0.245,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.154,
+      "max": 0.245,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.452,
+      "median": 0.571,
+      "p10": 0.0,
+      "p90": 0.778,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.0,
+      "max": 0.778,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.5,
+      "median": 9.5,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 138.733,
+      "median": 132.5,
+      "p10": 83.2,
+      "p90": 206.6,
+      "n": 6,
+      "unit": "per_page",
+      "min": 83.2,
+      "max": 206.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-icml-2025-001",
+        "s-icml-2025-002",
+        "s-icml-2025-003",
+        "s-icml-2025-004",
+        "s-icml-2025-005",
+        "s-icml-2025-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "ICML 2022",
+      "year": 2022,
+      "value": 8,
+      "source_id": "src-icml-2022-cfp",
+      "note": "2022 起改为「单文件、8 页正文 + 不限参考文献/附录」（相对 2021 的重要格式变化之一）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICML 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-icml-2023-cfp",
+      "note": "维持 8 页正文"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICML 2024",
+      "year": 2024,
+      "value": 8,
+      "source_id": "src-icml-2024-cfp",
+      "note": "维持 8 页正文"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICML 2025",
+      "year": 2025,
+      "value": 8,
+      "source_id": "src-icml-2025-cfp",
+      "note": "现行：8 页正文，录用后 +1"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "ICML 2024",
+      "year": 2024,
+      "value": 1,
+      "source_id": "src-icml-2024-authorinstructions",
+      "note": "录用后正文可 +1 页"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "ICML 2025",
+      "year": 2025,
+      "value": 1,
+      "source_id": "src-icml-2025-cfp",
+      "note": "仍 +1 页（即正文 9 页）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "ICML 2022",
+      "year": 2022,
+      "value": false,
+      "source_id": "src-icml-2022-cfp",
+      "note": "参考文献/附录不限页、不计入 8 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "ICML 2025",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-icml-2025-cfp",
+      "note": "仍不计入"
+    },
+    {
+      "key": "anonymity",
+      "edition": "ICML 2021",
+      "year": 2021,
+      "value": "double-blind",
+      "source_id": "src-icml-2021-cfp",
+      "note": "双盲审（沿用至今）"
+    },
+    {
+      "key": "anonymity",
+      "edition": "ICML 2025",
+      "year": 2025,
+      "value": "double-blind",
+      "source_id": "src-icml-2025-cfp",
+      "note": "仍为双盲"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取官方正文 10pt；margin_mm 取等效单边最小边距 22.225mm（左右 0.875in；上下 1in 更大，压缩时以下限约束，避免压到不合规）",
+    "requirement_fields": {
+      "page_limit": 9,
+      "font_pt": 10,
+      "margin_mm": 22.225,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 171.45
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段；texopt 不更换纸张"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段；ICML 为双栏，仅用于校验/迁移判断"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 25.4,
+          "left": 22.225,
+          "right": 22.225
+        },
+        "why": "Requirement.margin_mm 是单一等效值，无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 8,
+        "why": "page_limit 语义为总页数；ICML 的 8 页仅指 content pages（附录/参考文献另计），需 requirements 支持计数范围"
+      },
+      {
+        "key": "appendix_allowed",
+        "value": true,
+        "why": "texopt 不生成/校验附录结构"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否与官方双栏模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分正文页数与总页数，避免把不限页的参考文献/附录算进去导致过度压缩"
+      },
+      {
+        "field": "camera_ready_extra_pages",
+        "type": "int",
+        "example": 1,
+        "rationale": "录用版比投稿版多 1 页，优化目标不同"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-icml-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "ICML 2025 Call For Papers",
+      "url": "https://icml.cc/Conferences/2025/CallForPapers",
+      "fetched_at": "2026-09-12T10:18:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2025-cfp.html",
+      "sha256": "55f04a4ca2bb559a315a4c707071adf8ca983f823f05ede25ee87b4a87fae710",
+      "note": "官方 CFP：8 页正文/双盲/OpenReview/impact statement 不计页"
+    },
+    {
+      "id": "src-icml-2025-authorinstructions",
+      "kind": "official-guidelines",
+      "title": "ICML 2025 Author Instructions",
+      "url": "https://icml.cc/Conferences/2025/AuthorInstructions",
+      "fetched_at": "2026-09-12T10:18:21+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2025-authorinstructions.html",
+      "sha256": "ce94a7625d9f205c492d7ea1216fae6e7d21ced96be6a4997474eacae16804e3",
+      "note": "官方作者指南：单文件 8 页正文、附录不限、camera-ready +1"
+    },
+    {
+      "id": "src-icml-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "ICML 2024 Call For Papers",
+      "url": "https://icml.cc/Conferences/2024/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:23+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2024-cfp.html",
+      "sha256": "3db21d6ba9c8e1ca9468f8d17bef4d2cdcd692d2853fe17d3b8e64faa9c41f6f",
+      "note": "history：2024 页数规则"
+    },
+    {
+      "id": "src-icml-2024-authorinstructions",
+      "kind": "official-guidelines",
+      "title": "ICML 2024 Author Instructions",
+      "url": "https://icml.cc/Conferences/2024/AuthorInstructions",
+      "fetched_at": "2026-09-12T10:22:25+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2024-authorinstructions.html",
+      "sha256": "0a828b2debc47e8ac1770fbd652a52fab8aea108a785cbbc62ec81e7afc622d3",
+      "note": "history：2024 正文 8 页 + 录用加页"
+    },
+    {
+      "id": "src-icml-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "ICML 2023 Call For Papers",
+      "url": "https://icml.cc/Conferences/2023/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:21+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2023-cfp.html",
+      "sha256": "675f813fef218e886c479b7a3f516d4beb3ac0e7c2d5034e817af8930233ed59",
+      "note": "history：2023 页数规则"
+    },
+    {
+      "id": "src-icml-2022-cfp",
+      "kind": "official-guidelines",
+      "title": "ICML 2022 Call For Papers",
+      "url": "https://icml.cc/Conferences/2022/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:19+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2022-cfp.html",
+      "sha256": "b6524b2b0df9ddeb3a4d290d17d302734d14e66b00ced638ccd03129f855e935",
+      "note": "history：2022 改为 8 页正文"
+    },
+    {
+      "id": "src-icml-2021-cfp",
+      "kind": "official-guidelines",
+      "title": "ICML 2021 Call For Papers",
+      "url": "https://icml.cc/Conferences/2021/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:38+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2021-cfp.html",
+      "sha256": "b451c6fe6cc98b21d8dcda88c29c6977c77befe0838f70e73e6ccb41bc1e1df0",
+      "note": "history：2021 双盲政策"
+    },
+    {
+      "id": "src-icml-2025-proceedings",
+      "kind": "official-guidelines",
+      "title": "ICML 2025 Proceedings index (PMLR v267)",
+      "url": "https://proceedings.mlr.press/v267/",
+      "fetched_at": "2026-09-12T10:34:36+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-icml-2025-proceedings.html",
+      "sha256": "ae0094722adc8f850779123f7e648d0ba0054469fd9a12bee691eaafe5dce797",
+      "note": "官方 PMLR v267 索引，用于证明样本属 ICML 2025"
+    },
+    {
+      "id": "src-icml-2025-sty",
+      "kind": "official-template",
+      "title": "ICML 2025 LaTeX style file (icml2025.sty)",
+      "url": "/tmp/zips/icml/icml2025/icml2025.sty",
+      "fetched_at": "2026-09-12T10:20:37+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-icml-2025-sty.sty",
+      "sha256": "a176cdb6c9a39dde2cba05731d79ac02d2fe078b8c5edad1a2b8ddac4fd43d36",
+      "note": "官方 Style zip 内 sty；letter/twocolumn/10pt/textwidth 6.75in/columnsep 0.25in 等 template-implied 证据"
+    },
+    {
+      "id": "src-s-icml-2025-001",
+      "kind": "sample-paper",
+      "title": "Aggregation of Dependent Expert Distributions in Multimodal Variational Autoencoders",
+      "url": "https://proceedings.mlr.press/v267/a-mancisidor25a.html",
+      "fetched_at": "2026-09-12T10:34:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-001.html",
+      "sha256": "fd90c5f909948b53d31b31bfa5f4fa94a0db3116759cb3571200bb1962ab9036",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/a-mancisidor25a/a-mancisidor25a.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    },
+    {
+      "id": "src-s-icml-2025-002",
+      "kind": "sample-paper",
+      "title": "LlavaGuard: An Open VLM-based Framework for Safeguarding Vision Datasets and Models",
+      "url": "https://proceedings.mlr.press/v267/helff25a.html",
+      "fetched_at": "2026-09-12T10:44:05+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-002.html",
+      "sha256": "6594d69f178a9e1f9f9e17963486deadb265e5667a367ba29fc381c44424735c",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/helff25a/helff25a.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    },
+    {
+      "id": "src-s-icml-2025-003",
+      "kind": "sample-paper",
+      "title": "NETS: A Non-equilibrium Transport Sampler",
+      "url": "https://proceedings.mlr.press/v267/albergo25a.html",
+      "fetched_at": "2026-09-12T10:44:06+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-003.html",
+      "sha256": "ef8b0c43ead8d76ff33326e3f902b9d1460480c1b6fb29478a6192fa3fea0c70",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/albergo25a/albergo25a.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    },
+    {
+      "id": "src-s-icml-2025-004",
+      "kind": "sample-paper",
+      "title": "Grokking at the Edge of Linear Separability",
+      "url": "https://proceedings.mlr.press/v267/beck25a.html",
+      "fetched_at": "2026-09-12T10:44:08+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-004.html",
+      "sha256": "5b744c66c7395efc08e0309689edb400ee0089546a9b32d577586904d046f215",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/beck25a/beck25a.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    },
+    {
+      "id": "src-s-icml-2025-005",
+      "kind": "sample-paper",
+      "title": "TabNAT: A Continuous-Discrete Joint Generative Framework for Tabular Data",
+      "url": "https://proceedings.mlr.press/v267/zhang25t.html",
+      "fetched_at": "2026-09-12T10:44:09+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-005.html",
+      "sha256": "31661d33c0f83f04bfa54de265df0ebbc9d3081f6cd2b3c6706d63ae46d05e74",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/zhang25t/zhang25t.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    },
+    {
+      "id": "src-s-icml-2025-006",
+      "kind": "sample-paper",
+      "title": "Refining Adaptive Zeroth-Order Optimization at Ease",
+      "url": "https://proceedings.mlr.press/v267/shu25b.html",
+      "fetched_at": "2026-09-12T10:44:11+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-icml-2025-006.html",
+      "sha256": "4e7646b04576e5d8b34fcae9b47a603f993c979d829d24d100e8d4c98ce5df4c",
+      "pdf_url": "https://raw.githubusercontent.com/mlresearch/v267/main/assets/shu25b/shu25b.pdf",
+      "venue": "International Conference on Machine Learning",
+      "year": 2025,
+      "note": "PMLR v267 论文落地页；官方索引与落地页均标注 Proceedings of the 42nd International Conference on Machine Learning"
+    }
+  ],
+  "open_questions": [
+    "ICML 2021 CFP 归档页未再明文页数上限（2021 使用 CMT、格式与之后不同）；page_limit 仅能从 2022 起逐年取证。",
+    "ICML 官方页面未明文字号与页边距，仅由 icml2025.sty 读出（10pt、letter、textwidth 6.75in、columnsep 0.25in）。",
+    "官方未明文规定浮动体位置偏好（t/b/h）；仅有图形矢量图与无障碍排版建议。",
+    "ICML 要求 impact statement 与 camera-ready 的 lay summary，但 texopt 无对应字段，未纳入映射。"
+  ]
+}

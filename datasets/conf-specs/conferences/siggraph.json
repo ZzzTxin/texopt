@@ -1,0 +1,1082 @@
+{
+  "schema_version": "1.0",
+  "id": "siggraph",
+  "name": "ACM SIGGRAPH Annual Conference on Computer Graphics and Interactive Techniques (Technical Papers)",
+  "abbr": "SIGGRAPH",
+  "family": "graphics",
+  "official_site": "https://www.siggraph.org/",
+  "current_edition": "SIGGRAPH 2025",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023",
+    "2022"
+  ],
+  "template_basis": {
+    "class": "acmart.cls (acmtog)",
+    "inherits": "acmart",
+    "url": "https://www.acm.org/publications/proceedings-template"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 7,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "Dual-track（会议论文）投稿正文 ≤7 页（不含参考文献与 figures-only 页）；Journal-only 无页数限制（历史典型 8–12 页）",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Papers must be no longer than 7 pages excluding references and figures-only pages."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 7 页；参考文献长度不限",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "There is no limit on the length of the reference section."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "附录不得放在正文，只能作为 supplemental material 提交",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Appendices are to be provided as supplemental material, and not part of the paper itself."
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "附录不在正文内、不计入 7 页；正文允许至多 2 页 figures-only 页（置于参考文献之后）",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Each paper can have at most two figures-only pages"
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 1,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用会议论文可 +1 页，仅用于放作者名单/单位/版权/致谢",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Post-acceptance, authors of papers accepted to the Conference track can add one additional page to the final-format papers to accommodate the author list, author affiliations, copyright, and acknowledgements"
+        }
+      ]
+    },
+    "page_limit_total": {
+      "value": 10,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用会议论文：核心 7 页 + 两页 figures-only 合并入正文 + 1 页作者信息 = 至多 10 页，另加参考文献",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "In addition, after the final version has been approved, the authors may integrate figures included in the two figures-only pages of the submission into the main text, resulting in a total of at most 10 pages plus references."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "numbered with paper ID (submission)",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "送审稿所有页面须编号并含论文 ID；录用版 final 不含页码",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Be sure that all pages are numbered and contain your paper’s ID number."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "完全双盲；正文/补充材料/元数据均须匿名，自引用第三人称",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "The SIGGRAPH review process is fully double-blind"
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "Linklings",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿系统为 Linklings；录用后会议论文经 ACM TAPS 出版",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "One of the authors must start a submission in the online submission system “Linklings”"
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "supplementary materials encouraged, must be anonymized; >100MB may not be reviewed",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "鼓励提交补充材料（须匿名）；超过 100MB 时不保证评审核阅",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "If your supplemental materials amount to more than 100 MB of data, you are not guaranteed that reviewers will download and view them."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "acmart.cls (acmtog)",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "使用 ACM acmtog 文章风格双栏模板；LaTeX 命令 \\documentclass[acmtog,anonymous,review]{acmart}",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "\\documentclass[acmtog,anonymous,review]{acmart}"
+        }
+      ]
+    },
+    "template_url": {
+      "value": "https://www.acm.org/publications/proceedings-template",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "按 ACM SIGGRAPH publication guidelines 与 acmart 模板准备稿件",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Technical Papers authors should prepare their documents according to the ACM SIGGRAPH publication guidelines"
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart acmtog geometry 载入 letterpaper（8.5in × 11in）",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmtog 为 Large double-column 格式；acmart 对 acmtog 使用 \\twocolumn",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "acmtog   & Large double-column format.  Used for"
+        },
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "\\or % acmtog\n    \\twocolumn[\\box\\mktitle@bx]%"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 8.47,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmtog geometry columnsep=24pt = 8.467mm",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "includeheadfoot, columnsep=24pt,"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 9,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart acmtog 默认正文 9pt",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "\\or % acmtog\n    \\def\\ACM@fontsize{9pt}%"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 18.34,
+        "bottom": 26.46,
+        "left": 18.34,
+        "right": 18.34
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmtog geometry：top=52pt=18.34mm，bottom=75pt=26.46mm，inner=outer=52pt=18.34mm",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "top=52pt, bottom=75pt, inner=52pt, outer=52pt,"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 179.2,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "版心宽 = 8.5in − 2×52pt = 508pt = 179.2mm（双栏总宽）",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        },
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "top=52pt, bottom=75pt, inner=52pt, outer=52pt,"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "ACMReferenceFormat",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 随附 ACM-Reference-Format.bst；SIGGRAPH 强调历届会议论文引用格式",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "acmart.cls, the files ACM-Reference-Format.bst, templates"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "dual_submission_policy": {
+      "value": "No prior publication or concurrent submission of substantially similar work",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿须保证核心贡献未在别处发表/接受，且审稿期内未在他处审稿",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "authors acknowledge that the technical contributions they claim have not been previously published or accepted for publication in another peer-reviewed venue"
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "ACM-Reference-Format (natbib), 历届 SIGGRAPH 会议论文引用格式随年份不同",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "SIGGRAPH 特别提醒 ACM SIGGRAPH 会议论文的引用格式随发表年份不同",
+      "evidence": [
+        {
+          "source_id": "src-siggraph-2025-tp",
+          "quote": "Please pay particular attention to the citation format for prior ACM SIGGRAPH Conference Papers"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 11.571,
+      "median": 11.0,
+      "p10": 9.0,
+      "p90": 16.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 9.0,
+      "max": 16.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.429,
+      "median": 10.0,
+      "p10": 7.0,
+      "p90": 12.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 7.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 513.757,
+      "median": 508.9,
+      "p10": 508.8,
+      "p90": 542.2,
+      "n": 7,
+      "unit": "pt",
+      "min": 508.8,
+      "max": 542.2,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 23.9,
+      "median": 23.9,
+      "p10": 23.9,
+      "p90": 23.9,
+      "n": 7,
+      "unit": "pt",
+      "min": 23.9,
+      "max": 23.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 16.3,
+      "median": 18.1,
+      "p10": 5.7,
+      "p90": 18.1,
+      "n": 7,
+      "unit": "mm",
+      "min": 5.7,
+      "max": 18.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 18.329,
+      "median": 18.2,
+      "p10": 18.2,
+      "p90": 18.9,
+      "n": 7,
+      "unit": "mm",
+      "min": 18.2,
+      "max": 18.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 19.714,
+      "median": 19.2,
+      "p10": 19.2,
+      "p90": 21.9,
+      "n": 7,
+      "unit": "mm",
+      "min": 19.2,
+      "max": 21.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 28.029,
+      "median": 26.5,
+      "p10": 26.5,
+      "p90": 34.7,
+      "n": 7,
+      "unit": "mm",
+      "min": 26.5,
+      "max": 34.7,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "figures": {
+      "mean": 11.714,
+      "median": 12.0,
+      "p10": 5.0,
+      "p90": 21.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 5.0,
+      "max": 21.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "tables": {
+      "mean": 1.571,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 4.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 4.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "equations": {
+      "mean": 10.857,
+      "median": 8.0,
+      "p10": 3.0,
+      "p90": 26.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 3.0,
+      "max": 26.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.143,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "refs": {
+      "mean": 3.429,
+      "median": 3.0,
+      "p10": 1.0,
+      "p90": 8.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.143,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 1.276,
+      "median": 1.0,
+      "p10": 0.5,
+      "p90": 2.333,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.5,
+      "max": 2.333,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.179,
+      "median": 0.111,
+      "p10": 0.0,
+      "p90": 0.4,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 0.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 1.101,
+      "median": 1.0,
+      "p10": 0.3,
+      "p90": 2.167,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.3,
+      "max": 2.167,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.753,
+      "median": 0.728,
+      "p10": 0.475,
+      "p90": 1.129,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.475,
+      "max": 1.129,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.314,
+      "median": 0.178,
+      "p10": 0.131,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.131,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.577,
+      "median": 0.5,
+      "p10": 0.042,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.042,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 8.143,
+      "median": 8.0,
+      "p10": 8.0,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 8.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 99.0,
+      "median": 98.2,
+      "p10": 82.4,
+      "p90": 124.3,
+      "n": 7,
+      "unit": "per_page",
+      "min": 82.4,
+      "max": 124.3,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-siggraph-2023-001",
+        "s-siggraph-2024-001",
+        "s-siggraph-2024-002",
+        "s-siggraph-2025-001",
+        "s-siggraph-2025-002",
+        "s-siggraph-2025-003",
+        "s-siggraph-2025-004"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "SIGGRAPH 2022",
+      "year": 2022,
+      "value": 7,
+      "source_id": "src-siggraph-2022-tp",
+      "note": "2022：会议论文轨 7 页（不含参考文献），双栏"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "SIGGRAPH 2023",
+      "year": 2023,
+      "value": 7,
+      "source_id": "src-siggraph-2023-tp",
+      "note": "2023：7 页（不含参考文献与 figures-only 页）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "SIGGRAPH 2024",
+      "year": 2024,
+      "value": 7,
+      "source_id": "src-siggraph-2024-tp",
+      "note": "2024：维持 7 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "SIGGRAPH 2025",
+      "year": 2025,
+      "value": 7,
+      "source_id": "src-siggraph-2025-tp",
+      "note": "2025：维持 7 页，figures-only 至多 2 页"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "SIGGRAPH 2022",
+      "year": 2022,
+      "value": 0,
+      "source_id": "src-siggraph-2022-tp",
+      "note": "2022：会议论文不得超过 7 页 + 参考文献，无额外加页"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "SIGGRAPH 2023",
+      "year": 2023,
+      "value": 1,
+      "source_id": "src-siggraph-2023-tp",
+      "note": "2023 起录用会议论文可 +1 页放作者信息/致谢"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "SIGGRAPH 2025",
+      "year": 2025,
+      "value": 1,
+      "source_id": "src-siggraph-2025-tp",
+      "note": "2025：仍为 +1 页（至多 10 页加参考文献）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "SIGGRAPH 2023",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-siggraph-2023-tp",
+      "note": "参考文献不计入 7 页，长度不限"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "SIGGRAPH 2023",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-siggraph-2023-tp",
+      "note": "附录仅作补充材料，不计入正文"
+    },
+    {
+      "key": "template_file",
+      "edition": "SIGGRAPH 2022",
+      "year": 2022,
+      "value": "acmart >= 1.80 (acmtog)",
+      "source_id": "src-siggraph-2022-tp",
+      "note": "2022 要求 acmart 1.80 以上，否则不构成有效投稿"
+    },
+    {
+      "key": "template_file",
+      "edition": "SIGGRAPH 2025",
+      "year": 2025,
+      "value": "acmart >= 2.09 (acmtog)",
+      "source_id": "src-siggraph-2025-tp",
+      "note": "2025 要求 acmart 2.09 以上"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取 acmart acmtog 正文 9pt；margin_mm 取等效单边 18.34mm；page_limit 取会议论文轨正文 7 页",
+    "requirement_fields": {
+      "page_limit": 7,
+      "font_pt": 9,
+      "margin_mm": 18.34,
+      "eq_fleqn_allowed": true,
+      "float_spec": "tbp",
+      "microtype": true,
+      "overwide_fig_threshold_mm": 179.2,
+      "verbose": false
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段；acmtog 固定双栏"
+      },
+      {
+        "key": "page_limit_total",
+        "value": 10,
+        "why": "录用版 10 页为‘7 核心 + 2 figures-only + 1 作者页’，与 page_limit 语义不同"
+      },
+      {
+        "key": "page_numbering",
+        "value": "numbered with paper ID (submission)",
+        "why": "texopt 不生成投稿版页码/ID"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不检测匿名化"
+      },
+      {
+        "key": "submission_system",
+        "value": "Linklings",
+        "why": "texopt 不涉及投稿系统"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否与 acmtog 模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "SIGGRAPH 的 7 页不含参考文献与 figures-only 页"
+      },
+      {
+        "field": "figure_only_pages",
+        "type": "int",
+        "example": 2,
+        "rationale": "双轨投稿允许至多 2 页 images-only 页，影响版面规划"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-siggraph-2025-tp",
+      "kind": "official-guidelines",
+      "title": "SIGGRAPH 2025 Technical Papers — Submissions / Information for Authors",
+      "url": "/tmp/sg2025tp.html",
+      "fetched_at": "2026-09-12T10:22:28+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-siggraph-2025-tp.html",
+      "sha256": "5d46a148f39a0eadf9e7770f0719677805715512ef3cd6f9c07f224e1c489b91",
+      "note": "官方 Technical Papers 页：acmtog 模板/页数/匿名/录后加页规则"
+    },
+    {
+      "id": "src-siggraph-2024-tp",
+      "kind": "official-guidelines",
+      "title": "SIGGRAPH 2024 Technical Papers — Information for Authors",
+      "url": "/tmp/s2024tp.html",
+      "fetched_at": "2026-09-12T10:24:33+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-siggraph-2024-tp.html",
+      "sha256": "89ad0729814f76c19017dd94f938c45c26332202edddd5ee4637caf336cceb0e",
+      "note": "官方 Technical Papers 页：acmtog 模板/页数/匿名/录后加页规则"
+    },
+    {
+      "id": "src-siggraph-2023-tp",
+      "kind": "official-guidelines",
+      "title": "SIGGRAPH 2023 Technical Papers — Information for Authors",
+      "url": "/tmp/s2023tp.html",
+      "fetched_at": "2026-09-12T10:24:35+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-siggraph-2023-tp.html",
+      "sha256": "129fd738be857ffddd34d7f9f66feafb7451021aa50ea0b6d28d4819ce101222",
+      "note": "官方 Technical Papers 页：acmtog 模板/页数/匿名/录后加页规则"
+    },
+    {
+      "id": "src-siggraph-2022-tp",
+      "kind": "official-guidelines",
+      "title": "SIGGRAPH 2022 Technical Papers — Information for Authors",
+      "url": "/tmp/s2022tp.html",
+      "fetched_at": "2026-09-12T10:24:36+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-siggraph-2022-tp.html",
+      "sha256": "c4e3d273f490238cc1ae33117f3190c08018ac9ff9c890717197ca42d1129cee",
+      "note": "官方 Technical Papers 页：acmtog 模板/页数/匿名/录后加页规则"
+    },
+    {
+      "id": "src-acmart-dtx",
+      "kind": "official-template",
+      "title": "ACM acmart class (acmart.dtx documentation source)",
+      "url": "/tmp/acmart_extract/acmart.dtx",
+      "fetched_at": "2026-09-12T10:25:35+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-acmart-dtx.dtx",
+      "sha256": "e29efd327f5c759f3d1f2e99dc8588c6a05b734c142f89c3e348161b893e44ff",
+      "note": "ACM 官方 acmart 模板；acmtog 格式的 geometry/字号/双栏证据"
+    },
+    {
+      "id": "src-siggraph-2025-sample-003",
+      "kind": "sample-paper",
+      "title": "Physically Controllable Relighting of Photographs",
+      "url": "https://arxiv.org/abs/2508.05626",
+      "fetched_at": "2026-09-12T10:38:52+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2025-sample-003.html",
+      "sha256": "2c1c8ebfcb57e7ebb44b5837da69c370de8088addcbce43ee3a960a7f19cce02",
+      "pdf_url": "https://arxiv.org/pdf/2508.05626",
+      "venue": "SIGGRAPH 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-siggraph-2025-sample-004",
+      "kind": "sample-paper",
+      "title": "Spatiotemporally Consistent Indoor Lighting Estimation with Diffusion Priors",
+      "url": "https://arxiv.org/abs/2508.08384",
+      "fetched_at": "2026-09-12T10:38:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2025-sample-004.html",
+      "sha256": "b1bb82ba41ab63a8fcac27b8af5c7b5f56fd815f45bfffa5b64ce4e5c2b4b55a",
+      "pdf_url": "https://arxiv.org/pdf/2508.08384",
+      "venue": "SIGGRAPH 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-siggraph-2025-sample-005",
+      "kind": "sample-paper",
+      "title": "Noise-Coded Illumination for Forensic and Photometric Video Analysis",
+      "url": "https://arxiv.org/abs/2507.23002",
+      "fetched_at": "2026-09-12T10:38:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2025-sample-005.html",
+      "sha256": "69568105db661f76df064cf25a8e54f30f7c42b4f1273e333169248e1290b6db",
+      "pdf_url": "https://arxiv.org/pdf/2507.23002",
+      "venue": "SIGGRAPH 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-siggraph-2025-sample-006",
+      "kind": "sample-paper",
+      "title": "Light Pipe Holographic Display: Bandwidth-preserved Kaleidoscopic Guiding for AR Glasses",
+      "url": "https://arxiv.org/abs/2507.04374",
+      "fetched_at": "2026-09-12T10:38:49+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2025-sample-006.html",
+      "sha256": "31fb88996795aec7b52f142bd53b331d6231e2e261c193b2dda1bf47ec8182ae",
+      "pdf_url": "https://arxiv.org/pdf/2507.04374",
+      "venue": "SIGGRAPH 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-siggraph-2024-sample-004",
+      "kind": "sample-paper",
+      "title": "Woven Fabric Capture with a Reflection-Transmission Photo Pair",
+      "url": "https://arxiv.org/abs/2406.19398",
+      "fetched_at": "2026-09-12T10:38:45+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2024-sample-004.html",
+      "sha256": "b22dc6a5c9e48a4536eb14cfe8486420c3009ad7a53916a311307cf71e59b342",
+      "pdf_url": "https://arxiv.org/pdf/2406.19398",
+      "venue": "SIGGRAPH 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-siggraph-2024-sample-005",
+      "kind": "sample-paper",
+      "title": "Stabler Neo-Hookean Simulation: Absolute Eigenvalue Filtering for Projected Newton",
+      "url": "https://arxiv.org/abs/2406.05928",
+      "fetched_at": "2026-09-12T10:38:46+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2024-sample-005.html",
+      "sha256": "9c70ea71851ac93631b55508269530bccee0b4e1f29bad8505fb1798afef79b4",
+      "pdf_url": "https://arxiv.org/pdf/2406.05928",
+      "venue": "SIGGRAPH 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-siggraph-2023-sample-002",
+      "kind": "sample-paper",
+      "title": "OctFormer: Octree-based Transformers for 3D Point Clouds",
+      "url": "https://arxiv.org/abs/2305.03045",
+      "fetched_at": "2026-09-12T10:28:14+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-siggraph-2023-sample-002.html",
+      "sha256": "7672a4b0bd7ab0ab893959c4f2578c8509142d83323955b6b0835d5bbc3c7c59",
+      "pdf_url": "https://arxiv.org/pdf/2305.03045",
+      "venue": "SIGGRAPH 2023",
+      "year": 2023
+    }
+  ],
+  "open_questions": [
+    "SIGGRAPH 未明写字号/页边距，数值来自 ACM acmart acmtog 模板(9pt、letter、inner/outer 52pt)，属 template-implied。",
+    "SIGGRAPH 2022 的 7 页规则表述（‘7 pages excluding references’）与 2023+ 的‘figures-only pages’口径略有差异。",
+    "SIGGRAPH Journal track（TOG）无页数上限，典型 8–12 页，但无硬性区间，未纳入硬约束。",
+    "SIGGRAPH 送审稿是否强制行号未明说；acmart review 选项行为未确认。",
+    "样本证据依赖 arXiv 落地页 comment 字段（‘SIGGRAPH 20xx’）；ACM DL 直链常 403，未能用 ACM DL 页佐证。"
+  ]
+}

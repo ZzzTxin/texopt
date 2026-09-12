@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://texopt.local/schema/template.schema.json",
+  "title": "texopt 会议排版模板（统一 Schema v1.0）",
+  "description": "16 个会议共用的模板结构。所有数值必须带 basis 与来源；official / template-implied / sample-stat / derived 四级严格区分，样本统计值不得写成硬约束。",
+  "type": "object",
+  "required": [
+    "schema_version", "id", "conference", "edition", "family",
+    "data_basis", "sources", "traceability",
+    "hard_constraints", "geometry", "typography",
+    "float_policy", "density_targets", "optimization_policy",
+    "confidence", "texopt_flat"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "conference": { "type": "string" },
+    "edition": { "type": "string" },
+    "family": { "enum": ["ml", "nlp", "cv", "ai", "graphics", "data", "systems"] },
+    "generated_by": { "type": "string" },
+
+    "data_basis": {
+      "type": "object",
+      "required": ["n_samples", "measurement_method"],
+      "properties": {
+        "n_samples": { "type": "integer", "minimum": 0 },
+        "n_measurements": { "type": "integer", "minimum": 0 },
+        "focus_editions": { "type": "array", "items": { "type": "string" } },
+        "measurement_method": { "type": "string" },
+        "robust_stats_only": { "const": true }
+      }
+    },
+
+    "sources": {
+      "type": "array",
+      "description": "本模板引用到的全部来源：官方来源 id（指向 conferences/<id>.json 的 sources）、样本 PDF 直链、规则 id。",
+      "items": {
+        "type": "object",
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": { "enum": ["official-source", "sample-pdf", "rule", "analysis-file"] },
+          "ref": { "type": "string" },
+          "url": { "type": ["string", "null"] },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "traceability": {
+      "type": "object",
+      "required": ["field_basis", "basis_definitions"],
+      "properties": {
+        "basis_definitions": { "$ref": "#/definitions/basis_definitions" },
+        "field_basis": {
+          "type": "object",
+          "description": "字段路径 → basis。任何数值字段都必须在此登记。",
+          "additionalProperties": { "enum": ["official", "template-implied", "inferred", "sample-stat", "derived"] }
+        }
+      }
+    },
+
+    "hard_constraints": {
+      "type": "object",
+      "description": "官方（或官方模板隐含）要求，违反有不合规风险。键名沿用 schema/KEY_VOCAB.md。",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "confidence", "compliance_impact"],
+        "properties": {
+          "value": {},
+          "unit": { "type": ["string", "null"] },
+          "scope": { "enum": ["submission", "camera_ready", "both", "template_default"] },
+          "confidence": { "enum": ["official", "template-implied", "inferred"] },
+          "compliance_impact": { "enum": ["reject-risk", "desk-check", "informational"] },
+          "evidence": { "$ref": "#/definitions/evidence_list" },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "geometry": {
+      "type": "object",
+      "required": ["page_size", "page_width_mm", "page_height_mm", "columns", "margins", "margin_floor_mm"],
+      "properties": {
+        "page_size": { "$ref": "#/definitions/metric" },
+        "page_width_mm": { "$ref": "#/definitions/metric" },
+        "page_height_mm": { "$ref": "#/definitions/metric" },
+        "columns": { "$ref": "#/definitions/metric" },
+        "column_gap_mm": { "$ref": "#/definitions/metric" },
+        "column_width_mm": { "$ref": "#/definitions/metric" },
+        "text_width_mm": { "$ref": "#/definitions/metric" },
+        "text_height_mm": { "$ref": "#/definitions/metric" },
+        "margins": {
+          "type": "object",
+          "required": ["left_mm", "right_mm", "top_mm", "bottom_mm"],
+          "properties": {
+            "left_mm": { "$ref": "#/definitions/metric" },
+            "right_mm": { "$ref": "#/definitions/metric" },
+            "top_mm": { "$ref": "#/definitions/metric" },
+            "bottom_mm": { "$ref": "#/definitions/metric" }
+          }
+        },
+        "margin_floor_mm": {
+          "$ref": "#/definitions/metric",
+          "description": "texopt 压页时页边距不得低于此值（取官方/实测四边最小值）。"
+        },
+        "observed": {
+          "type": "object",
+          "description": "真实论文实测的稳健分布（仅参考，不参与合规判定）。",
+          "additionalProperties": { "$ref": "#/definitions/robust" }
+        }
+      }
+    },
+
+    "typography": {
+      "type": "object",
+      "required": ["body_font_pt", "caption_font_pt"],
+      "properties": {
+        "body_font_pt": { "$ref": "#/definitions/metric" },
+        "body_font_family": { "$ref": "#/definitions/metric" },
+        "line_spacing": { "$ref": "#/definitions/metric" },
+        "caption_font_pt": { "$ref": "#/definitions/metric" },
+        "caption_position": {
+          "type": "object",
+          "required": ["figure", "table"],
+          "properties": {
+            "figure": { "$ref": "#/definitions/metric" },
+            "table": { "$ref": "#/definitions/metric" }
+          }
+        },
+        "caption_align_observed": { "$ref": "#/definitions/robust" },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "float_policy": {
+      "type": "object",
+      "required": ["float_spec", "figure_width", "full_width_figure", "position_prior"],
+      "properties": {
+        "float_spec": { "$ref": "#/definitions/metric" },
+        "figure_width": {
+          "type": "object",
+          "required": ["typical_frac"],
+          "properties": {
+            "typical_frac": { "$ref": "#/definitions/robust" },
+            "denominator": { "type": "string", "description": "fig_width_frac 的分母（版心全宽），>1 表示检测框超出/等于整页宽" },
+            "overwide_threshold_mm": { "$ref": "#/definitions/metric" },
+            "spanning_note": { "type": "string" }
+          }
+        },
+        "full_width_figure": {
+          "type": "object",
+          "properties": {
+            "frac": { "$ref": "#/definitions/robust" },
+            "count_per_paper": { "$ref": "#/definitions/robust" }
+          }
+        },
+        "position_prior": {
+          "type": "object",
+          "description": "实测浮动体位置分布（top/bottom/mid）",
+          "properties": {
+            "full_width_float_ratio": { "type": "object", "additionalProperties": { "type": "number" } },
+            "figure_ratio": { "type": "object", "additionalProperties": { "type": "number" } }
+          }
+        },
+        "official_rules": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "density_targets": {
+      "type": "object",
+      "description": "经验规律（sample-stat），不是硬约束。reliable=false 的字段不得作为优化目标。",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["basis", "reliable"],
+        "properties": {
+          "basis": { "enum": ["sample-stat", "derived"] },
+          "reliable": { "type": "boolean" },
+          "per_paper": { "$ref": "#/definitions/robust" },
+          "per_content_page": { "$ref": "#/definitions/robust" },
+          "target_range": {
+            "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2,
+            "description": "建议区间 [P25, P75]"
+          },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "optimization_policy": {
+      "type": "object",
+      "required": ["priority", "avoid", "actions", "unsupported", "applicable_rules"],
+      "properties": {
+        "priority": {
+          "type": "array", "minItems": 3, "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["rank", "direction", "why", "evidence"],
+            "properties": {
+              "rank": { "type": "integer", "minimum": 1 },
+              "direction": { "type": "string" },
+              "why": { "type": "string" },
+              "evidence": { "type": "array", "items": { "type": "string" } },
+              "texopt_actions": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "avoid": { "type": "array", "items": { "type": "string" } },
+        "actions": {
+          "type": "object",
+          "description": "映射到 texopt 动作白名单的参数（仅参数建议，不修改代码）",
+          "additionalProperties": true
+        },
+        "unsupported": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": { "type": "string" },
+              "value": {},
+              "why": { "type": "string" }
+            },
+            "required": ["key", "value"]
+          }
+        },
+        "applicable_rules": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "confidence": {
+      "type": "object",
+      "required": ["sample_n", "level", "reliable_fields", "unreliable_fields", "conflicts"],
+      "properties": {
+        "sample_n": { "type": "integer" },
+        "level": { "enum": ["high", "medium", "low"] },
+        "reliable_fields": { "type": "array", "items": { "type": "string" } },
+        "unreliable_fields": { "type": "array", "items": { "type": "string" } },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "detail"],
+            "properties": {
+              "type": { "type": "string" },
+              "sample_id": { "type": ["string", "null"] },
+              "detail": { "type": "string" },
+              "resolution": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "texopt_flat": {
+      "type": "object",
+      "description": "投影到当前 texopt Requirement 字段的扁平值（供 requirements 模块直接消费；字段含义见 templates/README.md）。",
+      "required": ["page_limit", "font_pt", "margin_mm", "float_spec", "overwide_fig_threshold_mm"],
+      "properties": {
+        "page_limit": { "type": ["number", "null"] },
+        "font_pt": { "type": ["number", "null"] },
+        "margin_mm": { "type": ["number", "null"] },
+        "float_spec": { "type": ["string", "null"] },
+        "overwide_fig_threshold_mm": { "type": ["number", "null"] },
+        "eq_fleqn_allowed": { "type": ["boolean", "null"] },
+        "enable_quality_macros": { "type": ["boolean", "null"] }
+      }
+    }
+  },
+
+  "definitions": {
+    "basis_definitions": {
+      "type": "object",
+      "properties": {
+        "official": { "type": "string" },
+        "template-implied": { "type": "string" },
+        "inferred": { "type": "string" },
+        "sample-stat": { "type": "string" },
+        "derived": { "type": "string" }
+      }
+    },
+    "evidence_list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id"],
+        "properties": {
+          "source_id": { "type": "string" },
+          "quote": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "robust": {
+      "type": "object",
+      "required": ["n", "median"],
+      "properties": {
+        "n": { "type": "integer", "minimum": 0 },
+        "min": { "type": ["number", "null"] },
+        "p25": { "type": ["number", "null"] },
+        "median": { "type": ["number", "null"] },
+        "p75": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] },
+        "unit": { "type": ["string", "null"] }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["value", "basis"],
+      "properties": {
+        "value": {},
+        "unit": { "type": ["string", "null"] },
+        "basis": { "enum": ["official", "template-implied", "inferred", "sample-stat", "derived"] },
+        "stat": { "enum": ["value", "mode", "median", "p25", "p75", "min", "max"] },
+        "n": { "type": ["integer", "null"] },
+        "reliable": { "type": ["boolean", "null"] },
+        "derivation": { "type": ["string", "null"] },
+        "observed": { "$ref": "#/definitions/robust" },
+        "evidence": { "$ref": "#/definitions/evidence_list" },
+        "note": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

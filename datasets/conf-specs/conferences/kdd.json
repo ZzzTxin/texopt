@@ -1,0 +1,1068 @@
+{
+  "schema_version": "1.0",
+  "id": "kdd",
+  "name": "ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD)",
+  "abbr": "KDD",
+  "family": "data",
+  "official_site": "https://kdd.org/",
+  "current_edition": "KDD 2025",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023",
+    "2022"
+  ],
+  "template_basis": {
+    "class": "acmart.cls (sigconf)",
+    "inherits": "acmart",
+    "url": "https://www.acm.org/publications/proceedings-template"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "研究报告投稿正文（main paper）上限 8 个 content pages；其后接参考文献与可选附录",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "Submissions must be a single PDF file: 8 (eight) content pages as main paper, followed by references and an optional Appendix that has no page limits."
+        }
+      ]
+    },
+    "page_limit_total": {
+      "value": 12,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用版 proceedings 上限 12 页，其中 9 页为 content pages（正文 +1 页、参考文献与附录合计 ≤3 页）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "All accepted papers will be allowed the same maximum page length in the proceedings ( 12 pages, of which 9 are content pages)"
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 1,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后正文可由 8 页增至 9 个 content pages（+1）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "while we allow one more content page for accepted papers to incorporate reviewer feedback"
+        },
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "we limit the references and Appendix to only 3 pages."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿 8 页正文之后的参考文献不计入正文页数；录用版参考文献与附录合计限 3 页",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "Submissions must be a single PDF file: 8 (eight) content pages as main paper, followed by references and an optional Appendix that has no page limits."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许附录（reproducibility 细节、证明、伪代码等）；投稿阶段附录无页数上限",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "The Appendix can contain details on reproducibility, proofs, pseudo-code, etc."
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿阶段附录不计入 8 页正文（无页数上限）；录用版参考文献+附录合计限 3 页",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "followed by references and an optional Appendix that has no page limits"
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "Research Track 双盲评审；正文不得含作者名/单位/致谢等身份信息，自引用第三人称",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "The review process for the research track will be double-blind . The submitted document should omit any author names"
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "KDD 2023 起用 OpenReview 管理投稿与评审；2022 用 CMT",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "We will use OpenReview to manage the submissions and reviewing."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "acmart.cls",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "必须使用 ACM 模板（LaTeX 推荐 \\documentclass[sigconf,anonymous,review]{acmart}）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "Submissions must be in English, in double-column format, and must adhere to the ACM template and format"
+        },
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "\\documentclass[sigconf,anonymous,review]{acmart}"
+        }
+      ]
+    },
+    "template_url": {
+      "value": "https://www.acm.org/publications/proceedings-template",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "官方 ACM proceedings 模板（Word Interim Template / LaTeX acmart / Overleaf）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "Word users may use the Word Interim Template"
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 的 sigconf geometry 载入 letterpaper（8.5in × 11in）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sigconf 为双栏；acmart 对 sigconf 使用 \\twocolumn 排 title block 后的正文",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "\\or % sigconf\n    \\twocolumn[\\box\\mktitle@bx]%"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 8.47,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sigconf geometry columnsep=2pc；2pc = 24pt = 8.467mm",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "includeheadfoot, columnsep=2pc,"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 9,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart sigconf 默认正文字号 9pt",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "\\or % sigconf\n    \\def\\ACM@fontsize{9pt}%"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 20.11,
+        "bottom": 25.75,
+        "left": 19.05,
+        "right": 19.05
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart sigconf geometry：top=57pt=20.11mm，bottom=73pt=25.75mm，inner=outer=54pt=19.05mm；twoside 下左右对称",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "top=57pt, bottom=73pt, inner=54pt, outer=54pt,"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 177.8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "版心宽 = 8.5in − 2×54pt = 504pt = 177.8mm（双栏总宽）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        },
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "top=57pt, bottom=73pt, inner=54pt, outer=54pt,"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "ACMReferenceFormat",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 随附 ACM-Reference-Format.bst；如投稿模板所要求",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmrefformat-bst",
+          "quote": "filename        = \"ACM-Reference-Format.bst\""
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "dual_submission_policy": {
+      "value": "No concurrent submission to any archival venue; anonymized arXiv preprints of the same work are allowed",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿不得同时投任何有正式 proceedings 的会议/期刊；arXiv 预印本允许（投稿中不引用）",
+      "evidence": [
+        {
+          "source_id": "src-kdd-2025-researchtrack",
+          "quote": "Submissions must present original work—this means that papers under review at or published/accepted to any peer-reviewed conference/journal with published proceedings cannot be submitted."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "ACM-Reference-Format (natbib/numeric)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 默认启用 natbib（\\ExecuteOptionsX{natbib=true}），配合 ACM-Reference-Format.bst",
+      "evidence": [
+        {
+          "source_id": "src-kdd-acmart-dtx",
+          "quote": "\\ExecuteOptionsX{natbib=true}"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 13.333,
+      "median": 12.0,
+      "p10": 9.0,
+      "p90": 20.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 9.0,
+      "max": 20.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.167,
+      "median": 9.0,
+      "p10": 8.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 8.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 505.65,
+      "median": 505.1,
+      "p10": 504.8,
+      "p90": 508.6,
+      "n": 6,
+      "unit": "pt",
+      "min": 504.8,
+      "max": 508.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 23.917,
+      "median": 23.9,
+      "p10": 23.9,
+      "p90": 24.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 23.9,
+      "max": 24.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 18.55,
+      "median": 18.75,
+      "p10": 17.5,
+      "p90": 18.8,
+      "n": 6,
+      "unit": "mm",
+      "min": 17.5,
+      "max": 18.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 18.95,
+      "median": 18.95,
+      "p10": 18.9,
+      "p90": 19.0,
+      "n": 6,
+      "unit": "mm",
+      "min": 18.9,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 21.9,
+      "median": 21.9,
+      "p10": 21.9,
+      "p90": 21.9,
+      "n": 6,
+      "unit": "mm",
+      "min": 21.9,
+      "max": 21.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 29.183,
+      "median": 29.1,
+      "p10": 28.9,
+      "p90": 29.8,
+      "n": 6,
+      "unit": "mm",
+      "min": 28.9,
+      "max": 29.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "figures": {
+      "mean": 5.333,
+      "median": 5.0,
+      "p10": 2.0,
+      "p90": 8.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 2.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "tables": {
+      "mean": 6.0,
+      "median": 4.0,
+      "p10": 2.0,
+      "p90": 16.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 2.0,
+      "max": 16.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "equations": {
+      "mean": 12.667,
+      "median": 10.0,
+      "p10": 0.0,
+      "p90": 26.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 26.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 1.167,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 2.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "refs": {
+      "mean": 52.333,
+      "median": 53.0,
+      "p10": 33.0,
+      "p90": 67.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 33.0,
+      "max": 67.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.167,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.591,
+      "median": 0.59,
+      "p10": 0.2,
+      "p90": 0.889,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.2,
+      "max": 0.889,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.646,
+      "median": 0.422,
+      "p10": 0.222,
+      "p90": 1.6,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.222,
+      "max": 1.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 1.345,
+      "median": 1.062,
+      "p10": 0.0,
+      "p90": 2.889,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 2.889,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.523,
+      "median": 0.473,
+      "p10": 0.15,
+      "p90": 1.131,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.15,
+      "max": 1.131,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.161,
+      "median": 0.114,
+      "p10": 0.049,
+      "p90": 0.381,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.049,
+      "max": 0.381,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.203,
+      "median": 0.026,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 197.65,
+      "median": 168.75,
+      "p10": 122.4,
+      "p90": 411.1,
+      "n": 6,
+      "unit": "per_page",
+      "min": 122.4,
+      "max": 411.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-kdd-2024-001",
+        "s-kdd-2024-002",
+        "s-kdd-2024-003",
+        "s-kdd-2024-004",
+        "s-kdd-2024-005",
+        "s-kdd-2024-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "KDD 2022",
+      "year": 2022,
+      "value": 9,
+      "source_id": "src-kdd-2022-cfp",
+      "note": "2022：9 页且含参考文献"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "KDD 2023",
+      "year": 2023,
+      "value": 9,
+      "source_id": "src-kdd-2023-callforresearch",
+      "note": "2023：9 页但不含参考文献"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "KDD 2024",
+      "year": 2024,
+      "value": 8,
+      "source_id": "src-kdd-2024-researchtrack",
+      "note": "2024：改为 8 个 content pages（+参考文献/可选附录）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "KDD 2025",
+      "year": 2025,
+      "value": 8,
+      "source_id": "src-kdd-2025-researchtrack",
+      "note": "2025：维持 8 个 content pages"
+    },
+    {
+      "key": "references_counted",
+      "edition": "KDD 2022",
+      "year": 2022,
+      "value": true,
+      "source_id": "src-kdd-2022-cfp",
+      "note": "2022 参考文献计入 9 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "KDD 2023",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-kdd-2023-callforresearch",
+      "note": "2023 起参考文献不计入正文（9 页不含参考文献）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "KDD 2024",
+      "year": 2024,
+      "value": false,
+      "source_id": "src-kdd-2024-researchtrack",
+      "note": "8 content pages 之外的参考文献不计入正文"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "KDD 2024",
+      "year": 2024,
+      "value": 12,
+      "source_id": "src-kdd-2024-researchtrack",
+      "note": "录用版 12 页（9 content + 参考文献与附录 ≤3 页）"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "KDD 2025",
+      "year": 2025,
+      "value": 12,
+      "source_id": "src-kdd-2025-researchtrack",
+      "note": "沿用 12 页上限"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "KDD 2024",
+      "year": 2024,
+      "value": 1,
+      "source_id": "src-kdd-2024-researchtrack",
+      "note": "录用后正文 8→9 content pages"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "KDD 2025",
+      "year": 2025,
+      "value": 1,
+      "source_id": "src-kdd-2025-researchtrack",
+      "note": "仍为 +1 content page"
+    },
+    {
+      "key": "submission_system",
+      "edition": "KDD 2022",
+      "year": 2022,
+      "value": "CMT",
+      "source_id": "src-kdd-2022-cfp",
+      "note": "2022 使用 CMT3（Microsoft Research）"
+    },
+    {
+      "key": "submission_system",
+      "edition": "KDD 2023",
+      "year": 2023,
+      "value": "OpenReview",
+      "source_id": "src-kdd-2023-callforresearch",
+      "note": "2023 起迁移到 OpenReview"
+    },
+    {
+      "key": "submission_system",
+      "edition": "KDD 2025",
+      "year": 2025,
+      "value": "OpenReview",
+      "source_id": "src-kdd-2025-researchtrack",
+      "note": "2025 仍用 OpenReview，录用论文评审记录公开"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取 acmart sigconf 正文 9pt；margin_mm 取等效单边最小值 19.05mm（左右 inner/outer），上下边距未压缩时可更大；page_limit 取 content pages 8",
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 9,
+      "margin_mm": 19.05,
+      "eq_fleqn_allowed": true,
+      "float_spec": "tbp",
+      "microtype": true,
+      "overwide_fig_threshold_mm": 177.8,
+      "verbose": false
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段；texopt 不更换纸张"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段；sigconf 固定双栏"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 20.11,
+          "bottom": 25.75,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "why": "Requirement.margin_mm 为单一等效值，无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 8,
+        "why": "page_limit 语义为总页数，KDD 的 8 页仅指 content pages（参考文献/附录另计），需支持计数范围"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不检测匿名化"
+      },
+      {
+        "key": "page_limit_total",
+        "value": 12,
+        "why": "录用版 12 页含 3 页参考文献/附录，与 page_limit 语义冲突"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否与官方模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分正文页与总页数，避免把参考文献算入导致过度压缩"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 19.05,
+          "right": 19.05,
+          "top": 20.11,
+          "bottom": 25.75
+        },
+        "rationale": "ACM 模板上下边距不等，单一值会失真"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-kdd-2025-researchtrack",
+      "kind": "official-guidelines",
+      "title": "KDD 2025 Research Track: Call for Papers",
+      "url": "https://kdd2025.kdd.org/research-track-call-for-papers/",
+      "fetched_at": "2026-09-12T10:22:43+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2025-researchtrack.html",
+      "sha256": "e512e67a86fe445bb96b1a7da47461861ff05216a0805e233867bc926c523210",
+      "note": "官方 Research Track CFP：页数/匿名/模板/Submission 系统"
+    },
+    {
+      "id": "src-kdd-2024-researchtrack",
+      "kind": "official-guidelines",
+      "title": "KDD 2024 Research Track: Call for Papers",
+      "url": "https://kdd2024.kdd.org/research-track-call-for-papers/",
+      "fetched_at": "2026-09-12T10:22:46+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-researchtrack.html",
+      "sha256": "4fd907d0b5df80d1267f5cbe46a7776731974e0f2bef8103b01e619bc05b0b37",
+      "note": "官方 Research Track CFP：页数/匿名/模板/Submission 系统"
+    },
+    {
+      "id": "src-kdd-2023-callforresearch",
+      "kind": "official-guidelines",
+      "title": "KDD 2023 Call for Research Track Papers",
+      "url": "https://kdd.org/kdd2023/call-for-research-track-papers/index.html",
+      "fetched_at": "2026-09-12T10:23:03+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2023-callforresearch.html",
+      "sha256": "3e6d424809cacb6d8108490bdfd848ba66325876cda04e0c88e6273205d0ad49",
+      "note": "官方 Research Track CFP：页数/匿名/模板/Submission 系统"
+    },
+    {
+      "id": "src-kdd-2022-cfp",
+      "kind": "official-guidelines",
+      "title": "KDD 2022 Call for Research Track Papers",
+      "url": "https://kdd.org/kdd2022/cfpResearch.html",
+      "fetched_at": "2026-09-12T10:23:13+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2022-cfp.html",
+      "sha256": "0a258ce87432e3deae984a250fe17ea49449c2395ab6033be9440c9a4708f5dd",
+      "note": "官方 Research Track CFP：页数/匿名/模板/Submission 系统"
+    },
+    {
+      "id": "src-kdd-acmart-dtx",
+      "kind": "official-template",
+      "title": "ACM acmart class (acmart.dtx documentation source)",
+      "url": "https://mirrors.tuna.tsinghua.edu.cn/CTAN/macros/latex/contrib/acmart/acmart.dtx",
+      "fetched_at": "2026-09-12T10:23:36+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-acmart-dtx.sty",
+      "sha256": "e29efd327f5c759f3d1f2e99dc8588c6a05b734c142f89c3e348161b893e44ff",
+      "note": "ACM 官方 acmart 模板；sigconf/acmtog 的 geometry/字号/双栏与 \\\\twocolumn 证据"
+    },
+    {
+      "id": "src-kdd-acmrefformat-bst",
+      "kind": "style-source",
+      "title": "ACM-Reference-Format.bst",
+      "url": "https://mirrors.tuna.tsinghua.edu.cn/CTAN/macros/latex/contrib/acmart/ACM-Reference-Format.bst",
+      "fetched_at": "2026-09-12T10:23:36+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-acmrefformat-bst.sty",
+      "sha256": "4342d27456645567ef1a027f6474e894715bc31d468f040142fa54540440ad04",
+      "note": "ACM 官方参考文献 BibTeX 样式"
+    },
+    {
+      "id": "src-kdd-2024-sample-001",
+      "kind": "sample-paper",
+      "title": "Revisiting Local PageRank Estimation on Undirected Graphs: Simple and Optimal",
+      "url": "https://arxiv.org/abs/2409.08978",
+      "fetched_at": "2026-09-12T10:38:55+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-001.html",
+      "sha256": "dfea9d7ea21bcd58a71a86d2865e9a24b525865df1322f8447b408027ce74e56",
+      "pdf_url": "https://arxiv.org/pdf/2409.08978",
+      "venue": "KDD 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-kdd-2024-sample-002",
+      "kind": "sample-paper",
+      "title": "Mining of Switching Sparse Networks for Missing Value Imputation in Multivariate Time Series",
+      "url": "https://arxiv.org/abs/2409.09930",
+      "fetched_at": "2026-09-12T10:38:53+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-002.html",
+      "sha256": "70bff05bade1645dd5523d8971075d90340d196deb7cab40796107677e639fde",
+      "pdf_url": "https://arxiv.org/pdf/2409.09930",
+      "venue": "KDD 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-kdd-2024-sample-003",
+      "kind": "sample-paper",
+      "title": "Scalable Multitask Learning Using Gradient-based Estimation of Task Affinity",
+      "url": "https://arxiv.org/abs/2409.06091",
+      "fetched_at": "2026-09-12T10:38:54+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-003.html",
+      "sha256": "3cf4ecfe9bcea47110284784275137fd2fcecf64a56768af1253ab95764ebe5d",
+      "pdf_url": "https://arxiv.org/pdf/2409.06091",
+      "venue": "KDD 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-kdd-2024-sample-004",
+      "kind": "sample-paper",
+      "title": "CheatAgent: Attacking LLM-Empowered Recommender Systems via LLM Agent",
+      "url": "https://arxiv.org/abs/2504.13192",
+      "fetched_at": "2026-09-12T10:38:57+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-004.html",
+      "sha256": "3a2ca112e678cd2fa8748f805953afc6652dd80bf763cc8358c05acba6de2da8",
+      "pdf_url": "https://arxiv.org/pdf/2504.13192",
+      "venue": "KDD 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-kdd-2024-sample-005",
+      "kind": "sample-paper",
+      "title": "LogParser-LLM: Advancing Efficient Log Parsing with Large Language Models",
+      "url": "https://arxiv.org/abs/2408.13727",
+      "fetched_at": "2026-09-12T10:38:58+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-005.html",
+      "sha256": "40f30371ab7da55bdabed29f0450d59aa8032910ba382047fc56b376b53c840e",
+      "pdf_url": "https://arxiv.org/pdf/2408.13727",
+      "venue": "KDD 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-kdd-2024-sample-006",
+      "kind": "sample-paper",
+      "title": "Extreme Meta-Classification for Large-Scale Zero-Shot Retrieval",
+      "url": "https://arxiv.org/abs/2606.25237",
+      "fetched_at": "2026-09-12T10:38:56+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-kdd-2024-sample-006.html",
+      "sha256": "ef9425dd4daff5a46ec2bc05876fced199d28c89013ccb0866bced86e51f60d7",
+      "pdf_url": "https://arxiv.org/pdf/2606.25237",
+      "venue": "KDD 2024",
+      "year": 2024
+    }
+  ],
+  "open_questions": [
+    "KDD 未在 CFP 明写字号/页边距，上述数值来自 ACM acmart sigconf 模板(9pt、letter、inner/outer 54pt)，属 template-implied。",
+    "KDD 送审稿是否强制行号/页码未在 CFP 明说（acmart 的 review 选项会加行号），未确认。",
+    "KDD 2022 的 9 页含参考文献且允许 2 页可复现性补充材料，与 2023+ 的‘参考文献不计页’口径不完全可比。",
+    "KDD 2025 录用版 12 页中正文/参考文献/附录的精确切分（是否强制正文恰好 9 页）未见更细明文。"
+  ]
+}

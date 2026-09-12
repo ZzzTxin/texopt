@@ -198,6 +198,78 @@ def pdf_pages(pdf_path: str) -> int | None:
         return None
 
 
+# ---------------------------------------------------------------- 正文页数
+# 会议口径：多数会议的页数上限是「正文页」（参考文献/附录不计）。texopt 因此
+# 需要把「总页数」与「正文页数」分开——用 pdftotext 逐页找参考文献起始页。
+
+PDETOTEXT_GLOBS = [
+    "/mnt/c/texlive/*/bin/windows/pdftotext.exe",
+    "/mnt/c/texlive/*/bin/*/pdftotext",
+]
+# 参考文献标题（与 datasets 的 measure_pdf.py 同源规则：行首≤4 字符 + references/bibliography）
+REF_HEADING_RE = re.compile(
+    r"(?im)^[^\n]{0,4}(?:\d+\.?\s*)?(references|bibliography)\b")
+_CONTENT_CACHE: dict = {}
+
+
+@lru_cache(maxsize=1)
+def pdftotext_path() -> str | None:
+    p = next((p for g in PDETOTEXT_GLOBS for p in glob.glob(g)), None)
+    return p or shutil.which("pdftotext")
+
+
+def content_pages(pdf_path: str, first_page: int = 2) -> dict | None:
+    """估算正文页数区间（会议 page limit 的判定依据）。
+
+    做法：一次 pdftotext 取全文（\f 分页），从第 first_page 页起找第一篇
+    参考文献/致谢后的 References/Bibliography 标题页 k（跳过标题页噪声）。
+      * k 存在：正文 = 第 1..k 页的部分内容 →
+          下界 lower = k-1（完全在参考文献之前的页数）
+          上界 upper = k（正文可能延伸到参考文献首页）
+      * 找不到：无参考文献区 → lower = upper = 总页数。
+    返回 {first_ref_page, lower, upper, pages, method}；工具缺失时返回 None。
+    判定用「下界」以避免把合法论文误判为超页（真实论文常正好卡在上限）。
+    """
+    txt = pdftotext_path()
+    if not txt or not os.path.isfile(pdf_path):
+        return None
+    pdf_path = os.path.abspath(pdf_path)
+    try:
+        st = os.stat(pdf_path)
+        ckey = (pdf_path, st.st_mtime, st.st_size)
+        if ckey in _CONTENT_CACHE:
+            return _CONTENT_CACHE[ckey]
+    except OSError:
+        ckey = None
+    total = pdf_pages(pdf_path)
+    rc, out_b, _err = _run_with_timeout(
+        [txt, "-layout", os.path.basename(pdf_path), "-"],   # 末位 "-" = 输出到 stdout
+        os.path.dirname(pdf_path), 60)
+    if rc is None:
+        return None
+    pages = out_b.decode("utf-8", errors="replace").split("\f")
+    if pages and not pages[-1].strip():
+        pages = pages[:-1]                      # 末尾多出的空段
+    k = None
+    for i, text in enumerate(pages, start=1):
+        if i < first_page:
+            continue
+        if REF_HEADING_RE.search(text or ""):
+            k = i
+            break
+    n = total or len(pages)
+    if k is None:
+        info = {"first_ref_page": None, "lower": n, "upper": n,
+                "pages": n, "method": "pdftotext 未找到参考文献标题，按全部页计"}
+    else:
+        info = {"first_ref_page": k, "lower": max(1, k - 1), "upper": k,
+                "pages": n,
+                "method": "pdftotext 逐页匹配参考文献标题（正文=第1..参考文献首页）"}
+    if ckey is not None:
+        _CONTENT_CACHE[ckey] = info
+    return info
+
+
 # ---------------------------------------------------------------- PDF 图形裁切
 # 图形保真：图的唯一合法来源是原稿 PDF 本身——按坐标裁切原图原样嵌入，
 # 不用 TikZ 重画、不换算坐标轴。这是「内容零改动」在图像层的落地手段。

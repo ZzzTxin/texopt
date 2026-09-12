@@ -1,0 +1,108 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=19.1mm]{geometry}
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb,graphicx,booktabs,float,xcolor,multicol,titlesec,fancyhdr,hyperref,enumitem,caption,subcaption,microtype}
+\setmainfont{Latin Modern Roman}
+\setlength{\parindent}{0pt}\setlength{\parskip}{14pt}\setlength{\textfloatsep}{2pt}\setlength{\intextsep}{1pt}\setlength{\abovedisplayskip}{2pt}\setlength{\belowdisplayskip}{2pt}\setlength{\columnsep}{3pt}\setlength{\headheight}{8pt}
+\titleformat{\section}{\Large\bfseries\color{red}}{\thesection}{0.2em}{}
+\titleformat{\subsection}{\large\bfseries\color{blue}}{\thesubsection}{0.1em}{}
+\pagestyle{fancy}\fancyhf{}\lhead{}\rhead{\tiny \today}\cfoot{\thepage}
+\title{\Huge A Very Long and Poorly Designed Title That Takes Too Much Space and Makes the First Page Look Ridiculous}
+\author{A. Student \and B. Student}\date{}
+
+% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
+\emergencystretch=1.5em
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\doublehyphendemerits=5000
+\finalhyphendemerits=5000
+% ===== texopt end =====
+
+\usepackage{xurl}  % texopt: 允许超长 URL 断行
+
+\usepackage{tabularx}
+
+\begin{document}\maketitle
+This introductory paragraph is intentionally long enough to create an awkward block of text near the top of the page. It contains unnecessary repetition, strange spacing decisions, and several words that may interact badly with line breaking. The purpose of this document is not to communicate beautiful typography but to stress-test an automatic LaTeX layout optimization system. We want to observe what happens when headings, equations, figures, tables, lists, margins, and page breaks all behave badly at the same time.
+\section{Introduction}
+This section starts too abruptly after the title. The paragraph spacing is excessive. The text also contains a verylongunbr\-eakablewordt\-hatcancreate\-anoverfullhb\-oxandshouldt\-hereforestre\-ssparagraphl\-ayout. Another issue is an extremely narrow margin that leaves the page visually unbalanced.
+\subsection{Motivation}
+The following sentence is intentionally padded with repeated filler words filler words filler words filler words filler words filler words so that paragraph density changes significantly across the page.
+\begin{itemize}[leftmargin=1pt]
+\item First item with excessive vertical spacing and a very long sentence that should wrap across several lines and potentially create a widow or orphan.
+\item Second item.
+\item Third item with a nested list:
+\begin{enumerate}\item Nested item one.\item Nested item two.\item Nested item three.\end{enumerate}
+\end{itemize}
+\section{Mathematical Model}
+Here is an equation with intentionally bad spacing and a very long expression:
+\[
+F(x)=\frac{\sum_{i=1}^{n}\left(a_i x_i^2+b_i x_i+c_i\right)}{\prod_{j=1}^{m}(1+\lambda_j x_j)}+\int_{0}^{T}\frac{e^{-t^2}\sin(\omega t)}{1+t^2}\,dt+\sum_{k=1}^{100}\frac{1}{k^2+\alpha k+\beta}+\underbrace{\left(\frac{x+y+z}{1+x^2+y^2+z^2}\right)}_{\text{a deliberately long annotation}}
+\]
+The equation above may produce poor visual balance and consume a large amount of horizontal space.
+\begin{align}
+y &= a_0+a_1x+a_2x^2+a_3x^3+a_4x^4+a_5x^5+a_6x^6+a_7x^7+a_8x^8+a_9x^9 \\
+z &= \frac{\alpha+\beta+\gamma+\delta+\epsilon+\zeta+\eta+\theta}{1+\alpha^2+\beta^2+\gamma^2+\delta^2+\epsilon^2+\zeta^2+\eta^2+\theta^2}
+\end{align}
+Here is inline math that is too dense and too close to ordinary prose: $x_1+x_2+x_3+x_4+x_5+x_6+x_7+x_8+x_9+x_{10}=0$.
+\section{Figures}
+The figure is deliberately too wide and placed using an aggressive float specification.
+\begin{figure}[tbp]\centering\includegraphics[width=0.85\linewidth]{example-image-a}\caption{An oversized figure that can overflow the text area and create poor page balance.}\label{fig:oversized}\end{figure}
+The next figure uses a large amount of vertical space.
+\begin{figure}[!htbp]\centering\includegraphics[width=0.92\textwidth,height=0.4\textheight,keepaspectratio]{example-image-b}\caption{A large figure competing with surrounding text and floats.}\label{fig:large}\end{figure}
+Figure~\ref{fig:oversized} and Figure~\ref{fig:large} are referenced here, but their placement may be far from the references.
+\begin{figure}[tbp]\centering
+\begin{subfigure}{0.470\textwidth}\includegraphics[width=\linewidth]{example-image-c}\caption{First panel}\end{subfigure}\hspace{0.8cm}
+\begin{subfigure}{0.470\textwidth}\includegraphics[width=\linewidth]{example-image}\caption{Second panel}\end{subfigure}
+\caption{Two subfigures that nearly fill the page width and leave awkward spacing.}\end{figure}
+\section{Tables}
+The following table is intentionally too wide for the page.
+\begin{table}[tbp]\centering\caption{A very wide table with many columns}
+\begin{tabular}{lrrrrrrrr}\toprule Method & Accuracy & Precision & Recall & F1 & Time & Memory & Score & Rank\\\midrule
+Method A & 0.912345 & 0.934567 & 0.901234 & 0.917321 & 123.45 & 1024 & 98.123 & 1\\
+Method B & 0.901234 & 0.923456 & 0.889012 & 0.905432 & 234.56 & 2048 & 91.456 & 2\\
+Method C & 0.893210 & 0.912345 & 0.876543 & 0.894321 & 345.67 & 4096 & 87.789 & 3\\
+Method D & 0.882345 & 0.901234 & 0.865432 & 0.882345 & 456.78 & 8192 & 81.234 & 4\\\bottomrule\end{tabular}\end{table}
+Another table is deliberately split badly.
+\begin{table}[!ht]\centering\caption{Another dense table}\begin{tabularx}{\linewidth}{XXXX}\hline Very long heading that wraps & Another long heading & Third heading & Fourth heading\\\hline A large amount of text in a cell that may produce excessive row height & More text that is intentionally verbose & Additional information & Yet another verbose cell\\\hline\end{tabularx}\end{table}
+\section{Columns and Page Balance}
+Now we switch into two-column mode in the middle of the document.
+
+This paragraph begins a two-column region without a clear typographic reason. The columns are extremely narrow and may create many hyphenated words and visually noisy line endings. We intentionally add several long technical terms such as hyperparameteroptimizationframework and incomprehensibility to stress line breaking.
+\subsection{A Small Subsection} Short text.
+\[A=\begin{bmatrix}1&2&3\\4&5&6\\7&8&9\end{bmatrix}\]
+More text after the equation. More text after the equation. More text after the equation. More text after the equation.
+
+\section{Manual Page Breaks}
+This paragraph exists mainly to force bad pagination.
+
+\section{A New Section at the Top of a Page}
+This section begins at the top after an unnecessary manual page break. The next content is intentionally short.
+\begin{figure}[tbp]\centering\includegraphics[width=0.35\linewidth]{example-image}\caption{A small figure stranded on a mostly empty page.}\end{figure}
+
+\section{Lists and Spacing}
+\begin{enumerate}[leftmargin=0pt,label=\arabic*.,parsep=8pt]
+\item An item with excessive vertical spacing.
+\item Another item with enough text to create a bad page break. This sentence is repeated to increase the likelihood of a split item. This sentence is repeated to increase the likelihood of a split item.
+\item A final item.
+\end{enumerate}
+
+This paragraph contains a large manual vertical gap above it.
+
+And another one below it.
+\section{Poor Line Breaking}
+Here are words that should stress hyphenation and line breaking: electroencephalographically pseudopseudohypoparathyroidism counterrevolutionaries incomprehensibilities.
+A URL-like string is also included: \url{https://www.example.com/this/is/a/very/long/path/that/may/not/break/nicely/and/causes/overfull/boxes}.
+\section{Warnings and Miscellaneous Problems}
+\textbf{This is an excessively bold sentence that does not fit the surrounding visual hierarchy.}
+{ This entire paragraph is unnecessarily large. The font size is inconsistent with the body text and creates poor page density.}
+{ This tiny paragraph is much too small compared with the surrounding content. It exists solely to create inconsistent typography.}
+\begin{quote}This quote is too close to the surrounding material because spacing has been globally manipulated.\end{quote}
+\section{Conclusion}
+The conclusion is deliberately very short and leaves a large amount of whitespace on the final page. This creates poor visual balance compared with the dense earlier pages.
+
+\section*{Appendix}
+The appendix contains almost no information, producing another poorly balanced page.
+\[\sum_{i=1}^{n} i = \frac{n(n+1)}{2}\]
+\end{document}

@@ -1,0 +1,1158 @@
+{
+  "schema_version": "1.0",
+  "id": "iclr",
+  "name": "International Conference on Learning Representations",
+  "abbr": "ICLR",
+  "family": "ml",
+  "official_site": "https://iclr.cc/",
+  "current_edition": "ICLR 2025",
+  "focus_editions": [
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "template_basis": {
+    "class": "iclr2025_conference.sty",
+    "inherits": "article",
+    "url": "https://github.com/ICLR/Master-Template/raw/master/iclr2025.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 10,
+      "unit": "pages",
+      "scope": "both",
+      "confidence": "official",
+      "note": "ICLR 2025 新规：主文本（main text）必须为 6–10 页（含）；第 11 页即 desk reject；投稿版与 camera-ready 同限",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "New this year, the main text must be between 6 and 10 pages (inclusive). This limit will be strictly enforced. Papers with main text on the 11th page will be desk rejected. The page limit applies to both the initial and final camera ready version."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献不计入页数，且不限页",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "The list of references does not count towards the page limit, and unlimited additional pages are allowed for the bibliography/references."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许任意页数的附录（置于参考文献之后），审稿人无义务阅读",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "Authors may use as many pages of appendices (after the bibliography) as they wish, but reviewers are not required to read the appendix."
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "附录不计入页数上限（不限页）",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "Authors may use as many pages of appendices (after the bibliography) as they wish, but reviewers are not required to read the appendix."
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 0,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "camera-ready 页数上限与投稿版相同（10 页），不再额外加页（2021 曾允许 +1）",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-authorguide",
+          "quote": "page limit is identical with the submission version (10 pages)"
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "双盲审：审稿人看不到作者、作者看不到审稿人；允许 arXiv 预印本",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "Submissions will be double blind: reviewers cannot see author names when conducting reviews, and authors cannot see reviewer names."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿与公开讨论均在 OpenReview",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "Abstracts and papers must be submitted using the conference submission system at: https://openreview.net/group?id=ICLR.cc/2025/Conference"
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional Ethics Statement and Reproducibility Statement, each not counted and <=1 page",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "可选的 Ethics/Reproducibility 声明不计入页数上限，但各自不超过 1 页",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-authorguide",
+          "quote": "The optional ethic statement will not count toward the page limit, but should not be more than 1 page."
+        }
+      ]
+    },
+    "dual_submission_policy": {
+      "value": "arXiv/preprints and workshop (non-archival) versions allowed; substantially similar published/under-review work not allowed",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "允许 arXiv 预印本与无 proceedings 的 workshop 版本；与已发表或在审的实质重复不允许",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "papers that cite previous related work by the authors and papers that have appeared on non-peer reviewed websites (like arXiv) or that have been presented at workshops (i.e., venues that do not have publication proceedings) do not violate the policy."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 设 paperheight 11in、paperwidth 8.5in（US letter）",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\setlength{\\paperheight}{11in}\n\\setlength{\\paperwidth}{8.5in}"
+        }
+      ]
+    },
+    "columns": {
+      "value": 1,
+      "unit": null,
+      "scope": "both",
+      "confidence": "inferred",
+      "note": "官方 sty 未调用 \\twocolumn 且 \\textwidth 仅 5.5in（单栏版心），据此判定为单栏；ICLR 历来单栏排版",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\textwidth 5.5 true in"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "模板正文 10pt、行距(baselineskip) 11pt（sty 的 \\xpt 为 10pt）",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\def\\normalsize{\\@setsize\\normalsize{11pt}\\xpt\\@xpt}"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 25.4,
+        "left": 38.1,
+        "right": 38.1
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "由 sty 换算：\\oddsidemargin=.5in 使左右边距=(8.5in−5.5in)/2=1.5in=38.1mm；上=下=(11in−9in)/2=1in=25.4mm（等效单边）",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\oddsidemargin .5in    %   Note \\oddsidemargin = \\evensidemargin"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 139.7,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "5.5in = 139.7mm；单栏版心宽",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\textwidth 5.5 true in        % Width of text line."
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "author-year",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 载入 natbib 并设 authoryear 风格",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\setcitestyle{authoryear,round,citesep={;},aysep={,},yysep={;}}"
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "no page numbers; submission carries a running header and line-numbered ruler",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "template-implied",
+      "note": "sty 为投稿版设置页眉 “Under review as a conference paper at ICLR 2025”，并在左侧绘制行号标尺；不打印页码",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "\\lhead{Under review as a conference paper at ICLR 2025}"
+        }
+      ]
+    },
+    "template_file": {
+      "value": "iclr2025_conference.sty",
+      "unit": null,
+      "scope": "both",
+      "confidence": "inferred",
+      "note": "官方 iclr2025.zip 内主样式文件；CFP 只给出 zip 下载地址",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "https://github.com/ICLR/Master-Template/raw/master/iclr2025.zip"
+        }
+      ]
+    },
+    "template_url": {
+      "value": "https://github.com/ICLR/Master-Template/raw/master/iclr2025.zip",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方 Style 下载地址",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-cfp",
+          "quote": "To prepare your submission to ICLR 2025, please use the LaTeX style files provided at:"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "reference_style_hint": {
+      "value": "cite all related work including own; refer to own work in 3rd person to keep anonymity",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "匿名自引规范：以第三人称引用自己工作",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-authorguide",
+          "quote": "Yes, authors should provide the citations to all related work, including paper A. When referring to paper A, please use a 3rd person narrative."
+        }
+      ]
+    },
+    "section_style_hint": {
+      "value": "section headings use \\large small-caps, ragged right",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 将 section 设为 \\large\\sc，subsection 设为 \\normalsize\\sc",
+      "evidence": [
+        {
+          "source_id": "src-iclr-2025-sty",
+          "quote": "minus0.2ex}{\\large\\sc\\raggedright}}"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 25.167,
+      "median": 21.5,
+      "p10": 18.0,
+      "p90": 40.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 18.0,
+      "max": 40.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.667,
+      "median": 11.0,
+      "p10": 4.0,
+      "p90": 11.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 4.0,
+      "max": 11.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 396.467,
+      "median": 396.0,
+      "p10": 396.0,
+      "p90": 397.4,
+      "n": 6,
+      "unit": "pt",
+      "min": 396.0,
+      "max": 397.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 37.933,
+      "median": 38.1,
+      "p10": 37.6,
+      "p90": 38.1,
+      "n": 6,
+      "unit": "mm",
+      "min": 37.6,
+      "max": 38.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 38.1,
+      "median": 38.1,
+      "p10": 38.1,
+      "p90": 38.1,
+      "n": 6,
+      "unit": "mm",
+      "min": 38.1,
+      "max": 38.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 13.017,
+      "median": 9.7,
+      "p10": 9.7,
+      "p90": 29.6,
+      "n": 6,
+      "unit": "mm",
+      "min": 9.7,
+      "max": 29.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 10.6,
+      "median": 10.6,
+      "p10": 10.6,
+      "p90": 10.6,
+      "n": 6,
+      "unit": "mm",
+      "min": 10.6,
+      "max": 10.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "figures": {
+      "mean": 9.667,
+      "median": 8.5,
+      "p10": 6.0,
+      "p90": 18.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 6.0,
+      "max": 18.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "tables": {
+      "mean": 6.333,
+      "median": 4.5,
+      "p10": 0.0,
+      "p90": 19.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "equations": {
+      "mean": 20.333,
+      "median": 14.0,
+      "p10": 4.0,
+      "p90": 54.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 4.0,
+      "max": 54.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.667,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 3.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "refs": {
+      "mean": 4.0,
+      "median": 4.5,
+      "p10": 0.0,
+      "p90": 8.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.167,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 1.052,
+      "median": 0.905,
+      "p10": 0.636,
+      "p90": 1.636,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.636,
+      "max": 1.636,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.582,
+      "median": 0.427,
+      "p10": 0.0,
+      "p90": 1.727,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.727,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 2.677,
+      "median": 1.273,
+      "p10": 0.4,
+      "p90": 7.75,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.4,
+      "max": 7.75,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.74,
+      "median": 0.758,
+      "p10": 0.475,
+      "p90": 0.987,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.475,
+      "max": 0.987,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.157,
+      "median": 0.154,
+      "p10": 0.124,
+      "p90": 0.215,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.124,
+      "max": 0.215,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.475,
+      "median": 0.493,
+      "p10": 0.167,
+      "p90": 0.667,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.167,
+      "max": 0.667,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 67.883,
+      "median": 71.85,
+      "p10": 50.7,
+      "p90": 79.9,
+      "n": 6,
+      "unit": "per_page",
+      "min": 50.7,
+      "max": 79.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iclr-2025-001",
+        "s-iclr-2025-002",
+        "s-iclr-2025-003",
+        "s-iclr-2025-004",
+        "s-iclr-2025-005",
+        "s-iclr-2025-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2020",
+      "year": 2020,
+      "value": 10,
+      "source_id": "src-iclr-2020-cfp",
+      "note": "2020：建议 8 页，主文本硬上限 10 页（超出 8 页按更高标准审）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2021",
+      "year": 2021,
+      "value": 8,
+      "source_id": "src-iclr-2021-cfp",
+      "note": "2021：初审主文本硬上限收紧为 8 页（官方注明与上一年不同）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2022",
+      "year": 2022,
+      "value": 9,
+      "source_id": "src-iclr-2022-cfp",
+      "note": "2022：主文本上限 9 页，投稿与 camera-ready 同限"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2023",
+      "year": 2023,
+      "value": 9,
+      "source_id": "src-iclr-2023-cfp",
+      "note": "2023：维持 9 页（ethics/repro/ack 另计）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2024",
+      "year": 2024,
+      "value": 9,
+      "source_id": "src-iclr-2024-cfp",
+      "note": "2024：维持 9 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICLR 2025",
+      "year": 2025,
+      "value": 10,
+      "source_id": "src-iclr-2025-cfp",
+      "note": "2025 新规：主文本 6–10 页（含），改用区间；推荐 9 页"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "ICLR 2021",
+      "year": 2021,
+      "value": 1,
+      "source_id": "src-iclr-2021-cfp",
+      "note": "2021：rebuttal 与 camera-ready 允许主文本 +1 页（上限 9 页）"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "ICLR 2022",
+      "year": 2022,
+      "value": 0,
+      "source_id": "src-iclr-2022-cfp",
+      "note": "2022 起：页数上限对投稿与 camera-ready 相同，不再加页（沿用至 2025）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "ICLR 2020",
+      "year": 2020,
+      "value": false,
+      "source_id": "src-iclr-2020-cfp",
+      "note": "参考文献不限页、不计入（沿用至今）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "ICLR 2025",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-iclr-2025-cfp",
+      "note": "仍不计入"
+    },
+    {
+      "key": "anonymity",
+      "edition": "ICLR 2020",
+      "year": 2020,
+      "value": "double-blind",
+      "source_id": "src-iclr-2020-cfp",
+      "note": "双盲审（沿用至今）"
+    },
+    {
+      "key": "anonymity",
+      "edition": "ICLR 2025",
+      "year": 2025,
+      "value": "double-blind",
+      "source_id": "src-iclr-2025-cfp",
+      "note": "仍为双盲"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "ICLR 单栏；font_pt 取官方正文 10pt；margin_mm 取等效单边边距 38.1mm（左右 1.5in；上下 1in 更小，用 margin_min_mm 约束时注意左右远大于上下）",
+    "requirement_fields": {
+      "page_limit": 10,
+      "font_pt": 10,
+      "margin_mm": 38.1,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 139.7
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 1,
+        "why": "Requirement 无栏数字段；ICLR 单栏，仅用于校验"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 25.4,
+          "left": 38.1,
+          "right": 38.1
+        },
+        "why": "Requirement.margin_mm 是单一等效值，无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 10,
+        "why": "page_limit 为总页数语义；ICLR 的 10 页仅指主文本（参考文献/附录另计），且还有 6 页下限"
+      },
+      {
+        "key": "supplementary_policy",
+        "value": "ethics/repro statement <=1 page",
+        "why": "texopt 不生成/校验伦理与可复现性声明"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 1,
+        "rationale": "校验编译结果栏数是否与官方单栏模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分主文本页数与总页数"
+      },
+      {
+        "field": "page_limit_min",
+        "type": "int",
+        "example": 6,
+        "rationale": "ICLR 2025 有 6 页下限，单值 page_limit 表达不了区间"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 38.1,
+          "right": 38.1,
+          "top": 25.4,
+          "bottom": 25.4
+        },
+        "rationale": "ICLR 左右边距(1.5in)远大于上下(1in)"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-iclr-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2025 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2025/CallForPapers",
+      "fetched_at": "2026-09-12T10:18:19+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2025-cfp.html",
+      "sha256": "a41baed335f56ea35d30b0746afb667242630512f9c05b734a34b94e663dd87c",
+      "note": "官方 CFP：6–10 页正文/双盲/OpenReview/附录不限"
+    },
+    {
+      "id": "src-iclr-2025-authorguide",
+      "kind": "official-guidelines",
+      "title": "ICLR 2025 Author Guide",
+      "url": "https://iclr.cc/Conferences/2025/AuthorGuide",
+      "fetched_at": "2026-09-12T10:18:09+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2025-authorguide.html",
+      "sha256": "a2c505289eef8c6ab244f7fafbb896cc73f9fcb1951be8555bba84638879b2ae",
+      "note": "官方作者指南：camera-ready 页数同投稿（10 页）、ethics/repro 声明"
+    },
+    {
+      "id": "src-iclr-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2024 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2024/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:47+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2024-cfp.html",
+      "sha256": "c4f17d41edf5781dd92b6790b54a985efa6fc873d5bd14a64082d389a387c2fc",
+      "note": "history：2024 页数规则"
+    },
+    {
+      "id": "src-iclr-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2023 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2023/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:45+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2023-cfp.html",
+      "sha256": "db96178c4e182c41900e20b2834497d21e0912ee1dad1fe49c263136608b08d6",
+      "note": "history：2023 页数规则"
+    },
+    {
+      "id": "src-iclr-2022-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2022 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2022/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:43+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2022-cfp.html",
+      "sha256": "d42249ba09382b3639900bf01733442d7c0d6ac415dc4ca1b7921ab56b0cfd78",
+      "note": "history：2022 页数规则"
+    },
+    {
+      "id": "src-iclr-2021-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2021 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2021/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:40+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2021-cfp.html",
+      "sha256": "1250f346a057aa2ad43fac4749214a0182f59350782d936a54a9e8b2093826cd",
+      "note": "history：2021 页数/加页规则"
+    },
+    {
+      "id": "src-iclr-2020-cfp",
+      "kind": "official-guidelines",
+      "title": "ICLR 2020 Call For Papers",
+      "url": "https://iclr.cc/Conferences/2020/CallForPapers",
+      "fetched_at": "2026-09-12T10:23:24+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2020-cfp.html",
+      "sha256": "35093526c84762996f6f8e802d0005c8303aacb7385f1fa2304c9b88eff7e794",
+      "note": "history：2020 页数规则"
+    },
+    {
+      "id": "src-iclr-2025-proceedings",
+      "kind": "official-guidelines",
+      "title": "ICLR 2025 Virtual papers index",
+      "url": "https://iclr.cc/virtual/2025/papers.html",
+      "fetched_at": "2026-09-12T10:35:18+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iclr-2025-proceedings.html",
+      "sha256": "308d04522a6a9231f69c37492e44ca548c847dfaef063ba8e92ec577a409e6dc",
+      "note": "官方 ICLR 2025 virtual 论文列表，用于证明样本属 ICLR 2025"
+    },
+    {
+      "id": "src-iclr-2025-sty",
+      "kind": "official-template",
+      "title": "ICLR 2025 LaTeX style file (iclr2025_conference.sty)",
+      "url": "/tmp/zips/iclr/Master-Template-master/iclr2025/iclr2025_conference.sty",
+      "fetched_at": "2026-09-12T10:20:37+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-iclr-2025-sty.sty",
+      "sha256": "9e280a9ff99be84ad190f5cafe047a1a32c2eeb9ca14232ddceae42d8489c697",
+      "note": "官方 iclr2025.zip 内主 sty；letter/单栏 textwidth 5.5in/10pt 等 template-implied 证据"
+    },
+    {
+      "id": "src-s-iclr-2025-001",
+      "kind": "sample-paper",
+      "title": "Universal Image Restoration Pre-training via Degradation Classification",
+      "url": "https://iclr.cc/virtual/2025/poster/29746",
+      "fetched_at": "2026-09-12T10:35:36+08:00",
+      "http_status": "cached",
+      "raw_file": "sources/raw/src-s-iclr-2025-001.html",
+      "sha256": "b0dff3ce8a361e48b1756b911cb1a74f1f58c236b6eaab97ee3deb3ce9c14264",
+      "pdf_url": "https://arxiv.org/pdf/2501.15510",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id PacBhLzeGO，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-002",
+      "kind": "sample-paper",
+      "title": "NextBestPath: Efficient 3D Mapping of Unseen Environments",
+      "url": "https://iclr.cc/virtual/2025/poster/30819",
+      "fetched_at": "2026-09-12T10:35:39+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-002.html",
+      "sha256": "558fb6819ed913faa140c23c195ea794a871d9f5535fd1901da01c16573f11f8",
+      "pdf_url": "https://arxiv.org/pdf/2502.05378",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id 7WaRh4gCXp，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-003",
+      "kind": "sample-paper",
+      "title": "Emergence of meta-stable clustering in mean-field transformer models",
+      "url": "https://iclr.cc/virtual/2025/poster/28944",
+      "fetched_at": "2026-09-12T10:35:41+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-003.html",
+      "sha256": "7da3139987ca3e3b678c82f84d3eeee687b79dbe0da3824fcf0cb49d305c2a41",
+      "pdf_url": "https://arxiv.org/pdf/2410.23228",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id eBS3dQQ8GV，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-004",
+      "kind": "sample-paper",
+      "title": "SimpleTM: A Simple Baseline for Multivariate Time Series Forecasting",
+      "url": "https://iclr.cc/virtual/2025/poster/28373",
+      "fetched_at": "2026-09-12T10:35:45+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-004.html",
+      "sha256": "b7363f272a249bfc3ba4c92434aac57c73f39e2eb0016b0d1c79199cf7c84cec",
+      "pdf_url": "https://arxiv.org/pdf/2607.22012",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id oANkBaVci5，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-005",
+      "kind": "sample-paper",
+      "title": "When does compositional structure yield compositional generalization? A kernel theory.",
+      "url": "https://iclr.cc/virtual/2025/poster/30345",
+      "fetched_at": "2026-09-12T10:35:48+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-005.html",
+      "sha256": "e7310ad7b7b24df46806c98486d8e3bbf8fbb7c0f80ab8b58944d11d3bd4a864",
+      "pdf_url": "https://arxiv.org/pdf/2405.16391",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id FPBce2P1er，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-006",
+      "kind": "sample-paper",
+      "title": "PICASO: Permutation-Invariant Context Composition with State Space Models",
+      "url": "https://iclr.cc/virtual/2025/poster/30782",
+      "fetched_at": "2026-09-12T10:35:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-006.html",
+      "sha256": "9de16dfe0272acb70b4a8af1fc7003023e72e4ff8b045adacb8645bec6a132c3",
+      "pdf_url": "https://arxiv.org/pdf/2502.17605",
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "ICLR 2025 virtual poster 页（含 OpenReview forum id 88TC1AWV27，证明属 ICLR 2025） | 注：源 openreview.net/pdf 在本机返回 403，pdf_url 已回填为同论文的 arXiv 版本直链"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2501.15510",
+      "kind": "sample-paper",
+      "title": "Universal Image Restoration Pre-training via Degradation Classification",
+      "url": "https://arxiv.org/abs/2501.15510",
+      "fetched_at": "2026-09-12T10:49:21+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2501.15510.html",
+      "sha256": "59b4e6ff7dba7c51410a84c155b55a4a02b5ef5ca37c53f4361555e05b9a9b96",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2502.05378",
+      "kind": "sample-paper",
+      "title": "NextBestPath: Efficient 3D Mapping of Unseen Environments",
+      "url": "https://arxiv.org/abs/2502.05378",
+      "fetched_at": "2026-09-12T10:49:22+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2502.05378.html",
+      "sha256": "ffc61f63a5be7d826c02c99c327b33220fe21e1c513c31a10693d0ead496b3b1",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2410.23228",
+      "kind": "sample-paper",
+      "title": "Emergence of meta-stable clustering in mean-field transformer models",
+      "url": "https://arxiv.org/abs/2410.23228",
+      "fetched_at": "2026-09-12T10:49:23+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2410.23228.html",
+      "sha256": "f6039578710cfaa249a8db7cb53ea1a4ae7421752bc9d1ce7696681db11c5203",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2607.22012",
+      "kind": "sample-paper",
+      "title": "Cross-Domain Off-Policy Evaluation and Learning for Contextual Bandits",
+      "url": "https://arxiv.org/abs/2607.22012",
+      "fetched_at": "2026-09-12T10:49:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2607.22012.html",
+      "sha256": "4c2e2afeadabe861ddcdb232958d90f8e0dd20e2db1370ad8ecda76ff2b6ff69",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2405.16391",
+      "kind": "sample-paper",
+      "title": "When does compositional structure yield compositional generalization? A kernel theory",
+      "url": "https://arxiv.org/abs/2405.16391",
+      "fetched_at": "2026-09-12T10:49:24+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2405.16391.html",
+      "sha256": "23d1b8f24a2b23d4dc68ab01958547faab27c964a403b1b511e4d8fc8320499b",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    },
+    {
+      "id": "src-s-iclr-2025-arxiv-2502.17605",
+      "kind": "sample-paper",
+      "title": "PICASO: Permutation-Invariant Context Composition with State Space Models",
+      "url": "https://arxiv.org/abs/2502.17605",
+      "fetched_at": "2026-09-12T10:49:24+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iclr-2025-arxiv-2502.17605.html",
+      "sha256": "74bf447050fb0d033330174728dee6373a26a8b24317d304425d709120c992c8",
+      "pdf_url": null,
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 Comment 字段标明 ICLR 2025；PDF 直链为 arXiv 版本"
+    }
+  ],
+  "open_questions": [
+    "ICLR 2025 采用 6–10 页区间而非单一上限；texopt 的 page_limit 单值无法表达下限 6 页，已在 recommended_field_suggestions 提议 page_limit_min。",
+    "ICLR 论文 PDF 仅托管于 OpenReview（/pdf?id=...）；本机 curl 访问 OpenReview 返回 403，浏览器可正常打开，样本 pdf_url 采用该官方直链。",
+    "2025 sty 未调用 \\twocolumn，判定为单栏（columns=1, inferred）；官方未明文声明栏数。",
+    "官方未明文规定浮动体位置（t/b/h）与图表题注位置；仅由 LaTeX 默认与 sty 推断。",
+    "history 未取 2019 及更早年份（超出近 5 届范围）。"
+  ]
+}

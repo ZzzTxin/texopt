@@ -245,6 +245,63 @@ def _overwide_figs(per: P.Perception, req: Requirement) -> list[str]:
     return out
 
 
+def page_status(per: P.Perception, req: Requirement) -> dict:
+    """页数判定口径（会议差异的唯一来源是 req.page_limit_scope）。
+
+    total   —— 传统口径：直接比 PDF 总页数（与以前行为完全一致）；
+    content —— 会议口径：上限针对「正文页」（参考文献/附录不计）。
+      用 pdftotext 定位参考文献首页 k：
+        strict = k-1（完全在参考文献之前的页数）→ 只有它超限才判违规，
+                 避免把「正文恰好写到参考文献首页」的合法论文误判；
+        judge  = k  （含参考文献首页的上界）→ 用于压页推进/报告展示。
+    量不出正文页数时自动退回总页数口径（并在 advisory 里说明）。
+    """
+    scope = getattr(req, "page_limit_scope", "total") or "total"
+    limit = getattr(req, "page_limit", None)
+    st = {"scope": scope, "limit": limit, "total": per.pages,
+          "content_lower": getattr(per, "content_pages_lower", None),
+          "content_upper": getattr(per, "content_pages_upper", None),
+          "judge": per.pages, "strict": per.pages, "label": "页数"}
+    if scope == "content" and st["content_upper"] is not None:
+        st["judge"] = st["content_upper"]
+        st["strict"] = st["content_lower"]
+        st["first_ref_page"] = (per.content or {}).get("first_ref_page")
+        if st["first_ref_page"]:
+            st["label"] = "正文页数（参考文献之前，含参考文献首页的上界）"
+        else:
+            st["label"] = "页数（未检测到参考文献标题，按总页数计）"
+    st["over_strict"] = bool(limit and st["strict"] is not None
+                             and st["strict"] > limit)
+    st["over_soft"] = bool(limit and st["judge"] is not None
+                           and st["judge"] > limit)
+    return st
+
+
+def judge_pages(per: P.Perception, req: Requirement) -> int | None:
+    """当前用于压页推进的页数（会议口径下为正文页上界）。"""
+    return page_status(per, req)["judge"]
+
+
+def within_limit(per: P.Perception, req: Requirement) -> bool:
+    """是否确定满足页数上限（会议口径下用下界，避免临界误判）。"""
+    return not page_status(per, req)["over_strict"]
+
+
+def page_advisory(per: P.Perception, req: Requirement) -> str | None:
+    """页数相关的「临界/口径」提示（信息，不是违规）。"""
+    st = page_status(per, req)
+    if st["over_soft"] and not st["over_strict"]:
+        return (f"{st['label']} = {st['judge']}，高于上限 {st['limit']}，"
+                f"但完全在参考文献之前的页数 {st['strict']} ≤ {st['limit']}："
+                "正文可能恰好写到参考文献首页（临界），不判违规，"
+                f"建议人工/视觉确认（PDF 共 {st['total']} 页）")
+    if st["scope"] == "content" and st["content_upper"] is None:
+        return ("会议页数上限按正文页口径，但未能量出正文页数"
+                "（pdftotext 不可用或无参考文献），已退回总页数判定"
+                f"（PDF 共 {st['total']} 页）")
+    return None
+
+
 def l_violations(per: P.Perception, req: Requirement,
                  orig_body: str, orig_source: dict | None = None) -> list[str]:
     """L 硬约束违规清单。空列表 = 基础逻辑量化达标。"""
@@ -255,16 +312,31 @@ def l_violations(per: P.Perception, req: Requirement,
         out.append("未生成 PDF")
     if _norm_body(content_body(per.src), req) != _norm_body(orig_body, req):
         out.append("正文内容被改动（违反内容完整保留）")
-    if req.page_limit and per.pages is not None \
-            and per.pages > req.page_limit:
-        out.append(f"页数 {per.pages} 超出限制 {req.page_limit}")
+    if req.page_limit:
+        st = page_status(per, req)
+        if st["over_strict"]:
+            if st.get("first_ref_page"):
+                out.append(f"正文页数 {st['strict']}–{st['judge']}（参考文献之前）"
+                           f"超出限制 {req.page_limit}（PDF 共 {st['total']} 页）")
+            else:
+                out.append(f"页数 {st['judge']} 超出限制 {req.page_limit}")
+        elif st["scope"] == "content" and st["content_upper"] is None \
+                and per.pages is not None and per.pages > req.page_limit:
+            out.append(f"页数 {per.pages} 超出限制 {req.page_limit}"
+                       "（未能区分正文页，按总页数判定）")
     # 硬性规范（期刊/会议/自定义要求明确指定的，属 L 而非审美项）
     if req.font_pt and per.source["font_pt"] != req.font_pt:
         out.append(f"字号 {per.source['font_pt']}pt 不符合要求 {req.font_pt}pt")
-    if req.margin_mm and per.source.get("geometry_margin_mm") is not None \
-            and abs(per.source["geometry_margin_mm"] - req.margin_mm) > 0.5:
-        out.append(f"页边距 {per.source['geometry_margin_mm']:g}mm "
-                   f"不符合要求 {req.margin_mm:g}mm")
+    if req.margin_mm and per.source.get("geometry_margin_mm") is not None:
+        cur_mm = per.source["geometry_margin_mm"]
+        if getattr(req, "margin_is_floor", False):
+            # 会议模板：官方边距是下限（模板 json 里的 margin_floor_mm）——
+            # 低于下限才不合规；高于下限不干预（不得把合法的宽/不对称边距改小）。
+            if cur_mm < req.margin_mm - 0.5:
+                out.append(f"页边距 {cur_mm:g}mm 低于要求下限 "
+                           f"{req.margin_mm:g}mm")
+        elif abs(cur_mm - req.margin_mm) > 0.5:
+            out.append(f"页边距 {cur_mm:g}mm 不符合要求 {req.margin_mm:g}mm")
     if req.eq_fleqn_allowed is False and per.source["fleqn"]:
         out.append("文档类带 fleqn 选项，公式未居中")
     # 结构规范：目录 / 页眉（要求明确指定才算硬约束）

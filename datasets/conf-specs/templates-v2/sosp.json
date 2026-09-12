@@ -1,0 +1,1123 @@
+{
+ "schema_version": "1.0",
+ "id": "sosp",
+ "conference": "SOSP",
+ "edition": "SOSP 2025",
+ "family": "systems",
+ "generated_by": "tools/build_templates.py (from analysis/template-inputs.json)",
+ "data_basis": {
+  "n_samples": 7,
+  "n_measurements": 7,
+  "focus_editions": [
+   "2025",
+   "2024",
+   "2023"
+  ],
+  "measurement_method": "tools/measure_pdf.py (pdfminer.six 字形级几何)",
+  "robust_stats_only": true
+ },
+ "sources": [
+  {
+   "kind": "official-source",
+   "ref": "src-sosp-2025-cfp",
+   "url": "https://sigops.org/s/conferences/sosp/2025/cfp.html",
+   "note": "SOSP 2025 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp-2024-cfp",
+   "url": "https://sigops.org/s/conferences/sosp/2024/cfp.html",
+   "note": "SOSP 2024 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp-2023-cfp",
+   "url": "https://sosp2023.mpi-sws.org/cfp.html",
+   "note": "SOSP 2023 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp-2025-accepted",
+   "url": "https://sigops.org/s/conferences/sosp/2025/accepted.html",
+   "note": "SOSP 2025 Accepted Papers (official)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-pie",
+   "url": "https://arxiv.org/abs/2510.24051",
+   "note": "Pie: A Programmable Serving System for Emerging LLM Applications"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-orq",
+   "url": "https://arxiv.org/abs/2509.10793",
+   "note": "ORQ: Complex Analytics on Private Data with Strong Security Guarantees"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-ufork",
+   "url": "https://arxiv.org/abs/2509.09439",
+   "note": "μFork: Supporting POSIX fork Within a Single-Address-Space OS"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-hedrarag",
+   "url": "https://arxiv.org/abs/2507.09138",
+   "note": "HedraRAG: Coordinating LLM Generation and Database Retrieval in Heterogeneous RAG Serving"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-knighter",
+   "url": "https://arxiv.org/abs/2503.09002",
+   "note": "KNighter: Transforming Static Analysis with LLM-Synthesized Checkers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp25-diffkv",
+   "url": "https://arxiv.org/abs/2412.03131",
+   "note": "DiffKV: Differentiated Memory Management for Large Language Models with Parallel KV Compaction"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-sosp24-powerinfer",
+   "url": "https://arxiv.org/abs/2312.12456",
+   "note": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-001",
+   "url": "https://arxiv.org/pdf/2510.24051",
+   "note": "Pie: A Programmable Serving System for Emerging LLM Applications"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-002",
+   "url": "https://arxiv.org/pdf/2509.10793",
+   "note": "ORQ: Complex Analytics on Private Data with Strong Security Guarantees"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-003",
+   "url": "https://arxiv.org/pdf/2509.09439",
+   "note": "μFork: Supporting POSIX fork Within a Single-Address-Space OS"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-004",
+   "url": "https://arxiv.org/pdf/2507.09138",
+   "note": "HedraRAG: Coordinating LLM Generation and Database Retrieval in Heterogeneous RAG Serving"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-005",
+   "url": "https://arxiv.org/pdf/2503.09002",
+   "note": "KNighter: Transforming Static Analysis with LLM-Synthesized Checkers"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2025-006",
+   "url": "https://arxiv.org/pdf/2412.03131",
+   "note": "DiffKV: Differentiated Memory Management for Large Language Models with Parallel KV Compaction"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-sosp-2024-001",
+   "url": "https://arxiv.org/pdf/2312.12456",
+   "note": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-01",
+   "url": null,
+   "note": "页数上限针对“正文/技术内容页”，参考文献（多数会议）与附录不计入；不能简单地把上限当成 PDF 总页数。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-03",
+   "url": null,
+   "note": "全部 16 个会议均为双盲评审：稿件（含附录、补充材料）不得含身份信息。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-04",
+   "url": null,
+   "note": "纸张/栏数是模板固定的（letter 与 a4 混用；多数 2 栏，NeurIPS/ICLR/ECCV 为 1 栏）。"
+  },
+  {
+   "kind": "rule",
+   "ref": "R-01",
+   "url": null,
+   "note": "Requirement 缺少“栏数”字段；16/16 会议都隐含栏数约束（1 或 2 栏）。"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "analysis/template-inputs.json",
+   "url": null,
+   "note": "稳健统计（median/P25/P75）来源"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "samples/_measurements/*.json",
+   "url": null,
+   "note": "单篇论文实测几何"
+  }
+ ],
+ "traceability": {
+  "basis_definitions": {
+   "official": "官方指南/CFP/模板说明的明文字面值",
+   "template-implied": "从官方 .sty/.cls 源码或官方模板文件读出（无文字明文）",
+   "inferred": "由多源交叉推断（官方无明文，但模板行为 + 样本实测一致），可信度低于 template-implied",
+   "sample-stat": "真实论文 PDF 实测的稳健统计（median/P25/P75），不是规则",
+   "derived": "由前述值按固定公式推导（如 版心宽 = 行尾众数 − 行首最小值）"
+  },
+  "field_basis": {
+   "hard_constraints.anonymity": "official",
+   "hard_constraints.body_font_family": "official",
+   "hard_constraints.body_font_size_pt": "official",
+   "hard_constraints.column_gap_mm": "official",
+   "hard_constraints.columns": "official",
+   "hard_constraints.line_spacing": "official",
+   "hard_constraints.page_limit_content": "official",
+   "hard_constraints.page_numbering": "official",
+   "hard_constraints.paper_size": "official",
+   "hard_constraints.references_counted": "official",
+   "hard_constraints.text_height_mm": "official",
+   "hard_constraints.text_width_mm": "official",
+   "geometry.page_size": "official",
+   "geometry.page_width_mm": "derived",
+   "geometry.page_height_mm": "derived",
+   "geometry.columns": "official",
+   "geometry.text_width_mm": "official",
+   "geometry.margin_floor_mm": "sample-stat",
+   "geometry.margins.left_mm": "sample-stat",
+   "geometry.margins.right_mm": "sample-stat",
+   "geometry.margins.top_mm": "sample-stat",
+   "geometry.margins.bottom_mm": "sample-stat",
+   "geometry.column_gap_mm": "official",
+   "geometry.column_width_mm": "derived",
+   "geometry.text_height_mm": "official",
+   "typography.body_font_pt": "official",
+   "typography.caption_font_pt": "sample-stat",
+   "typography.body_font_family": "official",
+   "typography.line_spacing": "official",
+   "typography.caption_position.figure": "sample-stat",
+   "typography.caption_position.table": "sample-stat",
+   "float_policy.float_spec": "derived",
+   "float_policy.figure_width.overwide_threshold_mm": "derived",
+   "density_targets.figures": "sample-stat",
+   "density_targets.tables": "sample-stat",
+   "density_targets.equations": "sample-stat",
+   "density_targets.algorithms": "sample-stat",
+   "density_targets.footnotes": "sample-stat",
+   "density_targets.refs": "sample-stat",
+   "density_targets.lines_per_page": "sample-stat",
+   "density_targets.content_pages": "sample-stat"
+  }
+ },
+ "hard_constraints": {
+  "anonymity": {
+   "value": "double-blind",
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "SOSP will use double-blind reviewing."
+    }
+   ],
+   "note": "投稿双盲"
+  },
+  "body_font_family": {
+   "value": "Times Roman / Linux Libertine or similar",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+    }
+   ],
+   "note": "Times Roman、Linux Libertine 等 10pt 字体"
+  },
+  "body_font_size_pt": {
+   "value": 10,
+   "unit": "pt",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+    }
+   ],
+   "note": "正文 10pt、12pt（单倍）行距"
+  },
+  "column_gap_mm": {
+   "value": 8,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "using two columns separated by 8 mm (0.33 in) of whitespace"
+    }
+   ],
+   "note": "栏间距 8mm（0.33in）"
+  },
+  "columns": {
+   "value": 2,
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "using two columns separated by 8 mm (0.33 in) of whitespace"
+    }
+   ],
+   "note": "双栏"
+  },
+  "line_spacing": {
+   "value": "single",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+    }
+   ],
+   "note": "单倍行距"
+  },
+  "page_limit_content": {
+   "value": 12,
+   "unit": "pages",
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Submissions may have at most 12 pages of technical content, including all text, figures, tables, etc."
+    }
+   ],
+   "note": "投稿技术内容（含文字/图/表）上限 12 页"
+  },
+  "page_numbering": {
+   "value": "numbered",
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "All pages should be numbered, and references within the paper should be hyperlinked."
+    }
+   ],
+   "note": "所有页需编号，文内引用需超链接"
+  },
+  "paper_size": {
+   "value": "a4 or letter",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+    }
+   ],
+   "note": "允许 A4 或 US letter 纸"
+  },
+  "references_counted": {
+   "value": false,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Bibliographic references are not included in the 12-page limit."
+    }
+   ],
+   "note": "参考文献不计入 12 页技术内容上限"
+  },
+  "text_height_mm": {
+   "value": 229,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+    }
+   ],
+   "note": "版心高 229mm（9in）"
+  },
+  "text_width_mm": {
+   "value": 178,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-sosp-2024-cfp",
+     "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+    }
+   ],
+   "note": "版心宽 178mm（7in）"
+  }
+ },
+ "geometry": {
+  "page_size": {
+   "value": "letter",
+   "basis": "official",
+   "note": "官方允许多纸型（a4 or letter）；按实测 letter 处理，需在使用前确认目标模板"
+  },
+  "page_width_mm": {
+   "value": 215.9,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 letter 宽度（612.0pt）"
+  },
+  "page_height_mm": {
+   "value": 279.4,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 letter 高度（792.0pt）"
+  },
+  "columns": {
+   "value": 2,
+   "basis": "official",
+   "note": "双栏"
+  },
+  "text_width_mm": {
+   "value": 178,
+   "basis": "official",
+   "unit": "mm"
+  },
+  "margins": {
+   "left_mm": {
+    "value": 18.8,
+    "basis": "sample-stat",
+    "unit": "mm",
+    "stat": "median",
+    "n": 7,
+    "observed": {
+     "n": 7,
+     "min": 18.6,
+     "p25": 18.75,
+     "median": 18.8,
+     "p75": 18.85,
+     "max": 32.5,
+     "unit": "mm"
+    },
+    "note": "官方未给明文，取实测中位数（不要当硬约束）"
+   },
+   "right_mm": {
+    "value": 19.0,
+    "basis": "sample-stat",
+    "unit": "mm",
+    "stat": "median",
+    "n": 7,
+    "observed": {
+     "n": 7,
+     "min": 18.9,
+     "p25": 19.0,
+     "median": 19.0,
+     "p75": 19.0,
+     "max": 36.8,
+     "unit": "mm"
+    },
+    "note": "官方未给明文，取实测中位数（不要当硬约束）"
+   },
+   "top_mm": {
+    "value": 21.9,
+    "basis": "sample-stat",
+    "unit": "mm",
+    "stat": "median",
+    "n": 7,
+    "observed": {
+     "n": 7,
+     "min": 17.3,
+     "p25": 17.3,
+     "median": 21.9,
+     "p75": 25.15,
+     "max": 26.2,
+     "unit": "mm"
+    },
+    "note": "官方未给明文，取实测中位数（不要当硬约束）"
+   },
+   "bottom_mm": {
+    "value": 26.1,
+    "basis": "sample-stat",
+    "unit": "mm",
+    "stat": "median",
+    "n": 7,
+    "observed": {
+     "n": 7,
+     "min": 22.7,
+     "p25": 24.85,
+     "median": 26.1,
+     "p75": 28.65,
+     "max": 36.4,
+     "unit": "mm"
+    },
+    "note": "官方未给明文，取实测中位数（不要当硬约束）"
+   }
+  },
+  "margin_floor_mm": {
+   "value": 18.8,
+   "basis": "sample-stat",
+   "unit": "mm",
+   "stat": "value",
+   "derivation": "取四边最小值（texopt 压页时不得低于此值）"
+  },
+  "observed": {
+   "text_width_mm": {
+    "n": 7,
+    "min": 399.1,
+    "p25": 504.65,
+    "median": 504.8,
+    "p75": 505.1,
+    "max": 505.6,
+    "unit": "pt"
+   },
+   "text_height_mm": {
+    "n": 7,
+    "min": 643.6,
+    "p25": 651.4,
+    "median": 658.9,
+    "p75": 669.4,
+    "max": 678.6,
+    "unit": "pt"
+   },
+   "margins_left_mm": {
+    "n": 7,
+    "min": 18.6,
+    "p25": 18.75,
+    "median": 18.8,
+    "p75": 18.85,
+    "max": 32.5,
+    "unit": "mm"
+   },
+   "margins_right_mm": {
+    "n": 7,
+    "min": 18.9,
+    "p25": 19.0,
+    "median": 19.0,
+    "p75": 19.0,
+    "max": 36.8,
+    "unit": "mm"
+   },
+   "margins_top_mm": {
+    "n": 7,
+    "min": 17.3,
+    "p25": 17.3,
+    "median": 21.9,
+    "p75": 25.15,
+    "max": 26.2,
+    "unit": "mm"
+   },
+   "margins_bottom_mm": {
+    "n": 7,
+    "min": 22.7,
+    "p25": 24.85,
+    "median": 26.1,
+    "p75": 28.65,
+    "max": 36.4,
+    "unit": "mm"
+   },
+   "column_gap_pt": {
+    "n": 6,
+    "min": 23.8,
+    "p25": 23.825,
+    "median": 23.9,
+    "p75": 23.9,
+    "max": 23.9,
+    "unit": "pt"
+   }
+  },
+  "text_height_mm": {
+   "value": 229,
+   "basis": "official",
+   "unit": "mm"
+  },
+  "column_gap_mm": {
+   "value": 8,
+   "basis": "official",
+   "unit": "mm"
+  },
+  "column_width_mm": {
+   "value": 85.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "(版心宽 − 栏间距)/2"
+  }
+ },
+ "typography": {
+  "body_font_pt": {
+   "value": 10,
+   "basis": "official",
+   "unit": "pt",
+   "n": 7,
+   "observed": {
+    "n": 7,
+    "min": 9.0,
+    "p25": 10.0,
+    "median": 10.0,
+    "p75": 10.0,
+    "max": 10.0,
+    "unit": "pt"
+   }
+  },
+  "caption_font_pt": {
+   "value": 10.0,
+   "basis": "sample-stat",
+   "unit": "pt",
+   "stat": "median",
+   "n": 7,
+   "reliable": true,
+   "observed": {
+    "n": 7,
+    "min": 9.0,
+    "p25": 9.5,
+    "median": 10.0,
+    "p75": 10.0,
+    "max": 10.0,
+    "unit": "pt"
+   }
+  },
+  "body_font_family": {
+   "value": "Times Roman / Linux Libertine or similar",
+   "basis": "official"
+  },
+  "line_spacing": {
+   "value": "single",
+   "basis": "official"
+  },
+  "caption_position": {
+   "figure": {
+    "value": null,
+    "basis": "sample-stat",
+    "stat": "value",
+    "note": "官方未明文"
+   },
+   "table": {
+    "value": null,
+    "basis": "sample-stat",
+    "stat": "value",
+    "note": "官方未明文"
+   }
+  },
+  "caption_align_observed": {
+   "n": 7,
+   "median": 0.83,
+   "unit": "left_ratio",
+   "left": 112,
+   "center": 23
+  },
+  "notes": []
+ },
+ "float_policy": {
+  "float_spec": {
+   "value": "tbp",
+   "basis": "derived",
+   "derivation": "texopt 白名单动作 sanitize_float_specs 的目标档；[h]/[h!] 属不稳定写法（通用规则 A-04），真实论文以 t/b 为主",
+   "note": "实测全宽浮动体位置 top=0.889 bottom=0.0 mid=0.111"
+  },
+  "figure_width": {
+   "typical_frac": {
+    "n": 7,
+    "min": 0.432,
+    "p25": 0.464,
+    "median": 0.476,
+    "p75": 0.477,
+    "max": 0.776
+   },
+   "denominator": "版心全宽（单栏=版心；双栏=两栏+栏间距）",
+   "overwide_threshold_mm": {
+    "value": 178,
+    "basis": "derived",
+    "unit": "mm",
+    "derivation": "= 官方/实测版心宽（texopt normalize_fig_width 阈值）"
+   },
+   "spanning_note": "双栏会议的 fig_width_frac 中位数 ≈ 页面宽度/版心宽 （比值 1.2~1.3），说明测量把跨栏/整页图块合并成一条超宽框；该字段在双栏会议标记为不可靠，不得当“超宽违规”或“典型图宽”用。"
+  },
+  "full_width_figure": {
+   "frac": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.024,
+    "median": 0.056,
+    "p75": 0.17,
+    "max": 0.263
+   },
+   "count_per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 1.0,
+    "p75": 1.5,
+    "max": 5
+   }
+  },
+  "position_prior": {
+   "full_width_float_ratio": {
+    "top": 0.889,
+    "bottom": 0.0,
+    "mid": 0.111
+   },
+   "figure_ratio": {
+    "top": 0.865,
+    "bottom": 0.018,
+    "mid": 0.117
+   }
+  },
+  "official_rules": [
+   "recommended.float_placement_rules: use official SIGPLAN/ACM templates (rules auto-applied)"
+  ],
+  "notes": [
+   "图宽分栏不可只用 PDF 几何判定：texopt 需在视觉层（Phase 4）区分“栏内图 / 跨栏图”，当前阈值取版心全宽以免误伤全宽图。",
+   "浮动体以顶部为主（实测全宽浮动体 top=89%），texopt 应优先把浮动体推到页顶/跨栏页顶，而不是底部。"
+  ]
+ },
+ "density_targets": {
+  "figures": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 9,
+    "p25": 10.5,
+    "median": 17.0,
+    "p75": 18.0,
+    "max": 19
+   },
+   "target_range": [
+    10.5,
+    18.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.475,
+    "p25": 0.75,
+    "median": 1.2,
+    "p75": 1.357,
+    "max": 9.0
+   }
+  },
+  "tables": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 2.0,
+    "median": 3.0,
+    "p75": 7.0,
+    "max": 11
+   },
+   "target_range": [
+    2.0,
+    7.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.214,
+    "median": 0.275,
+    "p75": 0.479,
+    "max": 1.0
+   }
+  },
+  "equations": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 2.0,
+    "max": 8
+   },
+   "target_range": [
+    0.0,
+    2.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.155,
+    "max": 0.533
+   }
+  },
+  "algorithms": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.5,
+    "max": 1
+   },
+   "target_range": [
+    0.0,
+    0.5
+   ],
+   "note": "算法环境极少（多数会议中位数 0），不作优化目标",
+   "per_content_page": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.036,
+    "max": 0.071
+   }
+  },
+  "footnotes": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 1
+   },
+   "target_range": [
+    0.0,
+    0.0
+   ],
+   "note": null
+  },
+  "refs": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 16,
+    "p25": 61.5,
+    "median": 79.0,
+    "p75": 82.5,
+    "max": 131
+   },
+   "target_range": [
+    61.5,
+    82.5
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.4,
+    "p25": 4.238,
+    "median": 5.643,
+    "p75": 6.369,
+    "max": 131.0
+   }
+  },
+  "lines_per_page": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 7,
+    "min": 54.5,
+    "p25": 93.0,
+    "median": 100.4,
+    "p75": 107.1,
+    "max": 108.4
+   },
+   "note": "定义=正文页全部文本行数/正文页数（双栏会议为两栏之和），噪声大且跨栏不可比，仅作同会议内部参考，不作优化目标。"
+  },
+  "content_pages": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 1,
+    "p25": 13.0,
+    "median": 14.0,
+    "p75": 14.5,
+    "max": 40
+   },
+   "target_range": [
+    13.0,
+    14.5
+   ],
+   "note": "content_pages = 参考文献首页之前的部分；与官方上限并不相等（见 confidence.conflicts），不得强行统一。"
+  }
+ },
+ "optimization_policy": {
+  "priority": [
+   {
+    "rank": 1,
+    "direction": "L 层硬性合规修复（页数/字号/边距/纸张/栏数，先于一切审美优化）",
+    "why": "官方硬约束共 6 项被判为不合规风险项（含 anonymity、body_font_size_pt、columns、page_limit_content、paper_size、text_width_mm）；texopt 的 L 项是字典序首项，A 的收益不能换 L。",
+    "evidence": [
+     "hard_constraints.page_limit_content=12",
+     "hard_constraints.body_font_size_pt=10",
+     "geometry.margin_floor_mm=18.8",
+     "hard_constraints.columns=2"
+    ],
+    "texopt_actions": [
+     "set_fontsize",
+     "set_margin",
+     "drop_fleqn"
+    ]
+   },
+   {
+    "rank": 2,
+    "direction": "页数控制（压页）：纯排版手段优先，避免语义抛光",
+    "why": "样本 content_pages 中位数 14.0，官方正文上限 12（差 -2.0 页）。注意口径：content_pages = 参考文献首页之前（含该页），参考文献与附录不计入，与官方“正文页上限”不能直接等同，真实余量需按目标模板重编译确认。",
+    "evidence": [
+     "density_targets.content_pages.per_paper.median=14.0",
+     "hard_constraints.page_limit_content=12"
+    ],
+    "texopt_actions": [
+     "set_margin",
+     "reduce_list_spacing",
+     "remove_excessive_vspace",
+     "normalize_fig_width"
+    ]
+   },
+   {
+    "rank": 3,
+    "direction": "浮动体位置与跨栏占比：把图/表推到页顶、消除页面中部的浮动体",
+    "why": "每页图数中位数 1.20（每篇 17.0 张）、满宽图占比 0.06、全宽浮动体出现位置 top=89%/bottom=0%/mid=11%；浮动体位置是这类会议最主要的版面噪声来源。",
+    "evidence": [
+     "float_policy.position_prior",
+     "density_targets.figures.per_content_page"
+    ],
+    "texopt_actions": [
+     "sanitize_float_specs",
+     "set_float_spec"
+    ]
+   },
+   {
+    "rank": 4,
+    "direction": "图宽归一与超宽图检测（双栏特有：区分栏内图/跨栏图）",
+    "why": "版心 178mm、单栏宽 85.0mm；实测有 0 个样本的“图块≈整页宽”，说明跨栏图普遍。texopt 需按栏宽判定，避免把跨栏图压成栏宽。",
+    "evidence": [
+     "float_policy.figure_width.spanning_note"
+    ],
+    "texopt_actions": [
+     "normalize_fig_width",
+     "set_fig_width"
+    ]
+   },
+   {
+    "rank": 5,
+    "direction": "页边距可压缩空间极小：压页需转向字号档/行距/浮动体与列表间距",
+    "why": "官方最小边距仅 18.8mm（低于 20mm），已无合法压缩余地，继续压边距会直接踩硬约束。",
+    "evidence": [
+     "geometry.margin_floor_mm"
+    ],
+    "texopt_actions": [
+     "reduce_list_spacing",
+     "remove_excessive_vspace",
+     "sanitize_float_specs"
+    ]
+   }
+  ],
+  "avoid": [
+   "不得为压页而删改正文文字/公式/引用（L 项内容保持率为硬下限）",
+   "不得把样本统计值当硬约束（例如按中位数强制改变字号或页边距）",
+   "不得用全局手段抹平跨会议差异：单栏/双栏、参考文献计页规则、纸型逐会不同",
+   "不得据 fig_width_frac>1 判定“超宽图”：双栏下该比值≈整页宽，是跨栏图被合并的伪影",
+   "页数临界时不得先动用语义抛光（必须排版手段穷尽）"
+  ],
+  "actions": {
+   "normalize_fig_width": {
+    "threshold_mm": 178,
+    "note": "阈值=版心全宽；双栏下栏内图目标为栏宽，需视觉层支持"
+   },
+   "sanitize_float_specs": {
+    "req_spec": "tbp"
+   },
+   "set_margin": {
+    "min_mm": 12.8,
+    "note": "下限 = 官方最小边距 −6mm（保守），低于 margin_floor_mm 需人工确认"
+   },
+   "inject_quality_macros": {
+    "enable": true
+   },
+   "drop_fleqn": {
+    "enable": true
+   }
+  },
+  "unsupported": [
+   {
+    "key": "paper_size",
+    "value": "a4 or letter",
+    "why": "Requirement 无纸张尺寸字段，且 SOSP 允许二选一"
+   },
+   {
+    "key": "columns",
+    "value": 2,
+    "why": "Requirement 无栏数字段"
+   },
+   {
+    "key": "margins_mm",
+    "value": {
+     "top": 25.4,
+     "bottom": 25.4,
+     "left": 19.05,
+     "right": 19.05
+    },
+    "why": "单一 margin_mm 无法表达非对称边距；且 A4/letter 下不同"
+   },
+   {
+    "key": "page_limit_content",
+    "value": 12,
+    "why": "语义为技术内容页数（参考文献另计），需'计数范围'支持"
+   },
+   {
+    "key": "page_numbering",
+    "value": "numbered",
+    "why": "texopt 不控制页码"
+   },
+   {
+    "key": "body_font_family",
+    "value": "Times Roman / Linux Libertine",
+    "why": "Requirement 无字体族字段"
+   }
+  ],
+  "applicable_rules": [
+   "L-01",
+   "L-03",
+   "L-04",
+   "R-01"
+  ]
+ },
+ "confidence": {
+  "sample_n": 7,
+  "level": "medium",
+  "reliable_fields": [
+   "body_font_pt",
+   "caption_font_pt",
+   "columns",
+   "density_targets.algorithms",
+   "density_targets.content_pages",
+   "density_targets.equations",
+   "density_targets.figures",
+   "density_targets.refs",
+   "density_targets.tables",
+   "full_width_figure.frac",
+   "margin_floor_mm",
+   "margins",
+   "page_size",
+   "text_width_mm"
+  ],
+  "unreliable_fields": [
+   "density_targets.footnotes",
+   "density_targets.lines_per_page",
+   "float_policy.figure_width.typical_frac"
+  ],
+  "conflicts": [
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-001",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "content_pages_over_limit",
+    "sample_id": "s-sosp-2025-002",
+    "detail": "content_pages=40 > 官方上限 12 + 6：可能是 camera-ready/附录并入，也可能定位偏差；按冲突保留不修改",
+    "resolution": "按冲突保留：样本可能为 camera-ready/含附录，不据此修改官方上限"
+   },
+   {
+    "type": "columns_mismatch",
+    "sample_id": "s-sosp-2025-002",
+    "detail": "实测 columns=1 ≠ 官方/模板 columns=2（可能为整版跨栏图导致行首聚类偏移）",
+    "resolution": "该样本版面结构特殊（整页跨栏），不影响会议级结论"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-002",
+    "detail": "实测 paper_size=a4 ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "content_pages_implausible",
+    "sample_id": "s-sosp-2025-003",
+    "detail": "content_pages=1 明显偏小，疑为正文页定位失败",
+    "resolution": "该样本正文页数不可用；中位数由其余样本给出"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-003",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-004",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-005",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2025-006",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "paper_size_mismatch",
+    "sample_id": "s-sosp-2024-001",
+    "detail": "实测 paper_size=letter ≠ 官方 a4 or letter",
+    "resolution": "官方允许多纸型/实测漂移，按官方值并在 page_size.note 说明"
+   },
+   {
+    "type": "content_pages_vs_official_limit",
+    "sample_id": null,
+    "detail": "实测 content_pages 中位数 14.0 > 官方正文上限 12（口径不同：含参考文献首页，且部分样本把附录并入正文区）",
+    "resolution": "保留冲突，不修改官方上限；模板以官方值为 L 约束，实测值仅供观测"
+   }
+  ],
+  "notes": [
+   "样本 7 篇：sample-stat 字段为中可信度",
+   "双栏会议：图宽/浮动体几何受跨栏合并影响，需视觉层复核"
+  ]
+ },
+ "texopt_flat": {
+  "page_limit": 12,
+  "font_pt": 10,
+  "margin_mm": 18.8,
+  "float_spec": "tbp",
+  "overwide_fig_threshold_mm": 178,
+  "eq_fleqn_allowed": false,
+  "enable_quality_macros": true
+ }
+}

@@ -123,6 +123,30 @@ total = L_fail × 1e6 + A + I        （lexicographic：先保底，后求美）
 
 字段全部可选，缺省 = 不约束/不干预（尊重原稿）。
 
+## 会议模板（`--conference`，2026-09-12 新增）
+
+```bash
+python3 optimize.py paper.tex --conference aaai   # 按 AAAI 排版要求优化
+python3 optimize.py paper.tex --conference icml   # 按 ICML 排版要求优化
+python3 optimize.py --list-conferences            # 列出 16 个会议模板
+```
+
+模板来自 `datasets/conf-specs/templates-v2/<id>.json`（16 个会议：NeurIPS/ICML/ICLR/ACL/
+EMNLP/CVPR/ICCV/ECCV/AAAI/IJCAI/SIGGRAPH/KDD/WWW/OSDI/SOSP/NSDI），由「官方规范 +
+真实论文实测」数据集生成。加载与投影在 `texopt/conference.py`，**不为任何会议写单独代码**。
+
+| 模板内容 | 进入优化过程的方式 |
+|---|---|
+| `hard_constraints`（official / template-implied / inferred） | 转为 **L 硬约束**：页数上限、字号、边距下限、公式居中 → 用于判「是否违规」 |
+| 页数上限 | 默认按**正文页口径**：`texopt/engine.py` 用 pdftotext 定位参考文献首页 k，只有下界 k−1 超限才判违规（避免把恰好写到参考文献首页的合法论文误判） |
+| `geometry.margin_floor_mm` | 作**下限**使用：低于才判违规，高于不干预（不会把合法的宽/不对称边距改小） |
+| `float_policy.float_spec` / `overwide_fig_threshold_mm` | 浮动体参数目标档（`tbp`）与超宽图归一阈值 |
+| `density_targets` / `*_observed` / `position_prior`（sample-stat） | **只做「排版是否合理」的参考核对**（`conference.reasonableness`，写进报告与 state.json），不进 L、不参与 A 打分 |
+| 无对应字段/动作的项（栏数、纸张、字体族、匿名、checklist…） | **逐条记录**，不强行接入：见 `datasets/conf-specs/summary/texopt-integration-report.md` |
+
+优先级：**会议模板 < `--require` < settings.json < CLI 参数**（CLI 如 `--target` 可覆盖模板页数）。
+不指定 `--conference` 时 `base=None`，代码路径与行为与以前完全一致。
+
 ## 已覆盖的 Basic 排版模块
 
 | 模块 | 处理方式 |

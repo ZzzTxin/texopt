@@ -1,0 +1,1170 @@
+{
+  "schema_version": "1.0",
+  "id": "cvpr",
+  "name": "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+  "abbr": "CVPR",
+  "family": "cv",
+  "official_site": "https://cvpr.thecvf.com/",
+  "current_edition": "CVPR 2025",
+  "focus_editions": [
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "template_basis": {
+    "class": "cvpr.sty",
+    "inherits": "article",
+    "url": "https://github.com/cvpr-org/author-kit"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "正文（含全部图、表）上限 8 页；仅含参考文献的额外页不计入",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "Papers are limited to eight pages, including figures and tables, in the CVPR style. Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 8 页正文；仅参考文献可占额外页",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "inferred",
+      "note": "由“仅参考文献可占额外页”推断：技术附录须放入补充材料，不进正文计页（官方指南未单列“禁止附录”字样）",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "Papers are limited to eight pages, including figures and tables, in the CVPR style. Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方模板以 letterpaper 载入；sty 按 8.5x11in IEEE Proceedings 设计",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-main",
+          "quote": "\\documentclass[10pt,twocolumn,letterpaper]{article}"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方模板为双栏（twocolumn）；违规单栏会被拒",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-main",
+          "quote": "\\documentclass[10pt,twocolumn,letterpaper]{article}"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 10-point Times；模板与 sty 均强制 10pt",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "Times",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文使用 Times/Times Roman",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "line_spacing": {
+      "value": "single",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文单倍行距，段落不加额外空行",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 174.6,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "6.875in = 174.625mm 版心总宽（两栏 + 栏间距）",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-sty",
+          "quote": "\\setlength{\\textwidth}{6.875in}"
+        }
+      ]
+    },
+    "text_height_mm": {
+      "value": 225.4,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "8.875in = 225.425mm 版心高",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-sty",
+          "quote": "\\setlength{\\textheight}{8.875in}"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 7.94,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "0.3125in = 7.9375mm 栏间距（模板正文亦写 5/16 inch = 0.8cm）",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-sty",
+          "quote": "\\setlength{\\columnsep}{0.3125in}"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 28.6,
+        "left": 20.6,
+        "right": 20.6
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "上 1in=25.4mm；下 1-1/8in=28.58mm；左右=(8.5in 纸宽-6.875in 版心宽)/2=0.8125in=20.64mm",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "On all pages, the bottom margin should be $1\\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \\times 11$-inch paper;"
+        },
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page."
+        }
+      ]
+    },
+    "title_format": {
+      "value": "Times 14pt bold, title case (capitalize nouns/verbs/adjectives/adverbs)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题居中、Times 14-point 粗体、首字母大写规则",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "The title should be in Times 14-point, boldface type."
+        }
+      ]
+    },
+    "section_numbering": {
+      "value": "arabic",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "一级标题形如 1. Introduction（Times 12pt 粗体，左对齐）",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "(For example, {\\large \\bf 1. Introduction}) should be Times 12-point boldface, initially capitalized, flush left, with one blank line before and one blank line after."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "双盲评审；正文/致谢/补充材料均不得泄露身份",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "CVPR reviewing is double blind, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "自 CVPR 2023 起使用 OpenReview 管理投稿",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "CVPR 2025 will be using OpenReview to manage submissions."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "review version numbered, camera-ready no page numbers",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "送审版加页码；camera-ready 版不加页码",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "The review version should have page numbers, yet the final version submitted as camera ready should not show any page numbers."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional supplementary material; may include videos, proofs, additional figures/tables; no extra datasets/improved results",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料可选、独立提交；不得含额外数据集/改进结果/修正版正文",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-authorguidelines",
+          "quote": "Supplementary material may include videos, proofs, additional figures or tables, more detailed analysis of experiments presented in the paper, or a concurrent submission to CVPR or another conference."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图题在图下方",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Table captions should be above tables, while figure captions should be below figures."
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "above",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表题在表格上方",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Table captions should be above tables, while figure captions should be below figures."
+        }
+      ]
+    },
+    "caption_style_hint": {
+      "value": "9-point Roman; short captions centered",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注 9-point Roman，短题注居中",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "The captions of the figures and tables should be in 9-point Roman type as in \\cref{fig:onecol,fig:short}."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "9-point Times, numbered in square brackets",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献 9-point Times、单倍行距、按数字编号引用",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "List and number all bibliographical references in 9-point Times, single-spaced, at the end of your paper."
+        }
+      ]
+    },
+    "footnote_style_hint": {
+      "value": "Times 8-point, single-spaced; use sparingly",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "脚注 8-point Times，尽量少用",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "Use Times 8-point type, single-spaced."
+        }
+      ]
+    },
+    "color_policy": {
+      "value": "avoid relying on color alone (color-vision deficiency)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图表避免仅靠颜色区分（红色盲/绿色盲）",
+      "evidence": [
+        {
+          "source_id": "src-cvpr-2025-tmpl-formatting",
+          "quote": "If you use color in your plots, please keep in mind that a significant subset of reviewers and readers may have a color vision deficiency; red-green blindness is the most frequent kind."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 10.5,
+      "median": 10.5,
+      "p10": 10.0,
+      "p90": 11.0,
+      "n": 8,
+      "unit": "pages",
+      "min": 10.0,
+      "max": 11.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "content_pages": {
+      "mean": 8.875,
+      "median": 9.0,
+      "p10": 8.0,
+      "p90": 9.0,
+      "n": 8,
+      "unit": "pages",
+      "min": 8.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 8,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 495.538,
+      "median": 495.0,
+      "p10": 495.0,
+      "p90": 497.5,
+      "n": 8,
+      "unit": "pt",
+      "min": 495.0,
+      "max": 497.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 22.275,
+      "median": 22.3,
+      "p10": 22.0,
+      "p90": 22.6,
+      "n": 8,
+      "unit": "pt",
+      "min": 22.0,
+      "max": 22.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 20.075,
+      "median": 20.6,
+      "p10": 17.4,
+      "p90": 20.6,
+      "n": 8,
+      "unit": "mm",
+      "min": 17.4,
+      "max": 20.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 20.963,
+      "median": 20.6,
+      "p10": 20.5,
+      "p90": 23.6,
+      "n": 8,
+      "unit": "mm",
+      "min": 20.5,
+      "max": 23.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 26.3,
+      "median": 26.3,
+      "p10": 26.1,
+      "p90": 26.6,
+      "n": 8,
+      "unit": "mm",
+      "min": 26.1,
+      "max": 26.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 27.775,
+      "median": 27.8,
+      "p10": 27.6,
+      "p90": 27.8,
+      "n": 8,
+      "unit": "mm",
+      "min": 27.6,
+      "max": 27.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "figures": {
+      "mean": 5.75,
+      "median": 6.5,
+      "p10": 1.0,
+      "p90": 9.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "tables": {
+      "mean": 4.0,
+      "median": 4.0,
+      "p10": 2.0,
+      "p90": 6.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 2.0,
+      "max": 6.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "equations": {
+      "mean": 4.875,
+      "median": 3.5,
+      "p10": 0.0,
+      "p90": 10.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 0.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "refs": {
+      "mean": 52.625,
+      "median": 51.5,
+      "p10": 33.0,
+      "p90": 70.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 33.0,
+      "max": 70.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.375,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 2.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.649,
+      "median": 0.764,
+      "p10": 0.111,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.111,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.451,
+      "median": 0.472,
+      "p10": 0.222,
+      "p90": 0.667,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.222,
+      "max": 0.667,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.545,
+      "median": 0.389,
+      "p10": 0.0,
+      "p90": 1.111,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.111,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 1.235,
+      "median": 1.236,
+      "p10": 1.23,
+      "p90": 1.236,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.23,
+      "max": 1.236,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 8.875,
+      "median": 9.0,
+      "p10": 8.0,
+      "p90": 9.0,
+      "n": 8,
+      "unit": "pt",
+      "min": 8.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 125.888,
+      "median": 123.4,
+      "p10": 102.1,
+      "p90": 175.6,
+      "n": 8,
+      "unit": "per_page",
+      "min": 102.1,
+      "max": 175.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-cvpr-2025-001",
+        "s-cvpr-2025-002",
+        "s-cvpr-2025-003",
+        "s-cvpr-2025-004",
+        "s-cvpr-2025-005",
+        "s-cvpr-2025-006",
+        "s-cvpr-2025-007",
+        "s-cvpr-2025-008"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "CVPR 2022",
+      "year": 2022,
+      "value": 8,
+      "source_id": "src-cvpr-2022-authorguidelines",
+      "note": "8 页正文（含图/表），仅参考文献可额外；投稿系统 CMT3"
+    },
+    {
+      "key": "submission_system",
+      "edition": "CVPR 2022",
+      "year": 2022,
+      "value": "CMT3",
+      "source_id": "src-cvpr-2022-authorguidelines",
+      "note": "CVPR 2022 使用 CMT3 投稿"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "CVPR 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-cvpr-2023-authorguidelines",
+      "note": "维持 8 页；对 multi-media 未变"
+    },
+    {
+      "key": "submission_system",
+      "edition": "CVPR 2023",
+      "year": 2023,
+      "value": "OpenReview",
+      "source_id": "src-cvpr-2023-authorguidelines",
+      "note": "CVPR 2023 起改用 OpenReview（首次）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "CVPR 2024",
+      "year": 2024,
+      "value": 8,
+      "source_id": "src-cvpr-2024-authorguidelines",
+      "note": "维持 8 页 + 仅参考文献额外"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "CVPR 2025",
+      "year": 2025,
+      "value": 8,
+      "source_id": "src-cvpr-2025-authorguidelines",
+      "note": "现行：8 页正文（含图/表），参考文献不计"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取正文 10pt；margin_mm 取左右边距 0.8125in=20.64mm（决定版心宽 174.6mm），上下边距更大（25.4/28.6mm）",
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 10,
+      "margin_mm": 20.64,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 174.6,
+      "margin_min_mm": 20.6
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 28.6,
+          "left": 20.6,
+          "right": 20.6
+        },
+        "why": "Requirement.margin_mm 是单一值，无法表达上下/左右不等"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 8,
+        "why": "page_limit 语义为总页数；CVPR 的 8 页只算正文，参考文献另计"
+      },
+      {
+        "key": "appendix_allowed",
+        "value": false,
+        "why": "texopt 无“正文禁附录”这类结构约束"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不处理匿名化"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否为双栏"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分正文页与总页；否则 8 页约束会把参考文献算进去"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 20.6,
+          "right": 20.6,
+          "top": 25.4,
+          "bottom": 28.6
+        },
+        "rationale": "CVPR 上下边距大于左右，单一 margin_mm 会失真"
+      },
+      {
+        "field": "caption_position_policy",
+        "type": "obj",
+        "example": {
+          "figure": "below",
+          "table": "above"
+        },
+        "rationale": "图题在下/表题在上是官方模板明文，可作 A 项检查"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-cvpr-2025-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "CVPR 2025 Author Guidelines (Submission Policies)",
+      "url": "https://cvpr.thecvf.com/Conferences/2025/AuthorGuidelines",
+      "fetched_at": "2026-09-12T10:18:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-cvpr-2025-authorguidelines.html",
+      "sha256": "4a8ce4def7e946f2d686a5fc2dcdf42acc9574a8f8eedf2f84c130ec9a347e58",
+      "note": "官方作者指南：8 页正文（含图/表）、仅参考文献可额外页、双盲、OpenReview、补充材料、rebuttal 规则"
+    },
+    {
+      "id": "src-cvpr-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "CVPR 2025 Call for Papers",
+      "url": "https://cvpr.thecvf.com/Conferences/2025/CallForPapers",
+      "fetched_at": "2026-09-12T10:18:09+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-cvpr-2025-cfp.html",
+      "sha256": "95d5afe6bb5257317f91fae936d76c94cd2c07a38c9234036e32ec3bace6d8bc",
+      "note": "官方 CFP 页（主题/日期/投稿入口）"
+    },
+    {
+      "id": "src-cvpr-2025-sty",
+      "kind": "official-template",
+      "title": "CVPR LaTeX style file (cvpr.sty, cvpr-org/author-kit)",
+      "url": "/tmp/cvpr-kit/author-kit-main/cvpr.sty",
+      "fetched_at": "2026-09-12T10:19:32+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-cvpr-2025-sty.sty",
+      "sha256": "2602473285d1a7df2a445ac89b76e1afa0acab78e056f0369d19770245190153",
+      "note": "官方 author-kit 的 cvpr.sty：textwidth 6.875in / textheight 8.875in / columnsep 0.3125in / letter / 10pt。归档版来自 author-kit main 分支（版本串 2026），版式与 CVPR 2025 kit (CVPR2025-v3.1) 逐字节一致"
+    },
+    {
+      "id": "src-cvpr-2025-tmpl-main",
+      "kind": "official-template",
+      "title": "CVPR LaTeX template main.tex (author-kit)",
+      "url": "/tmp/cvpr-kit/author-kit-main/main.tex",
+      "fetched_at": "2026-09-12T10:19:33+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-cvpr-2025-tmpl-main.sty",
+      "sha256": "06566f9054028a4f688be0906958326f892437a93d3d157bcef015ba8ee1f463",
+      "note": "官方模板主文件：documentclass[10pt,twocolumn,letterpaper]"
+    },
+    {
+      "id": "src-cvpr-2025-tmpl-formatting",
+      "kind": "official-template",
+      "title": "CVPR author kit - Formatting your paper (sec/2_formatting.tex)",
+      "url": "/tmp/cvpr-kit/author-kit-main/sec/2_formatting.tex",
+      "fetched_at": "2026-09-12T10:19:32+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-cvpr-2025-tmpl-formatting.sty",
+      "sha256": "72b0eb3b2b255c0dd67f3ee295f5e52f3bbbe4a2aa29c7dd790c69a5954a5994",
+      "note": "官方模板正文的格式说明：版心尺寸、题注位置、字号、页码等"
+    },
+    {
+      "id": "src-cvpr-2024-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "CVPR 2024 Author Guidelines",
+      "url": "https://cvpr.thecvf.com/Conferences/2024/AuthorGuidelines",
+      "fetched_at": "2026-09-12T10:19:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-cvpr-2024-authorguidelines.html",
+      "sha256": "c12320341ce89f551af3fa38ea373decb49e43b3c172cf5dfbba741163666240",
+      "note": "history：CVPR 2024 页数/匿名/投稿系统"
+    },
+    {
+      "id": "src-cvpr-2023-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "CVPR 2023 Author Guidelines",
+      "url": "https://cvpr2023.thecvf.com/Conferences/2023/AuthorGuidelines",
+      "fetched_at": "2026-09-12T10:19:47+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-cvpr-2023-authorguidelines.html",
+      "sha256": "35d8c5e736d6ea6629b5e0430e489735be0953d8d49a160b1b295aaf4de19d37",
+      "note": "history：CVPR 2023 页数/匿名/投稿系统"
+    },
+    {
+      "id": "src-cvpr-2022-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "CVPR 2022 Author Guidelines",
+      "url": "https://cvpr2022.thecvf.com/author-guidelines",
+      "fetched_at": "2026-09-12T10:19:45+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-cvpr-2022-authorguidelines.html",
+      "sha256": "e41e64735bde332693698b2d2fbd489815a312e5b359f63a27640a3b306f5e3f",
+      "note": "history：CVPR 2022 页数/匿名/投稿系统"
+    },
+    {
+      "id": "src-s-cvpr-2025-001-abs",
+      "kind": "sample-paper",
+      "title": "Uni4D: Unifying Visual Foundation Models for 4D Modeling from a Single Video",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Yao_Uni4D_Unifying_Visual_Foundation_Models_for_4D_Modeling_from_a_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-001-abs.html",
+      "sha256": "5cf5b1929bf9d9ec2d5a093fe44c1ef2bb7e62811311ae2736af4cda1d6aefd6",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Yao_Uni4D_Unifying_Visual_Foundation_Models_for_4D_Modeling_from_a_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-002-abs",
+      "kind": "sample-paper",
+      "title": "Textured Gaussians for Enhanced 3D Scene Appearance Modeling",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Chao_Textured_Gaussians_for_Enhanced_3D_Scene_Appearance_Modeling_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-002-abs.html",
+      "sha256": "c7e20c7ebf128b4020ca1df387a03eb5066b9b0e8ac4291c1cc0c4208abfc338",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Chao_Textured_Gaussians_for_Enhanced_3D_Scene_Appearance_Modeling_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-003-abs",
+      "kind": "sample-paper",
+      "title": "Video Depth Anything: Consistent Depth Estimation for Super-Long Videos",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Chen_Video_Depth_Anything_Consistent_Depth_Estimation_for_Super-Long_Videos_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:53+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-003-abs.html",
+      "sha256": "c915b708490eb2ac0621b2f251e109123bd5c75634bcf6639e2817c48496e41b",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Chen_Video_Depth_Anything_Consistent_Depth_Estimation_for_Super-Long_Videos_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-004-abs",
+      "kind": "sample-paper",
+      "title": "SceneTAP: Scene-Coherent Typographic Adversarial Planner against Vision-Language Models in Real-World Environments",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Cao_SceneTAP_Scene-Coherent_Typographic_Adversarial_Planner_against_Vision-Language_Models_in_Real-World_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:54+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-004-abs.html",
+      "sha256": "719c89e4a8100b06bc6f2e63c8f9467d32d798d337310387ec955901a67543c5",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Cao_SceneTAP_Scene-Coherent_Typographic_Adversarial_Planner_against_Vision-Language_Models_in_Real-World_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-005-abs",
+      "kind": "sample-paper",
+      "title": "Dataset Distillation with Neural Characteristic Function: A Minmax Perspective",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Wang_Dataset_Distillation_with_Neural_Characteristic_Function_A_Minmax_Perspective_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:55+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-005-abs.html",
+      "sha256": "fe50d20069ac6f2f3c71df212109a0874ac7f3a9c640191e70047b20d13b3b7f",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Wang_Dataset_Distillation_with_Neural_Characteristic_Function_A_Minmax_Perspective_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-006-abs",
+      "kind": "sample-paper",
+      "title": "Effective SAM Combination for Open-Vocabulary Semantic Segmentation",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Lee_Effective_SAM_Combination_for_Open-Vocabulary_Semantic_Segmentation_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:57+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-006-abs.html",
+      "sha256": "6e64260afb2dfa1b5c7719474d780df757907bd7f800483b822b0447ab051857",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Lee_Effective_SAM_Combination_for_Open-Vocabulary_Semantic_Segmentation_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-007-abs",
+      "kind": "sample-paper",
+      "title": "Long Video Diffusion Generation with Segmented Cross-Attention and Content-Rich Video Data Curation",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Yan_Long_Video_Diffusion_Generation_with_Segmented_Cross-Attention_and_Content-Rich_Video_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:58+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-007-abs.html",
+      "sha256": "69ba87742368d597541e95b1ec0e41de32a112fde8df54784c2310e9d3047596",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Yan_Long_Video_Diffusion_Generation_with_Segmented_Cross-Attention_and_Content-Rich_Video_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    },
+    {
+      "id": "src-s-cvpr-2025-008-abs",
+      "kind": "sample-paper",
+      "title": "Towards Source-Free Machine Unlearning",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Ahmed_Towards_Source-Free_Machine_Unlearning_CVPR_2025_paper.html",
+      "fetched_at": "2026-09-12T10:38:59+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-cvpr-2025-008-abs.html",
+      "sha256": "4097463745b47ca10bce95d4c22ef441cbf1959f9876fb0f0f3644cc43ee0ca4",
+      "pdf_url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Ahmed_Towards_Source-Free_Machine_Unlearning_CVPR_2025_paper.pdf",
+      "venue": "CVPR 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 CVPR 2025 主会"
+    }
+  ],
+  "open_questions": [
+    "CVPR 未在作者指南中明文规定 camera-ready 是否可加页；官方 Camera-Ready Submission Instructions 页未归档，未确认是否仍为 8 页 + 参考文献。",
+    "CVPR 官方指南未明文字号/边距/纸张，均由官方模板与 sty 读出（10pt、letterpaper、textwidth 6.875in）；数值以模板为准。",
+    "浮动体放置位置（[t]/[b] 偏好）无官方明文，仅有图题/表题位置与留白建议。",
+    "归档的 cvpr.sty 取自 author-kit main 分支（版本串 2026），与 CVPR2025-v3.1 逐字节一致（仅版本串不同），故 template-implied 值可用于 CVPR 2025。"
+  ]
+}

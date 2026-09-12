@@ -1,0 +1,1161 @@
+{
+  "schema_version": "1.0",
+  "id": "iccv",
+  "name": "IEEE/CVF International Conference on Computer Vision",
+  "abbr": "ICCV",
+  "family": "cv",
+  "official_site": "https://iccv.thecvf.com/",
+  "current_edition": "ICCV 2025",
+  "focus_editions": [
+    "2021",
+    "2023",
+    "2025"
+  ],
+  "template_basis": {
+    "class": "iccv.sty",
+    "inherits": "article",
+    "url": "https://media.eventhosts.cc/Conferences/ICCV2025/ICCV2025-Author-Kit-Feb.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "正文（含全部图、表）上限 8 页；仅含参考文献的额外页不计入",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-authorguidelines",
+          "quote": "Papers are limited to eight pages, including figures and tables, in the ICCV style. Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 8 页正文",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-authorguidelines",
+          "quote": "Additional pages containing only cited references are allowed."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "inferred",
+      "note": "依据 ICCV 2023 明文（附录计页/须移至补充材料）推断；ICCV 2025 指南仅提“仅参考文献可额外”，未再单列附录",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2023-submissionguidelines",
+          "quote": "Appendices may not be a part of the additional pages. Appendices are counted towards the eight-page limit or should be moved to the supplementary document."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 iccv.sty 声明使用 letter 纸张",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-sty",
+          "quote": "\\PackageWarningNoLine{iccv}{Incorrect paper size - ICCV uses paper size `letter'. Please load document class `article' with `letterpaper' option}"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方模板为双栏",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-main",
+          "quote": "\\documentclass[10pt,twocolumn,letterpaper]{article}"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 10-point Times",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "Times",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文使用 Times",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "line_spacing": {
+      "value": "single",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文单倍行距",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "Type main text in 10-point Times, single-spaced."
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 174.6,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "6.875in = 174.625mm 版心总宽",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-sty",
+          "quote": "\\setlength{\\textwidth}{6.875in}"
+        }
+      ]
+    },
+    "text_height_mm": {
+      "value": 225.4,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "8.875in = 225.425mm 版心高",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-sty",
+          "quote": "\\setlength{\\textheight}{8.875in}"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 7.94,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "0.3125in = 7.9375mm 栏间距",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-sty",
+          "quote": "\\setlength{\\columnsep}{0.3125in}"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 28.6,
+        "left": 20.6,
+        "right": 20.6
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "上 1in=25.4mm；下 1-1/8in=28.58mm；左右=(8.5in-6.875in)/2=0.8125in=20.64mm",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "On all pages, the bottom margin should be $1\\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \\times 11$-inch paper;"
+        }
+      ]
+    },
+    "title_format": {
+      "value": "Times 14pt bold, title case",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题 Times 14-point 粗体",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "The title should be in Times 14-point, boldface type."
+        }
+      ]
+    },
+    "section_numbering": {
+      "value": "arabic",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "一级标题形如 1. Introduction（Times 12pt 粗体，左对齐）",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "(For example, {\\large \\bf 1. Introduction}) should be Times 12-point boldface, initially capitalized, flush left, with one blank line before, and one blank line after."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "双盲评审；不得在致谢/补充材料泄露身份",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-authorguidelines",
+          "quote": "ICCV reviewing is double blind, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "ICCV 2025 使用 OpenReview（2021/2023 用 CMT）",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-authorguidelines",
+          "quote": "ICCV 2025 will be using OpenReview to manage submissions."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "review version numbered, camera-ready no page numbers",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "送审版加页码；camera-ready 不加",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "The review version should have page numbers, yet the final version submitted as camera ready should not show any page numbers."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional supplementary material (videos, proofs, extra figures/tables); code encouraged, anonymized",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料可选、独立提交；不得含额外数据集/改进结果",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-authorguidelines",
+          "quote": "Supplementary material may include videos, proofs, additional figures or tables, more detailed analysis of experiments presented in the paper, or a concurrent submission to another conference."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "inferred",
+      "note": "官方模板 figure 示例中 \\caption 位于图内容之后、\\end{figure} 之前 → 图题在图下方；ICCV 指南未明文",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-intro",
+          "quote": "   \\caption{Example of caption.\n   It is set in Roman so that mathematics (always set in Roman: $B \\sin A = A \\sin B$) may be included without an ugly clash.}\n   \\label{fig:onecol}\n\\end{figure}"
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "inferred",
+      "note": "官方模板 table 示例中 \\caption 置于 tabular 之后 → 表题在表下方（与 CVPR/ICCV 指南缺省相反）；ICCV 指南未明文",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "  \\end{tabular}\n  \\caption{Results.   Ours is better.}\n  \\label{tab:example}\n\\end{table}"
+        }
+      ]
+    },
+    "caption_style_hint": {
+      "value": "9-point Roman; short captions centered",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注 9-point Roman",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "Figure and table captions should be 9-point Roman type as in \\cref{fig:onecol,fig:short}."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "9-point Times, numbered",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献 9-point Times、按数字编号",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "List and number all bibliographical references in 9-point Times, single-spaced, at the end of your paper."
+        }
+      ]
+    },
+    "footnote_style_hint": {
+      "value": "Times 8-point, single-spaced",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "脚注 8-point Times",
+      "evidence": [
+        {
+          "source_id": "src-iccv-2025-tmpl-formatting",
+          "quote": "Use Times 8-point type, single-spaced."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 11.0,
+      "median": 11.0,
+      "p10": 10.0,
+      "p90": 12.0,
+      "n": 8,
+      "unit": "pages",
+      "min": 10.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 8,
+      "unit": "pages",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 8,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 495.0,
+      "median": 495.0,
+      "p10": 495.0,
+      "p90": 495.0,
+      "n": 8,
+      "unit": "pt",
+      "min": 495.0,
+      "max": 495.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 22.288,
+      "median": 22.3,
+      "p10": 22.2,
+      "p90": 22.3,
+      "n": 8,
+      "unit": "pt",
+      "min": 22.2,
+      "max": 22.3,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 20.6,
+      "median": 20.6,
+      "p10": 20.6,
+      "p90": 20.6,
+      "n": 8,
+      "unit": "mm",
+      "min": 20.6,
+      "max": 20.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 20.6,
+      "median": 20.6,
+      "p10": 20.6,
+      "p90": 20.6,
+      "n": 8,
+      "unit": "mm",
+      "min": 20.6,
+      "max": 20.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 26.212,
+      "median": 26.1,
+      "p10": 26.1,
+      "p90": 26.4,
+      "n": 8,
+      "unit": "mm",
+      "min": 26.1,
+      "max": 26.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 27.775,
+      "median": 27.8,
+      "p10": 27.6,
+      "p90": 27.8,
+      "n": 8,
+      "unit": "mm",
+      "min": 27.6,
+      "max": 27.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "figures": {
+      "mean": 6.0,
+      "median": 6.0,
+      "p10": 5.0,
+      "p90": 7.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 5.0,
+      "max": 7.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "tables": {
+      "mean": 4.125,
+      "median": 4.0,
+      "p10": 1.0,
+      "p90": 7.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 7.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "equations": {
+      "mean": 11.5,
+      "median": 8.0,
+      "p10": 3.0,
+      "p90": 27.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 3.0,
+      "max": 27.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.125,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "refs": {
+      "mean": 69.875,
+      "median": 66.5,
+      "p10": 43.0,
+      "p90": 102.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 43.0,
+      "max": 102.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "n": 8,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 0.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.667,
+      "median": 0.667,
+      "p10": 0.556,
+      "p90": 0.778,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.556,
+      "max": 0.778,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.458,
+      "median": 0.444,
+      "p10": 0.111,
+      "p90": 0.778,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.111,
+      "max": 0.778,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 1.278,
+      "median": 0.889,
+      "p10": 0.333,
+      "p90": 3.0,
+      "n": 8,
+      "unit": "per_page",
+      "min": 0.333,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 1.236,
+      "median": 1.236,
+      "p10": 1.236,
+      "p90": 1.236,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.236,
+      "max": 1.236,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 8,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 8,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 122.688,
+      "median": 125.0,
+      "p10": 97.2,
+      "p90": 145.0,
+      "n": 8,
+      "unit": "per_page",
+      "min": 97.2,
+      "max": 145.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-iccv-2025-001",
+        "s-iccv-2025-002",
+        "s-iccv-2025-003",
+        "s-iccv-2025-004",
+        "s-iccv-2025-005",
+        "s-iccv-2025-006",
+        "s-iccv-2025-007",
+        "s-iccv-2025-008"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "ICCV 2021",
+      "year": 2021,
+      "value": 8,
+      "source_id": "src-iccv-2021-authorguidelines",
+      "note": "8 页正文（含图/表），仅参考文献可额外"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ICCV 2021",
+      "year": 2021,
+      "value": "CMT",
+      "source_id": "src-iccv-2021-authorguidelines",
+      "note": "ICCV 2021 使用 CMT 投稿"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICCV 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-iccv-2023-submissionguidelines",
+      "note": "维持 8 页；明文附录计页、须移至补充材料"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "ICCV 2023",
+      "year": 2023,
+      "value": true,
+      "source_id": "src-iccv-2023-submissionguidelines",
+      "note": "ICCV 2023：附录计入 8 页或移至补充文档"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ICCV 2023",
+      "year": 2023,
+      "value": "CMT",
+      "source_id": "src-iccv-2023-submissionguidelines",
+      "note": "ICCV 2023 仍用 CMT"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "ICCV 2025",
+      "year": 2025,
+      "value": 8,
+      "source_id": "src-iccv-2025-authorguidelines",
+      "note": "现行：8 页正文（含图/表），仅参考文献可额外"
+    },
+    {
+      "key": "submission_system",
+      "edition": "ICCV 2025",
+      "year": 2025,
+      "value": "OpenReview",
+      "source_id": "src-iccv-2025-authorguidelines",
+      "note": "ICCV 2025 改用 OpenReview"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "与 CVPR 同源（iccv.sty 由 cvpr.sty 派生）；font_pt 取正文 10pt，margin_mm 取左右 20.64mm",
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 10,
+      "margin_mm": 20.64,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 174.6,
+      "margin_min_mm": 20.6
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 28.6,
+          "left": 20.6,
+          "right": 20.6
+        },
+        "why": "单一 margin_mm 无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 8,
+        "why": "8 页仅指正文，参考文献另计"
+      },
+      {
+        "key": "appendix_allowed",
+        "value": false,
+        "why": "texopt 无“正文禁附录”结构约束"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不处理匿名化"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验双栏"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分正文页与总页"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 20.6,
+          "right": 20.6,
+          "top": 25.4,
+          "bottom": 28.6
+        },
+        "rationale": "下边距大于上/左右会失真"
+      },
+      {
+        "field": "caption_position_policy",
+        "type": "obj",
+        "example": {
+          "figure": "below",
+          "table": "above"
+        },
+        "rationale": "官方模板明文"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-iccv-2025-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "ICCV 2025 Author Guidelines (Submission Policies, Author FAQ, Ethics)",
+      "url": "https://iccv.thecvf.com/Conferences/2025/AuthorGuidelines",
+      "fetched_at": "2026-09-12T10:19:52+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iccv-2025-authorguidelines.html",
+      "sha256": "0c6e956a81d941dbc6414992a682108dcd96f9a077ee9cbfe4bb2e47cc2459c0",
+      "note": "官方作者指南：8 页正文（含图/表）、仅参考文献可额外、双盲、OpenReview"
+    },
+    {
+      "id": "src-iccv-2025-sty",
+      "kind": "official-template",
+      "title": "ICCV 2025 LaTeX style file (iccv.sty)",
+      "url": "/tmp/iccv25kit/ICCV2025-Author-Kit-Feb/iccv.sty",
+      "fetched_at": "2026-09-12T10:39:15+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-iccv-2025-sty.sty",
+      "sha256": "d4b522c1b3ecc0029d23f3d057383fd3bc8145c9aebf47f1b7058e91a35e3eff",
+      "note": "官方 ICCV 2025 Author Kit 内的 iccv.sty：textwidth 6.875in / textheight 8.875in / columnsep 0.3125in / letter / 10pt（kit: ICCV2025-Author-Kit-Feb.zip）"
+    },
+    {
+      "id": "src-iccv-2025-tmpl-main",
+      "kind": "official-template",
+      "title": "ICCV 2025 LaTeX template main.tex",
+      "url": "/tmp/iccv25kit/ICCV2025-Author-Kit-Feb/main.tex",
+      "fetched_at": "2026-09-12T10:39:15+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-iccv-2025-tmpl-main.tex",
+      "sha256": "40f1353ad07decc2b26f110bb2e3af768cb31fcd2033624cdd7be898adda290d",
+      "note": "官方模板主文件：documentclass[10pt,twocolumn,letterpaper]"
+    },
+    {
+      "id": "src-iccv-2025-tmpl-formatting",
+      "kind": "official-template",
+      "title": "ICCV 2025 author kit - Formatting your paper (sec/2_formatting.tex)",
+      "url": "/tmp/iccv25kit/ICCV2025-Author-Kit-Feb/sec/2_formatting.tex",
+      "fetched_at": "2026-09-12T10:39:16+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-iccv-2025-tmpl-formatting.tex",
+      "sha256": "44634ad045b015e73222fb5c92c6649738c537dce827778fa8c2ca260e817d35",
+      "note": "官方模板正文的格式说明：版心尺寸、题注位置、字号、页码"
+    },
+    {
+      "id": "src-iccv-2025-tmpl-intro",
+      "kind": "official-template",
+      "title": "ICCV 2025 author kit - sec/1_intro.tex (figure/caption examples)",
+      "url": "/tmp/iccv25kit/ICCV2025-Author-Kit-Feb/sec/1_intro.tex",
+      "fetched_at": "2026-09-12T10:43:50+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-iccv-2025-tmpl-intro.tex",
+      "sha256": "cb73ca6af756417dba6502a3ee1e2a2b653cdc923dbfd1c77e6a444675be1084",
+      "note": "官方模板示例：图形浮动体与题注结构（用于推断图题位置）"
+    },
+    {
+      "id": "src-iccv-2023-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "ICCV 2023 Author Guidelines",
+      "url": "https://iccv2023.thecvf.com/author.guidelines-352000-2-20.php",
+      "fetched_at": "2026-09-12T10:20:11+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iccv-2023-authorguidelines.html",
+      "sha256": "27b6a90080ff050688441b6fab0f5119b03aab4eeaef5b22bc4ba652d7be6afe",
+      "note": "history：ICCV 2023 匿名/双投/伦理等政策"
+    },
+    {
+      "id": "src-iccv-2023-submissionguidelines",
+      "kind": "official-guidelines",
+      "title": "ICCV 2023 Submission Guidelines",
+      "url": "https://iccv2023.thecvf.com/submission.guidelines-361600-2-20-16.php",
+      "fetched_at": "2026-09-12T10:20:22+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iccv-2023-submissionguidelines.html",
+      "sha256": "46c098f726217dcb6a39c42c99527a7a4a0d0c1b403fb4d567ce1b2eaef415d9",
+      "note": "history：ICCV 2023 8 页 + 附录计页规则、CMT 投稿"
+    },
+    {
+      "id": "src-iccv-2021-authorguidelines",
+      "kind": "official-guidelines",
+      "title": "ICCV 2021 Author Guidelines",
+      "url": "https://iccv2021.thecvf.com/node/4",
+      "fetched_at": "2026-09-12T10:20:18+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-iccv-2021-authorguidelines.html",
+      "sha256": "89fe4a788cccd4e9469a37bfc59420d8dc7acd4108da92d1a948ac2b4c9a1d7b",
+      "note": "history：ICCV 2021 8 页规则、CMT 投稿"
+    },
+    {
+      "id": "src-s-iccv-2025-001-abs",
+      "kind": "sample-paper",
+      "title": "GCRayDiffusion: Pose-Free Surface Reconstruction via Geometric Consistent Ray Diffusion",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Chen_GCRayDiffusion_Pose-Free_Surface_Reconstruction_via_Geometric_Consistent_Ray_Diffusion_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:01+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-001-abs.html",
+      "sha256": "3e97e296b72bd490e796bf74bc5f52556d5cfc46e708f6f0c6ea92e7efa135ec",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Chen_GCRayDiffusion_Pose-Free_Surface_Reconstruction_via_Geometric_Consistent_Ray_Diffusion_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-002-abs",
+      "kind": "sample-paper",
+      "title": "GWM: Towards Scalable Gaussian World Models for Robotic Manipulation",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Lu_GWM_Towards_Scalable_Gaussian_World_Models_for_Robotic_Manipulation_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:02+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-002-abs.html",
+      "sha256": "1adb6005923a0380438cad76effdde79288d0000de468cab6b39c65e97a90d1d",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Lu_GWM_Towards_Scalable_Gaussian_World_Models_for_Robotic_Manipulation_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-003-abs",
+      "kind": "sample-paper",
+      "title": "SpatialTrackerV2: Advancing 3D Point Tracking with Explicit Camera Motion",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Xiao_SpatialTrackerV2_Advancing_3D_Point_Tracking_with_Explicit_Camera_Motion_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:03+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-003-abs.html",
+      "sha256": "73cd8004074c779091c0db9fc86e1878a88fd942a1d27e45924eb96bd11b7be2",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Xiao_SpatialTrackerV2_Advancing_3D_Point_Tracking_with_Explicit_Camera_Motion_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-004-abs",
+      "kind": "sample-paper",
+      "title": "EasyControl: Adding Efficient and Flexible Control for Diffusion Transformer",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_EasyControl_Adding_Efficient_and_Flexible_Control_for_Diffusion_Transformer_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:04+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-004-abs.html",
+      "sha256": "208e9c08d812f152f13ee17dc9e9437e66503f0c3e857bf0cdf8d59d6ca4189c",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Zhang_EasyControl_Adding_Efficient_and_Flexible_Control_for_Diffusion_Transformer_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-005-abs",
+      "kind": "sample-paper",
+      "title": "Deciphering Cross-Modal Alignment in Large Vision-Language Models via Modality Integration Rate",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Huang_Deciphering_Cross-Modal_Alignment_in_Large_Vision-Language_Models_via_Modality_Integration_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:06+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-005-abs.html",
+      "sha256": "707c192c2615eca91416d824946a548013542c4a8ffa454be0703a1816e5e4e7",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Huang_Deciphering_Cross-Modal_Alignment_in_Large_Vision-Language_Models_via_Modality_Integration_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-006-abs",
+      "kind": "sample-paper",
+      "title": "FB-Diff: Fourier Basis-guided Diffusion for Temporal Interpolation of 4D Medical Imaging",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/You_FB-Diff_Fourier_Basis-guided_Diffusion_for_Temporal_Interpolation_of_4D_Medical_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-006-abs.html",
+      "sha256": "dee71b2ad93faa351a4fde1980c5535a52dd6e091e73254a02499bf16b0c5d23",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/You_FB-Diff_Fourier_Basis-guided_Diffusion_for_Temporal_Interpolation_of_4D_Medical_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-007-abs",
+      "kind": "sample-paper",
+      "title": "MOSAIC: Generating Consistent, Privacy-Preserving Scenes from Multiple Depth Views in Multi-Room Environments",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Liu_MOSAIC_Generating_Consistent_Privacy-Preserving_Scenes_from_Multiple_Depth_Views_in_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:08+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-007-abs.html",
+      "sha256": "cd36ce4373f54a3165351602ba0ec9a74a1b602a9e8423906aa6f9b65ad9caa7",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Liu_MOSAIC_Generating_Consistent_Privacy-Preserving_Scenes_from_Multiple_Depth_Views_in_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    },
+    {
+      "id": "src-s-iccv-2025-008-abs",
+      "kind": "sample-paper",
+      "title": "Leaps and Bounds: An Improved Point Cloud Winding Number Formulation for Fast Normal Estimation and Surface Reconstruction",
+      "url": "https://openaccess.thecvf.com/content/ICCV2025/html/Koneputugodage_Leaps_and_Bounds_An_Improved_Point_Cloud_Winding_Number_Formulation_ICCV_2025_paper.html",
+      "fetched_at": "2026-09-12T10:39:10+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-iccv-2025-008-abs.html",
+      "sha256": "e2a27e84c07378b3b510df1dab6bf37b5e6ef9dad17b93ff2556cd33de80cc82",
+      "pdf_url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Koneputugodage_Leaps_and_Bounds_An_Improved_Point_Cloud_Winding_Number_Formulation_ICCV_2025_paper.pdf",
+      "venue": "ICCV 2025",
+      "year": 2025,
+      "note": "CVF Open Access 论文落地页，证明属 ICCV 2025 主会"
+    }
+  ],
+  "open_questions": [
+    "ICCV 2025 作者指南未明炍提及附录；推断与 CVPR 一致（正文仅 8 页 + 参考文献），附录须放入补充材料。",
+    "ICCV 指南未明文规定题注位置；官方模板示例显示图题在下方，且 table 示例中表题置于表格下方（与 CVPR 相反），此处标 inferred，待更多样本核实。",
+    "ICCV 无独立 camera-ready 加页明文；未确认录用后页数规则。",
+    "ICCV 2025 sty/template 由官方 Author Kit（ICCV2025-Author-Kit-Feb.zip）解出，URL 记录为本地路径；官方 zip 下载地址见 template_basis.url。",
+    "浮动体位置偏好无官方明文。"
+  ]
+}

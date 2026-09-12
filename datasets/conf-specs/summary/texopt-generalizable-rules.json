@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0",
+  "title": "跨会议可抽象为 texopt 通用规则的清单",
+  "scope": "16 个计算机顶会：NeurIPS, ICML, ICLR, ACL, EMNLP, CVPR, ICCV, ECCV, AAAI, IJCAI, SIGGRAPH, KDD, WWW, OSDI, SOSP, NSDI",
+  "generated_by": "人工汇总（agent），逐条指向 conferences/*.json 的字段路径与来源 id；引文原文存于相应 JSON 的 evidence.quote",
+  "traceability": "每条 rule 的 evidence 给出 conference + key，可直接在 conferences/<id>.json 里查到 value/confidence/evidence（source_id + 逐字引文）；统计类 rule 指向 patterns/*.json 与 samples/*.jsonl 的实测值",
+  "layers": {
+    "L": "硬性约束（违反=不合规）：作为 texopt 的 L 项（lexicographic 首项，不可用 A 的收益交换）",
+    "A": "排版质量/审美代理目标（A 项）：来自真实论文实测统计或官方推荐，用于 A 项与感知阈值",
+    "R": "requirements 模块路线图：当前 Requirement 表达不了、但被官方明文约束的字段"
+  },
+  "rules": [
+    {
+      "id": "L-01",
+      "layer": "L",
+      "statement": "页数上限针对“正文/技术内容页”，参考文献（多数会议）与附录不计入；不能简单地把上限当成 PDF 总页数。",
+      "applies_to": "all 16 (references_counted=false: 15；IJCAI 例外=true)",
+      "evidence": [
+        {"conference": "neurips", "key": "hard_constraints.page_limit_content"},
+        {"conference": "neurips", "key": "hard_constraints.references_counted"},
+        {"conference": "ijcai", "key": "hard_constraints.references_counted"}
+      ],
+      "texopt_action": "压页时先按“正文页”判定；不得为压页而压缩参考文献或附录。需给 Requirement 增加计数范围语义（见 R-02）。",
+      "priority": "high"
+    },
+    {
+      "id": "L-02",
+      "layer": "L",
+      "statement": "官方模板的几何（字号、页边距、纸张、栏数）是硬约束，擅自改小字号/页边距可被直接拒稿。",
+      "applies_to": "neurips, icml, iclr, cvpr, iccv, aaai（明文“违背 style/页数可被拒稿”），其余同理由模板隐含",
+      "evidence": [
+        {"conference": "neurips", "key": "hard_constraints.body_font_size_pt"},
+        {"conference": "cvpr", "key": "hard_constraints.page_limit_content"}
+      ],
+      "texopt_action": "Requirement.allow_geometry_tune 必须默认 False；压页优先纯排版手段（间距、浮动体位置、避免孤行寡行、列表/标题间距收紧），几何调整只在显式允许且不低于官方下限时启用（margin_min_mm）。",
+      "priority": "high"
+    },
+    {
+      "id": "L-03",
+      "layer": "L",
+      "statement": "全部 16 个会议均为双盲评审：稿件（含附录、补充材料）不得含身份信息。",
+      "applies_to": "all 16",
+      "evidence": [
+        {"conference": "neurips", "key": "hard_constraints.anonymity"},
+        {"conference": "acl", "key": "hard_constraints.anonymity"},
+        {"conference": "osdi", "key": "hard_constraints.anonymity"}
+      ],
+      "texopt_action": "优化动作不得写入/恢复作者信息、机构、致谢；注入页眉/PDF 元数据时保持匿名（texopt 不改内容，天然安全，但注意排版副产物如自定义目录/页眉）。",
+      "priority": "high"
+    },
+    {
+      "id": "L-04",
+      "layer": "L",
+      "statement": "纸张/栏数是模板固定的（letter 与 a4 混用；多数 2 栏，NeurIPS/ICLR/ECCV 为 1 栏）。",
+      "applies_to": "letter: 13；a4: acl, emnlp, sosp；columns=1: neurips, iclr, eccv",
+      "evidence": [
+        {"conference": "acl", "key": "hard_constraints.paper_size"},
+        {"conference": "neurips", "key": "hard_constraints.columns"},
+        {"conference": "cvpr", "key": "hard_constraints.columns"}
+      ],
+      "texopt_action": "校验编译产物的纸张与栏数是否与目标会议一致（模板被误改时是最常见的“看起来没问题但已不合规”的坑）。",
+      "priority": "medium"
+    },
+    {
+      "id": "L-05",
+      "layer": "L",
+      "statement": "部分会议强制提交 paper checklist，且 checklist 不计页；不得删除模板 checklist 段。",
+      "applies_to": "neurips, icml(impact statement), aaai(checklist) 等",
+      "evidence": [
+        {"conference": "neurips", "key": "hard_constraints.checklist_required"},
+        {"conference": "aaai", "key": "hard_constraints.checklist_required"}
+      ],
+      "texopt_action": "把 checklist/impact statement 段加入“不可删除、不可压缩”保护名单。",
+      "priority": "medium"
+    },
+    {
+      "id": "A-01",
+      "layer": "A",
+      "statement": "“满宽图/跨栏图是常态”：单栏会议的图宽接近版心宽（实测 fig_width_frac_median≈0.98），双栏会议的满宽图占比也高。因此缩小图片极易破坏观感，只应针对视觉上明显过大的图。",
+      "applies_to": "neurips（实测 n=6）；其余见 patterns/float_patterns.json",
+      "evidence": [
+        {"file": "patterns/float_patterns.json", "key": "conferences.neurips.fig_width_frac_median"},
+        {"file": "patterns/float_patterns.json", "key": "conferences.neurips.full_width_fig_frac_mean"}
+      ],
+      "texopt_action": "reduce_oversized_figures 的触发条件改为“视觉高度占比超阈值 + 满宽”双条件，而不是“宽 > 阈值”；default max_fig_height_frac 保持 0.40 并参考各会议实测 fig_height_frac 分位。",
+      "priority": "high"
+    },
+    {
+      "id": "A-02",
+      "layer": "A",
+      "statement": "题注字号与正文字号的关系由会议模板决定：多数会议题注字号等于或略小于正文（实测 NeurIPS 题注 10pt = 正文 10pt；ACL 正文 11pt / 题注 10pt）。不应把“题注必须比正文小”当作通用规则。",
+      "applies_to": "neurips, acl（实测）；其余见 patterns/float_patterns.json 的 caption_font_pt_mode",
+      "evidence": [
+        {"file": "patterns/float_patterns.json", "key": "conferences.neurips.caption_font_pt_mode"},
+        {"file": "patterns/layout_patterns.json", "key": "conferences.acl.caption_font_pt_mode"}
+      ],
+      "texopt_action": "感知层以“题注字号相对正文的偏移量应落在实测区间内”为判据，而不是固定阈值。",
+      "priority": "medium"
+    },
+    {
+      "id": "A-03",
+      "layer": "A",
+      "statement": "题注位置按会议区分：图题在下是主流；表题在 CVPR/NeurIPS/ECCV 为下→上不一致（CVPR/NeurIPS 在上、ICCV/ACL/EMNLP/IJCAI 在下）。必须按目标会议取规则。",
+      "applies_to": "cvpr, neurips, eccv（表题在上）；iccv, acl, emnlp, ijcai（表题在下）；全部（图题在下）",
+      "evidence": [
+        {"conference": "cvpr", "key": "recommended.table_caption_position"},
+        {"conference": "iccv", "key": "recommended.table_caption_position"},
+        {"conference": "neurips", "key": "recommended.figure_caption_position"}
+      ],
+      "texopt_action": "A 项加入 caption_position 检查；requirements 增加 caption_position_policy（见 R-05）。",
+      "priority": "medium"
+    },
+    {
+      "id": "A-04",
+      "layer": "A",
+      "statement": "可修复的版面缺陷集中在 overfull/underfull hbox、vbox（孤行寡行代理）、浮动体参数不稳定（[h]/[h!]）与超宽图表；官方模板普遍已设置 widowpenalty/clubpenalty 等质量参数。",
+      "applies_to": "all（template-implied）",
+      "evidence": [
+        {"conference": "neurips", "key": "hard_constraints.float_placement_rules"}
+      ],
+      "texopt_action": "保持 sanitize_float_specs([h]→[tbp]) 与 inject_quality_macros；把孤行寡行作为 A 项主项。",
+      "priority": "high"
+    },
+    {
+      "id": "A-05",
+      "layer": "A",
+      "statement": "版面密度有稳定量级：双栏会议每页约 100~122 行、单栏每页约 55~65 行；图/表/公式/参考文献密度见实测统计。可作为 A 项归一化基准与感知阈值来源。",
+      "applies_to": "all（实测）",
+      "evidence": [
+        {"file": "patterns/layout_patterns.json", "key": "conferences.*.figures_per_paper"},
+        {"file": "samples/neurips.samples.jsonl", "key": "measured.lines_per_page"}
+      ],
+      "texopt_action": "score 模块的 A 项归一化使用各会议实测均值/四分位，而不是全局常数。",
+      "priority": "medium"
+    },
+    {
+      "id": "R-01",
+      "layer": "R",
+      "statement": "Requirement 缺少“栏数”字段；16/16 会议都隐含栏数约束（1 或 2 栏）。",
+      "applies_to": "all 16",
+      "evidence": [
+        {"conference": "neurips", "key": "texopt_requirement_map.unsupported_constraints"}
+      ],
+      "texopt_action": "新增 requirement 字段 columns:int，用于编译后校验与跨模板迁移判断。",
+      "priority": "high"
+    },
+    {
+      "id": "R-02",
+      "layer": "R",
+      "statement": "Requirement 的 page_limit 语义是“总页数”，与会议普遍采用的“正文页上限”不一致（14/16 会议把 references_counted 标为 false）。",
+      "applies_to": "14/16 会议提出",
+      "evidence": [
+        {"conference": "neurips", "key": "texopt_requirement_map.unsupported_constraints"},
+        {"conference": "icml", "key": "texopt_requirement_map.unsupported_constraints"}
+      ],
+      "texopt_action": "新增 page_limit_scope: content_only|total；ICLR 这类区间约束再加 page_limit_min。",
+      "priority": "high"
+    },
+    {
+      "id": "R-03",
+      "layer": "R",
+      "statement": "Requirement 缺少纸张尺寸字段（letter 13 个、a4 3 个）。",
+      "applies_to": "16/16 会议提出",
+      "evidence": [
+        {"conference": "acl", "key": "texopt_requirement_map.unsupported_constraints"}
+      ],
+      "texopt_action": "新增 paper_size；至少在编译后做一致性校验。",
+      "priority": "medium"
+    },
+    {
+      "id": "R-04",
+      "layer": "R",
+      "statement": "单一 margin_mm 无法表达非对称页边距（NeurIPS/ICLR 左右 1.5in vs 上下 1in；ACL 左右 0.75in 等）。",
+      "applies_to": "9/16 会议提出",
+      "evidence": [
+        {"conference": "neurips", "key": "texopt_requirement_map.unsupported_constraints"},
+        {"conference": "aaai", "key": "texopt_requirement_map.unsupported_constraints"}
+      ],
+      "texopt_action": "新增 asymmetric_margins{top,bottom,left,right}，或让 margin_mm 接受对象。",
+      "priority": "medium"
+    },
+    {
+      "id": "R-05",
+      "layer": "R",
+      "statement": "图/表题注位置的官方规定需要可配置（不同会议相反）。",
+      "applies_to": "6/16 会议提出",
+      "evidence": [
+        {"conference": "cvpr", "key": "texopt_requirement_map.recommended_field_suggestions"}
+      ],
+      "texopt_action": "新增 caption_position_policy{figure,table}。",
+      "priority": "medium"
+    },
+    {
+      "id": "R-06",
+      "layer": "R",
+      "statement": "其余未被 texopt 表达的官方硬要求：匿名、checklist、页码策略、附录政策、参考文献风格（bib_style）、投稿系统。",
+      "applies_to": "跨会议（见各 json 的 unsupported_constraints）",
+      "evidence": [
+        {"conference": "aaai", "key": "texopt_requirement_map.unsupported_constraints"},
+        {"conference": "kdd", "key": "texopt_requirement_map.unsupported_constraints"}
+      ],
+      "texopt_action": "作为 requirements 模块的 roadmap 候选；其中匿名/checklist 属“不可删除保护”，其余属校验项。",
+      "priority": "low"
+    }
+  ]
+}

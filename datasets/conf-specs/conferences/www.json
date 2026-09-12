@@ -1,0 +1,1076 @@
+{
+  "schema_version": "1.0",
+  "id": "www",
+  "name": "The Web Conference (WWW / TheWebConf, formerly International World Wide Web Conference)",
+  "abbr": "WWW",
+  "family": "data",
+  "official_site": "https://www.thewebconf.org/",
+  "current_edition": "WWW 2026",
+  "focus_editions": [
+    "2026",
+    "2024",
+    "2023",
+    "2022"
+  ],
+  "template_basis": {
+    "class": "acmart.cls (sigconf)",
+    "inherits": "acmart",
+    "url": "https://www.acm.org/publications/proceedings-template"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "Research Tracks 投稿正文（main paper）上限 8 页，须自包含",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "Submissions must be a single PDF file: 8 (eight) pages as main paper, with additional pages for references and an optional Appendix"
+        }
+      ]
+    },
+    "page_limit_total": {
+      "value": 12,
+      "unit": "pages",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 + 参考文献 + 可选附录总计不超过 12 页；录用版 proceedings 亦为 12 页（其中 8 页 content）",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "up to a maximum of 12 (twelve) pages in total."
+        },
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "All accepted papers will be allowed the same maximum page length in the proceedings (12 pages, of which 8 are content pages)"
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不占 8 页正文，但与附录一并计入 12 页总上限",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "with additional pages for references and an optional Appendix"
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许附录（可含 reproducibility 细节、证明、伪代码等）",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "an optional Appendix (that might contain details on reproducibility, proofs, pseudo-code, etc)"
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "附录计入 12 页总上限（正文+参考文献+附录 ≤12 页）",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "up to a maximum of 12 (twelve) pages in total."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "双盲评审；正文删除作者名/单位等身份信息，自引用第三人称",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "The review process will be double-blind."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "WWW 2024 起用 OpenReview 管理投稿与评审（2023 用 EasyChair）",
+      "evidence": [
+        {
+          "source_id": "src-www-2024-researchtrack",
+          "quote": "We will use OpenReview to manage the submissions and reviewing."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "acmart.cls",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "必须使用 ACM 模板（LaTeX 推荐 \\documentclass[sigconf, anonymous, review]{acmart}）",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "\\documentclass[sigconf, anonymous, review]{acmart}."
+        }
+      ]
+    },
+    "template_url": {
+      "value": "https://www.acm.org/publications/proceedings-template",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "官方 ACM proceedings 模板（Word Interim Template / LaTeX acmart / Overleaf）",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "ACM template and format (also"
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart sigconf geometry 载入 letterpaper（8.5in × 11in）",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sigconf 为双栏；acmart 对 sigconf 使用 \\twocolumn",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "\\or % sigconf\n    \\twocolumn[\\box\\mktitle@bx]%"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 8.47,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sigconf geometry columnsep=2pc；2pc = 24pt = 8.467mm",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "includeheadfoot, columnsep=2pc,"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 9,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart sigconf 默认正文 9pt",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "\\or % sigconf\n    \\def\\ACM@fontsize{9pt}%"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 20.11,
+        "bottom": 25.75,
+        "left": 19.05,
+        "right": 19.05
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart sigconf geometry：top=57pt=20.11mm，bottom=73pt=25.75mm，inner=outer=54pt=19.05mm",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "top=57pt, bottom=73pt, inner=54pt, outer=54pt,"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 177.8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "版心宽 = 8.5in − 2×54pt = 504pt = 177.8mm",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "paperwidth=8.5in, paperheight=11in,"
+        },
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "top=57pt, bottom=73pt, inner=54pt, outer=54pt,"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "ACMReferenceFormat",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 随附 ACM-Reference-Format.bst",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "acmart.cls, the files ACM-Reference-Format.bst, templates"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "dual_submission_policy": {
+      "value": "No archival concurrent submission; anonymous arXiv preprints allowed",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "不得同时投有正式 proceedings 的会议/期刊；匿名 arXiv 预印本允许",
+      "evidence": [
+        {
+          "source_id": "src-www-2026-researchtrack",
+          "quote": "papers under review at or published/accepted to any peer-reviewed conference / journal with published proceedings cannot be submitted."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "ACM-Reference-Format (natbib/numeric)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "acmart 默认启用 natbib，配合 ACM-Reference-Format.bst",
+      "evidence": [
+        {
+          "source_id": "src-acmart-dtx",
+          "quote": "\\ExecuteOptionsX{natbib=true}"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 15.0,
+      "median": 15.0,
+      "p10": 4.0,
+      "p90": 29.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 4.0,
+      "max": 29.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "content_pages": {
+      "mean": 10.714,
+      "median": 9.0,
+      "p10": 4.0,
+      "p90": 26.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 4.0,
+      "max": 26.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.429,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 12.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 497.557,
+      "median": 504.9,
+      "p10": 453.5,
+      "p90": 505.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 453.5,
+      "max": 505.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 23.883,
+      "median": 23.9,
+      "p10": 23.8,
+      "p90": 23.9,
+      "n": 6,
+      "unit": "pt",
+      "min": 23.8,
+      "max": 23.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 20.043,
+      "median": 18.8,
+      "p10": 18.8,
+      "p90": 27.4,
+      "n": 7,
+      "unit": "mm",
+      "min": 18.8,
+      "max": 27.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 20.3,
+      "median": 18.9,
+      "p10": 18.9,
+      "p90": 28.5,
+      "n": 7,
+      "unit": "mm",
+      "min": 18.9,
+      "max": 28.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 24.229,
+      "median": 21.9,
+      "p10": 20.8,
+      "p90": 39.3,
+      "n": 7,
+      "unit": "mm",
+      "min": 20.8,
+      "max": 39.3,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 28.0,
+      "median": 29.1,
+      "p10": 20.1,
+      "p90": 29.8,
+      "n": 7,
+      "unit": "mm",
+      "min": 20.1,
+      "max": 29.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "figures": {
+      "mean": 7.286,
+      "median": 7.0,
+      "p10": 5.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 5.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "tables": {
+      "mean": 7.429,
+      "median": 8.0,
+      "p10": 1.0,
+      "p90": 13.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 13.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "equations": {
+      "mean": 20.857,
+      "median": 23.0,
+      "p10": 4.0,
+      "p90": 45.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 4.0,
+      "max": 45.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.571,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 2.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "refs": {
+      "mean": 43.571,
+      "median": 54.0,
+      "p10": 8.0,
+      "p90": 62.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 8.0,
+      "max": 62.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.571,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 3.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.825,
+      "median": 0.778,
+      "p10": 0.385,
+      "p90": 1.5,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.385,
+      "max": 1.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.783,
+      "median": 0.889,
+      "p10": 0.231,
+      "p90": 1.444,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.231,
+      "max": 1.444,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 2.293,
+      "median": 2.556,
+      "p10": 0.385,
+      "p90": 5.0,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.385,
+      "max": 5.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.478,
+      "median": 0.463,
+      "p10": 0.433,
+      "p90": 0.525,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.433,
+      "max": 0.525,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.198,
+      "median": 0.152,
+      "p10": 0.095,
+      "p90": 0.491,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.095,
+      "max": 0.491,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.117,
+      "median": 0.125,
+      "p10": 0.0,
+      "p90": 0.286,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.0,
+      "max": 0.286,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.286,
+      "median": 9.0,
+      "p10": 8.0,
+      "p90": 12.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 8.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 136.571,
+      "median": 140.6,
+      "p10": 50.8,
+      "p90": 170.6,
+      "n": 7,
+      "unit": "per_page",
+      "min": 50.8,
+      "max": 170.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-www-2024-001",
+        "s-www-2024-002",
+        "s-www-2024-003",
+        "s-www-2024-004",
+        "s-www-2025-001",
+        "s-www-2025-002",
+        "s-www-2025-003"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "WWW 2022",
+      "year": 2022,
+      "value": 8,
+      "source_id": "src-www-2022-researchtrack",
+      "note": "2022：8 页内容（含图表，不含补充材料与参考文献）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "WWW 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-www-2023-researchtrack",
+      "note": "2023：8 页内容（须含其中引用的图表）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "WWW 2024",
+      "year": 2024,
+      "value": 8,
+      "source_id": "src-www-2024-researchtrack",
+      "note": "2024：8 页正文，参考文献无限页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "WWW 2026",
+      "year": 2026,
+      "value": 8,
+      "source_id": "src-www-2026-researchtrack",
+      "note": "2026：8 页正文，总计封顶 12 页"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "WWW 2022",
+      "year": 2022,
+      "value": 12,
+      "source_id": "src-www-2022-researchtrack",
+      "note": "2022：含补充材料与参考文献总计 ≤12 页"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "WWW 2023",
+      "year": 2023,
+      "value": 12,
+      "source_id": "src-www-2023-researchtrack",
+      "note": "2023：正文+附录+参考文献总计 ≤12 页"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "WWW 2024",
+      "year": 2024,
+      "value": null,
+      "source_id": "src-www-2024-researchtrack",
+      "note": "2024：参考文献无限页（无 12 页封顶）；录用版 proceedings 12 页"
+    },
+    {
+      "key": "page_limit_total",
+      "edition": "WWW 2026",
+      "year": 2026,
+      "value": 12,
+      "source_id": "src-www-2026-researchtrack",
+      "note": "2026：恢复 12 页总上限（正文 8 + 参考文献/附录）"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "WWW 2022",
+      "year": 2022,
+      "value": true,
+      "source_id": "src-www-2022-researchtrack",
+      "note": "2022：2 页补充材料计入 12 页总上限"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "WWW 2023",
+      "year": 2023,
+      "value": true,
+      "source_id": "src-www-2023-researchtrack",
+      "note": "2023：最多 2 页附录计入 12 页总上限"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "WWW 2024",
+      "year": 2024,
+      "value": false,
+      "source_id": "src-www-2024-researchtrack",
+      "note": "2024：附录/参考文献不计入正文页"
+    },
+    {
+      "key": "submission_system",
+      "edition": "WWW 2023",
+      "year": 2023,
+      "value": "EasyChair",
+      "source_id": "src-www-2023-researchtrack",
+      "note": "2023 使用 EasyChair"
+    },
+    {
+      "key": "submission_system",
+      "edition": "WWW 2024",
+      "year": 2024,
+      "value": "OpenReview",
+      "source_id": "src-www-2024-researchtrack",
+      "note": "2024 起迁移到 OpenReview"
+    },
+    {
+      "key": "submission_system",
+      "edition": "WWW 2026",
+      "year": 2026,
+      "value": "OpenReview",
+      "source_id": "src-www-2026-researchtrack",
+      "note": "2026 仍用 OpenReview"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取 acmart sigconf 正文 9pt；margin_mm 取等效单边 19.05mm；page_limit 取正文 8 页（总 12 页见 unsupported）",
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 9,
+      "margin_mm": 19.05,
+      "eq_fleqn_allowed": true,
+      "float_spec": "tbp",
+      "microtype": true,
+      "overwide_fig_threshold_mm": 177.8,
+      "verbose": false
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段；sigconf 固定双栏"
+      },
+      {
+        "key": "page_limit_total",
+        "value": 12,
+        "why": "投稿总页数 12 含参考文献/附录，与 page_limit 语义冲突，需支持计数范围"
+      },
+      {
+        "key": "appendix_counted",
+        "value": true,
+        "why": "texopt 无附录计数概念"
+      },
+      {
+        "key": "anonymity",
+        "value": "double-blind",
+        "why": "texopt 不检测匿名化"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否与官方模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分 8 页正文与 12 页总上限"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 19.05,
+          "right": 19.05,
+          "top": 20.11,
+          "bottom": 25.75
+        },
+        "rationale": "ACM 模板上下边距不等"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-www-2026-researchtrack",
+      "kind": "official-guidelines",
+      "title": "The Web Conference 2026 (WWW 2026) Research Tracks — Call for Papers",
+      "url": "https://www2026.thewebconf.org/calls/research-tracks",
+      "fetched_at": "2026-09-12T10:24:15+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2026-researchtrack.html",
+      "sha256": "52d6b3507eb3d45b75fb5c78b1949750a65cf8579a3664cf9a036018c2776385",
+      "note": "官方 Research Tracks CFP：内容页/附录/参考文献页数、匿名、ACM 模板、OpenReview"
+    },
+    {
+      "id": "src-www-2024-researchtrack",
+      "kind": "official-guidelines",
+      "title": "The Web Conference 2024 (WWW 2024) — Call for Papers",
+      "url": "https://www2024.thewebconf.org/calls/research-tracks",
+      "fetched_at": "2026-09-12T10:20:15+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-researchtrack.html",
+      "sha256": "7cb051a1d6430d3223fd8e8dd8a94f6e3e0f62b614927308a121f0f214f29f2d",
+      "note": "官方 Research Tracks CFP：内容页/附录/参考文献页数、匿名、ACM 模板、OpenReview"
+    },
+    {
+      "id": "src-www-2023-researchtrack",
+      "kind": "official-guidelines",
+      "title": "The Web Conference 2023 (WWW 2023) — Call for Papers",
+      "url": "https://www2023.thewebconf.org/calls/research-tracks/",
+      "fetched_at": "2026-09-12T10:20:41+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2023-researchtrack.html",
+      "sha256": "b160af30874bb8c53295ca3483467833d05cf4f6aab4ab0ff15048a0f9097a78",
+      "note": "官方 Research Tracks CFP：内容页/附录/参考文献页数、匿名、ACM 模板、OpenReview"
+    },
+    {
+      "id": "src-www-2022-researchtrack",
+      "kind": "official-guidelines",
+      "title": "The Web Conference 2022 (WWW 2022) — Call for Papers",
+      "url": "https://www2022.thewebconf.org/cfp/research/",
+      "fetched_at": "2026-09-12T10:22:47+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2022-researchtrack.html",
+      "sha256": "293604d7feb6011f6d6add12c7b91975e7497d91e75d5c300c70557af6b67ae2",
+      "note": "官方 Research Tracks CFP：内容页/附录/参考文献页数、匿名、ACM 模板、OpenReview"
+    },
+    {
+      "id": "src-www-2024-accepted",
+      "kind": "official-guidelines",
+      "title": "The Web Conference 2024 — Accepted Papers (Research Tracks)",
+      "url": "https://www2024.thewebconf.org/accepted/research-tracks",
+      "fetched_at": "2026-09-12T10:27:43+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-accepted.html",
+      "sha256": "3feedcc7e710b92f35fb95190ce54c7c4f6e2a9286fc52cc61fa0931746819d9",
+      "note": "官方 accepted papers 列表页，用于证明样本论文归属"
+    },
+    {
+      "id": "src-acmart-dtx",
+      "kind": "official-template",
+      "title": "ACM acmart class (acmart.dtx documentation source)",
+      "url": "/tmp/acmart_extract/acmart.dtx",
+      "fetched_at": "2026-09-12T10:25:35+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-acmart-dtx.dtx",
+      "sha256": "e29efd327f5c759f3d1f2e99dc8588c6a05b734c142f89c3e348161b893e44ff",
+      "note": "ACM 官方 acmart 模板；sigconf 格式的 geometry/字号/双栏证据"
+    },
+    {
+      "id": "src-www-2024-sample-001",
+      "kind": "sample-paper",
+      "title": "Masked Graph Autoencoder with Non-discrete Bandwidths",
+      "url": "https://arxiv.org/abs/2402.03814",
+      "fetched_at": "2026-09-12T10:39:00+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-sample-001.html",
+      "sha256": "d36c794ac95ef3c989fc4f06bd382e648bf2dacf742da512123d399f0b756e96",
+      "pdf_url": "https://arxiv.org/pdf/2402.03814",
+      "venue": "WWW 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-www-2024-sample-002",
+      "kind": "sample-paper",
+      "title": "Fair Graph Representation Learning via Sensitive Attribute Disentanglement",
+      "url": "https://arxiv.org/abs/2405.07011",
+      "fetched_at": "2026-09-12T10:39:01+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-sample-002.html",
+      "sha256": "238dd4ba7cbb1ff20bb1a1d228b40242e749a2fbf820b156f66d2429a25ee941",
+      "pdf_url": "https://arxiv.org/pdf/2405.07011",
+      "venue": "WWW 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-www-2024-sample-003",
+      "kind": "sample-paper",
+      "title": "Event GDR: Event-Centric Generative Document Retrieval",
+      "url": "https://arxiv.org/abs/2405.06886",
+      "fetched_at": "2026-09-12T10:39:02+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-sample-003.html",
+      "sha256": "4225ff76e1d82dc6e7e7430b7d63d4f523e6b5b3c4c0510aff1704fd147485a6",
+      "pdf_url": "https://arxiv.org/pdf/2405.06886",
+      "venue": "WWW 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-www-2024-sample-004",
+      "kind": "sample-paper",
+      "title": "Inductive Cognitive Diagnosis for Fast Student Learning in Web-Based Online Intelligent Education Systems",
+      "url": "https://arxiv.org/abs/2404.11290",
+      "fetched_at": "2026-09-12T10:38:59+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2024-sample-004.html",
+      "sha256": "ce02efa5be14c2caadc0ab27ddcd2f8f1d7fdf51d2e123eee0c394d34afadea1",
+      "pdf_url": "https://arxiv.org/pdf/2404.11290",
+      "venue": "WWW 2024",
+      "year": 2024
+    },
+    {
+      "id": "src-www-2025-sample-001",
+      "kind": "sample-paper",
+      "title": "MER-Inspector: Assessing model extraction risks from an attack-agnostic perspective",
+      "url": "https://arxiv.org/abs/2509.18578",
+      "fetched_at": "2026-09-12T10:38:49+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2025-sample-001.html",
+      "sha256": "b9e67b0c72be2631744944599fc6702af701dbae663f0c399e27af9a649d2e57",
+      "pdf_url": "https://arxiv.org/pdf/2509.18578",
+      "venue": "WWW 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-www-2025-sample-002",
+      "kind": "sample-paper",
+      "title": "Graph Wave Networks",
+      "url": "https://arxiv.org/abs/2505.20034",
+      "fetched_at": "2026-09-12T10:38:48+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2025-sample-002.html",
+      "sha256": "1acf1955bf4383afa115641ea2434115090b2d49ea03b0c9eaeaa1220ba275fc",
+      "pdf_url": "https://arxiv.org/pdf/2505.20034",
+      "venue": "WWW 2025",
+      "year": 2025
+    },
+    {
+      "id": "src-www-2025-sample-003",
+      "kind": "sample-paper",
+      "title": "Str-GCL: Structural Commonsense Driven Graph Contrastive Learning",
+      "url": "https://arxiv.org/abs/2507.07141",
+      "fetched_at": "2026-09-12T10:38:47+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-www-2025-sample-003.html",
+      "sha256": "b3d4359311a67827f12984520792bc6698ad1c5cd38bbe3153b24eba00115bc2",
+      "pdf_url": "https://arxiv.org/pdf/2507.07141",
+      "venue": "WWW 2025",
+      "year": 2025
+    }
+  ],
+  "open_questions": [
+    "WWW 未明写字号/页边距，数值来自 ACM acmart sigconf 模板(9pt、letter、inner/outer 54pt)，属 template-implied。",
+    "WWW 2025（The Web Conference 2025）Research Tracks CFP 未归档，history 缺 2025 一年；2026 页数规则引自 archived 2026 CFP。",
+    "WWW 2024 对录用版 proceedings 的页数规定（12 页 8 content）与 2026 相同，但投稿阶段‘参考文献无限页’的计页口径与 2026 不同。",
+    "WWW 送审稿是否强制页码未明说；accepted 列表页仅证明归属，不含排版值。"
+  ]
+}

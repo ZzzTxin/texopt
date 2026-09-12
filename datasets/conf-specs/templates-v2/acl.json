@@ -1,0 +1,1213 @@
+{
+ "schema_version": "1.0",
+ "id": "acl",
+ "conference": "ACL",
+ "edition": "ACL 2025",
+ "family": "nlp",
+ "generated_by": "tools/build_templates.py (from analysis/template-inputs.json)",
+ "data_basis": {
+  "n_samples": 7,
+  "n_measurements": 7,
+  "focus_editions": [
+   "2025",
+   "2024",
+   "2023",
+   "2022"
+  ],
+  "measurement_method": "tools/measure_pdf.py (pdfminer.six 字形级几何)",
+  "robust_stats_only": true
+ },
+ "sources": [
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-cfp",
+   "url": "https://2025.aclweb.org/calls/main_conference_papers/",
+   "note": "ACL 2025 Call for Papers (Main Conference)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-formatting",
+   "url": "https://acl-org.github.io/ACLPUB/formatting.html",
+   "note": "ACLPUB Paper Formatting Guidelines (*ACL)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-sty",
+   "url": "https://cdn.jsdelivr.net/gh/acl-org/acl-style-files@master/acl.sty",
+   "note": "ACL LaTeX style file (acl.sty)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-natbib-bst",
+   "url": "https://cdn.jsdelivr.net/gh/acl-org/acl-style-files@master/acl_natbib.bst",
+   "note": "ACL natbib bibliography style (acl_natbib.bst)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2024-cfp",
+   "url": "https://2024.aclweb.org/calls/main_conference_papers/",
+   "note": "ACL 2024 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2023-cfp",
+   "url": "https://2023.aclweb.org/calls/main_conference/",
+   "note": "ACL 2023 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2022-cfp",
+   "url": "https://2022.aclweb.org/callpapers.html",
+   "note": "ACL 2022 Call for Papers"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-an-2025.acl-long",
+   "url": "https://aclanthology.org/volumes/2025.acl-long/",
+   "note": "ACL Anthology: Proceedings of ACL 2025 (Volume 1: Long Papers)"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-1",
+   "url": "https://aclanthology.org/2025.acl-long.1/",
+   "note": "EcomScriptBench: A Multi-task Benchmark for E-commerce Script Planning via Step-wise Intention-Driven Product Association"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-348",
+   "url": "https://aclanthology.org/2025.acl-long.348/",
+   "note": "Towards Effective Extraction and Evaluation of Factual Claims"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-542",
+   "url": "https://aclanthology.org/2025.acl-long.542/",
+   "note": "Frictional Agent Alignment Framework: Slow Down and Don’t Break Things"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-847",
+   "url": "https://aclanthology.org/2025.acl-long.847/",
+   "note": "Donate or Create? Comparing Data Collection Strategies for Emotion-labeled Multimodal Social Media Posts"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-1000",
+   "url": "https://aclanthology.org/2025.acl-long.1000/",
+   "note": "Deep Temporal Reasoning in Video Language Models: A Cross-Linguistic Evaluation of Action Duration and Completion through Perfect Times"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-1332",
+   "url": "https://aclanthology.org/2025.acl-long.1332/",
+   "note": "MMDEND: Dendrite-Inspired Multi-Branch Multi-Compartment Parallel Spiking Neuron for Sequence Modeling"
+  },
+  {
+   "kind": "official-source",
+   "ref": "src-acl-2025-paper-1500",
+   "url": "https://aclanthology.org/2025.acl-long.1500/",
+   "note": "FocusLLM: Precise Understanding of Long Context by Dynamic Condensing"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-001",
+   "url": "https://aclanthology.org/2025.acl-long.1.pdf",
+   "note": "EcomScriptBench: A Multi-task Benchmark for E-commerce Script Planning via Step-wise Intention-Driven Product Association"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-002",
+   "url": "https://aclanthology.org/2025.acl-long.348.pdf",
+   "note": "Towards Effective Extraction and Evaluation of Factual Claims"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-003",
+   "url": "https://aclanthology.org/2025.acl-long.542.pdf",
+   "note": "Frictional Agent Alignment Framework: Slow Down and Don’t Break Things"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-004",
+   "url": "https://aclanthology.org/2025.acl-long.847.pdf",
+   "note": "Donate or Create? Comparing Data Collection Strategies for Emotion-labeled Multimodal Social Media Posts"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-005",
+   "url": "https://aclanthology.org/2025.acl-long.1000.pdf",
+   "note": "Deep Temporal Reasoning in Video Language Models: A Cross-Linguistic Evaluation of Action Duration and Completion through Perfect Times"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-006",
+   "url": "https://aclanthology.org/2025.acl-long.1332.pdf",
+   "note": "MMDEND: Dendrite-Inspired Multi-Branch Multi-Compartment Parallel Spiking Neuron for Sequence Modeling"
+  },
+  {
+   "kind": "sample-pdf",
+   "ref": "s-acl-2025-007",
+   "url": "https://aclanthology.org/2025.acl-long.1500.pdf",
+   "note": "FocusLLM: Precise Understanding of Long Context by Dynamic Condensing"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-01",
+   "url": null,
+   "note": "页数上限针对“正文/技术内容页”，参考文献（多数会议）与附录不计入；不能简单地把上限当成 PDF 总页数。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-03",
+   "url": null,
+   "note": "全部 16 个会议均为双盲评审：稿件（含附录、补充材料）不得含身份信息。"
+  },
+  {
+   "kind": "rule",
+   "ref": "L-04",
+   "url": null,
+   "note": "纸张/栏数是模板固定的（letter 与 a4 混用；多数 2 栏，NeurIPS/ICLR/ECCV 为 1 栏）。"
+  },
+  {
+   "kind": "rule",
+   "ref": "A-02",
+   "url": null,
+   "note": "题注字号与正文字号的关系由会议模板决定：多数会议题注字号等于或略小于正文（实测 NeurIPS 题注 10pt = 正文 10pt；ACL 正文 11pt / 题注 10pt）。不应把“题注必须比正文小”当作通用规则。"
+  },
+  {
+   "kind": "rule",
+   "ref": "A-03",
+   "url": null,
+   "note": "题注位置按会议区分：图题在下是主流；表题在 CVPR/NeurIPS/ECCV 为下→上不一致（CVPR/NeurIPS 在上、ICCV/ACL/EMNLP/IJCAI 在下）。必须按目标会议取规则。"
+  },
+  {
+   "kind": "rule",
+   "ref": "R-01",
+   "url": null,
+   "note": "Requirement 缺少“栏数”字段；16/16 会议都隐含栏数约束（1 或 2 栏）。"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "analysis/template-inputs.json",
+   "url": null,
+   "note": "稳健统计（median/P25/P75）来源"
+  },
+  {
+   "kind": "analysis-file",
+   "ref": "samples/_measurements/*.json",
+   "url": null,
+   "note": "单篇论文实测几何"
+  }
+ ],
+ "traceability": {
+  "basis_definitions": {
+   "official": "官方指南/CFP/模板说明的明文字面值",
+   "template-implied": "从官方 .sty/.cls 源码或官方模板文件读出（无文字明文）",
+   "inferred": "由多源交叉推断（官方无明文，但模板行为 + 样本实测一致），可信度低于 template-implied",
+   "sample-stat": "真实论文 PDF 实测的稳健统计（median/P25/P75），不是规则",
+   "derived": "由前述值按固定公式推导（如 版心宽 = 行尾众数 − 行首最小值）"
+  },
+  "field_basis": {
+   "hard_constraints.abstract_max_words": "official",
+   "hard_constraints.anonymity": "official",
+   "hard_constraints.appendix_allowed": "official",
+   "hard_constraints.appendix_counted": "official",
+   "hard_constraints.bib_style": "template-implied",
+   "hard_constraints.body_font_family": "official",
+   "hard_constraints.body_font_size_pt": "official",
+   "hard_constraints.camera_ready_extra_pages": "official",
+   "hard_constraints.checklist_required": "official",
+   "hard_constraints.column_gap_mm": "official",
+   "hard_constraints.columns": "official",
+   "hard_constraints.margins_mm": "official",
+   "hard_constraints.page_limit_content": "official",
+   "hard_constraints.page_numbering": "official",
+   "hard_constraints.paper_size": "official",
+   "hard_constraints.references_counted": "official",
+   "hard_constraints.text_width_mm": "inferred",
+   "hard_constraints.title_format": "official",
+   "geometry.page_size": "official",
+   "geometry.page_width_mm": "derived",
+   "geometry.page_height_mm": "derived",
+   "geometry.columns": "official",
+   "geometry.text_width_mm": "inferred",
+   "geometry.margin_floor_mm": "official",
+   "geometry.margins.left_mm": "official",
+   "geometry.margins.right_mm": "official",
+   "geometry.margins.top_mm": "official",
+   "geometry.margins.bottom_mm": "official",
+   "geometry.column_gap_mm": "official",
+   "geometry.column_width_mm": "derived",
+   "geometry.text_height_mm": "sample-stat",
+   "typography.body_font_pt": "official",
+   "typography.caption_font_pt": "sample-stat",
+   "typography.body_font_family": "official",
+   "typography.caption_position.figure": "official",
+   "typography.caption_position.table": "official",
+   "float_policy.float_spec": "derived",
+   "float_policy.figure_width.overwide_threshold_mm": "derived",
+   "density_targets.figures": "sample-stat",
+   "density_targets.tables": "sample-stat",
+   "density_targets.equations": "sample-stat",
+   "density_targets.algorithms": "sample-stat",
+   "density_targets.footnotes": "sample-stat",
+   "density_targets.refs": "sample-stat",
+   "density_targets.lines_per_page": "sample-stat",
+   "density_targets.content_pages": "sample-stat"
+  }
+ },
+ "hard_constraints": {
+  "abstract_max_words": {
+   "value": 200,
+   "unit": "words",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "It should be no longer than 200 words."
+    }
+   ],
+   "note": "摘要不超过 200 词，纯文本（不含 LaTeX 标记）；10pt roman 单倍行距"
+  },
+  "anonymity": {
+   "value": "double-blind",
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-2025-cfp",
+     "quote": "The reviewing process will continue to be double-blind."
+    }
+   ],
+   "note": "送审稿双盲：正文与补充材料均不得含作者身份信息；送审版需加行号"
+  },
+  "appendix_allowed": {
+   "value": true,
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "The conference encourages submission of appendices and supplementary material, which are not required to fit within these page limits."
+    }
+   ],
+   "note": "允许附录与补充材料；附录不必受正文页数限制"
+  },
+  "appendix_counted": {
+   "value": false,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "The conference encourages submission of appendices and supplementary material, which are not required to fit within these page limits."
+    }
+   ],
+   "note": "附录不计入正文页数；但送审版须自洽（审稿人可不看附录）"
+  },
+  "bib_style": {
+   "value": "acl_natbib",
+   "unit": null,
+   "scope": "both",
+   "confidence": "template-implied",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-sty",
+     "quote": "\\bibliographystyle{acl_natbib}"
+    }
+   ],
+   "note": "官方 sty 指定 acl_natbib（author-year）；正文引用为 (作者, 年份)"
+  },
+  "body_font_family": {
+   "value": "Times Roman",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "should be set in Times Roman"
+    }
+   ],
+   "note": "正文应使用 Times Roman（不可用时可用 Times New Roman / Computer Modern Roman）"
+  },
+  "body_font_size_pt": {
+   "value": 11,
+   "unit": "pt",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "document text 11 pt"
+    }
+   ],
+   "note": "正文 11pt（romans）；节标题 12pt，小节 11pt，题注/摘要/参考文献 10pt，脚注 9pt"
+  },
+  "camera_ready_extra_pages": {
+   "value": 1,
+   "unit": "pages",
+   "scope": "camera_ready",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Upon acceptance, final versions of long papers will be given one additional page – up to nine (9) pages of content plus unlimited pages for acknowledgments and references"
+    }
+   ],
+   "note": "长论文录用后 +1 页正文（最多 9 页）；短论文最多 5 页"
+  },
+  "checklist_required": {
+   "value": true,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-2025-cfp",
+     "quote": "Ethics Policy including the responsible NLP research checklist"
+    }
+   ],
+   "note": "强制提交 Responsible NLP Research checklist（随 ARR 提交，不占正文页数）"
+  },
+  "column_gap_mm": {
+   "value": 6.0,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Gap between columns: 0.6 cm"
+    }
+   ],
+   "note": "栏间距 0.6cm = 6mm"
+  },
+  "columns": {
+   "value": 2,
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Manuscripts must be set in two columns."
+    }
+   ],
+   "note": "正文双栏；标题/作者/跨栏图表除外"
+  },
+  "margins_mm": {
+   "value": {
+    "top": 25.0,
+    "bottom": 25.0,
+    "left": 25.0,
+    "right": 25.0
+   },
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Left margin: 2.5 cm"
+    }
+   ],
+   "note": "四边页边距均 2.5cm=25mm（官方明文）"
+  },
+  "page_limit_content": {
+   "value": 8,
+   "unit": "pages",
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Review versions of long papers may have up to eight (8) pages of content plus unlimited pages for references."
+    }
+   ],
+   "note": "长论文送审版正文（含全部图表）上限 8 页；参考文献不计页。短论文为 4 页（见 note 与 history）"
+  },
+  "page_numbering": {
+   "value": "review-numbered; final unnumbered",
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Review versions should have page numbers, centered in the bottom margin, but pages should not be numbered in the final version."
+    }
+   ],
+   "note": "送审版页脚居中加页码；终稿不加页码"
+  },
+  "paper_size": {
+   "value": "a4",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "All papers must use A4 paper format (21 cm x 29.7 cm)."
+    }
+   ],
+   "note": "必须 A4（21cm × 29.7cm），不接受其它纸张"
+  },
+  "references_counted": {
+   "value": false,
+   "unit": null,
+   "scope": "submission",
+   "confidence": "official",
+   "compliance_impact": "desk-check",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "plus unlimited pages for references"
+    }
+   ],
+   "note": "参考文献不计入正文页数（不限页）"
+  },
+  "text_width_mm": {
+   "value": 160.0,
+   "unit": "mm",
+   "scope": "both",
+   "confidence": "inferred",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Column width: 7.7 cm"
+    }
+   ],
+   "note": "版心总宽 = 2×栏宽 7.7cm + 栏间距 0.6cm = 16.0cm = 160mm（由官方栏宽/栏间距推算）"
+  },
+  "title_format": {
+   "value": "15pt bold; Title Case; plain text, no markup/LaTeX",
+   "unit": null,
+   "scope": "both",
+   "confidence": "official",
+   "compliance_impact": "reject-risk",
+   "evidence": [
+    {
+     "source_id": "src-acl-formatting",
+     "quote": "Place the title centered at the top of the first page, in 15-point bold."
+    }
+   ],
+   "note": "标题 15pt 粗体、Title Case、纯文本（不含 LaTeX 命令），跨双栏居中"
+  }
+ },
+ "geometry": {
+  "page_size": {
+   "value": "a4",
+   "basis": "official"
+  },
+  "page_width_mm": {
+   "value": 210.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 a4 宽度（595.28pt）"
+  },
+  "page_height_mm": {
+   "value": 297.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "标准纸张 a4 高度（841.89pt）"
+  },
+  "columns": {
+   "value": 2,
+   "basis": "official",
+   "note": "双栏"
+  },
+  "text_width_mm": {
+   "value": 160.0,
+   "basis": "inferred",
+   "unit": "mm"
+  },
+  "margins": {
+   "left_mm": {
+    "value": 25.0,
+    "basis": "official",
+    "unit": "mm"
+   },
+   "right_mm": {
+    "value": 25.0,
+    "basis": "official",
+    "unit": "mm"
+   },
+   "top_mm": {
+    "value": 25.0,
+    "basis": "official",
+    "unit": "mm"
+   },
+   "bottom_mm": {
+    "value": 25.0,
+    "basis": "official",
+    "unit": "mm"
+   }
+  },
+  "margin_floor_mm": {
+   "value": 25.0,
+   "basis": "official",
+   "unit": "mm",
+   "derivation": "取四边最小值（texopt 压页时不得低于此值）"
+  },
+  "observed": {
+   "text_width_mm": {
+    "n": 7,
+    "min": 454.2,
+    "p25": 454.45,
+    "median": 454.9,
+    "p75": 455.35,
+    "max": 456.6,
+    "unit": "pt"
+   },
+   "text_height_mm": {
+    "n": 7,
+    "min": 686.1,
+    "p25": 698.0,
+    "median": 701.0,
+    "p75": 701.05,
+    "max": 701.7,
+    "unit": "pt"
+   },
+   "margins_left_mm": {
+    "n": 7,
+    "min": 24.5,
+    "p25": 24.5,
+    "median": 24.7,
+    "p75": 24.75,
+    "max": 24.8,
+    "unit": "mm"
+   },
+   "margins_right_mm": {
+    "n": 7,
+    "min": 24.4,
+    "p25": 24.75,
+    "median": 25.0,
+    "p75": 25.0,
+    "max": 25.0,
+    "unit": "mm"
+   },
+   "margins_top_mm": {
+    "n": 7,
+    "min": 25.8,
+    "p25": 26.2,
+    "median": 26.3,
+    "p75": 26.35,
+    "max": 26.6,
+    "unit": "mm"
+   },
+   "margins_bottom_mm": {
+    "n": 7,
+    "min": 23.3,
+    "p25": 23.35,
+    "median": 23.4,
+    "p75": 23.75,
+    "max": 28.4,
+    "unit": "mm"
+   },
+   "column_gap_pt": {
+    "n": 7,
+    "min": 16.8,
+    "p25": 16.8,
+    "median": 16.8,
+    "p75": 16.8,
+    "max": 27.8,
+    "unit": "pt"
+   }
+  },
+  "text_height_mm": {
+   "value": 247.3,
+   "basis": "sample-stat",
+   "unit": "mm",
+   "stat": "median",
+   "n": 7,
+   "observed": {
+    "n": 7,
+    "min": 686.1,
+    "p25": 698.0,
+    "median": 701.0,
+    "p75": 701.05,
+    "max": 701.7,
+    "unit": "pt"
+   },
+   "note": "官方未给明文，取实测中位数"
+  },
+  "column_gap_mm": {
+   "value": 6.0,
+   "basis": "official",
+   "unit": "mm"
+  },
+  "column_width_mm": {
+   "value": 77.0,
+   "basis": "derived",
+   "unit": "mm",
+   "derivation": "(版心宽 − 栏间距)/2"
+  }
+ },
+ "typography": {
+  "body_font_pt": {
+   "value": 11,
+   "basis": "official",
+   "unit": "pt",
+   "n": 7,
+   "observed": {
+    "n": 7,
+    "min": 9.0,
+    "p25": 10.5,
+    "median": 11.0,
+    "p75": 11.0,
+    "max": 11.0,
+    "unit": "pt"
+   }
+  },
+  "caption_font_pt": {
+   "value": 10.0,
+   "basis": "sample-stat",
+   "unit": "pt",
+   "stat": "median",
+   "n": 7,
+   "reliable": true,
+   "observed": {
+    "n": 7,
+    "min": 10.0,
+    "p25": 10.0,
+    "median": 10.0,
+    "p75": 10.0,
+    "max": 10.0,
+    "unit": "pt"
+   }
+  },
+  "body_font_family": {
+   "value": "Times Roman",
+   "basis": "official"
+  },
+  "caption_position": {
+   "figure": {
+    "value": "below",
+    "basis": "official",
+    "evidence": [
+     {
+      "source_id": "src-acl-formatting",
+      "quote": "Captions should be placed below figures/tables, in 10 point roman type."
+     }
+    ]
+   },
+   "table": {
+    "value": "below",
+    "basis": "official",
+    "evidence": [
+     {
+      "source_id": "src-acl-formatting",
+      "quote": "Captions should be placed below figures/tables, in 10 point roman type."
+     }
+    ]
+   }
+  },
+  "caption_align_observed": {
+   "n": 7,
+   "median": 0.726,
+   "unit": "left_ratio",
+   "left": 90,
+   "center": 34
+  },
+  "notes": [
+   "标题格式官方有明文，见 hard_constraints.title_format"
+  ]
+ },
+ "float_policy": {
+  "float_spec": {
+   "value": "tbp",
+   "basis": "derived",
+   "derivation": "texopt 白名单动作 sanitize_float_specs 的目标档；[h]/[h!] 属不稳定写法（通用规则 A-04），真实论文以 t/b 为主",
+   "note": "实测全宽浮动体位置 top=0.4 bottom=0.38 mid=0.22"
+  },
+  "figure_width": {
+   "typical_frac": {
+    "n": 7,
+    "min": 1.304,
+    "p25": 1.308,
+    "median": 1.309,
+    "p75": 1.31,
+    "max": 1.311
+   },
+   "denominator": "版心全宽（单栏=版心；双栏=两栏+栏间距）",
+   "overwide_threshold_mm": {
+    "value": 160.0,
+    "basis": "derived",
+    "unit": "mm",
+    "derivation": "= 官方/实测版心宽（texopt normalize_fig_width 阈值）"
+   },
+   "spanning_note": "双栏会议的 fig_width_frac 中位数 ≈ 页面宽度/版心宽 （比值 1.2~1.3），说明测量把跨栏/整页图块合并成一条超宽框；该字段在双栏会议标记为不可靠，不得当“超宽违规”或“典型图宽”用。"
+  },
+  "full_width_figure": {
+   "frac": {
+    "n": 7,
+    "min": 1.0,
+    "p25": 1.0,
+    "median": 1.0,
+    "p75": 1.0,
+    "max": 1.0
+   },
+   "count_per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 2.0,
+    "median": 7.0,
+    "p75": 11.5,
+    "max": 16
+   }
+  },
+  "position_prior": {
+   "full_width_float_ratio": {
+    "top": 0.4,
+    "bottom": 0.38,
+    "mid": 0.22
+   },
+   "figure_ratio": {
+    "top": 0.056,
+    "bottom": 0.067,
+    "mid": 0.877
+   }
+  },
+  "official_rules": [
+   "recommended.float_placement_rules: place figures/tables near first mention (not at end); wide floats may span both columns"
+  ],
+  "notes": [
+   "图宽分栏不可只用 PDF 几何判定：texopt 需在视觉层（Phase 4）区分“栏内图 / 跨栏图”，当前阈值取版心全宽以免误伤全宽图。",
+   "浮动体顶/底并重（top=40% bottom=38%），不应强制全部推到页顶；优先消除页面中部的浮动体（mid=22%）。"
+  ]
+ },
+ "density_targets": {
+  "figures": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 1,
+    "p25": 5.5,
+    "median": 9.0,
+    "p75": 11.0,
+    "max": 15
+   },
+   "target_range": [
+    5.5,
+    11.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.1,
+    "p25": 0.594,
+    "median": 1.1,
+    "p75": 1.293,
+    "max": 4.5
+   }
+  },
+  "tables": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 5,
+    "p25": 8.0,
+    "median": 11.0,
+    "p75": 12.0,
+    "max": 14
+   },
+   "target_range": [
+    8.0,
+    12.0
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.5,
+    "p25": 0.889,
+    "median": 1.0,
+    "p75": 1.3,
+    "max": 6.0
+   }
+  },
+  "equations": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 1.0,
+    "p75": 10.5,
+    "max": 45
+   },
+   "target_range": [
+    0.0,
+    10.5
+   ],
+   "note": null,
+   "per_content_page": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.1,
+    "p75": 1.167,
+    "max": 22.5
+   }
+  },
+  "algorithms": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 1
+   },
+   "target_range": [
+    0.0,
+    0.0
+   ],
+   "note": "算法环境极少（多数会议中位数 0），不作优化目标",
+   "per_content_page": {
+    "n": 7,
+    "min": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 0.0,
+    "max": 0.5
+   }
+  },
+  "footnotes": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 7,
+    "min": 0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 2.0,
+    "max": 8
+   },
+   "target_range": [
+    0.0,
+    2.0
+   ],
+   "note": null
+  },
+  "refs": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 7,
+    "min": 2,
+    "p25": 5.5,
+    "median": 7.0,
+    "p75": 12.0,
+    "max": 24
+   },
+   "target_range": [
+    5.5,
+    12.0
+   ],
+   "note": "参考文献条数为测量伪影：检测式只认 [n] 数字引用/短作者串，author-year 风格长作者列表漏检（见 confidence.conflicts）。该字段不可用。",
+   "per_content_page": {
+    "n": 7,
+    "min": 0.182,
+    "p25": 0.572,
+    "median": 0.778,
+    "p75": 1.7,
+    "max": 7.0
+   }
+  },
+  "lines_per_page": {
+   "basis": "sample-stat",
+   "reliable": false,
+   "per_paper": {
+    "n": 7,
+    "min": 73.0,
+    "p25": 97.15,
+    "median": 110.5,
+    "p75": 120.7,
+    "max": 138.8
+   },
+   "note": "定义=正文页全部文本行数/正文页数（双栏会议为两栏之和），噪声大且跨栏不可比，仅作同会议内部参考，不作优化目标。"
+  },
+  "content_pages": {
+   "basis": "sample-stat",
+   "reliable": true,
+   "per_paper": {
+    "n": 7,
+    "min": 2,
+    "p25": 9.0,
+    "median": 10.0,
+    "p75": 10.0,
+    "max": 11
+   },
+   "target_range": [
+    9.0,
+    10.0
+   ],
+   "note": "content_pages = 参考文献首页之前的部分；与官方上限并不相等（见 confidence.conflicts），不得强行统一。"
+  }
+ },
+ "optimization_policy": {
+  "priority": [
+   {
+    "rank": 1,
+    "direction": "L 层硬性合规修复（页数/字号/边距/纸张/栏数，先于一切审美优化）",
+    "why": "官方硬约束共 10 项被判为不合规风险项（含 anonymity、body_font_size_pt、camera_ready_extra_pages、checklist_required、columns、margins_mm、page_limit_content、paper_size、text_width_mm、title_format）；texopt 的 L 项是字典序首项，A 的收益不能换 L。",
+    "evidence": [
+     "hard_constraints.page_limit_content=8",
+     "hard_constraints.body_font_size_pt=11",
+     "geometry.margin_floor_mm=25.0",
+     "hard_constraints.columns=2"
+    ],
+    "texopt_actions": [
+     "set_fontsize",
+     "set_margin",
+     "drop_fleqn"
+    ]
+   },
+   {
+    "rank": 2,
+    "direction": "页数控制（压页）：纯排版手段优先，避免语义抛光",
+    "why": "样本 content_pages 中位数 10.0，官方正文上限 8（差 -2.0 页）。注意口径：content_pages = 参考文献首页之前（含该页），参考文献与附录不计入，与官方“正文页上限”不能直接等同，真实余量需按目标模板重编译确认。",
+    "evidence": [
+     "density_targets.content_pages.per_paper.median=10.0",
+     "hard_constraints.page_limit_content=8"
+    ],
+    "texopt_actions": [
+     "set_margin",
+     "reduce_list_spacing",
+     "remove_excessive_vspace",
+     "normalize_fig_width"
+    ]
+   },
+   {
+    "rank": 3,
+    "direction": "浮动体位置与跨栏占比：把图/表推到页顶、消除页面中部的浮动体",
+    "why": "每页图数中位数 1.10（每篇 9.0 张）、满宽图占比 1.00、全宽浮动体出现位置 top=40%/bottom=38%/mid=22%；浮动体位置是这类会议最主要的版面噪声来源。",
+    "evidence": [
+     "float_policy.position_prior",
+     "density_targets.figures.per_content_page"
+    ],
+    "texopt_actions": [
+     "sanitize_float_specs",
+     "set_float_spec"
+    ]
+   },
+   {
+    "rank": 4,
+    "direction": "表格宽度治理（tabularx 自适应、去竖线、超宽表检测）",
+    "why": "每页表数中位数 1.00（每篇 11.0 张），表格密度高；超宽表格是双栏排版最常见的溢出源。",
+    "evidence": [
+     "density_targets.tables.per_content_page"
+    ],
+    "texopt_actions": [
+     "fix_table_width"
+    ]
+   },
+   {
+    "rank": 5,
+    "direction": "图宽归一与超宽图检测（双栏特有：区分栏内图/跨栏图）",
+    "why": "版心 160.0mm、单栏宽 77.0mm；实测有 7 个样本的“图块≈整页宽”，说明跨栏图普遍。texopt 需按栏宽判定，避免把跨栏图压成栏宽。",
+    "evidence": [
+     "float_policy.figure_width.spanning_note"
+    ],
+    "texopt_actions": [
+     "normalize_fig_width",
+     "set_fig_width"
+    ]
+   }
+  ],
+  "avoid": [
+   "不得为压页而删改正文文字/公式/引用（L 项内容保持率为硬下限）",
+   "不得把样本统计值当硬约束（例如按中位数强制改变字号或页边距）",
+   "不得用全局手段抹平跨会议差异：单栏/双栏、参考文献计页规则、纸型逐会不同",
+   "不得以 refs_per_paper 为目标：该会议该指标为测量伪影",
+   "不得据 fig_width_frac>1 判定“超宽图”：双栏下该比值≈整页宽，是跨栏图被合并的伪影",
+   "页数临界时不得先动用语义抛光（必须排版手段穷尽）"
+  ],
+  "actions": {
+   "normalize_fig_width": {
+    "threshold_mm": 160.0,
+    "note": "阈值=版心全宽；双栏下栏内图目标为栏宽，需视觉层支持"
+   },
+   "sanitize_float_specs": {
+    "req_spec": "tbp"
+   },
+   "set_margin": {
+    "min_mm": 19.0,
+    "note": "下限 = 官方最小边距 −6mm（保守），低于 margin_floor_mm 需人工确认"
+   },
+   "inject_quality_macros": {
+    "enable": true
+   },
+   "drop_fleqn": {
+    "enable": true
+   }
+  },
+  "unsupported": [
+   {
+    "key": "paper_size",
+    "value": "a4",
+    "why": "Requirement 无纸张尺寸字段；texopt 不更换纸张"
+   },
+   {
+    "key": "columns",
+    "value": 2,
+    "why": "Requirement 无栏数字段；仅用于校验/迁移判断"
+   },
+   {
+    "key": "page_limit_content",
+    "value": 8,
+    "why": "page_limit 语义为总页数，ACL 的 8 页仅指正文（参考文献/附录另计，不限页）"
+   },
+   {
+    "key": "references_counted",
+    "value": false,
+    "why": "texopt 无法表达「参考文献不计页」的计数范围"
+   },
+   {
+    "key": "checklist_required",
+    "value": true,
+    "why": "texopt 不生成/校验 checklist"
+   }
+  ],
+  "applicable_rules": [
+   "L-01",
+   "L-03",
+   "L-04",
+   "A-02",
+   "A-03",
+   "R-01"
+  ]
+ },
+ "confidence": {
+  "sample_n": 7,
+  "level": "medium",
+  "reliable_fields": [
+   "body_font_pt",
+   "caption_font_pt",
+   "columns",
+   "density_targets.algorithms",
+   "density_targets.content_pages",
+   "density_targets.equations",
+   "density_targets.figures",
+   "density_targets.tables",
+   "full_width_figure.frac",
+   "margin_floor_mm",
+   "margins",
+   "page_size",
+   "text_width_mm"
+  ],
+  "unreliable_fields": [
+   "density_targets.footnotes",
+   "density_targets.lines_per_page",
+   "density_targets.refs",
+   "float_policy.figure_width.typical_frac"
+  ],
+  "conflicts": [
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-001",
+    "detail": "fig_width_frac_median=1.304 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-002",
+    "detail": "fig_width_frac_median=1.308 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "body_font_mismatch",
+    "sample_id": "s-acl-2025-002",
+    "detail": "实测正文 9.0pt ≠ 官方/模板 11pt",
+    "resolution": "该样本正文实际字号偏离官方档，按官方值，样本仅作观测"
+   },
+   {
+    "type": "content_pages_implausible",
+    "sample_id": "s-acl-2025-003",
+    "detail": "content_pages=2 明显偏小，疑为正文页定位失败",
+    "resolution": "该样本正文页数不可用；中位数由其余样本给出"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-003",
+    "detail": "fig_width_frac_median=1.309 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-004",
+    "detail": "fig_width_frac_median=1.311 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-005",
+    "detail": "fig_width_frac_median=1.307 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-006",
+    "detail": "fig_width_frac_median=1.310 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "fig_width_frac_gt_1",
+    "sample_id": "s-acl-2025-007",
+    "detail": "fig_width_frac_median=1.310 > 1：该类图片几何宽超过单栏/版心基准，实际多为跨栏或整版图，不能当“超宽违规”处理",
+    "resolution": "判为跨栏/整页图块合并伪影，不计入“超宽违规”"
+   },
+   {
+    "type": "refs_measurement_artifact",
+    "sample_id": null,
+    "detail": "refs 中位数 7.0 与真实引用量级不符（ref_style=author-year）",
+    "resolution": "正则只认 [n]/短作者串，长作者列表漏检；该字段不可用"
+   },
+   {
+    "type": "content_pages_vs_official_limit",
+    "sample_id": null,
+    "detail": "实测 content_pages 中位数 10.0 > 官方正文上限 8（口径不同：含参考文献首页，且部分样本把附录并入正文区）",
+    "resolution": "保留冲突，不修改官方上限；模板以官方值为 L 约束，实测值仅供观测"
+   }
+  ],
+  "notes": [
+   "样本 7 篇：sample-stat 字段为中可信度",
+   "双栏会议：图宽/浮动体几何受跨栏合并影响，需视觉层复核"
+  ]
+ },
+ "texopt_flat": {
+  "page_limit": 8,
+  "font_pt": 11,
+  "margin_mm": 25.0,
+  "float_spec": "tbp",
+  "overwide_fig_threshold_mm": 160.0,
+  "eq_fleqn_allowed": false,
+  "enable_quality_macros": true
+ }
+}

@@ -1,0 +1,1121 @@
+{
+  "schema_version": "1.0",
+  "id": "emnlp",
+  "name": "Conference on Empirical Methods in Natural Language Processing",
+  "abbr": "EMNLP",
+  "family": "nlp",
+  "official_site": "https://2025.emnlp.org/",
+  "current_edition": "EMNLP 2025",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023"
+  ],
+  "template_basis": {
+    "class": "acl.sty",
+    "inherits": "acl_natbib",
+    "url": "https://github.com/acl-org/acl-style-files"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 8,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "长论文送审版正文上限 8 页；短论文 4 页（参考文献/附录不限页）",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2025-cfp",
+          "quote": "Long Papers (8 pages) and Short Papers (4 pages)"
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入正文页数",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2023-cfp",
+          "quote": "Long papers may consist of up to 8 pages of content, plus unlimited pages for references and appendix"
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许附录；附录不限页",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2023-cfp",
+          "quote": "Long papers may consist of up to 8 pages of content, plus unlimited pages for references and appendix"
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "附录不计入正文页数",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2023-cfp",
+          "quote": "Long papers may consist of up to 8 pages of content, plus unlimited pages for references and appendix"
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 1,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后长论文 +1 页（最多 9 页），短论文最多 5 页",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2025-cfp",
+          "quote": "Final versions of accepted papers will be given one additional page of content (up to 9 pages for long papers, up to 5 pages for short papers) to address reviewers’ comments."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "a4",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "采用 *ACL 官方样式：必须 A4（21cm × 29.7cm）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "All papers must use A4 paper format (21 cm x 29.7 cm)."
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "送审稿须用 *ACL 官方样式的双栏格式",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2023-cfp",
+          "quote": "must follow the EMNLP 2023 two-column format"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.0,
+        "bottom": 25.0,
+        "left": 25.0,
+        "right": 25.0
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "四边 2.5cm=25mm（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Left margin: 2.5 cm"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 6.0,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "栏间距 0.6cm=6mm（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Gap between columns: 0.6 cm"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 11,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 11pt；题注/摘要/参考文献 10pt（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "document text 11 pt"
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "Times Roman",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 Times Roman（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "should be set in Times Roman"
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "送审稿双盲；无匿名期要求",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2025-cfp",
+          "quote": "The reviewing process will continue to be double-blind."
+        }
+      ]
+    },
+    "abstract_max_words": {
+      "value": 200,
+      "unit": "words",
+      "scope": "both",
+      "confidence": "official",
+      "note": "摘要不超过 200 词（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "It should be no longer than 200 words."
+        }
+      ]
+    },
+    "section_numbering": {
+      "value": "arabic",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "章节用阿拉伯数字编号（*ACL 规范）",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Use numbered sections (Arabic numerals) to facilitate cross references."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "review-numbered; final unnumbered",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "*ACL 规范：送审版加页码、终稿不加",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Review versions should have page numbers, centered in the bottom margin, but pages should not be numbered in the final version."
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "acl_natbib",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 指定 acl_natbib（author-year）",
+      "evidence": [
+        {
+          "source_id": "src-acl-sty",
+          "quote": "\\bibliographystyle{acl_natbib}"
+        }
+      ]
+    },
+    "checklist_required": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "强制 Responsible NLP research checklist（随 ARR 提交）",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2025-cfp",
+          "quote": "ACL’s Publication Ethics Policy , and ARR’s Ethics Policy including the responsible NLP research checklist"
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview (ACL Rolling Review)",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "经 ARR/OpenReview 投稿并 commit 到 EMNLP",
+      "evidence": [
+        {
+          "source_id": "src-emnlp-2025-cfp",
+          "quote": "Both submissions of articles for review and commitment of reviewed articles to the conference will be performed via the Open Review platform"
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional supplementary material; must be anonymized",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料可选、须匿名，正文不得依赖之",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Submissions may include non-readable supplementary material used in the work and described in the paper."
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图题在图下方，10pt roman",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Captions should be placed below figures/tables, in 10 point roman type."
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表题同样在下方",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Captions should be placed below figures/tables, in 10 point roman type."
+        }
+      ]
+    },
+    "caption_style_hint": {
+      "value": "one-line centered; multi-line left-aligned; 10pt roman",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注排版",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Captions that are one line are centered. Captions longer than one line are left-aligned."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "author-year in parentheses; alphabetical reference list",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "引用风格",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Citations within the text appear in parentheses (Gusfield, 1997)"
+        }
+      ]
+    },
+    "float_placement_rules": {
+      "value": "near first mention; wide floats may span both columns",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "浮动体位置",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "Place figures and tables in the paper near where they are first discussed, rather than at the end, if possible."
+        }
+      ]
+    },
+    "color_policy": {
+      "value": "grayscale readability strongly encouraged",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "颜色政策",
+      "evidence": [
+        {
+          "source_id": "src-acl-formatting",
+          "quote": "grayscale readability is strongly encouraged"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 21.857,
+      "median": 21.0,
+      "p10": 14.0,
+      "p90": 28.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 14.0,
+      "max": 28.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 6.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 6.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.714,
+      "median": 11.0,
+      "p10": 10.0,
+      "p90": 11.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 11.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 455.329,
+      "median": 455.7,
+      "p10": 453.5,
+      "p90": 456.8,
+      "n": 7,
+      "unit": "pt",
+      "min": 453.5,
+      "max": 456.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 18.386,
+      "median": 16.8,
+      "p10": 16.8,
+      "p90": 27.8,
+      "n": 7,
+      "unit": "pt",
+      "min": 16.8,
+      "max": 27.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 24.7,
+      "median": 24.7,
+      "p10": 24.4,
+      "p90": 25.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 24.4,
+      "max": 25.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 24.657,
+      "median": 24.4,
+      "p10": 24.4,
+      "p90": 25.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 24.4,
+      "max": 25.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 26.314,
+      "median": 26.3,
+      "p10": 26.1,
+      "p90": 26.7,
+      "n": 7,
+      "unit": "mm",
+      "min": 26.1,
+      "max": 26.7,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 26.171,
+      "median": 23.4,
+      "p10": 23.3,
+      "p90": 42.5,
+      "n": 7,
+      "unit": "mm",
+      "min": 23.3,
+      "max": 42.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "figures": {
+      "mean": 5.714,
+      "median": 6.0,
+      "p10": 1.0,
+      "p90": 12.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "tables": {
+      "mean": 12.714,
+      "median": 14.0,
+      "p10": 1.0,
+      "p90": 18.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 18.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "equations": {
+      "mean": 4.714,
+      "median": 5.0,
+      "p10": 0.0,
+      "p90": 12.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 12.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.143,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "refs": {
+      "mean": 14.429,
+      "median": 10.0,
+      "p10": 4.0,
+      "p90": 35.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 4.0,
+      "max": 35.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.143,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.616,
+      "median": 0.6,
+      "p10": 0.111,
+      "p90": 1.333,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.111,
+      "max": 1.333,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 1.359,
+      "median": 1.556,
+      "p10": 0.167,
+      "p90": 2.0,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.167,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.498,
+      "median": 0.556,
+      "p10": 0.0,
+      "p90": 1.333,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.333,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 1.307,
+      "median": 1.306,
+      "p10": 1.303,
+      "p90": 1.313,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.303,
+      "max": 1.313,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 121.471,
+      "median": 106.5,
+      "p10": 74.8,
+      "p90": 203.9,
+      "n": 7,
+      "unit": "per_page",
+      "min": 74.8,
+      "max": 203.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-emnlp-2025-001",
+        "s-emnlp-2025-002",
+        "s-emnlp-2025-003",
+        "s-emnlp-2025-004",
+        "s-emnlp-2025-005",
+        "s-emnlp-2025-006",
+        "s-emnlp-2025-007"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "EMNLP 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-emnlp-2023-cfp",
+      "note": "长论文 8 页正文（+unlimited refs and appendix），录用后 9 页；短论文 4→5 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "EMNLP 2024",
+      "year": 2024,
+      "value": 8,
+      "source_id": "src-emnlp-2024-cfp",
+      "note": "维持 8 页（长）/4 页（短），改用 ARR 承诺制"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "EMNLP 2025",
+      "year": 2025,
+      "value": 8,
+      "source_id": "src-emnlp-2025-cfp",
+      "note": "现行：长 8 / 短 4，录用后 9 / 5"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "EMNLP 2023",
+      "year": 2023,
+      "value": 1,
+      "source_id": "src-emnlp-2023-cfp",
+      "note": "录用后长论文 +1 页（最多 9 页）"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "EMNLP 2025",
+      "year": 2025,
+      "value": 1,
+      "source_id": "src-emnlp-2025-cfp",
+      "note": "仍为 +1 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "EMNLP 2023",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-emnlp-2023-cfp",
+      "note": "参考文献与附录不计页（沿用至今）"
+    },
+    {
+      "key": "anonymity",
+      "edition": "EMNLP 2023",
+      "year": 2023,
+      "value": "double-blind (anonymity period)",
+      "source_id": "src-emnlp-2023-cfp",
+      "note": "2023 CFP 仍设匿名期（anonymity period begins 一段）"
+    },
+    {
+      "key": "anonymity",
+      "edition": "EMNLP 2025",
+      "year": 2025,
+      "value": "double-blind (no anonymity period)",
+      "source_id": "src-emnlp-2025-cfp",
+      "note": "2025 明确无匿名期要求，但稿件仍须完全匿名"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "EMNLP 与 ACL 共用 *ACL 版式：font_pt 11pt、margin 25mm、版心总宽 160mm",
+    "requirement_fields": {
+      "page_limit": 8,
+      "font_pt": 11,
+      "margin_mm": 25.0,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 160.0
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "a4",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 8,
+        "why": "page_limit 语义为总页数，EMNLP 的 8 页仅指正文"
+      },
+      {
+        "key": "references_counted",
+        "value": false,
+        "why": "无法表达「参考文献不计页」"
+      },
+      {
+        "key": "checklist_required",
+        "value": true,
+        "why": "texopt 不生成/校验 checklist"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译栏数是否与官方模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分正文页与总页"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-emnlp-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "EMNLP 2025 Call for Papers",
+      "url": "https://2025.emnlp.org/calls/main_conference_papers/",
+      "fetched_at": "2026-09-12T10:21:49+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-cfp.html",
+      "sha256": "9ea8201f86c2093e34c33b6a6f1b71c2eae81c14f5909b84a450335286de1221",
+      "note": "官方 CFP：8/4 页、匿名、ARR、checklist、模板要求"
+    },
+    {
+      "id": "src-acl-formatting",
+      "kind": "official-guidelines",
+      "title": "ACLPUB Paper Formatting Guidelines (*ACL)",
+      "url": "https://acl-org.github.io/ACLPUB/formatting.html",
+      "fetched_at": "2026-09-12T10:21:48+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-acl-formatting.html",
+      "sha256": "4a90de70bc6edc8bd05d2272612574edd27695ac72efe2a0ffaf2f5359b475b8",
+      "note": "*ACL 官方排版规范（EMNLP 同用）：A4/双栏/2.5cm/字号/摘要 200 词"
+    },
+    {
+      "id": "src-acl-sty",
+      "kind": "official-template",
+      "title": "ACL LaTeX style file (acl.sty)",
+      "url": "https://cdn.jsdelivr.net/gh/acl-org/acl-style-files@master/acl.sty",
+      "fetched_at": "2026-09-12T10:21:09+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-acl-sty.sty",
+      "sha256": "19dfeddc2c0e448f3926a0bef048a9db3f3611b46265b760caabd7ada4f361de",
+      "note": "EMNLP 官方样式文件（acl.sty）：双栏 a4/2.5cm/11pt"
+    },
+    {
+      "id": "src-acl-natbib-bst",
+      "kind": "official-template",
+      "title": "ACL natbib bibliography style (acl_natbib.bst)",
+      "url": "https://cdn.jsdelivr.net/gh/acl-org/acl-style-files@master/acl_natbib.bst",
+      "fetched_at": "2026-09-12T10:21:10+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-acl-natbib-bst.sty",
+      "sha256": "6fbb306202290f4b68e74ac1460a8b27398500cb6dfeb4492e74c457eae7cd1e",
+      "note": "官方参考文献样式（author-year）"
+    },
+    {
+      "id": "src-emnlp-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "EMNLP 2024 Call for Papers",
+      "url": "https://2024.emnlp.org/calls/main_conference_papers/",
+      "fetched_at": "2026-09-12T10:21:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2024-cfp.html",
+      "sha256": "3a6abf684f60add526504e7e94c3242d1379f7c6abc4f1e93dcfa183324b2e8e",
+      "note": "history：2024 页数/ARR 承诺"
+    },
+    {
+      "id": "src-emnlp-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "EMNLP 2023 Call for Papers",
+      "url": "https://2023.emnlp.org/calls/main_conference_papers/",
+      "fetched_at": "2026-09-12T10:21:52+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2023-cfp.html",
+      "sha256": "f8431f2a4d5fcf934620002439b07376c4df536f4e6e0af5bd6535e21adeb7a0",
+      "note": "history：2023 页数/匿名期"
+    },
+    {
+      "id": "src-an-2025.emnlp-main",
+      "kind": "official-guidelines",
+      "title": "ACL Anthology: Proceedings of EMNLP 2025 (Main Conference)",
+      "url": "https://aclanthology.org/volumes/2025.emnlp-main/",
+      "fetched_at": "2026-09-12T10:26:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-an-2025.emnlp-main.html",
+      "sha256": "89e5671dae14b5c9f9d769f0e47759e0482c9e7707f9da94327d220deda7c77b",
+      "note": "官方卷页列表（用于定位 EMNLP 2025 样本论文）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-3",
+      "kind": "sample-paper",
+      "title": "Biased Tales: Cultural and Topic Bias in Generating Children’s Stories",
+      "url": "https://aclanthology.org/2025.emnlp-main.3/",
+      "fetched_at": "2026-09-12T10:36:30+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-3.html",
+      "sha256": "44bbee3e476fa3f8cb90fb35cd996c5db697fdfe6a822d05bba848d48200f2f3",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.3.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.3",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（偏差研究，含图/例）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-40",
+      "kind": "sample-paper",
+      "title": "Towards Controllable Speech Synthesis in the Era of Large Language Models: A Systematic Survey",
+      "url": "https://aclanthology.org/2025.emnlp-main.40/",
+      "fetched_at": "2026-09-12T10:36:32+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-40.html",
+      "sha256": "e26bef60daa75ecea309fad113c0792479f47766f3fea4bd696c49ab7dc6cf4b",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.40.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.40",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（综述，版式结构完整）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-150",
+      "kind": "sample-paper",
+      "title": "Active Layer-Contrastive Decoding Reduces Hallucination in Large Language Model Generation",
+      "url": "https://aclanthology.org/2025.emnlp-main.150/",
+      "fetched_at": "2026-09-12T10:36:33+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-150.html",
+      "sha256": "31e2c93c0b73edf3751ba59dcbe60f53dbc49259a57f8cdf0d9e11637fc39b9d",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.150.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.150",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（解码方法，表格密集）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-400",
+      "kind": "sample-paper",
+      "title": "UNCERTAINTY-LINE: Length-Invariant Estimation of Uncertainty for Large Language Models",
+      "url": "https://aclanthology.org/2025.emnlp-main.400/",
+      "fetched_at": "2026-09-12T10:36:35+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-400.html",
+      "sha256": "a4098f6dc64f485ffe3b9f8b1c0b20894c6ee4c4f8861d408138297092c88a35",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.400.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.400",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（不确定性估计，公式）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-700",
+      "kind": "sample-paper",
+      "title": "Translation in the Hands of Many: Centering Lay Users in Machine Translation Interactions",
+      "url": "https://aclanthology.org/2025.emnlp-main.700/",
+      "fetched_at": "2026-09-12T10:36:37+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-700.html",
+      "sha256": "7df2cd67653a8d73083134b2dad0d4a1d9265c83d17ed6fd27076c4f03e5b1c9",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.700.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.700",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（人机交互研究，含图）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-1500",
+      "kind": "sample-paper",
+      "title": "StepER: Step-wise Knowledge Distillation for Enhancing Reasoning Ability in Multi-Step Retrieval-Augmented Language Models",
+      "url": "https://aclanthology.org/2025.emnlp-main.1500/",
+      "fetched_at": "2026-09-12T10:36:39+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-1500.html",
+      "sha256": "f63dda8406ff0953cde491344055ae69b23100bba937d7ff72585d14b6235294",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.1500.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.1500",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（RAG 蒸馏，算法+流程）"
+    },
+    {
+      "id": "src-emnlp-2025-paper-1809",
+      "kind": "sample-paper",
+      "title": "A Head to Predict and a Head to Question: Pre-trained Uncertainty Quantification Heads for Hallucination Detection in LLM Outputs",
+      "url": "https://aclanthology.org/2025.emnlp-main.1809/",
+      "fetched_at": "2026-09-12T10:36:41+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-emnlp-2025-paper-1809.html",
+      "sha256": "3075bbacb0eb3b2b09c5c479a72adb6edb5f07a5d2bcef79876e5f43233f0398",
+      "pdf_url": "https://aclanthology.org/2025.emnlp-main.1809.pdf",
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "anthology_id": "2025.emnlp-main.1809",
+      "note": "EMNLP Anthology 论文落地页，证明属 EMNLP 2025（方法+大量实验表）"
+    }
+  ],
+  "open_questions": [
+    "EMNLP 使用与 ACL 相同的 ACLPUB 排版规范与 acl.sty，其字号/页边距来自该规范而非各届 CFP。",
+    "EMNLP 2022 与更早的页数规则未归档（本数据集覆盖 2023–2025）。",
+    "「Limitations」小节强制，但 KEY_VOCAB 无对应键，未单列。"
+  ]
+}
