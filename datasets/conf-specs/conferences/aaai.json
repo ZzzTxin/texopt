@@ -1,0 +1,1114 @@
+{
+  "schema_version": "1.0",
+  "id": "aaai",
+  "name": "AAAI Conference on Artificial Intelligence",
+  "abbr": "AAAI",
+  "family": "ai",
+  "official_site": "https://aaai.org/",
+  "current_edition": "AAAI-25",
+  "focus_editions": [
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "template_basis": {
+    "class": "aaai25.sty",
+    "inherits": "article",
+    "url": "https://aaai.org/authorkit25/"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 7,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿技术内容上限 7 页；仅参考文献可另加页（投稿版需省略致谢）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-subinstructions",
+          "quote": "Submissions may consist of up to 7 pages of technical content plus additional pages solely for references; acknowledgements should be omitted from papers submitted for review."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 7 页技术内容，可另加页",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-subinstructions",
+          "quote": "Submissions may consist of up to 7 pages of technical content plus additional pages solely for references"
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许附录，须置于正文之后；投稿阶段技术附录可作为补充材料单独提交",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Any appendices must appear after the main content."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿匿名，需移除作者与单位信息，可替换为 paper number 与关键词",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-subinstructions",
+          "quote": "AAAI submissions are anonymous and must conform to the instructions (detailed below) for double-blind review."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "none (no page numbers, headers or footers)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "不得打印页码；禁止 \\pagestyle（页眉页脚）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Do not print any page numbers on your paper. The use of \\textbackslash pagestyle is forbidden."
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "所有论文必须为 AAAI 双栏格式",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Two-column format in AAAI style is required for all papers."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "最终稿必须为 US letter（8.5x11in），无例外",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "The paper size for final submission must be US letter without exception."
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 19.05,
+        "bottom": 31.75,
+        "left": 19.05,
+        "right": 19.05
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方明文：上 .75in=19.05mm、左 .75in=19.05mm、右 .75in=19.05mm、下 1.25in=31.75mm（非对称，下边距更大）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Top margin: .75 inches"
+        },
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Bottom margin: 1.25 inches"
+        },
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Right margin: .75 inches"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 9.52,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方明文：栏间距 0.375in = 0.952cm = 9.52mm",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Each column should be 3.3 inches wide (slightly more than 3.25 inches), with a .375 inch (.952 cm) gutter of white space between the two columns."
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 Times Roman 10pt、行距 12pt（sty 亦设 10 point on 11 的 \\normalsize）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "The default size for your type must be ten-point with twelve-point leading (line spacing)."
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 177.8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "7.0in = 177.8mm；sty 设 textwidth=7.0in（双栏合计）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-sty",
+          "quote": "\\setlength\\textheight{9.0in} \\setlength\\textwidth{7.0in}"
+        }
+      ]
+    },
+    "title_format": {
+      "value": "Title Case (Chicago Manual of Style); 16pt bold",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "标题须为 Title Case（非句首大写）；16pt 粗体、24pt leading，居中跨两栏",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Your title must follow Title Case capitalization rules (not sentence case)."
+        }
+      ]
+    },
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图题必须位于插图下方；图注字号 10pt 罗马体",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "The illustration number and caption must appear \\textit{under} the illustration."
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表题必须在表格下方（与 NeurIPS 上方表题相反）；10pt 罗马体",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "The number and caption for your table must appear \\textit{under} (not above) the table."
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "author-year",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "aaai25.bst + natbib，文内引用为 (Author Year) 作者-年制",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Citations within the text should include the author's last name and year, for example (Newell 1980)."
+        }
+      ]
+    },
+    "checklist_required": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "强制提交 reproducibility checklist，附于参考文献之后、不占页数",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-subinstructions",
+          "quote": "Authors must complete a reproducibility checklist at the time of paper submission"
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "仅接受 OpenReview 投稿（不接受邮件等其它方式）",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-subinstructions",
+          "quote": "Submissions will not be accepted by e-mail or any other mechanism other than OpenReview."
+        }
+      ]
+    },
+    "float_placement_rules": {
+      "value": "figures/tables placed where first discussed; algorithms and listings floated to top (preferably) or bottom",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "浮动体应靠近首次提及处；算法/代码清单优先置顶、其次置底",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Like all illustrations, they should appear floated to the top (preferably) or bottom of the page."
+        }
+      ]
+    },
+    "section_numbering": {
+      "value": "none (optional; off by default)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "章节编号可选，默认关闭（secnumdepth=0）；短论文/扩展摘要不建议编号",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "The use of section numbers in AAAI Press papers is optional."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "three kinds allowed: technical appendix, multimedia, code and data; due 3 days after paper deadline",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料三类：技术附录、多媒体、代码与数据；截止在投稿后 3 天",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-cfp",
+          "quote": "Three kinds of supplementary material may be submitted alongside all papers: (1) technical appendix; (2) multimedia; (3) code and data. Supplementary material deadline is 3 days after the paper submission deadline."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "aaai25.sty",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方指定 aaai25.sty 与 aaai25.bst；禁止 hyperref/geometry 等改制包",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "You must use the 2025 AAAI Press \\LaTeX{} style file and the aaai25.bst bibliography style files"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "table_style_hint": {
+      "value": "tables 10-point roman (may reduce to 9-point); no resizing commands",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "表体 10pt，必要时可 9pt；不得用 resizebox 整体缩放",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Tables should be presented in 10 point roman type. If necessary, they may be altered to 9 point type."
+        }
+      ]
+    },
+    "figure_width_hint": {
+      "value": "keep figures slightly narrower than the column (e.g. 0.9\\columnwidth)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图宽略窄于栏宽以避免 overfull boxes",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Reduce the figure size so that it is slightly narrower than the column."
+        }
+      ]
+    },
+    "color_policy": {
+      "value": "color restricted to figures only; CMYK, WCAG compliant; no color in text",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "仅图内可用颜色（CMYK、对比度达标）；正文文本不得用色",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "Use of color is restricted to figures only."
+        }
+      ]
+    },
+    "reference_style_hint": {
+      "value": "references may be same size as surrounding text",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献可用正文同字号；超页时可缩至 9pt",
+      "evidence": [
+        {
+          "source_id": "src-aaai-2025-formatting-tex",
+          "quote": "References may be the same size as surrounding text."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 8.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 8.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 8.167,
+      "median": 8.0,
+      "p10": 8.0,
+      "p90": 9.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 8.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 504.0,
+      "median": 504.0,
+      "p10": 504.0,
+      "p90": 504.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 504.0,
+      "max": 504.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 27.5,
+      "median": 27.5,
+      "p10": 27.5,
+      "p90": 27.5,
+      "n": 6,
+      "unit": "pt",
+      "min": 27.5,
+      "max": 27.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 19.0,
+      "median": 19.0,
+      "p10": 19.0,
+      "p90": 19.0,
+      "n": 6,
+      "unit": "mm",
+      "min": 19.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 19.0,
+      "median": 19.0,
+      "p10": 19.0,
+      "p90": 19.0,
+      "n": 6,
+      "unit": "mm",
+      "min": 19.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 34.833,
+      "median": 19.95,
+      "p10": 19.7,
+      "p90": 94.8,
+      "n": 6,
+      "unit": "mm",
+      "min": 19.7,
+      "max": 94.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 31.0,
+      "median": 31.0,
+      "p10": 31.0,
+      "p90": 31.0,
+      "n": 6,
+      "unit": "mm",
+      "min": 31.0,
+      "max": 31.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "figures": {
+      "mean": 6.167,
+      "median": 6.5,
+      "p10": 3.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 3.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "tables": {
+      "mean": 3.333,
+      "median": 2.5,
+      "p10": 1.0,
+      "p90": 8.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 1.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "equations": {
+      "mean": 9.0,
+      "median": 7.0,
+      "p10": 0.0,
+      "p90": 22.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 22.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.167,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "refs": {
+      "mean": 20.667,
+      "median": 20.0,
+      "p10": 14.0,
+      "p90": 32.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 14.0,
+      "max": 32.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 0.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 0.752,
+      "median": 0.757,
+      "p10": 0.375,
+      "p90": 1.25,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.375,
+      "max": 1.25,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.405,
+      "median": 0.312,
+      "p10": 0.125,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.125,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 1.097,
+      "median": 0.875,
+      "p10": 0.0,
+      "p90": 2.75,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 2.75,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 1.214,
+      "median": 1.214,
+      "p10": 1.214,
+      "p90": 1.214,
+      "n": 6,
+      "unit": "ratio",
+      "min": 1.214,
+      "max": 1.214,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 1.0,
+      "median": 1.0,
+      "p10": 1.0,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 1.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 116.0,
+      "median": 105.8,
+      "p10": 88.4,
+      "p90": 173.9,
+      "n": 6,
+      "unit": "per_page",
+      "min": 88.4,
+      "max": 173.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-aaai-2025-001",
+        "s-aaai-2025-002",
+        "s-aaai-2025-003",
+        "s-aaai-2025-004",
+        "s-aaai-2025-005",
+        "s-aaai-2025-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "AAAI-23",
+      "year": 2023,
+      "value": 7,
+      "source_id": "src-aaai-2023-submission-guidelines",
+      "note": "2023：7 页技术内容 + 仅供参考文献的加页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "AAAI-24",
+      "year": 2024,
+      "value": 7,
+      "source_id": "src-aaai-2024-subinstructions-v2",
+      "note": "2024：维持 7 页技术内容"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "AAAI-25",
+      "year": 2025,
+      "value": 7,
+      "source_id": "src-aaai-2025-subinstructions",
+      "note": "2025：维持 7 页技术内容 + 仅参考文献加页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "AAAI-23",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-aaai-2023-submission-guidelines",
+      "note": "参考文献不计页、可另加页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "AAAI-25",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-aaai-2025-subinstructions",
+      "note": "仍不计入"
+    },
+    {
+      "key": "checklist_required",
+      "edition": "AAAI-24",
+      "year": 2024,
+      "value": true,
+      "source_id": "src-aaai-2024-subinstructions-v2",
+      "note": "强制 reproducibility checklist"
+    },
+    {
+      "key": "checklist_required",
+      "edition": "AAAI-25",
+      "year": 2025,
+      "value": true,
+      "source_id": "src-aaai-2025-subinstructions",
+      "note": "仍强制；2025 明确置于参考文献之后、不占页数"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "AAAI 双栏；font_pt 取官方正文 10pt；margin_mm 取等效单边最小边距 19.05mm（左右与上 .75in；下边距 1.25in 更大，压缩时以下限约束）",
+    "requirement_fields": {
+      "page_limit": 7,
+      "font_pt": 10,
+      "margin_mm": 19.05,
+      "float_spec": "tb",
+      "overwide_fig_threshold_mm": 177.8
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段；AAAI 双栏"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 19.05,
+          "bottom": 31.75,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "why": "Requirement.margin_mm 单一值无法表达非对称边距（下边距 1.25in）"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 7,
+        "why": "page_limit 为总页数语义；AAAI 的 7 页仅指技术内容（参考文献另计）"
+      },
+      {
+        "key": "checklist_required",
+        "value": true,
+        "why": "texopt 不生成/校验 reproducibility checklist"
+      },
+      {
+        "key": "page_numbering",
+        "value": "none",
+        "why": "AAAI 禁止页码/页眉页脚与 \\pagestyle，texopt 无对应开关"
+      },
+      {
+        "key": "columns_forbidden_packages",
+        "value": "hyperref/geometry/etc.",
+        "why": "AAAI 明令禁止若干宏包，texopt 无黑名单校验"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验编译结果栏数是否与官方双栏模板一致"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分技术内容页数与总页数"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 19.05,
+          "right": 19.05,
+          "top": 19.05,
+          "bottom": 31.75
+        },
+        "rationale": "AAAI 下边距(1.25in)明显大于其它三边(.75in)"
+      },
+      {
+        "field": "caption_position_policy",
+        "type": "obj",
+        "example": {
+          "figure": "below",
+          "table": "below"
+        },
+        "rationale": "AAAI 图题与表题均在下方，可作检查项"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-aaai-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "AAAI-25 Main Technical Track Call for Papers",
+      "url": "https://aaai.org/conference/aaai/aaai-25/aaai-25-main-technical-call-for-papers/",
+      "fetched_at": "2026-09-12T10:20:40+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-aaai-2025-cfp.html",
+      "sha256": "61926e6f542a763ca4a8c9d601d38c6ee2cea6ef85897a531d3988c28a509b65",
+      "note": "官方 CFP：7 页正文/双盲/补充材料三类/参考资料另计"
+    },
+    {
+      "id": "src-aaai-2025-subinstructions",
+      "kind": "official-guidelines",
+      "title": "AAAI-25 Submission Instructions",
+      "url": "https://aaai.org/conference/aaai/aaai-25/submission-instructions/",
+      "fetched_at": "2026-09-12T10:21:01+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-aaai-2025-subinstructions.html",
+      "sha256": "f2b52e7bcd559a8da83cab2f7855219683660eeb6a767edb46249ae6fc941dda",
+      "note": "官方投稿说明：7 页技术内容 + 仅供参考文献的加页、匿名、checklist、OpenReview"
+    },
+    {
+      "id": "src-aaai-2024-subinstructions-v2",
+      "kind": "official-guidelines",
+      "title": "AAAI-24 Submission Instructions",
+      "url": "https://aaai.org/aaai-24-conference/submission-instructions/",
+      "fetched_at": "2026-09-12T10:39:51+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-aaai-2024-subinstructions-v2.html",
+      "sha256": "83d9aefe1b9d93391672416cf9ae82b03bc1cbb3f4a79fc0edee9f6393945565",
+      "note": "history：2024 页数/匿名/checklist"
+    },
+    {
+      "id": "src-aaai-2023-submission-guidelines",
+      "kind": "official-guidelines",
+      "title": "AAAI-23 Submission Guidelines",
+      "url": "https://aaai.org/conference/aaai/aaai-23/submission-guidelines/",
+      "fetched_at": "2026-09-12T10:41:01+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-aaai-2023-submission-guidelines.html",
+      "sha256": "82c9e61245519849cefa3f21d21b558d9b9e3fd794fa0356bd42097739738769",
+      "note": "history：2023 页数规则"
+    },
+    {
+      "id": "src-aaai-2025-issue-v39-1",
+      "kind": "official-guidelines",
+      "title": "AAAI-25 Proceedings, Vol.39 No.1 (Technical Tracks 1)",
+      "url": "https://ojs.aaai.org/index.php/AAAI/issue/view/624",
+      "fetched_at": "2026-09-12T10:43:29+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-aaai-2025-issue-v39-1.html",
+      "sha256": "16f567af2479a51a99d65e8a75028aab9d9152a2454bfdbcf6072d3d5c461482",
+      "note": "AAAI-25 官方 proceedings (OJS) Vol.39 No.1 卷页；经 curl --compressed 解压后归档（ojs.aaai.org 强制 gzip）"
+    },
+    {
+      "id": "src-aaai-2025-sty",
+      "kind": "official-template",
+      "title": "AAAI-25 LaTeX style file (aaai25.sty)",
+      "url": "/tmp/zips/aaai/AuthorKit25/CameraReady/LaTeX/aaai25.sty",
+      "fetched_at": "2026-09-12T10:22:07+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-aaai-2025-sty.sty",
+      "sha256": "e062275ae269b957cba4d5b6b5afb189da8443a2645972b541a7d6eead0f6c65",
+      "note": "AuthorKit25 内 sty；textwidth 7.0in/columnsep 0.375in/10pt/aaai25.bst 等 template-implied 证据"
+    },
+    {
+      "id": "src-aaai-2025-formatting-tex",
+      "kind": "official-template",
+      "title": "AAAI-25 Formatting Instructions for Authors (aaai25.tex)",
+      "url": "/tmp/zips/aaai/AuthorKit25/CameraReady/LaTeX/Formatting-Instructions-LaTeX-2025.tex",
+      "fetched_at": "2026-09-12T10:22:07+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-aaai-2025-formatting-tex.sty",
+      "sha256": "0a3058107704a9083fadde411fc55c50402cb36aff6c1b1a7b932ed2ea69bddd",
+      "note": "AuthorKit25 内官方排版说明：页边距 .75/1.25in、栏宽 3.3in+0.375in gutter、10pt/12pt、题注位置等"
+    },
+    {
+      "id": "src-s-aaai-2025-001",
+      "kind": "sample-paper",
+      "title": "Relation-Aware Equivariant Graph Networks for Epitope-Unknown Antibody Design and Specificity Optimization",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/32074",
+      "fetched_at": "2026-09-12T10:43:30+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-001.html",
+      "sha256": "e5e97b3f6b68294165dd4bc4c9ad41f975542bc18b4c4f4a59b83509c61b3fbe",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/32074/34229",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    },
+    {
+      "id": "src-s-aaai-2025-002",
+      "kind": "sample-paper",
+      "title": "4D Diffusion for Dynamic Protein Structure Prediction with Reference and Motion Guidance",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/31984",
+      "fetched_at": "2026-09-12T10:43:32+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-002.html",
+      "sha256": "1e51da30350e8b4b6a022ff1f8f0c14a461ec2b84fd15aa5a4b2584b5f68cdd6",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/31984/34139",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    },
+    {
+      "id": "src-s-aaai-2025-003",
+      "kind": "sample-paper",
+      "title": "A Simple and Comprehensive Benchmark for Single-Cell Transcriptomics",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/32049",
+      "fetched_at": "2026-09-12T10:43:33+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-003.html",
+      "sha256": "3e3b231a38bbd9b51a613e396e765fb52f613d67118740fe1afca889424c29d0",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/32049/34204",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    },
+    {
+      "id": "src-s-aaai-2025-004",
+      "kind": "sample-paper",
+      "title": "AI-Powered Algorithm-Centric Quantum Processor Topology Design",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/32023",
+      "fetched_at": "2026-09-12T10:43:34+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-004.html",
+      "sha256": "ead35f85a891474e61f994f89a91a283bc2c029942e886c081d3f4b4aabc028f",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/32023/34178",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    },
+    {
+      "id": "src-s-aaai-2025-005",
+      "kind": "sample-paper",
+      "title": "Formal Synthesis of Barrier Certificates Using Fourier Kolmogorov-Arnold Network",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/32101",
+      "fetched_at": "2026-09-12T10:43:36+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-005.html",
+      "sha256": "1ecad5aa6d574aabe11ece64679b1aa9226c6cb5e68253c521c7c339b4d1a0a5",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/32101/34256",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    },
+    {
+      "id": "src-s-aaai-2025-006",
+      "kind": "sample-paper",
+      "title": "VerilogCoder: Autonomous Verilog Coding Agents with Graph-based Planning and Abstract Syntax Tree (AST)-based Waveform Tracing Tool",
+      "url": "https://ojs.aaai.org/index.php/AAAI/article/view/32007",
+      "fetched_at": "2026-09-12T10:43:37+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-s-aaai-2025-006.html",
+      "sha256": "64de124c07b6018f0557f6c58a6470eb904b18ca0e7d972df7655db9082def02",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/32007/34162",
+      "venue": "AAAI-25",
+      "year": 2025,
+      "note": "AAAI-25 官方 proceedings (OJS) 论文页，卷期标注 Vol. 39 No. 1: AAAI-25 Technical Tracks 1；经 curl --compressed 解压后归档"
+    }
+  ],
+  "open_questions": [
+    "AAAI 2022 及更早的 CFP/投稿说明页面已被站点重写：抓取 aaai-22/23/24 旧路径均返回当前（AAAI-25/26）内容，且 web.archive.org 在本机不可达，故 history 仅覆盖 2023–2025；2022 及以前的页数规则未确认。",
+    "AAAI camera-ready/出版阶段的超页费与可否加页未在归档页面中明示（仅提及存在 page charges）。",
+    "投稿版是否允许正文内附录未明示；官方将 technical appendix 归为独立补充材料。",
+    "摘要字数上限、图题首字母大小写规则未在归档页面明文。",
+    "样本 PDF 直链位于 ojs.aaai.org（强制 gzip 传输），已用 curl --compressed 解压后归档，导致部分 source 的 http_status 记为 local。"
+  ]
+}

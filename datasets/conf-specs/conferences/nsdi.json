@@ -1,0 +1,1019 @@
+{
+  "schema_version": "1.0",
+  "id": "nsdi",
+  "name": "USENIX Symposium on Networked Systems Design and Implementation",
+  "abbr": "NSDI",
+  "family": "systems",
+  "official_site": "https://www.usenix.org/conference/nsdi25",
+  "current_edition": "NSDI '25",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023"
+  ],
+  "template_basis": {
+    "class": "usenix2019_v3.sty",
+    "inherits": "usenix",
+    "url": "https://www.usenix.org/sites/default/files/usenix2019_v3.sty"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 12,
+      "unit": "pages",
+      "scope": "both",
+      "confidence": "official",
+      "note": "投稿与最终稿均 12 页上限（含脚注、图、表）",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "must be no longer than 12 pages, including footnotes, figures, and tables."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "参考文献与附录补充材料可无限加页、不计入 12 页",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions may include as many additional pages as needed for references and for supplementary material in appendices."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许在附录中放补充材料",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions may include as many additional pages as needed for references and for supplementary material in appendices."
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "附录不计入 12 页",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions may include as many additional pages as needed for references and for supplementary material in appendices."
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 0,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "最终稿与投稿同为 12 页上限，无额外加页（'as well as final papers'）",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "must be no longer than 12 pages, including footnotes, figures, and tables."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "格式化为 8.5 x 11in（US letter）",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "formatted for 8.5\" x 11\" paper"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "双栏排版",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions must be in two-column format, using 10-point type on 12-point (single-spaced) leading, in a text block 7\" wide x 9\" deep"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 8.382,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "栏间距 0.33in = 8.382mm",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "with .33\" inter-column space"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 10pt，12pt 单倍行距",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions must be in two-column format, using 10-point type on 12-point (single-spaced) leading, in a text block 7\" wide x 9\" deep"
+        }
+      ]
+    },
+    "line_spacing": {
+      "value": "single",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "单倍行距",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions must be in two-column format, using 10-point type on 12-point (single-spaced) leading, in a text block 7\" wide x 9\" deep"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 177.8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "版心宽 7in = 177.8mm",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions must be in two-column format, using 10-point type on 12-point (single-spaced) leading, in a text block 7\" wide x 9\" deep"
+        }
+      ]
+    },
+    "text_height_mm": {
+      "value": 228.6,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "版心高 9in = 228.6mm",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Submissions must be in two-column format, using 10-point type on 12-point (single-spaced) leading, in a text block 7\" wide x 9\" deep"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 25.4,
+        "left": 19.05,
+        "right": 19.05
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "等效单边页边距：letter 8.5x11in 中 7x9in 版心 → 左右 0.75in=19.05mm、上下 1in=25.4mm",
+      "evidence": [
+        {
+          "source_id": "src-usenix-template-2019v3",
+          "quote": "USENIX wants margins of: 0.75\" sides, 1\" bottom, and 1\" top."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿双盲；operational systems track 为有限双盲（可不匿名系统名）",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "NSDI '25 is double-blind, meaning that authors should make a good faith effort to anonymize papers."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "numbered",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "送审稿需加页码",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Pages should be numbered, and figures and tables should be legible when printed without requiring magnification."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional appendix/supplementary; paper must stand alone; PC not required to read",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "补充材料可选，正文须自洽",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "The paper should stand alone without the supplementary material, but authors may use this space for content that may be of interest to some readers but is peripheral to the main technical contributions of the paper."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "USENIX online submission form",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "经 USENIX 在线投稿表单提交",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "All papers must be submitted via the submission form"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "color_policy": {
+      "value": "color allowed, but figures should remain readable in black and white",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "图可用彩色但须黑白可读",
+      "evidence": [
+        {
+          "source_id": "src-nsdi-2025-cfp",
+          "quote": "Authors may use color in their figures, but the figures should be readable when printed in black and white."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 19.143,
+      "median": 18.0,
+      "p10": 15.0,
+      "p90": 29.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 15.0,
+      "max": 29.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "content_pages": {
+      "mean": 14.143,
+      "median": 14.0,
+      "p10": 14.0,
+      "p90": 15.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 14.0,
+      "max": 15.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 505.686,
+      "median": 505.4,
+      "p10": 504.8,
+      "p90": 508.8,
+      "n": 7,
+      "unit": "pt",
+      "min": 504.8,
+      "max": 508.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 23.843,
+      "median": 23.8,
+      "p10": 23.8,
+      "p90": 23.9,
+      "n": 7,
+      "unit": "pt",
+      "min": 23.8,
+      "max": 23.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 18.486,
+      "median": 18.6,
+      "p10": 17.4,
+      "p90": 18.8,
+      "n": 7,
+      "unit": "mm",
+      "min": 17.4,
+      "max": 18.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 19.0,
+      "median": 19.0,
+      "p10": 19.0,
+      "p90": 19.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 19.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 26.1,
+      "median": 26.1,
+      "p10": 26.1,
+      "p90": 26.1,
+      "n": 7,
+      "unit": "mm",
+      "min": 26.1,
+      "max": 26.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 9.0,
+      "median": 9.0,
+      "p10": 9.0,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "mm",
+      "min": 9.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "figures": {
+      "mean": 16.571,
+      "median": 13.0,
+      "p10": 10.0,
+      "p90": 30.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 10.0,
+      "max": 30.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "tables": {
+      "mean": 1.286,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 3.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "equations": {
+      "mean": 3.429,
+      "median": 2.0,
+      "p10": 0.0,
+      "p90": 15.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 15.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.286,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 2.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "refs": {
+      "mean": 66.857,
+      "median": 58.0,
+      "p10": 34.0,
+      "p90": 151.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 34.0,
+      "max": 151.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 0.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 1.171,
+      "median": 0.929,
+      "p10": 0.714,
+      "p90": 2.143,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.714,
+      "max": 2.143,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.09,
+      "median": 0.071,
+      "p10": 0.0,
+      "p90": 0.2,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 0.2,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.245,
+      "median": 0.143,
+      "p10": 0.0,
+      "p90": 1.071,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.071,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.474,
+      "median": 0.449,
+      "p10": 0.427,
+      "p90": 0.636,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.427,
+      "max": 0.636,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.136,
+      "median": 0.15,
+      "p10": 0.095,
+      "p90": 0.166,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.095,
+      "max": 0.166,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.199,
+      "median": 0.167,
+      "p10": 0.025,
+      "p90": 0.333,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.025,
+      "max": 0.333,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.857,
+      "median": 10.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 98.086,
+      "median": 94.4,
+      "p10": 86.8,
+      "p90": 112.1,
+      "n": 7,
+      "unit": "per_page",
+      "min": 86.8,
+      "max": 112.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-nsdi-2024-001",
+        "s-nsdi-2024-002",
+        "s-nsdi-2024-003",
+        "s-nsdi-2024-004",
+        "s-nsdi-2024-005",
+        "s-nsdi-2024-006",
+        "s-nsdi-2024-007"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "NSDI '23",
+      "year": 2023,
+      "value": 12,
+      "source_id": "src-nsdi-2023-cfp",
+      "note": "12 页上限（含脚注/图/表）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NSDI '24",
+      "year": 2024,
+      "value": 12,
+      "source_id": "src-nsdi-2024-cfp",
+      "note": "维持 12 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NSDI '25",
+      "year": 2025,
+      "value": 12,
+      "source_id": "src-nsdi-2025-cfp",
+      "note": "维持 12 页；投稿与最终稿同限"
+    },
+    {
+      "key": "references_counted",
+      "edition": "NSDI '23",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-nsdi-2023-cfp",
+      "note": "参考文献另计、不限页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "NSDI '25",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-nsdi-2025-cfp",
+      "note": "仍不限页"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "NSDI '25",
+      "year": 2025,
+      "value": 0,
+      "source_id": "src-nsdi-2025-cfp",
+      "note": "最终稿同为 12 页，无加页"
+    },
+    {
+      "key": "anonymity",
+      "edition": "NSDI '23",
+      "year": 2023,
+      "value": "double-blind",
+      "source_id": "src-nsdi-2023-cfp",
+      "note": "双盲；operational track 规则不同"
+    },
+    {
+      "key": "anonymity",
+      "edition": "NSDI '25",
+      "year": 2025,
+      "value": "double-blind",
+      "source_id": "src-nsdi-2025-cfp",
+      "note": "仍双盲"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取官方正文 10pt；margin_mm 取等效单边 19.05mm（左右 0.75in，上下 1in）；texopt 压缩下限用 margin_min_mm 保护",
+    "requirement_fields": {
+      "page_limit": 12,
+      "font_pt": 10,
+      "margin_mm": 19.05,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 177.8
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 25.4,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "why": "单一 margin_mm 无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 12,
+        "why": "正文 12 页 + 无限参考文献/附录，需'计数范围'支持"
+      },
+      {
+        "key": "page_numbering",
+        "value": "numbered",
+        "why": "texopt 不控制页码"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验栏数"
+      },
+      {
+        "field": "appendix_page_policy",
+        "type": "str",
+        "example": "uncounted",
+        "rationale": "NSDI 附录不计页，需区分"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-usenix-paper-templates",
+      "kind": "official-guidelines",
+      "title": "USENIX Templates for Conference Papers",
+      "url": "https://www.usenix.org/conferences/author-resources/paper-templates",
+      "fetched_at": "2026-09-12T10:18:40+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-usenix-paper-templates.html",
+      "sha256": "dc2e24cb6e0527b38332235472a886c14ace2847b32ddd926f488dd66588e4bb",
+      "note": "官方模板页：letter 纸、双栏、text block 7x9in、10pt Times on 12pt single-spaced"
+    },
+    {
+      "id": "src-usenix-template-2019v3",
+      "kind": "official-template",
+      "title": "USENIX LaTeX style file (usenix2019_v3.sty)",
+      "url": "https://www.usenix.org/sites/default/files/usenix2019_v3.sty",
+      "fetched_at": "2026-09-12T10:18:29+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-usenix-template-2019v3.sty",
+      "sha256": "4ed9aa9d0c5daec54ce3b4188a4bf6d3bef3462c79ff65551d567511d3c45ff6",
+      "note": "官方 sty：twocolumn、textwidth 7in/textheight 9in、columnsep 0.33in、margins 0.75in sides + 1in top/bottom、标题 14pt bold"
+    },
+    {
+      "id": "src-usenix-template-tex",
+      "kind": "official-template",
+      "title": "USENIX LaTeX template (usenix2019_v3.2.tex)",
+      "url": "https://www.usenix.org/sites/default/files/usenix2019_v3.2.tex",
+      "fetched_at": "2026-09-12T10:18:41+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-usenix-template-tex.sty",
+      "sha256": "b2203c8d5adc698cc3ecf937636607041fabbfa91fc3481e18cfc4d46cc2d73e",
+      "note": "官方 tex：documentclass letterpaper,twocolumn,10pt；摘要≤200 词；无日期"
+    },
+    {
+      "id": "src-nsdi-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "NSDI '25 Call for Papers",
+      "url": "https://www.usenix.org/conference/nsdi25/call-for-papers",
+      "fetched_at": "2026-09-12T10:18:12+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi-2025-cfp.html",
+      "sha256": "631cef56326b4d8b95b4401eb872bf1f5be9de9ab9f4b9450a23e7317524e070",
+      "note": "NSDI '25 CFP：12 页（含脚注/图表）、无限参考文献与附录；双栏 10pt；双盲"
+    },
+    {
+      "id": "src-nsdi-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "NSDI '24 Call for Papers",
+      "url": "https://www.usenix.org/conference/nsdi24/call-for-papers",
+      "fetched_at": "2026-09-12T10:18:14+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi-2024-cfp.html",
+      "sha256": "cd62efa596885e0e5c61a3ce042867fcace9c077686b31600332afe906c8fb24",
+      "note": "NSDI '24 CFP：页数与格式规则"
+    },
+    {
+      "id": "src-nsdi-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "NSDI '23 Call for Papers",
+      "url": "https://www.usenix.org/conference/nsdi23/call-for-papers",
+      "fetched_at": "2026-09-12T10:18:17+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi-2023-cfp.html",
+      "sha256": "2472f0939fc2c758fdb5a6610ee3ee6f5cc3b1f3c9fac7ae836e0e274728c9bc",
+      "note": "NSDI '23 CFP：页数与格式规则"
+    },
+    {
+      "id": "src-nsdi24-pres-addanki-reverie",
+      "kind": "sample-paper",
+      "title": "Reverie: Low Pass Filter-Based Switch Buffer Sharing for Datacenters with RDMA and TCP Traffic",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/addanki-reverie",
+      "fetched_at": "2026-09-12T10:26:14+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-addanki-reverie.html",
+      "sha256": "0380b3b1256bb2037e976ad0877ba83944e6734ff9d17ca6e49e4c87015894eb",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-addanki-reverie.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-agarwal-anup",
+      "kind": "sample-paper",
+      "title": "Towards provably performant congestion control",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/agarwal-anup",
+      "fetched_at": "2026-09-12T10:26:16+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-agarwal-anup.html",
+      "sha256": "146b8cae7d659048a91bcb558ac74341e1747f9909fe14efc560b769681088be",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-agarwal-anup.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-alquraan",
+      "kind": "sample-paper",
+      "title": "LoLKV: The Logless, Linearizable, RDMA-based Key-Value Storage System",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/alquraan",
+      "fetched_at": "2026-09-12T10:26:18+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-alquraan.html",
+      "sha256": "86ef1a7b7ea94efb58c03305c749ba0fd274eb8f1710e1ff4afca54cf772a81e",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-alquraan.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-carver",
+      "kind": "sample-paper",
+      "title": "Catch Me If You Can: Laser Tethering with Highly Mobile Targets",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/carver",
+      "fetched_at": "2026-09-12T10:26:22+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-carver.html",
+      "sha256": "e43fd3619b2575bc68b953094ef5192ed9d2cf86700b8f3b0d87962d07dda09b",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-carver.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-chae",
+      "kind": "sample-paper",
+      "title": "mmComb: High-speed mmWave Commodity WiFi Backscatter",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/chae",
+      "fetched_at": "2026-09-12T10:26:24+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-chae.html",
+      "sha256": "2af7d096b4b53111cf69ede87d0dffbaca574c947dccb4f00424fe8224590781",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-chae.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-chen-bo",
+      "kind": "sample-paper",
+      "title": "LiFteR: Unleash Learned Codecs in Video Streaming with Loose Frame Referencing",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/chen-bo",
+      "fetched_at": "2026-09-12T10:26:20+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-chen-bo.html",
+      "sha256": "f570c7df38ed57a97f6bf6a709492328f62fcf2f6d4a0215a79c07959bac6383",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-chen-bo.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    },
+    {
+      "id": "src-nsdi24-pres-huang",
+      "kind": "sample-paper",
+      "title": "DISTMM: Accelerating Distributed Multimodal Model Training",
+      "url": "https://www.usenix.org/conference/nsdi24/presentation/huang",
+      "fetched_at": "2026-09-12T10:26:26+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-nsdi24-pres-huang.html",
+      "sha256": "9c9d318645249a08e068a4dc02fd0e109319636d5a1a7561a8bbea8c95eaee7f",
+      "pdf_url": "https://www.usenix.org/system/files/nsdi24-huang.pdf",
+      "venue": "NSDI '24",
+      "year": 2024,
+      "note": "USENIX 官方 presentation 落地页（NSDI '24）"
+    }
+  ],
+  "open_questions": [
+    "NSDI 官方 CFP 未给正文之外的字号/边距明文，边距由 7x9in 版心换算（template-implied）。",
+    "NSDI 未明文规定图题/表题位置。",
+    "NSDI 未指定参考文献样式（numeric/author-year）。",
+    "operational systems track 的匿名豁免仅见文字描述，未单列 schema 字段。",
+    "submission system 名称（USENIX 表单；历史上用 HotCRP）未在 CFP 明确。"
+  ]
+}

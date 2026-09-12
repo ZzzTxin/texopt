@@ -1,0 +1,1964 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <style>html { scroll-padding-top: 70px; /* height of sticky header plus extra */ }</style>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/virtual/js/virtual.js"></script>
+    <meta name="google-site-verification" content="0jwPnVXIAk4FvFdT37dwMmd-kjHF86e5DKwvqlStUW0">
+
+
+    
+    <link rel="stylesheet" href="/static/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css" type="text/css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/core/css/custom.css" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+            processEscapes: true,
+          },
+          options: {
+            ignoreHtmlClass: 'no-mathjax',
+          }
+        };
+    </script>
+
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            nonce="eWZAzyGqpnRoX4GSq2PxDg==" >
+    </script>
+
+    <!--This script keeps local links inside the web app rather than opening them
+in Safari, and has nothing to do with editing or Aloha.-->
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+    (function (document, navigator, standalone) {
+
+        if ((standalone in navigator) && navigator[standalone]) {
+            var curnode, location = document.location, stop = /^(a|html)$/i;
+            document.addEventListener('click', function (e) {
+                curnode = e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                    curnode = curnode.parentNode;
+                }
+
+                if (
+                    'href' in curnode && // is a link
+                    (chref = curnode.href).replace(location.href, '').indexOf('#') && // is not an anchor
+                    (!(/^[a-z\+\.\-]+:/i).test(chref) ||                       // either does not have a proper scheme (relative links)
+                        chref.indexOf(location.protocol + '//' + location.host) === 0) // or is in the same protocol and domain
+                ) {
+                    e.preventDefault();
+                    location.href = curnode.href;
+                }
+            }, false);
+        }
+    })(document, window.navigator, 'standalone');
+</script>
+
+
+<style>
+
+    @media screen and (min-width: 767px) {
+        .blurb {
+            min-height: 260px;
+        }
+    }
+</style>
+    
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+</script>
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+    if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "/static/core/js/jquery-3.6.1.min.js";
+        document.head.appendChild(script);
+    }
+</script>
+
+    
+    <script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+        var $ = jQuery;
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <script src="/static/core/js/ajax-csrf-snippet.js"></script>
+    
+    <link rel="stylesheet" href="/static/fontawesomefree/css/all.min.css">
+    <script src="/static/fontawesomefree/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+
+    <style nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+        body {
+            font-family: Exo;}
+    </style>
+
+
+
+
+
+
+
+
+        
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js" integrity="sha512-lEb9Vp/rkl9g2E/LdHIMFTqz21+LA79f84gqP75fbimHqVTu6483JG1AwJlWLLQ8ezTehty78fObKupq3HSHPQ==" crossorigin="anonymous"></script>
+    <script src="/static/core/js/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="/static/core/js/ajax-csrf-snippet.js" ></script>
+    <script src="/static/virtual/js/virtual.js"></script>
+    
+
+    
+
+    
+    <link rel="canonical" href="https://iclr.cc/Conferences/2025/AuthorGuide">
+
+    <title>Author Guide</title>
+</head>
+
+<body>
+<!-- <h1><a href="#" onclick="alert('CSP Test');">CSP Test</a></h1> -->
+
+
+
+
+<div class="noprint">
+    
+        
+            <!--Navbar start-->
+<header>
+    <a href="#child-menu" class="off-screen">Skip to yearly menu bar</a>
+    <a href="#main" class="off-screen">Skip to main content</a>
+    <div id="id_navbar" class="navbar navbar-expand-sm navbar-dark" aria-label="Main Navigation"
+         style="background-color:#212529">
+        <h2 class="off-screen">Main Navigation</h2>
+        <div class="container-fluid">
+            <div><a class="navbar-brand" href="/" aria-label="Home">
+
+                <img src="/static/core/img/iclr-navbar-logo.svg" alt="conference_logo" height="40"></a></div>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggler1"
+                    aria-expanded="false" aria-label="Toggle main navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarToggler1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ICLR
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/FAQ">
+                    <span >
+                        Help/FAQ
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Help/Contact">
+                    <span >
+                        Contact ICLR
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Profile/create">
+                    <span >
+                        Create Profile
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/JournalToConference">
+                    <span >
+                        Journal To Conference Track
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/DiversityInclusion">
+                    <span >
+                        Diversity &amp; Inclusion
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://openreview.net/group?id=ICLR.cc">
+                    <span >
+                        Proceedings at OpenReview
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/FutureMeetings">
+                    <span >
+                        Future Meetings
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Press">
+                    <span >
+                        Press
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Sponsors/sponsorinfo">
+                    <span >
+                        Exhibitor Information
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://blog.iclr.cc/">
+                    <span >
+                        ICLR Blog
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://twitter.com/iclr_conf?ref_src=twsrc%5Etfw">
+                    <span >
+                        ICLR Twitter
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/About">
+                    <span >
+                        About ICLR
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Downloads">
+                    <span >
+                        Downloads
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/PrivacyPolicy">
+                    <span >
+                        Privacy Policy
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/resetpassword">
+                    <span >
+                        Reset Password
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/MyStuff">
+                    <span >
+                        My Stuff
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    
+                </ul>
+
+                
+                <form class="d-flex mx-2" aria-label="Search" role="search" action="/search">
+                    <div class="input-group" role="search" style="outline-color:green;">
+                        <input type="text" class="form-control" placeholder="Search" name="q"
+                               value=""
+                               aria-label="Search" aria-describedby="btnGroupAddon"
+                                id="navbar-search">
+                        <div class="input-group-text btn-primary" id="btnGroupAddon">
+                            <button style="border: none; background-color: transparent; padding: 0;" type="submit" aria-label="execute search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                
+                    <a href="/accounts/login?nextp=/virtual/2025/37547 " class="navbar-brand"><span
+                            class="fa-solid fa-right-to-bracket"></span> Login</a>
+                
+
+            </div>
+        </div>
+    </div>
+</header>
+<!--Navbar end-->
+        
+    
+</div><!--noprint div-->
+
+<!--This holds the whole page including the navbar-->
+<main id="main">
+    
+        
+            <div class="container-fluid">
+                
+<!--Navbar start-->
+
+
+
+
+<div class="container-fluid">
+
+    <div class="dropdown" id="child-menu">
+        <nav class="align-middle navbar navbar-expand-md mx-4 border border-3 border-top-0 rounded-bottom"
+             style="min-height: 57px; background-color: #F6f6f6;">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggler1214"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarToggler1214">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle border-3  btn btn-primary text-white p-1" style= "background-color: #070bff; font-size: 1.2 em;"
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Year: (2025)
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2027/index.html">2027
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2026">2026
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2025">2025
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2024">2024
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2023">2023
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2022">2022
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2021">2021
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2020">2020
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2019">2019
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2018">2018
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/archive/www/2017.html">2017
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/archive/www/2016.html">2016
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/archive/www/2015.html">2015
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/archive/2014/">2014
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/archive/2013/">2013
+                </a>
+                
+            </li>
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Dates">
+                    <span >
+                        Dates
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Calls
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForPapers">
+                    <span >
+                        Call for Papers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForWorkshops">
+                    <span >
+                        Call for Workshops
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForTinyPapers">
+                    <span >
+                        Call for Tiny Papers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForBlogPosts">
+                    <span >
+                        Call for Blog Posts
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForSocials">
+                    <span >
+                        Call for Socials
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Attend
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Register2">
+                    <span >
+                        Register
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/VisaTravel">
+                    <span >
+                        Visa and Travel Information
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ChildCare">
+                    <span >
+                        Child Care
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/FinancialAssistance">
+                    <span >
+                        Financial Assistance and Volunteering
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Organization
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Committees">
+                    <span >
+                        Organizing Committee
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ProgramCommittee">
+                    <span >
+                        Program Committee
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Board">
+                    <span >
+                        ICLR Board
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/EthicsCommittee">
+                    <span >
+                        Ethics Committee
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Guides
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/PosterInstructions">
+                    <span >
+                        Poster Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/AuthorGuide">
+                    <span >
+                        Author Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ReviewerGuide">
+                    <span >
+                        Reviewer Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ACGuide">
+                    <span >
+                        Area Chair Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/SACguide">
+                    <span >
+                        Senior Area Chair Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/FAQ">
+                    <span >
+                        FAQ
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Sponsors">
+                    <span >
+                        Exhibitors
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/index.html">
+                    <span >
+                        Conference Site
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Navbar end-->
+
+            </div>
+            <br><br>
+        
+    
+    
+        
+        <div class="container">
+    
+    
+
+    
+    <div class="container">
+        
+            <!--JUst above the HTML in document-snippet.html-->
+            <div> <div>
+<h1><strong>ICLR 2025 Author Guide</strong></h1>
+
+<p>Similarly to previous years, this year too we are asking authors to submit paper abstracts by the abstract submission deadline of September 27 2024, anywhere on earth. The full paper submission deadline is October 1 2024, anywhere on earth. Abstracts and papers must be submitted using the conference submission system at: <a href="https://openreview.net/group?id=ICLR.cc/2025/Conference"> https://openreview.net/group?id=ICLR.cc/2025/Conference </a> . <strong> Please keep in mind that the deadlines are final and we cannot make any accommodations for missing the abstract deadline or paper deadline. </strong> It is key that authors submit genuine and informative abstracts that reflect the content of the full submission, as abstracts will be used in reviewer bidding before the final paper submission deadline. Placeholder or duplicate abstracts will be removed.</p>
+
+<p>For detailed submission instructions, including paper length and style file, please refer to the call for papers on <a href="https://iclr.cc/Conferences/2025/CallForPapers"> https://iclr.cc/Conferences/2025/CallForPapers </a> .</p>
+
+<p><strong>Source code submission:</strong> Source code associated with a paper can be uploaded as part of the supplementary material. Code submission gives more information to reviewers, especially for replicability of the paper. We encourage all authors to submit code as part of their submission. Note that reviewers are encouraged, but not required to review supplementary material during the review process. All supplementary code must be self-contained and zipped into a single file or can be downloaded via an anonymous URL. Note that supplementary material will be visible to reviewers and the public throughout and after the review period, and ensure <strong>all material is anonymized.</strong></p>
+
+<p><strong>Supplementary (text) submission:</strong> We encourage authors to submit a single file (paper + supplementary text). Please mark the supplementary material clearly.</p>
+
+<p><strong>Note: All authors are required to have an openreview profile. Please make sure that all of the authors create an openreview profile. </strong></p>
+
+<h3><strong>Code of Ethics and Ethics statement</strong></h3>
+
+<p>All ICLR participants, including authors, are required to adhere to the ICLR Code of Ethics ( <a href="https://iclr.cc/public/CodeOfEthics"><u>https://iclr.cc/public/CodeOfEthics</u></a> ). All authors of submitted papers are required to read the Code of Ethics, adhere to it, and explicitly acknowledge this during the submission process. The Code of Ethics applies to all conference participation, including paper submission, reviewing, and paper discussion.</p>
+
+<p>As part of the review process, reviewers will be encouraged to raise potential violations of the ICLR Code of Ethics. If authors feel that their paper submission raises questions regarding the Code of Ethics, they are encouraged to discuss any potential issues as part of their submission. This discussion is not counted against the maximum page limit of the paper and should be included as a separate section.</p>
+
+<p>Authors who encounter potential violations of the Code of Ethics, e.g., as part of the review or public discussion, should raise these issues in a private message to their papers Area Chair through the open review interface.</p>
+
+<p>Authors are encouraged to include a paragraph of <strong>Ethics Statement</strong> (at the end of the main text before references) to address potential concerns where appropriate, topics include, but are not limited to, studies that involve human subjects, practices to data set releases, potentially harmful insights, methodologies and applications, pontential conflicts of interest and sponsorship, discrimination/bias/fairness concerns, privacy and security issues, legal compliance, and research integrity issues (e.g., IRB, documentation, research ethics). <em> The optional ethic statement will not count toward the page limit, but should not be more than 1 page. </em></p>
+
+<h3><strong>Reproducibility</strong></h3>
+
+<p>It is important that the work published in ICLR is reproducible. Authors are strongly encouraged to include a paragraph-long <strong>Reproducibility Statement</strong> <em>at the end of the main text (before references)</em> to discuss the efforts that have been made to ensure reproducibility. This paragraph should not itself describe details needed for reproducing the results, but rather reference the parts of the main paper, appendix, and supplemental materials that will help with reproducibility. For example, for novel models or algorithms, a link to a anonymous downloadable source code can be submitted as supplementary materials; for theoretical results, clear explanations of any assumptions and a complete proof of the claims can be included in the appendix; for any datasets used in the experiments, a complete description of the data processing steps can be provided in the supplementary materials. Each of the above are examples of things that can be referenced in the reproducibility statement. <em> This optional reproducibility statement will not count toward the page limit, but should not be more than 1 page. </em></p>
+
+<h3><strong>Reviewing Process</strong></h3>
+
+<p>Submissions to ICLR are uploaded on OpenReview, which enables public discussion during the review process, public discussion phase, which lasts until November 26 2024, as well as further discussion only between reviewers and area chairs until December 10, 2023.</p>
+
+<p>Authors are encouraged to participate in the public discussion of their paper, as well as of any other paper submitted to the conference. Submissions and reviews are both anonymous and visible as follows:</p>
+
+<ul>
+	<li>Official reviews are anonymous and publicly visible.</li>
+	<li>Anybody who is logged in can post comments that are publicly visible or restrict visibility to reviewers and up, ACs and up, or just PCs. Login is required before posting any comment.</li>
+</ul>
+
+<p>By November 10, 2024, we expect all reviews to be completed. Reviews are anonymous and publicly visible in Open Review. Once the reviews are posted, authors are free to upload modifications to the paper until Nov 27, 2024. The most relevant dates for authors are as follows:</p>
+
+<ul>
+	<li>Review Release: November 13, 2024</li>
+	<li>Discussion Stage: November 13 - November 26
+	<ul>
+		<li>Discussions among Reviewers/Authors/Public.</li>
+		<li>Anyone may post comments, but they must be logged in, and their names will be shown. Reviewers remain anonymous</li>
+		<li>Authors can update their draft until Nov 27 (End of Day, Anywhere on Earth)</li>
+	</ul>
+	</li>
+	<li>Like the 2024 conferene, there will be no second stage of discussion between authors and reviewers.</li>
+</ul>
+
+<p>In addition, authors can post "official comments" about their paper once the discussion stages begin, and restrict visibility to reviewers, area chairs, or program chairs as appropriate. For example, this functionality can be used to post links to supplementary material.</p>
+
+<h3><strong>Camera-ready Submissions</strong></h3>
+
+<p>An email with instructions for uploading camera-ready submissions will go out mid-February 2024.</p>
+
+<ul>
+	<li>page limit is identical with the submission version (10 pages)</li>
+	<li>Similarly, ethics statements and acknowledgement etc. do not count for page limit.</li>
+</ul>
+
+<h3><a id="faq" name="faq"><strong>Frequently Asked Questions</strong></a></h3>
+
+<h4> </h4>
+
+<h4><strong>FAQ Before Submission Deadline</strong></h4>
+
+<div><strong>Q. How do I submit the abstract?</strong></div>
+
+<div> </div>
+
+<div>In openreview page, you will see that only "Abstract*" section is mandatory (indicated by "*") and not "PDF" section. To submit an abstract, you can enter text in "Abstract" section. You can upload the full paper in "PDF" section anytime before the deadline.</div>
+
+<div> </div>
+
+<p><strong>Q. Do I need an OpenReview account to submit the paper?</strong></p>
+
+<p>Yes. And so as <strong>all</strong> your co-authors. Please ensure this before the submission deadline; we cannot make an exception (for fairness) if you failed to submit by the abstract deadline.</p>
+
+<p><strong>Q. Some authors did not have OR accounts by the abstract deadline. Will my paper get desk-rejected? </strong></p>
+
+<p>No. As long as ALL authors have OR account before the full paper deadline, the paper will not be desk-rejected.</p>
+
+<p><strong>Q. How to check that all authors have an OR account?</strong></p>
+
+<p>If you click any of the names in the Authors field, it will bring them to the profile of that author, if one exists. Otherwise, they will see a page alerting them that there is no profile linked to that email.</p>
+
+<p><strong>Q. How do I fix the issue of OR accounts? I cant remove and add an author.</strong></p>
+
+<p>The author can create an OpenReview profile and confirm the email address used in submission. Once this is done, the submission will be correctly linked to their profile.</p>
+
+<p><strong>Q. I have an OR account, but I submitted the work with a different email address. </strong></p>
+
+<p>This is fixable: you just need to edit their profile, add the email and click on "Confirm". You will receive an email to verify they own the email account. After the confirmation, the email will be automatically linked to the profile and the submission.</p>
+
+<p><strong>Q: Can I add or make changes on authors after the abstract submission deadline?</strong></p>
+
+<p>No. You cannot add or remove authors after the abstract submission deadline - we make no exceptions whatsoever, so please don't bother sending an email (we get a lot of these emails, sometimes the same question multiple times from the same people). Note that the orders can be changed if the contribution among the authors changes <strong>but this is allowed only until the submission deadline</strong> . Please coordinate among the authors and make sure that everyone has an OpenReview profile before the abstract submission deadline.</p>
+
+<p><strong>Q: When is the submission deadline for supplementary materials?</strong></p>
+
+<p>The deadline is the same for the full paper and for the supplementary materials.</p>
+
+<p><strong>Q: Should the appendices be added as a separate PDF or in the same PDF as the main paper? </strong></p>
+
+<p>Either is allowed: you can include the appendices at the end of the main pdf after the references, or you can include it as a separate file for the supplementary materials.</p>
+
+<p><strong>Q: How can we make our code available for reviewing anonymously?</strong></p>
+
+<p>You can share your code in three ways:</p>
+
+<ol>
+	<li>Anonymize your code, put it in a .zip file and submit it as supplementary materials.</li>
+	<li>Make an anonymous repository and put the link in your paper. The above methods will make your code public, along with your paper and reviews/comments for the paper.</li>
+	<li>After we open the discussion forums for all submitted papers, make a comment directed to the reviewers and area chairs and put a link to an anonymous repository. This method will let you keep your code visible only to the reviewers and ACs for your paper.</li>
+</ol>
+
+<p><strong>Q: Can I submit a link for demonstration (for example, including a video)?</strong></p>
+
+<p>Yes, such a link can be submitted as long as it is completely anonymous. Also, makes sure that the host website does not track visitors because such an information can reveal the identity of the reviewer. If your link is found to have such issues, it will put your submission at the risk of rejection.</p>
+
+<p><strong>Q: I cant modify my submission to include the PDF and supplementary materials. Can you help? </strong></p>
+
+<p>Make sure you logged in using the same account you used to upload the submission. If so, you should be able to click on your submission and see a "Revision" button.</p>
+
+<p>If you are still having problems accessing your submission, follow these steps:</p>
+
+<ol>
+	<li>Go to your submission and hover over your name in the Authors field.</li>
+	<li>If your name is associated with an email address that is not currently on your profile, add this email address to your OpenReview profile and confirm it. This will give you access to your submission and the Revision button.</li>
+	<li>If your name is associated with another profile that is not the profile you submitted the paper with, contact the OpenReview team at info@openreview.net so they can merge your profiles.</li>
+</ol>
+
+<p>If you are still having trouble, please contact OpenReview technical support at info@openreview.net and explain the situation.</p>
+
+<p><strong>Q: Can you explain how to treat de-anonymization in the case where a submitted paper refers to a challenge they won which can identify the authors? </strong></p>
+
+<p>It is ok to report the results on the leaderboard of a challenge. The authors can include the ranking and the name of the challenge. The reviewers will be advised to not intentionally search the authors by examining the leaderboard.</p>
+
+<p><strong>Q: Can I submit an abstract to serve as a placeholder so that I can fill in the details of my submission after the abstract deadline? </strong></p>
+
+<p>No. All placeholder abstract submissions will be deleted.</p>
+
+<p><strong>Q: We recently submitted paper A on arxiv. Now we are submitting a follow up work B to ICLR. Should we cite paper A in our submission B? If so, how should I cite the work without violating the double-blind process? </strong></p>
+
+<p>Yes, authors should provide the citations to all related work, including paper A. When referring to paper A, please use a 3rd person narrative.</p>
+
+<p><strong>Q. I have a nearly identical version on arxiv. Does this violate the anonymity policy? </strong></p>
+
+<p>No, so long as you do not refer to it explicity.</p>
+
+<p><strong>Q: If my submission does not have any ethics issues to the best of our knowledge, do I still need to include an Ethics Statement? </strong></p>
+
+<p>No, there is no need to include an Ethics Statement for all submissions. Submissions with potential ethics issues (such as study involving human subjects, dataset with sensitive information, etc) should consider including an ethics statement.</p>
+
+<p><strong>Q. Does the acknowledgement section included in the page limit?</strong></p>
+
+<p>No.</p>
+
+<h4><strong>FAQ During Discussion Stages</strong></h4>
+
+<p><strong>Q. Can we make changes to the title and abstract for the full paper submission?</strong></p>
+
+<p>It is Ok to revise the title and abstract for your full paper submission so long as the revised version stays close to your original abstract submission; The revised version shouldnt read like a different paper compared to your original abstract submission. If so, the paper will be rejected.</p>
+
+<p><strong>Q. Can we change the title of a paper during the rebuttal?</strong></p>
+
+<p>Yes, you can change the title, abstract, and the papers content, including supplementary materials. But make sure any modifications are clearly communicated to the reviewers and the area chair, so that they can efficiently review the modified version of your paper. The set of authors cannot be changed, but the order can be changed.</p>
+
+<p><strong>Q. For rebuttal revisions, how many pages are allowed?</strong></p>
+
+<p>The page limit is identical with the submission version (10 pages).</p>
+
+<p><strong>Q. For rebuttal revisions, are we limited to one upload or can we update the paper several times? </strong></p>
+
+<p>You can upload revisions until the discussion period ends, but reviewers and area chairs are not required to look at every revision. It is up to you to clearly communicate whats been changed.</p>
+
+<p><strong>Q. Is there a limit on the number of comments we can post? Can we post multiple replies to each reviewer? </strong></p>
+
+<p>There is a word limit for each comment, but <strong>there is no limit on the number of comments</strong> . You may post multiple replies to each reviewer, but please remain civil and considerate of the reviewers time, as they are reviewing and thus engaging in discussions for multiple papers for ICLR. Compared to other conferences in the field, the open nature of the discussion phases allows more interaction among the authors and reviewers. Please see previous versions of ICLR OpenReview to get a sense of the interactions (e.g., <a href="https://openreview.net/group?id=ICLR.cc/2021/Conference"> <u>OpenReview forums for ICLR 2021</u> </a> )</p>
+
+<p><strong>Q. How do we contact the Reviewers, Area Chairs, and Program Chairs?</strong></p>
+
+<p>If you have important private comments to the area chair and/or reviewers of your paper, please communicate through the OpenReview forum for that submission and choose Area Chairs of the submission and/or "Reviewers of the submission" from the dropdown menu of the Readers.</p>
+
+<p>Your first point of contact in case of questions is the Area Chair assigned to your submission. In cases that cannot be resolved together with the Area Chair, please contact the Program Chairs through email. Prefix your title as [Authors-to-PCs].</p>
+
+<p><strong>Q. If I have an accepted paper, do I have to register?</strong></p>
+
+<p>Yes, if you have an accepted paper, one of the authors of your paper must have a "Conference and Workshops" registration. If the author is a student they only need a student registration. If an author has multiple papers they only need one registration. </p>
+
+<h2><strong>Other info</strong></h2>
+
+<p><strong>Conference logistics for accepted papers:</strong></p>
+
+<ul>
+	<li>Authors who registered to attend in-person AND offered an oral spot <strong>will present oral in person</strong>.</li>
+	<li>Authors who registered to attend will record a 5 min summary video. All videos will be hosted on iclr.cc for asynchronous viewing.</li>
+	<li>All accepted papers should recieve recording link in a email from SlidesLive. The SlidesLive recording link is also available on your <a href="/MyStuff">My Stuff page</a> below Presentation History</li>
+	<li>For authors who registered to attend in-person, there will be in-person poster sessions. There is no virtual poster session this year.</li>
+	<li>Spotlight papers are recognized with a "Spotlight" paper positioned on the posterboard during the poster session.</li>
+</ul>
+
+<p><strong>Q.Where can I get an invitation letter to attend the conference (for visa purposes)? </strong></p>
+
+<p>You can generate your invitation letter after you register. Visit <a href="/Conferences/2025/VisaTravel">https://iclr.cc/Conferences/2025/VisaTravel </a>for more informatrion.</p>
+
+<p><strong>Q. What is the poster size?</strong></p>
+
+<p>See the <a href="/Conferences/2025/PosterInstructions">Poster Guide</a></p>
+
+<p><strong>Q. I did not get an email from slideslive about video upload. How do I upload the video? </strong></p>
+
+<p>The email might have gone to spam box. You can find the recording linking by logging into you profile <a href="https://iclr.cc/MyStuff" target="_blank">https://iclr.cc/MyStuff</a> and then look in your presentation history. For details see the <a href="https://wiki.eventhosts.cc/en/reference/organizing-video-recordings#what-if-i-didnt-receive-my-invitation"> video recordings wiki page </a> .</p>
+
+<p><strong>Q. I need to fix my camera ready. Can I ask for it?</strong></p>
+
+<p>TBD</p>
+
+<p><strong>Q. Can the appendix be part of the main paper in the camera eady?</strong></p>
+
+<p>Yes, it is recommended for the appendix to be included in the same pdf as the main paper for the camera ready.</p>
+
+<p><strong>Q. Can author order be updated for camera ready?</strong></p>
+
+<p>Author orders can be changed. Authors cannot be added or removed.</p>
+</div>
+</div>
+        
+    </div>
+
+
+
+    
+        </div>
+    
+
+</main>
+<!--END BLOCK CONTENT-->
+
+
+<!--Footer for the edit button-->
+
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+
+    $(function () {
+        if ($(".editable").length == 0) {
+            $("#editFooter").hide();
+        }
+
+        // Event bindings for edit buttons
+        $('.startEditBtn').on('click', function() {
+            start_edit();
+        });
+        
+        $('.stopEditBtn').on('click', function() {
+            stop_edit();
+        });
+        $('#id_accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.workshopstatus').on('change', function() {
+            changeStatus(this);
+        });
+        $('.action-select').on('change', function() {
+            actionChanged(this);
+        });
+        $('.extra').on('change', function() {
+            extraChanged(this);
+        });
+        $('.filter_workshop').on('change', function() {
+            this.form.submit();
+        });
+        $('.volunteer-status, .recommendation-letter-status').on('change', function() {
+            setStatus(this);
+        });
+        $('.status-form-show').on('change', function() {
+            this.form.submit();
+        });
+        $('.download-form-download').on('change', function() {
+            this.form.submit();
+        });
+        $('.presentation-type-form-presentation-type').on('change', function() {
+            this.form.submit();
+        });
+        $('.export-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.import-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.vol-email-form-to, .vol-email-form-template').on('change', function() {
+            this.form.submit();
+        });
+        $('.organizer-alert').on('click', function() {
+            getUserCreateForm(this.href);
+        });
+    })
+</script>
+
+<script src="/static/core/js/fastclick.min.js" ></script>
+
+<!--We don't know if there are editable tags on the page until after the django template engine has rendered the page. So,
+test in javascript for "editable" tags and if present, load the ckeditor engine dynamically. -->
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+    if (document.getElementsByClassName('editable').length > 0) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/static/core/ckeditor/4.18/ckeditor.js";    // use this for linked script
+      script.onload = function () {
+        console.log("ckeditor loaded");
+        // Initial setup when each editor is ready
+        CKEDITOR.on("instanceReady", function (e) {
+          updateToggleDocName(e.editor);
+        });
+
+        // React to any editor entering/leaving read-only
+        CKEDITOR.on("readOnly", function (e) {
+          updateToggleDocName(e.editor);
+        });
+      };
+        document.body.appendChild(script);
+    }
+
+    function updateToggleDocName(editor) {
+      var id = editor && editor.name;
+      if (!id || id.indexOf("id_") !== 0) return;
+
+      var doc_name_element = document.getElementById("document_name_" + id.slice(3));
+      console.log(doc_name_element);
+      if (!doc_name_element) return;
+
+      doc_name_element.style.display = editor.readOnly ? "none" : "block";
+    }
+
+</script>
+
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+    function fetchContent() {
+        $(".editable").each(function (index) {
+            var myself = this;
+            var docvID = this.getAttribute('id').replace("id_", "");
+            var blurbtext = this.getAttribute("blurbtext");
+            $.ajax({
+                url: "/Admin/RetrieveDocumentVersion",
+                type: "POST",
+                data: {
+                    docvID: docvID,
+                    blurbtext: blurbtext,
+                    csrfmiddlewaretoken: csrftoken,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    myself.setAttribute("contenteditable", "true");
+                    myself.innerHTML = data;
+                    CKEDITOR.inline(myself.id);
+                },
+            });
+        })
+    }
+
+    $("#nopageedit").hide();
+
+    function start_edit() {
+
+        $(".editable").addClass("warning-ring");
+
+        //At the beginning of an edit, we need to replace the content of the
+        //editable div with it's databased content in order to preserve the
+        //template tags. We want the tag, not the rendered tag.
+
+        /* You must remove any countdown.js timers on the page before replacing the page with it's
+        document version otherwise, Javascript will throw an exception.  */
+
+
+        $("[class$='-countdown']").parent().remove();
+        fetchContent();
+        $(".editable").attr("onblur", "ckeditorsave(this)");
+        window.status.bold();
+        window.status = "Click outside the editable area to save. Changes are LIVE!! Refresh page to discard changes.";
+        $("#editpage").hide();
+        $("#noeditpage").show();
+    }
+
+
+    function stop_edit() {
+        ckeditorsave();
+        $("#noeditpage").hide();
+        $("#editpage").show();
+        window.location.reload();
+    }
+
+    function ckeditorsave(event) {
+        for (var name in CKEDITOR.instances) {
+            if (CKEDITOR.instances[name].checkDirty()) {
+                editor = CKEDITOR.instances[name];
+                saveEditable(editor);
+            }
+        }
+    }
+
+    function saveEditable(editor) {
+        var content = editor.getData();
+        var contentId = editor.name;
+        var pageId = window.location.pathname;
+        var originalContent = "N/A";
+        var documentversion = editor.container.getAttribute("id").replace("id_", "");
+        var blurbtext = editor.container.getAttribute("blurbtext");
+        if (contentId.match(/-aloha$/gi)) {
+            contentId = contentId.replace(/-aloha/gi, '');
+        }  /*I'm not sure what this does but it seems like it would matter*/
+        var request = jQuery.ajax({
+            url: "/Admin/SaveDocument",
+            type: "POST",
+            async: false,
+            data: {
+                content: content,
+                originalContent: originalContent,
+                contentId: contentId,
+                pageId: pageId,
+                documentversion: documentversion,
+                blurbtext: blurbtext,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                if (data['message']) {
+                    alert(data['message']);
+                }
+            },
+            error: function (xqXHR, textStatus) {
+                window.status = textStatus;
+                debugger;
+            }
+
+        });
+
+    };
+
+
+</script>
+
+<script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+    jQuery(document).ajaxSend(function (event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+
+
+
+
+
+<div id="successful-page-load" class='hidden'>Successful Page Load</div>
+
+
+
+
+
+    
+        <link href="/static/conf_gdpr/css/conf_gdpr.css" rel="stylesheet">
+        <div id="cookie-bar" style="z-index: 8">
+            <table class="gdpr-statement">
+                <col>
+                <col style="width:120px">
+                <tr>
+                    <td style="padding:5px">
+                        ICLR uses cookies for essential functions only. We do not sell your personal
+                        information.
+                        <a href="/public/PrivacyPolicy">Our Privacy Policy &raquo;&nbsp;</a>
+                    </td>
+                    <td>
+                        <button float-end class="btn btn-light btn-sm btn btn-outline-dark" id="accept_cookies_button" >Accept</button>
+                           
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script nonce="eWZAzyGqpnRoX4GSq2PxDg==">
+            function accept_cookies() {
+
+                $.ajax({
+                    method: "POST",
+                    url: "/conf_gdpr/accept",
+                    data: {
+                        csrfmiddlewaretoken: csrftoken,
+                    },
+                }).done(function (data) {
+                    console.log(data);
+                    $("#cookie-bar").fadeOut();
+                }).fail(function (jqXHR, textStatus) {
+                    alert(textStatus);
+                });
+            }
+            $("#accept_cookies_button").on("click", () => {
+                accept_cookies();
+            });
+        </script>
+
+    
+
+
+
+
+
+
+
+<br>
+<div class="noprint">
+    <footer id="bootstrap-footer" class="text-center text-lg-start bg-light text-muted noprint">
+
+        <div class="text-center p-1 border-top border-dark">
+        </div>
+        <!-- Section: Links  -->
+        <section class="pt-1">
+            <div class="container text-center text-md-start mt-3">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-3">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <img src="/static/core/img/ICLR-logo.svg" alt="ICLR logo" height='30'>
+                        </h6>
+                        <p>
+                            The ICLR Logo above may be used on presentations. Right-click and choose
+                            download. It is a vector graphic and may be used at any scale.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Grid column -->
+                    <div class="col-md-5 col-lg-4 col-xl-3 mx-auto mb-4" style="max-width: 300px;">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-center">
+                            Useful links
+                        </h6>
+                        <div>
+             <ul>
+	<li><a href="/About">About ICLR</a></li>
+	<li><a href="https://iclr.cc/Sponsors/sponsorinfo">Sponsor / Exhibitor Information</a></li>
+	<li><a href="https://iclr.cc/Conferences/2025/Press">Press</a></li>
+</ul>
+
+            </div>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        
+                            <p>
+                                <i class="fas fa-home me-3"></i> 2710 E Corridor Dr, Appleton WI 54913
+                            </p>
+                        
+                        <p>
+                            <i class="fas fa-envelope me-3"></i> <a href="/Help/Contact">Email</a>
+                        </p>
+                        
+                            <p><i class="fas fa-phone me-3"></i> Phone: +1-920-268-4789</p>
+                        
+                        
+
+
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            <div>
+             <p><a href="https://openreview.net/group?id=ICLR.cc">ICLR Proceedings at OpenReview</a></p>
+
+            </div>
+        </div>
+        <!-- Copyright -->
+    </footer>
+</div>
+<!-- Footer -->
+
+
+<!-- Footer -->
+
+</body>
+</html>

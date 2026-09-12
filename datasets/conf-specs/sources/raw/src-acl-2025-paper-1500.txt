@@ -1,0 +1,303 @@
+FocusLLM: Precise Understanding of Long Context by Dynamic Condensing - ACL Anthology 
+ ACL Anthology 
+ 
+ About Announcements 
+ Communication channels 
+ Related work 
+ Copyright 
+ 
+ Credits 
+ Volunteer 
+ Development 
+ Feedback 
+ 
+ Using Author directory 
+ Citing papers 
+ Links in the Anthology 
+ Data access 
+ 
+ All FAQs 
+ 
+ Details
+
+ Anthology identifiers 
+ Names 
+ ORCID iDs 
+ DOIs 
+ Verified authors 
+ 
+ Contributions Submissions 
+ Corrections 
+ Maintain author pages 
+ Attachments 
+ 
+ GitHub 
+
+ F ocus LLM : Precise Understanding of Long Context by Dynamic Condensing 
+ Zhenyu Li ,
+ Yike Zhang ,
+ Tengyu Pan ,
+ Yutao Sun ,
+ Zhichao Duan ,
+ Junjie Fang ,
+ Rong Han ,
+ Zixuan Wang ,
+ Jianyong Wang 
+
+ Correct Metadata for 
+ 
+ Use this form to create a GitHub issue with structured data describing the correction. You will need a GitHub account.
+Once you create that issue, the correction will be reviewed by a staff member.
+ ⚠️ Mobile Users: Submitting this form to create a new issue will only work with github.com, not the GitHub Mobile app.
+ Important : The Anthology treat PDFs as authoritative. Please use this form only to correct data
+that is out of line with the PDF. See our corrections
+guidelines if you need to change the PDF.
+ Title 
+ Adjust the title. Retain tags such as
+<fixed-case>. 
+ 
+ Authors 
+ Adjust author names and order to match the
+PDF. 
+ Add Author Abstract 
+ Correct abstract if needed. Retain XML formatting tags such as <tex-math>. You may use <b>...</b> for bold , <i>...</i> for italic , <u>...</u> for underline , <sc>...</sc> for small-caps , <tt>...<tt> for typewriter text , <url>...</url> for URLs, <a href=...> for hyperlinks, and <par/> for paragraph breaks. 
+ 
+ Verification against PDF 
+ Ensure that the new title/authors match the snapshot below. (If there
+is no snapshot or it is too small, consult the PDF .) 
+ Authors concatenated from the text boxes above: 
+
+ ALL author names match the snapshot above—including
+middle initials, hyphens, and accents. 
+ Create GitHub issue for staff review 
+
+ Abstract
+ Empowering LLMs with the ability to precisely understand long contexts is crucial for many downstream applications. However, handling long contexts with conventional transformer architecture requires substantial training and inference resources. Existing context condensing methods cannot accurately understand the full context, as there is a considerable amount of information loss in the condensing process. To address these issues, we present FocusLLM , a framework designed to extend the fixed context length of any decoder-only LLM, allowing the model to focus on relevant information from very long sequences. FocusLLM first divides long text input into chunks based on the model’s original context length. It then employs the dynamic condensing process to distill crucial information from each chunk. Ultimately, through the novel parallel decoding mechanism, FocusLLM can integrate the extracted information into its local context. FocusLLM stands out for great training efficiency and versatility: trained with an 8K input length and with much less training cost than previous methods, FocusLLM exhibits superior performance across downstream tasks and maintains strong language modeling ability when handling extensive long texts, even up to 400K tokens. Our code is available at https://github.com/leezythu/FocusLLM . 
+
+ Anthology ID: 2025.acl-long.1500 Volume: Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) Month: July Year: 2025 Address: Vienna, Austria Editors: Wanxiang Che ,
+ Joyce Nabende ,
+ Ekaterina Shutova ,
+ Mohammad Taher Pilehvar Venue: ACL SIG: Publisher: Association for Computational Linguistics Note: Pages: 31087–31101 Language: URL: https://aclanthology.org/2025.acl-long.1500/ DOI: 10.18653/v1/2025.acl-long.1500 Bibkey: li-etal-2025-focusllm Cite (ACL): Zhenyu Li, Yike Zhang, Tengyu Pan, Yutao Sun, Zhichao Duan, Junjie Fang, Rong Han, Zixuan Wang, and Jianyong Wang. 2025. FocusLLM: Precise Understanding of Long Context by Dynamic Condensing . In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 31087–31101, Vienna, Austria. Association for Computational Linguistics. Cite (Informal): FocusLLM: Precise Understanding of Long Context by Dynamic Condensing (Li et al., ACL 2025) Copy Citation: BibTeX 
+ Markdown 
+ MODS XML 
+ Endnote 
+ More
+options… PDF: https://aclanthology.org/2025.acl-long.1500.pdf 
+ PDF 
+ Cite 
+ Search 
+ 
+ Fix data 
+
+ Export citation
+ 
+ BibTeX 
+ MODS XML 
+ Endnote 
+ Preformatted 
+ @inproceedings{li-etal-2025-focusllm,
+ title = "{F}ocus{LLM}: Precise Understanding of Long Context by Dynamic Condensing",
+ author = "Li, Zhenyu and
+ Zhang, Yike and
+ Pan, Tengyu and
+ Sun, Yutao and
+ Duan, Zhichao and
+ Fang, Junjie and
+ Han, Rong and
+ Wang, Zixuan and
+ Wang, Jianyong",
+ editor = "Che, Wanxiang and
+ Nabende, Joyce and
+ Shutova, Ekaterina and
+ Pilehvar, Mohammad Taher",
+ booktitle = "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+ month = jul,
+ year = "2025",
+ address = "Vienna, Austria",
+ publisher = "Association for Computational Linguistics",
+ url = "https://aclanthology.org/2025.acl-long.1500/",
+ doi = "10.18653/v1/2025.acl-long.1500",
+ pages = "31087--31101",
+ ISBN = "979-8-89176-251-0",
+ abstract = "Empowering LLMs with the ability to precisely understand long contexts is crucial for many downstream applications. However, handling long contexts with conventional transformer architecture requires substantial training and inference resources. Existing context condensing methods cannot accurately understand the full context, as there is a considerable amount of information loss in the condensing process. To address these issues, we present \textbf{FocusLLM}, a framework designed to extend the fixed context length of any decoder-only LLM, allowing the model to focus on relevant information from very long sequences. FocusLLM first divides long text input into chunks based on the model{'}s original context length. It then employs the \textbf{\textit{dynamic condensing}} process to distill crucial information from each chunk. Ultimately, through the novel \textbf{\textit{parallel decoding}} mechanism, FocusLLM can integrate the extracted information into its local context. FocusLLM stands out for great training efficiency and versatility: trained with an 8K input length and with much less training cost than previous methods, FocusLLM exhibits superior performance across downstream tasks and maintains strong language modeling ability when handling extensive long texts, even up to 400K tokens. Our code is available at \url{https://github.com/leezythu/FocusLLM}."
+} Download as
+File 
+ Copy to Clipboard 
+
+ <?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="li-etal-2025-focusllm">
+ <titleInfo>
+ <title>FocusLLM: Precise Understanding of Long Context by Dynamic Condensing</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Zhenyu</namePart>
+ <namePart type="family">Li</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Yike</namePart>
+ <namePart type="family">Zhang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Tengyu</namePart>
+ <namePart type="family">Pan</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Yutao</namePart>
+ <namePart type="family">Sun</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zhichao</namePart>
+ <namePart type="family">Duan</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Junjie</namePart>
+ <namePart type="family">Fang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Rong</namePart>
+ <namePart type="family">Han</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zixuan</namePart>
+ <namePart type="family">Wang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Jianyong</namePart>
+ <namePart type="family">Wang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <dateIssued>2025-07</dateIssued>
+ </originInfo>
+ <typeOfResource>text</typeOfResource>
+ <relatedItem type="host">
+ <titleInfo>
+ <title>Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Wanxiang</namePart>
+ <namePart type="family">Che</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Joyce</namePart>
+ <namePart type="family">Nabende</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Ekaterina</namePart>
+ <namePart type="family">Shutova</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Mohammad</namePart>
+ <namePart type="given">Taher</namePart>
+ <namePart type="family">Pilehvar</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <publisher>Association for Computational Linguistics</publisher>
+ <place>
+ <placeTerm type="text">Vienna, Austria</placeTerm>
+ </place>
+ </originInfo>
+ <genre authority="marcgt">conference publication</genre>
+ <identifier type="isbn">979-8-89176-251-0</identifier>
+ </relatedItem>
+ <abstract>Empowering LLMs with the ability to precisely understand long contexts is crucial for many downstream applications. However, handling long contexts with conventional transformer architecture requires substantial training and inference resources. Existing context condensing methods cannot accurately understand the full context, as there is a considerable amount of information loss in the condensing process. To address these issues, we present FocusLLM, a framework designed to extend the fixed context length of any decoder-only LLM, allowing the model to focus on relevant information from very long sequences. FocusLLM first divides long text input into chunks based on the model’s original context length. It then employs the dynamic condensing process to distill crucial information from each chunk. Ultimately, through the novel parallel decoding mechanism, FocusLLM can integrate the extracted information into its local context. FocusLLM stands out for great training efficiency and versatility: trained with an 8K input length and with much less training cost than previous methods, FocusLLM exhibits superior performance across downstream tasks and maintains strong language modeling ability when handling extensive long texts, even up to 400K tokens. Our code is available at https://github.com/leezythu/FocusLLM.</abstract>
+ <identifier type="citekey">li-etal-2025-focusllm</identifier>
+ <identifier type="doi">10.18653/v1/2025.acl-long.1500</identifier>
+ <location>
+ <url>https://aclanthology.org/2025.acl-long.1500/</url>
+ </location>
+ <part>
+ <date>2025-07</date>
+ <extent unit="page">
+ <start>31087</start>
+ <end>31101</end>
+ </extent>
+ </part>
+</mods>
+</modsCollection>
+ Download as
+File 
+ Copy to Clipboard 
+
+ %0 Conference Proceedings
+%T FocusLLM: Precise Understanding of Long Context by Dynamic Condensing
+%A Li, Zhenyu
+%A Zhang, Yike
+%A Pan, Tengyu
+%A Sun, Yutao
+%A Duan, Zhichao
+%A Fang, Junjie
+%A Han, Rong
+%A Wang, Zixuan
+%A Wang, Jianyong
+%Y Che, Wanxiang
+%Y Nabende, Joyce
+%Y Shutova, Ekaterina
+%Y Pilehvar, Mohammad Taher
+%S Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)
+%D 2025
+%8 July
+%I Association for Computational Linguistics
+%C Vienna, Austria
+%@ 979-8-89176-251-0
+%F li-etal-2025-focusllm
+%X Empowering LLMs with the ability to precisely understand long contexts is crucial for many downstream applications. However, handling long contexts with conventional transformer architecture requires substantial training and inference resources. Existing context condensing methods cannot accurately understand the full context, as there is a considerable amount of information loss in the condensing process. To address these issues, we present FocusLLM, a framework designed to extend the fixed context length of any decoder-only LLM, allowing the model to focus on relevant information from very long sequences. FocusLLM first divides long text input into chunks based on the model’s original context length. It then employs the dynamic condensing process to distill crucial information from each chunk. Ultimately, through the novel parallel decoding mechanism, FocusLLM can integrate the extracted information into its local context. FocusLLM stands out for great training efficiency and versatility: trained with an 8K input length and with much less training cost than previous methods, FocusLLM exhibits superior performance across downstream tasks and maintains strong language modeling ability when handling extensive long texts, even up to 400K tokens. Our code is available at https://github.com/leezythu/FocusLLM.
+%R 10.18653/v1/2025.acl-long.1500
+%U https://aclanthology.org/2025.acl-long.1500/
+%U https://doi.org/10.18653/v1/2025.acl-long.1500
+%P 31087-31101 Download as
+File 
+ Copy to Clipboard 
+
+ Markdown (Informal)
+ [FocusLLM: Precise Understanding of Long Context by Dynamic Condensing](https://aclanthology.org/2025.acl-long.1500/) (Li et al., ACL 2025)
+ FocusLLM: Precise Understanding of Long Context by Dynamic Condensing (Li et al., ACL 2025)
+ ACL
+ Zhenyu Li, Yike Zhang, Tengyu Pan, Yutao Sun, Zhichao Duan, Junjie Fang, Rong Han, Zixuan Wang, and Jianyong Wang. 2025. FocusLLM: Precise Understanding of Long Context by Dynamic Condensing . In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 31087–31101, Vienna, Austria. Association for Computational Linguistics.
+ Copy Markdown to
+Clipboard 
+ Copy ACL to
+Clipboard 
+
+ACL materials are Copyright © 1963–2026 ACL; other materials are copyrighted by their respective copyright holders. Materials prior to 2016 here are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 International License . Permission is granted to make copies for the purposes of teaching and research. Materials published in or after 2016 are licensed on a Creative Commons Attribution 4.0 International License .
+ The ACL Anthology is managed and built by the ACL Anthology team of volunteers.
+ Site last built on 11 September 2026 at 14:21 UTC with commit ba88a43 .

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <title>ICCV 2025 Open Access Repository</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/conf.css">
+<meta name="citation_title" content="EasyControl: Adding Efficient and Flexible Control for Diffusion Transformer">
+<meta name="citation_author" content="Zhang, Yuxuan">
+<meta name="citation_author" content="Yuan, Yirui">
+<meta name="citation_author" content="Song, Yiren">
+<meta name="citation_author" content="Wang, Haofan">
+<meta name="citation_author" content="Liu, Jiaming">
+<meta name="citation_publication_date" content="2025">
+<meta name="citation_conference_title" content="Proceedings of the IEEE/CVF International Conference on Computer Vision">
+<meta name="citation_firstpage" content="19513">
+<meta name="citation_lastpage" content="19524">
+<meta name="citation_pdf_url" content="https://openaccess.thecvf.com/content/ICCV2025/papers/Zhang_EasyControl_Adding_Efficient_and_Flexible_Control_for_Diffusion_Transformer_ICCV_2025_paper.pdf">
+</head>
+<body>
+<div id="header">
+    <div id="header_left">
+        <a href="https://iccv.thecvf.com/"><img src="/img/iccv2025-logo.svg" width="175" border="0" alt="ICCV 2025"></a>
+        <a href="https://www.thecvf.com/"><img src="/img/cropped-cvf-s.jpg" width="175" height="112" border="0" alt="CVF"></a>
+    </div>
+    <div id="header_right">
+        <div id="header_title">
+            <a href="https://iccv.thecvf.com/">ICCV 2025</a> <a href="/menu" class="a_monochrome">open access</a>
+        </div>
+        <div id="help">
+            These ICCV 2025 papers are the Open Access versions, provided by the
+<a href="https://www.thecvf.com/">Computer Vision Foundation.</a><br>
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+        </div>
+        <div id="disclaimer">
+            This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.<br><br>
+            <form action="/ICCV2025" method="post">
+                <input type="text" name="query">
+                <input type="submit" value="Search">
+            </form>
+
+        </div>
+    </div>
+    <div id="header_sponsor">
+        <p style="vertical-align:center; text-align: center"> <strong>Powered by:</strong></p>
+        <img src="/img/ms-azure-logo.png" width="100" alt="Microsoft Azure">
+        <p> </p>
+        <p> </p>
+        <p style="vertical-align:center; text-align: center"> <strong>Sponsored by:</strong></p>
+        <img src="/img/amazon-logo.png" width="100" alt="Amazon">
+        <img src="/img/facebook_logo.jpg" width="100" alt="Facebook">
+        <img src="/img/Google_2015_logo.svg" width="100" alt="Google">
+    </div>
+</div>
+<div class="clear"></div>
+<div id="content">    <dl>
+    <div id="papertitle">
+        EasyControl: Adding Efficient and Flexible Control for Diffusion Transformer
+    <dd>
+    </div>
+    <div id="authors">        <br><b><i>Yuxuan Zhang, Yirui Yuan, Yiren Song, Haofan Wang, Jiaming Liu</i></b>; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2025, pp. 19513-19524
+    </div>
+    <font size="5">
+    <br><b>Abstract</b>
+    </font>
+    <br><br>
+    <div id="abstract">
+    Recent advancements in Unet-based diffusion models, such as ControlNet and IP-Adapter, have introduced effective spatial and subject control mechanisms. However, the DiT (Diffusion Transformer) architecture still struggles with efficient and flexible control. To tackle this issue, we propose EasyControl, a novel framework designed to unify condition-guided diffusion transformers with high efficiency and flexibility. Our framework is built on three key innovations. First, we introduce a lightweight Condition Injection LoRA Module. This module processes conditional signals in isolation, acting as a plug-and-play solution. It avoids modifying the base model&#x27;s weights, ensuring compatibility with customized models and enabling the flexible injection of diverse conditions. Notably, this module also supports harmonious and robust zero-shot multi-condition generalization, even when trained only on single-condition data. Second, we propose a Position-Aware Training Paradigm. This approach standardizes input conditions to fixed resolutions, allowing the generation of images with arbitrary aspect ratios and flexible resolutions. At the same time, it optimizes computational efficiency, making the framework more practical for real-world applications. Third, we develop a Causal Attention Mechanism combined with the KV Cache technique, adapted for conditional generation tasks. This innovation significantly reduces the latency of image synthesis, improving the overall efficiency of the framework. Through extensive experiments, we demonstrate that EasyControl achieves exceptional performance across various application scenarios. These innovations collectively make our framework highly efficient, flexible, and suitable for a wide range of tasks.
+    </div>
+    <font size="5">
+    <br><b>Related Material</b>
+    </font>
+    <br><br>    <dd>
+[<a href="/content/ICCV2025/papers/Zhang_EasyControl_Adding_Efficient_and_Flexible_Control_for_Diffusion_Transformer_ICCV_2025_paper.pdf">pdf</a>]
+[<a href="/content/ICCV2025/supplemental/Zhang_EasyControl_Adding_Efficient_ICCV_2025_supplemental.pdf">supp</a>]
+[<a href="http://arxiv.org/abs/2503.07027">arXiv</a>]
+<div class="link2">[<a class="fakelink" onclick="$(this).siblings('.bibref').slideToggle()">bibtex</a>]
+<div class="bibref pre-white-space">@InProceedings{Zhang_2025_ICCV,
+    author    = {Zhang, Yuxuan and Yuan, Yirui and Song, Yiren and Wang, Haofan and Liu, Jiaming},
+    title     = {EasyControl: Adding Efficient and Flexible Control for Diffusion Transformer},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2025},
+    pages     = {19513-19524}
+}</div>
+</div>        
+</dd></dl></div>
+</body>
+</html>

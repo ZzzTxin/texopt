@@ -62,6 +62,9 @@ class Requirement:
     # ---- 硬性排版规范（要求明确指定才作为 L 项执行；None = 尊重原稿） ----
     font_pt: int | None = None           # 期望正文字号档（10/11/12）
     margin_mm: float | None = None       # 期望等效单边页边距（mm）
+    margin_is_floor: bool = False        # True：margin_mm 是「下限」（会议模板口径）——
+                                         #   低于下限才判违规，高于下限不干预；
+                                         # False：与 margin_mm 不等即违规（旧行为）
     eq_fleqn_allowed: bool = False       # False：移除 fleqn，公式保持居中
     # ---- 结构规范（前置结构 / 版面规范，2026-09-10 新增） ----
     toc: bool = False                    # 需要目录页（\tableofcontents）
@@ -121,20 +124,34 @@ class Requirement:
     fig_shrink_factor: float = 0.85         # 每次缩放系数
     done_max_a: float | None = None        # A 绝对上限（None=不设，靠视觉缺陷清单判定）
     min_stall_rounds: int = 2              # 连续无改善轮数达到才停（避免过早收敛）
+    # ---- 会议要求（会议模板 templates-v2；2026-09-12 新增） ----
+    # 会议之间的差异全部由 json 字段驱动，不为任何会议写单独代码。
+    conference: str | None = None          # 会议 id（aaai/icml/...）；None = 未指定
+    page_limit_scope: str = "total"        # total=总页数口径；content=正文页口径
+    official_constraints: dict | None = None   # 官方硬约束摘要（违规判定/报告用）
+    soft_targets: dict | None = None           # 真实论文统计（只作合理性核对）
+    unused_template_parts: list | None = None  # 模板中本版接不上的字段（明确记录）
 
     # ------------------------------------------------------------ 来源合并
     @classmethod
     def load(cls, tex_dir: str = ".", template: str | None = None,
              require_file: str | None = None,
-             settings: dict | None = None) -> "Requirement":
-        """按优先级合并：模板预设 < 要求文件 < settings（None 字段忽略）。"""
-        base: dict = {}
+             settings: dict | None = None,
+             base: dict | None = None) -> "Requirement":
+        """按优先级合并：会议/模板预设 < 要求文件 < settings < CLI（None 字段忽略）。
+
+        base：会议模板（texopt.conference）投影出的扁平字段，优先级最低，
+        只提供默认值；用户显式给定的 --require / --settings / CLI 一律覆盖它。
+        """
+        base_d: dict = {}
 
         def merge(d: dict):
             for k, v in (d or {}).items():
                 if v is None or k in ("template", "name", "desc"):
                     continue            # 模板选择/描述信息由调用方决定，非规格字段
-                base[k] = v
+                base_d[k] = v
+
+        merge(base)                     # 会议模板（若有）优先级最低
 
         tpl = template or "custom"
         builtin = BUILTIN_TEMPLATES.get(tpl)
@@ -162,10 +179,10 @@ class Requirement:
             merge(s)
 
         known = set(cls.__dataclass_fields__)
-        extra = set(base) - known
+        extra = set(base_d) - known
         if extra:
             raise ValueError(f"要求规格里有未知字段：{sorted(extra)}")
-        obj = cls(**base)
+        obj = cls(**base_d)
         obj._template = tpl
         return obj
 

@@ -10,9 +10,19 @@
     python3 optimize.py examples/demo.tex                     # 纯质量模式
     python3 optimize.py examples/demo.tex --target 5          # 只要页数限制
     python3 optimize.py examples/demo.tex --template ieee     # 期刊模板
+    python3 optimize.py paper.tex --conference aaai           # 会议模板（AAAI）
+    python3 optimize.py paper.tex --conference icml           # 会议模板（ICML）
+    python3 optimize.py --list-conferences                    # 列出可选会议
     python3 optimize.py my_paper.tex --require my_reqs.json   # 自定义详细要求
     python3 optimize.py my_paper.tex --template acm --require extra.json
     python3 optimize.py --list-templates                      # 列出可用模板
+
+会议模板（--conference，templates-v2/<id>.json）：
+    官方硬约束（页数/字号/边距/浮动体规范）→ 转为 L 硬约束，用于判「是否违规」；
+    官方页数上限默认按「正文页」口径判定（参考文献不计，pdftotext 定位参考文献首页）；
+    真实论文统计（图/表/公式密度、浮动体位置先验）→ 只做「排版是否合理」的参考核对，
+    不进 L、不影响评分；模板里本版接不上的字段会列在报告与
+    datasets/conf-specs/summary/texopt-integration-report.md 里（不强行接入）。
 
 结构/版面规范（2026-09-10 新增）：
     python3 optimize.py p.tex --toc --header --heading-color 0,62,120
@@ -46,6 +56,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from texopt.core import Optimizer, verify   # noqa: E402
 from texopt import proposal as _proposal     # noqa: E402
 from texopt import whitelist as _whitelist   # noqa: E402
+from texopt import conference as _conference  # noqa: E402
 from texopt.requirements import Requirement, list_templates   # noqa: E402
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -80,6 +91,29 @@ def _print_status_detail(result: dict) -> None:
         print(f"     被回滚/阻止的动作：{', '.join(result['blocked'])}")
 
 
+def _print_conference_detail(conf: dict | None) -> None:
+    """打印会议要求信息（官方硬约束 / 合理性参考 / 未接入项计数）。"""
+    if not conf:
+        return
+    print(f"  [会议] {conf['id']}：页数上限 {conf.get('page_limit')}"
+          f"（口径 {conf.get('page_scope')}；正文页下界/上界 "
+          f"{conf.get('content_pages_lower')}/{conf.get('content_pages_upper')}，"
+          f"PDF 共 {conf.get('pages_total')} 页）")
+    if conf.get("page_advisory"):
+        print(f"     {conf['page_advisory']}")
+    rr = conf.get("reasonableness") or {}
+    if rr.get("enabled"):
+        dev = rr.get("deviations") or []
+        print(f"  [会议] 合理性核对（仅参考，不影响判定）："
+              f"{len(rr.get('checks', []))} 项，偏离参考区间 {len(dev)} 项")
+        for d in dev[:4]:
+            print(f"     · {d}")
+    n_unused = len(conf.get("unused") or [])
+    if n_unused:
+        print(f"  [会议] 模板中本版未接入的内容：{n_unused} 项已记录"
+              "（见 datasets/conf-specs/summary/texopt-integration-report.md）")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="texopt 论文整体排版优化 Agent"
@@ -89,6 +123,12 @@ def main() -> int:
     ap.add_argument("--template", "-T", default=None,
                     help="期刊/会议模板预设（ieee/acm/springer-llncs/...，"
                          "或 templates/<id>.json）")
+    ap.add_argument("--conference", "-C", default=None,
+                    help="会议模板（datasets/conf-specs/templates-v2/<id>.json）："
+                         "官方硬约束→违规判定，真实论文统计→合理性参考；"
+                         "如 aaai/icml/cvpr/acl/...（--list-conferences 查看）")
+    ap.add_argument("--list-conferences", action="store_true",
+                    help="列出可选会议模板后退出")
     ap.add_argument("--require", "-r", default=None,
                     help="自定义排版要求 JSON（可给出任意详细要求）")
     ap.add_argument("--list-templates", action="store_true",
@@ -176,6 +216,19 @@ def main() -> int:
             print(f"- {t['id']}: {t['name']} —— {t['desc']}")
         return 0
 
+    if args.list_conferences:
+        rows = _conference.list_conferences()
+        if not rows:
+            print(f"[错误] 没找到会议模板目录："
+                  f"{_conference.templates_dir()}")
+            return 2
+        print(f"会议模板目录：{_conference.templates_dir()}\n")
+        for t in rows:
+            print(f"- {t['id']:9s} {t.get('conference') or '':22s} "
+                  f"{t.get('edition') or '':14s} n={t.get('n_samples')} "
+                  f"可信度={t.get('level')}")
+        return 0
+
     # ---------------- 工具：从原 PDF 裁切图形（图形保真） ----------------
     if args.extract_fig:
         from texopt import engine
@@ -227,8 +280,28 @@ def main() -> int:
     if tpl is None and settings.get("template") not in (None, "custom"):
         tpl = settings["template"]
 
+    # 会议模板（templates-v2）：投影为 Requirement 默认值，优先级最低
+    prof = None
+    if args.conference:
+        try:
+            prof = _conference.load(args.conference)
+        except ValueError as exc:
+            print(f"[错误] {exc}")
+            return 2
+
     req = Requirement.load(tex_dir=SCRIPT_DIR, template=tpl,
-                           require_file=args.require, settings=settings)
+                           require_file=args.require, settings=settings,
+                           base=prof.requirement_fields if prof else None)
+    if prof is not None:
+        _conference.apply_to(req, prof)
+        req._conf_field_sources = prof.field_sources
+        if not args.quiet:
+            print(f"[会议] {prof.describe()}")
+            for w in prof.warnings:
+                print(f"[会议][警告] {w}")
+            if prof.deferred:
+                print(f"[会议] 模板中暂未接入的字段 {len(prof.deferred)} 项"
+                      "（已记录，见 summary/texopt-integration-report.md）")
     # 结构/版面规范：CLI 显式给定则覆盖（最高优先级）
     for attr, val in (("toc", args.toc),
                       ("running_header", args.header),
@@ -323,6 +396,7 @@ def main() -> int:
         print(f"\n[完成] 状态={result['status']}  L 违规 {len(result['l'])} 项  "
               f"A={result['a']}  I={result['i']}  最终 {result['pages']} 页")
         _print_status_detail(result)
+        _print_conference_detail(result.get("conference"))
         print(f"  优化稿：{result['tex']}")
         if args.json:
             import json as _json
@@ -345,6 +419,7 @@ def main() -> int:
           f"A={result['a']}  I={result['i']}  "
           f"最终 {result['pages']} 页")
     _print_status_detail(result)
+    _print_conference_detail(result.get("conference"))
     for v in result["l"]:
         print(f"  [L 未达标] {v}")
     if result["status"] == "EXHAUSTED":

@@ -1,0 +1,1096 @@
+{
+  "schema_version": "1.0",
+  "id": "neurips",
+  "name": "Conference on Neural Information Processing Systems",
+  "abbr": "NeurIPS",
+  "family": "ml",
+  "official_site": "https://neurips.cc/",
+  "current_edition": "NeurIPS 2025",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023",
+    "2022",
+    "2021",
+    "2020"
+  ],
+  "template_basis": {
+    "class": "neurips_2025.sty",
+    "inherits": "article",
+    "url": "https://media.neurips.cc/Conferences/NeurIPS2025/Styles.zip"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 9,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "正文（含全部图、表）上限 9 页；参考文献/checklist/技术附录不计入 content pages",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "The main text of a submitted paper is limited to nine content pages , including all figures and tables. Additional pages containing references, checklist, and the optional technical appendices do not count as content pages."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献页不计入 9 页正文上限",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "Additional pages containing references, checklist, and the optional technical appendices do not count as content pages."
+        }
+      ]
+    },
+    "appendix_allowed": {
+      "value": true,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许技术附录，可随投稿提交或作为补充材料单独 PDF",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "Technical appendices with additional results, figures, graphs and proofs may be submitted with the paper submission before the full submission deadline (see above), or as a separate PDF in the ZIP file below before the supplementary material deadline."
+        }
+      ]
+    },
+    "appendix_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "技术附录无页数限制、不计入正文",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "There is no page limit for the technical appendices."
+        }
+      ]
+    },
+    "camera_ready_extra_pages": {
+      "value": 1,
+      "unit": "pages",
+      "scope": "camera_ready",
+      "confidence": "official",
+      "note": "录用后可在 content 页数上再 +1 页",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "If your submission is accepted, you will be allowed an additional content page for the camera-ready version."
+        }
+      ]
+    },
+    "checklist_required": {
+      "value": true,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "强制提交 paper checklist（不占页数）",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "authors are required to complete a paper checklist"
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿须匿名；自引需第三人称；补充材料与代码同样匿名",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "All submissions must be anonymized and may not contain any identifying information that may violate the double-blind reviewing policy."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "technical appendices + supplementary material ≤ 100MB, must be anonymized",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料上限 100MB，且必须匿名",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "Authors may submit up to 100MB of technical appendices and supplementary material."
+        }
+      ]
+    },
+    "submission_system": {
+      "value": "OpenReview",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "审稿意见与作者回复均在 OpenReview forum 上进行",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-cfp",
+          "quote": "Author responses may not contain any identifying information that may violate the double-blind reviewing policy. Authors may not submit revisions of their paper or supplemental material, but may post their responses as a discussion in OpenReview."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 的 geometry 载入 letterpaper",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "\\usepackage[verbose=true,letterpaper]{geometry}"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "官方 sty 把 \\normalsize 设为 10pt（begindisplay 11pt）；违反字号/边距会被拒稿",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "\\renewcommand{\\normalsize}{%\n  \\@setfontsize\\normalsize\\@xpt\\@xipt"
+        }
+      ]
+    },
+    "margins_mm": {
+      "value": {
+        "top": 25.4,
+        "bottom": 25.4,
+        "left": 38.1,
+        "right": 38.1
+      },
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "由 geometry 换算：上 1in=25.4mm；下 = 11in 页高 − 1in 上边距 − 9in 版心高 = 1in=25.4mm；左右 = (8.5in 信纸宽 − 5.5in 版心宽)/2 = 1.5in=38.1mm",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "textheight=9in,\n    textwidth=5.5in,\n    top=1in,"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 139.7,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "5.5in = 139.7mm；版心总宽",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "textwidth=5.5in,"
+        }
+      ]
+    },
+    "columns": {
+      "value": 1,
+      "unit": null,
+      "scope": "both",
+      "confidence": "inferred",
+      "note": "官方 sty 未加载 twocolumn、未定义 \\columnsep，textwidth=5.5in 即整版心宽 → 单栏；同届样本 PDF 实测 columns 亦为 1（见 statistics 与 samples/*.jsonl）",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "textwidth=5.5in,"
+        }
+      ]
+    },
+    "bib_style": {
+      "value": "natbib",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 自动加载 natbib；模板正文说明参考文献可用任意风格但建议统一",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "% - loads natbib automatically; this can be suppressed with the"
+        }
+      ]
+    },
+    "float_placement_rules": {
+      "value": "captions 由 sty 统一定义（图题在下、表题在上），基线间距 7pt",
+      "unit": null,
+      "scope": "both",
+      "confidence": "template-implied",
+      "note": "sty 为表格交换 above/belowcaptionskip，使表题位于表格上方",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-sty",
+          "quote": "% swap above/belowcaptionskip lengths for tables"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "figure_caption_position": {
+      "value": "below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方模板正文：图号与图题始终出现在图之后，前后各留一行",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-template-tex",
+          "quote": "The figure number and caption always appear after the figure. Place one line space before the figure caption and one line space after the figure."
+        }
+      ]
+    },
+    "table_caption_position": {
+      "value": "above",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "官方模板正文：表号与表题始终出现在表格之前",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-template-tex",
+          "quote": "The table number and title always appear before the table."
+        }
+      ]
+    },
+    "caption_style_hint": {
+      "value": "lower case (except first word and proper nouns); tables centered, neat, legible",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注首字母外全小写；表格居中、不加竖线",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-template-tex",
+          "quote": "The figure caption should be lower case (except for first word and proper nouns); figures are numbered consecutively."
+        }
+      ]
+    },
+    "table_style_hint": {
+      "value": "no vertical rules (booktabs 风格)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "模板明确：出版级表格不含竖线",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-template-tex",
+          "quote": "Note that publication-quality tables \\emph{do not contain vertical rules.} We"
+        }
+      ]
+    },
+    "float_density_hint": {
+      "value": "each figure/table surrounded by one line space above and below",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "题注与浮动体之间的留白规范（对应 texopt 的 whitespace/浮动体间距）",
+      "evidence": [
+        {
+          "source_id": "src-neurips-2025-template-tex",
+          "quote": "Place one line space before the table title, one line space after the table title, and one line space after the table."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 28.667,
+      "median": 26.0,
+      "p10": 24.0,
+      "p90": 43.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 24.0,
+      "max": 43.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "content_pages": {
+      "mean": 9.167,
+      "median": 10.5,
+      "p10": 2.0,
+      "p90": 11.0,
+      "n": 6,
+      "unit": "pages",
+      "min": 2.0,
+      "max": 11.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.833,
+      "median": 10.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 396.983,
+      "median": 396.95,
+      "p10": 396.8,
+      "p90": 397.3,
+      "n": 6,
+      "unit": "pt",
+      "min": 396.8,
+      "max": 397.3,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 37.75,
+      "median": 37.8,
+      "p10": 37.6,
+      "p90": 37.8,
+      "n": 6,
+      "unit": "mm",
+      "min": 37.6,
+      "max": 37.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 38.1,
+      "median": 38.1,
+      "p10": 38.1,
+      "p90": 38.1,
+      "n": 6,
+      "unit": "mm",
+      "min": 38.1,
+      "max": 38.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 26.2,
+      "median": 26.1,
+      "p10": 26.1,
+      "p90": 26.4,
+      "n": 6,
+      "unit": "mm",
+      "min": 26.1,
+      "max": 26.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 14.1,
+      "median": 14.1,
+      "p10": 14.1,
+      "p90": 14.1,
+      "n": 6,
+      "unit": "mm",
+      "min": 14.1,
+      "max": 14.1,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "figures": {
+      "mean": 9.167,
+      "median": 8.5,
+      "p10": 6.0,
+      "p90": 14.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 6.0,
+      "max": 14.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "tables": {
+      "mean": 6.833,
+      "median": 6.5,
+      "p10": 4.0,
+      "p90": 9.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 4.0,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "equations": {
+      "mean": 8.0,
+      "median": 8.0,
+      "p10": 2.0,
+      "p90": 13.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 2.0,
+      "max": 13.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "algorithms": {
+      "mean": 1.333,
+      "median": 1.0,
+      "p10": 0.0,
+      "p90": 4.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 4.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "refs": {
+      "mean": 44.333,
+      "median": 55.5,
+      "p10": 0.0,
+      "p90": 78.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 78.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.833,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 5.0,
+      "n": 6,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 5.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 1.409,
+      "median": 1.0,
+      "p10": 0.545,
+      "p90": 4.0,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.545,
+      "max": 4.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 1.047,
+      "median": 0.759,
+      "p10": 0.4,
+      "p90": 3.0,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.4,
+      "max": 3.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 1.039,
+      "median": 1.15,
+      "p10": 0.182,
+      "p90": 2.0,
+      "n": 6,
+      "unit": "per_page",
+      "min": 0.182,
+      "max": 2.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.992,
+      "median": 0.988,
+      "p10": 0.978,
+      "p90": 1.021,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.978,
+      "max": 1.021,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.226,
+      "median": 0.218,
+      "p10": 0.19,
+      "p90": 0.289,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.19,
+      "max": 0.289,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.793,
+      "median": 0.803,
+      "p10": 0.538,
+      "p90": 1.0,
+      "n": 6,
+      "unit": "ratio",
+      "min": 0.538,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 10.0,
+      "median": 10.0,
+      "p10": 10.0,
+      "p90": 10.0,
+      "n": 6,
+      "unit": "pt",
+      "min": 10.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 69.617,
+      "median": 63.95,
+      "p10": 52.2,
+      "p90": 102.7,
+      "n": 6,
+      "unit": "per_page",
+      "min": 52.2,
+      "max": 102.7,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-neurips-2024-001",
+        "s-neurips-2024-002",
+        "s-neurips-2024-003",
+        "s-neurips-2024-004",
+        "s-neurips-2024-005",
+        "s-neurips-2024-006"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2020",
+      "year": 2020,
+      "value": 8,
+      "source_id": "src-neurips-2020-cfp",
+      "note": "2020 为 8 页正文（不含 broader impact/致谢/参考文献）；2021 起改为 9 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2021",
+      "year": 2021,
+      "value": 9,
+      "source_id": "src-neurips-2021-cfp",
+      "note": "改为 9 页正文，官方理由是给 checklist 留空间；checklist+参考文献不计页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2022",
+      "year": 2022,
+      "value": 9,
+      "source_id": "src-neurips-2022-cfp",
+      "note": "维持 9 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2023",
+      "year": 2023,
+      "value": 9,
+      "source_id": "src-neurips-2023-cfp",
+      "note": "维持 9 页；checklist 改为在 OpenReview 填写（仍不占页）"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2024",
+      "year": 2024,
+      "value": 9,
+      "source_id": "src-neurips-2024-cfp",
+      "note": "维持 9 页；技术附录无页数限制"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "NeurIPS 2025",
+      "year": 2025,
+      "value": 9,
+      "source_id": "src-neurips-2025-cfp",
+      "note": "现行规则：9 页 content pages（含图表），附录/参考文献/checklist 不计"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "NeurIPS 2020",
+      "year": 2020,
+      "value": 1,
+      "source_id": "src-neurips-2020-cfp",
+      "note": "录用后可加第 9 个 content page"
+    },
+    {
+      "key": "camera_ready_extra_pages",
+      "edition": "NeurIPS 2025",
+      "year": 2025,
+      "value": 1,
+      "source_id": "src-neurips-2025-cfp",
+      "note": "仍为 +1 content page"
+    },
+    {
+      "key": "references_counted",
+      "edition": "NeurIPS 2020",
+      "year": 2020,
+      "value": false,
+      "source_id": "src-neurips-2020-cfp",
+      "note": "参考文献不计入 content pages（沿用至今）"
+    },
+    {
+      "key": "references_counted",
+      "edition": "NeurIPS 2025",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-neurips-2025-cfp",
+      "note": "仍不计入"
+    },
+    {
+      "key": "appendix_counted",
+      "edition": "NeurIPS 2024",
+      "year": 2024,
+      "value": false,
+      "source_id": "src-neurips-2024-cfp",
+      "note": "技术附录无页数限制"
+    },
+    {
+      "key": "checklist_required",
+      "edition": "NeurIPS 2021",
+      "year": 2021,
+      "value": true,
+      "source_id": "src-neurips-2021-cfp",
+      "note": "2021 起强制 checklist，需出现在 PDF 中（参考文献之后）"
+    },
+    {
+      "key": "checklist_required",
+      "edition": "NeurIPS 2025",
+      "year": 2025,
+      "value": true,
+      "source_id": "src-neurips-2025-cfp",
+      "note": "仍强制；2023 起可在 OpenReview 内填写"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "font_pt 取官方正文 10pt；margin_mm 取等效单边边距 25.4mm（上下 1in；左右 1.5in 更大，texopt 压缩时以下限 margin_min_mm 约束，避免压到不合规）",
+    "requirement_fields": {
+      "page_limit": 9,
+      "font_pt": 10,
+      "margin_mm": 25.4,
+      "float_spec": "tbp",
+      "overwide_fig_threshold_mm": 139.7
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "letter",
+        "why": "Requirement 无纸张尺寸字段；texopt 不更换纸张"
+      },
+      {
+        "key": "columns",
+        "value": 1,
+        "why": "Requirement 无栏数字段；仅用于校验/迁移判断"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 25.4,
+          "left": 38.1,
+          "right": 38.1
+        },
+        "why": "Requirement.margin_mm 是单一等效值，无法表达非对称边距"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 9,
+        "why": "page_limit 语义为“总页数”，NeurIPS 的 9 页仅指 content pages（参考文献/附录另计），需 requirements 层支持“计数范围”"
+      },
+      {
+        "key": "checklist_required",
+        "value": true,
+        "why": "texopt 不生成/校验 checklist"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 1,
+        "rationale": "校验编译结果栏数是否与官方模板一致（模板被误改时会破坏合规）"
+      },
+      {
+        "field": "page_limit_scope",
+        "type": "str",
+        "example": "content_only",
+        "rationale": "区分“正文页数”与“总页数”，否则 9 页约束会把参考文献页算进去导致过度压缩"
+      },
+      {
+        "field": "asymmetric_margins",
+        "type": "obj",
+        "example": {
+          "left": 38.1,
+          "right": 38.1,
+          "top": 25.4,
+          "bottom": 25.4
+        },
+        "rationale": "NeurIPS/ICLR 等左右边距远大于上下，用单一 margin_mm 会失真"
+      },
+      {
+        "field": "caption_position_policy",
+        "type": "obj",
+        "example": {
+          "figure": "below",
+          "table": "above"
+        },
+        "rationale": "图题在下/表题在上是官方推荐，可作 A 项检查"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-neurips-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2025 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2025/CallForPapers",
+      "fetched_at": "2026-09-12T10:18:07+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2025-cfp.html",
+      "sha256": "87487bfc1291559be45daf9b5c972b7876fe38e89d2b6c8a55a5098534eb0eb6",
+      "note": "官方 CFP：9 页正文上限、匿名、checklist、附录不计页"
+    },
+    {
+      "id": "src-neurips-2025-sty",
+      "kind": "official-template",
+      "title": "NeurIPS 2025 LaTeX style file (neurips_2025.sty)",
+      "url": "https://media.neurips.cc/Conferences/NeurIPS2025/Styles.zip",
+      "fetched_at": "2026-09-12T10:20:37+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-neurips-2025-sty.sty",
+      "sha256": "67a960f35da6fecb5a0ce0202fa400459f4c8bb6c294f1a3fdd82fbbd39244c2",
+      "note": "官方 Style zip 内的 sty；letterpaper/textwidth=5.5in/10pt 等 template-implied 证据"
+    },
+    {
+      "id": "src-neurips-2025-template-tex",
+      "kind": "official-template",
+      "title": "NeurIPS 2025 LaTeX template (neurips_2025.tex)",
+      "url": "https://media.neurips.cc/Conferences/NeurIPS2025/Styles.zip",
+      "fetched_at": "2026-09-12T10:22:07+08:00",
+      "http_status": "local",
+      "raw_file": "sources/raw/src-neurips-2025-template-tex.sty",
+      "sha256": "a95f477ae3441b6b31fa9872804f00dbe9bf6b46b41d640b35457b64ad00735e",
+      "note": "官方模板 tex，展示 maketitle/checklist 用法"
+    },
+    {
+      "id": "src-neurips-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2024 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2024/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:26+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2024-cfp.html",
+      "sha256": "7d1c45db245c2b4e9ceaad8374fd86fca34d102bfa0dcd1c6b17080bc8657516",
+      "note": "2024 页数/附录/checklist 明文"
+    },
+    {
+      "id": "src-neurips-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2023 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2023/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:23+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2023-cfp.html",
+      "sha256": "8b52dba822190a1db79a35d8bc849cac507d24240c3c61e8c523254ed2c19d00",
+      "note": "history：2023 页数规则"
+    },
+    {
+      "id": "src-neurips-2022-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2022 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2022/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:21+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2022-cfp.html",
+      "sha256": "227fbd45aaf9e55bca2e1f79ecc6c541bbb53ca09028f7d6306b4f59a0a2e909",
+      "note": "history：2022 页数规则"
+    },
+    {
+      "id": "src-neurips-2021-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2021 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2021/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:19+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2021-cfp.html",
+      "sha256": "ddd4fabdb4920f390bf673c7b79b968bebfc18bc86c8c5015ceb3980c8b0e3e3",
+      "note": "history：2021 页数规则（9 页含 checklist 不占页）"
+    },
+    {
+      "id": "src-neurips-2020-cfp",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2020 Call for Papers",
+      "url": "https://neurips.cc/Conferences/2020/CallForPapers",
+      "fetched_at": "2026-09-12T10:22:36+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2020-cfp.html",
+      "sha256": "62baaff317f4ddb7eab78d13563f3bb1d8b63222bc501d60bdbf47109b2deaa1",
+      "note": "history：2020 为 8 页正文，录用后第 9 页"
+    },
+    {
+      "id": "src-neurips-2024-proceedings",
+      "kind": "official-guidelines",
+      "title": "NeurIPS 2024 Proceedings index (official)",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024",
+      "fetched_at": "2026-09-12T10:31:55+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-neurips-2024-proceedings.html",
+      "sha256": "0563caf8d9a661bfa9d26e3e8692cc352ce6a446ea922e27f73b37b87a4f7506",
+      "note": "官方 proceedings 索引，用于证明样本论文确属 NeurIPS 2024"
+    },
+    {
+      "id": "src-s-neurips-2024-001-abs",
+      "kind": "sample-paper",
+      "title": "MicroAdam: Accurate Adaptive Optimization with Low Space Overhead and Provable Convergence",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/000f947dcaff8fbffcc3f53a1314f358-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/000f947dcaff8fbffcc3f53a1314f358-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:19+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-001-abs.html",
+      "sha256": "5043fe7da5d1642262ac487f3424057344f202e45701e7daebf14334920f16f1",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    },
+    {
+      "id": "src-s-neurips-2024-002-abs",
+      "kind": "sample-paper",
+      "title": "GITA: Graph to Visual and Textual Integration for Vision-Language Graph Reasoning",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/00295cede6e1600d344b5cd6d9fd4640-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/00295cede6e1600d344b5cd6d9fd4640-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:21+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-002-abs.html",
+      "sha256": "8bf32aff1b8b863d151ac9613e1b98fe7e4a7cb86be2264520937377201bd476",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    },
+    {
+      "id": "src-s-neurips-2024-003-abs",
+      "kind": "sample-paper",
+      "title": "Training-Free Adaptive Diffusion with Bounded Difference Approximation Strategy",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/00d1f03b87a401b1c7957e0cc785d0bc-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/00d1f03b87a401b1c7957e0cc785d0bc-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:22+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-003-abs.html",
+      "sha256": "8e3193ebf30338ff4bb55cb9ff6a8f7b7e41bf3156129c49e1f2dbd9cee16706",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    },
+    {
+      "id": "src-s-neurips-2024-004-abs",
+      "kind": "sample-paper",
+      "title": "Chain of Preference Optimization: Improving Chain-of-Thought Reasoning in LLMs",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/00d80722b756de0166523a87805dd00f-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/00d80722b756de0166523a87805dd00f-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:24+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-004-abs.html",
+      "sha256": "91a045aade2b49cddb122d38d2f05189032225a0479734d1caad7e418efa592d",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    },
+    {
+      "id": "src-s-neurips-2024-005-abs",
+      "kind": "sample-paper",
+      "title": "DiTFastAttn: Attention Compression for Diffusion Transformer Models",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/0267925e3c276e79189251585b4100bf-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/0267925e3c276e79189251585b4100bf-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:25+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-005-abs.html",
+      "sha256": "59794e238d1617d0990b9fafb5de1e6ee90f86aac4539a7f7ad042a7fd86e7e7",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    },
+    {
+      "id": "src-s-neurips-2024-006-abs",
+      "kind": "sample-paper",
+      "title": "MoE Jetpack: From Dense Checkpoints to Adaptive Mixture of Experts for Vision Tasks",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/167bcf2af2cd08fcf75b932022db0311-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/167bcf2af2cd08fcf75b932022db0311-Paper-Conference.pdf",
+      "venue": "NeurIPS 2024",
+      "year": 2024,
+      "fetched_at": "2026-09-12T10:32:27+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-s-neurips-2024-006-abs.html",
+      "sha256": "764c912891b078b8504bfef116ce74141cc55ed4022d817f0dc66803749bd89b",
+      "note": "官方 proceedings 索引/落地页证明属 NeurIPS 2024 主会"
+    }
+  ],
+  "open_questions": [
+    "NeurIPS 官方未在 CFP 明文字号/页边距，仅由 sty 读出（10pt、letterpaper、textwidth 5.5in）；违规会被拒稿但数值需以模板为准。",
+    "页数上限是否含“致谢/基金披露”未见 2025 明文（2020 年明确 broader impact/acknowledgements 不计）；2025 只提 references/checklist/appendix。",
+    "作者指南对浮动体位置（[t]/[b]/[!ht] 偏好）无明文，仅有图题/表题位置与留白建议。"
+  ]
+}

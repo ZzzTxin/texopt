@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon" type="image/x-icon" href="https://s2022.siggraph.org/wp-content/themes/siggraph2022/favicon.ico">
+	<script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=Set%2CArray.from%2CObject.assign%2CArray.prototype.find%2CArray.prototype.includes%2CString.prototype.includes"></script>
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+
+	<title>Technical Papers | SIGGRAPH 2022</title>
+
+	<meta property="og:locale" content="en_US">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="Technical Papers | SIGGRAPH 2022">
+	<meta property="og:url" content="https://s2022.siggraph.org/program/technical-papers/">
+	<meta property="og:site_name" content="SIGGRAPH 2022">
+	<meta property="article:publisher" content="https://www.facebook.com/SIGGRAPHConferences">
+	<meta property="article:modified_time" content="2023-03-15T21:28:01+00:00">
+	<meta property="og:image" content="https://s2022.siggraph.org/wp-content/uploads/2020/08/Technical_Papers.jpg">
+	<meta property="og:image:width" content="800">
+	<meta property="og:image:height" content="534">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@siggraph">
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://s2022.siggraph.org/#website","url":"https://s2022.siggraph.org/","name":"SIGGRAPH 2022","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://s2022.siggraph.org/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"en-US"},{"@type":"ImageObject","@id":"https://s2022.siggraph.org/program/technical-papers/#primaryimage","inLanguage":"en-US","url":"https://s2022.siggraph.org/wp-content/uploads/2020/08/Technical_Papers.jpg","contentUrl":"https://s2022.siggraph.org/wp-content/uploads/2020/08/Technical_Papers.jpg","width":800,"height":534},{"@type":"WebPage","@id":"https://s2022.siggraph.org/program/technical-papers/#webpage","url":"https://s2022.siggraph.org/program/technical-papers/","name":"Technical Papers | SIGGRAPH 2022","isPartOf":{"@id":"https://s2022.siggraph.org/#website"},"primaryImageOfPage":{"@id":"https://s2022.siggraph.org/program/technical-papers/#primaryimage"},"datePublished":"2020-08-26T15:03:31+00:00","dateModified":"2023-03-15T21:28:01+00:00","breadcrumb":{"@id":"https://s2022.siggraph.org/program/technical-papers/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://s2022.siggraph.org/program/technical-papers/"]}]},{"@type":"BreadcrumbList","@id":"https://s2022.siggraph.org/program/technical-papers/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://s2022.siggraph.org/"},{"@type":"ListItem","position":2,"name":"Technical Papers"}]}]}</script>
+
+
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//s.w.org">
+
+
+<link rel="stylesheet" id="wp-block-library-css" href="https://s2022.siggraph.org/wp-includes/css/dist/block-library/style.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="contact-form-7-css" href="https://s2022.siggraph.org/wp-content/plugins/contact-form-7/includes/css/styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="https://s2022.siggraph.org/wp-content/plugins/linklings_wp_program/public/css/font-awesome-4.1.0/css/font-awesome.css" type="text/css" media="all">
+<link rel="stylesheet" id="google-fonts-css" href="//fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,800;1,400;1,500;1,600;1,800&display=swap" type="text/css" media="all">
+<link rel="stylesheet" id="theme-style-css" href="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/css/style.css" type="text/css" media="all">
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-includes/js/jquery/jquery.min.js" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-includes/js/jquery/jquery-migrate.min.js" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/js/outdated-browser-rework.js" id="outdated-browser-rework-js"></script>
+
+
+
+
+
+
+
+
+<style type="text/css" media="screen">
+	.g { margin:0px; padding:0px; overflow:hidden; line-height:1; zoom:1; }
+	.g img { height:auto; }
+	.g-col { position:relative; float:left; }
+	.g-col:first-child { margin-left: 0; }
+	.g-col:last-child { margin-right: 0; }
+	.g-1 { margin:0px 0px 0px 0px; width:100%; max-width:150px; height:100%; max-height:150px; }
+	.g-2 { margin:0px 0px 0px 0px; width:100%; max-width:1050px; height:100%; max-height:150px; }
+	.g-3 {  width:100%; max-width:728px;  height:100%; max-height:90px; margin: 0 auto; }
+	@media only screen and (max-width: 480px) {
+		.g-col, .g-dyn, .g-single { width:100%; margin-left:0; margin-right:0; }
+	}
+</style>
+
+
+
+<style type="text/css">
+/* Global CSS */
+h4, .h4 {
+  font-size: .8rem;
+}
+
+strong {
+  font-family: "Visia Pro Bold",sans-serif;
+}
+
+/* Add styles to body copy link since bold is not enough - Jeremy 05/13/2022 */
+.full-width-text-inner.the-content p a,
+.two-col-text-row p a,
+.image-text-row p a {
+  text-decoration: underline;
+}
+
+/* Speakers widget - added because custom font does not accept special chars and bold custom font is too thin for fallback bold font */
+.speaker-text h3 {
+  font-weight: 400;
+}
+
+/* The font family chosen is already bold and does not contain the apostraphe character so by bolding the font it made the apostraphe a very bold sans-serif default */
+.interior-hero-text h1 {
+  font-weight: normal;
+}
+
+.interior-hero-text .sub-head {
+  line-height: 1.1em;
+}
+
+/* Hide "Join Us" bar in the footer until registration is live */
+/* .footer-top {
+  display: none;
+  visibility: hidden;
+  height: 0;
+  width: 0;
+} */
+
+/* Force space for social sharing for when content is short but sidebar is tall - Jeremy */
+/* .program-single-row .sidebar-program {
+  padding-bottom: 65px;
+} */
+
+/* Muunuu asked this to be hidden 08/03/2021 - Jeremy */
+.line-sidebar {
+  display: none;
+}
+
+/* Updated HR styles to accommodate a request by Laura 05//14/2021 - Jeremy */
+.program-single-content section hr {
+  display: none;
+}
+@media all and (min-width: 768px){
+  .program-single-content section hr {
+    display: block;
+    border-bottom: 1px solid rgba(0, 3, 2, 0.15) !important;
+    width: calc(100% + 95px);
+    margin: 15px 0 0 -30px;
+    padding-top: 20px;
+  }
+}
+
+/* Added to accommodate a schedule table for ACM SIGGRAPH Frontiers Landing Page 05/13/2021 - Jeremy */
+.schedule-table tr td {
+  vertical-align: top;
+  padding: 0 20px 20px 0;
+  min-width: 150px;
+}
+.schedule-table tr td:first-child {
+  font-weight: bold;
+}
+
+/* Client (Laura Ludka) requested larger subheads 03/10/2021 */
+.section-image-text .sub-head-medium {
+  font-size: .9rem;
+}
+
+/* Fixes the program and event share buttons to bottom of the sidebar */
+/* @media all and (min-width: 768px){
+  .sidebar-program .widget.widget-share {
+    position: absolute;
+    bottom: 0px;
+  }
+} */
+
+/* Button disable class, was made for footer but can be used other places */
+li.disable > a {
+  opacity: .25;
+  pointer-events: none;
+}
+.disabled-link-notice {
+  font-size: 8px;
+}
+
+/* This override fixes the shapes overlapping hero text when a sidebar option is chosen 04/20/2021 */
+.interior-hero-media img.bg-anim-front {
+  margin-left: -390px;
+  display: block;
+}
+
+@media all and (max-width: 1200px) {
+  .interior-hero-media img.bg-anim-front {
+	display: none;
+  }
+}
+
+/*
+ * Program/Event Pages
+ */
+.widget.widget-chair .chair-entry {
+  background: white;
+
+}
+.widget.widget-chair .chair-entry .chair-name {
+  bottom: auto;
+  top: 100%;
+}
+.accordion-body-inner p b {
+  font-weight: 600;
+}
+.accordion-body-inner a {
+  color: #0099ce;
+}
+.sidebar-vert-spacer {
+  display: none;
+}
+@media all and (min-width: 850px) {
+	.sidebar-vert-spacer {
+      display:  block;
+    }
+}
+
+/*
+ * Featured Speakers
+ */
+.postid-533 .program-single-content .section-image-text:nth-child(6),
+.postid-533 .program-single-content .section-image-text:nth-child(7) {
+  display: none;
+  visibility: hidden;
+}
+
+/*
+ * Student Volunteers
+ */
+@media all and (min-width: 900px) {
+  .height-spacer {
+	height: 150px;
+  }
+}
+
+/*
+ * Registration Page
+ */
+@media all and (min-width: 1200px) {
+  .addons-grid .addon-col {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+}
+
+.section-registration-level-nav {display: none;}
+
+/* BEGIN - Temporary fix for the Technical papers page to allow for there to be no gaps in the content because of a very long sidebar, Can delete once more content has been added to the page. */
+@media only screen and (min-width: 768px) {
+  .single.single-program.postid-506 section.section-interior-hero {
+/*     padding-bottom: 375px; */
+  }
+}
+
+/* Temporary fix for content space issues */
+@media only screen and (max-width: 767px) {
+  .interior-hero-spacer {
+    display: none;
+    visibility: hidden;
+    height: 0 !important;
+  }
+}
+
+/* Homepage - specific request by Muunuu 08/05/21 - Jeremy Freeman
+ * ATTENTION: This must be removed when more content is added
+ */
+.home #main > section:nth-child(2) {
+  background-color: white;
+}
+@media only screen and (min-width: 762px){
+  .home .homepage-hero-row .homepage-hero-content .hero-content-inner {
+    max-width: 630px;
+  }
+}
+
+/* SIGGRAPH Committee Page */
+.page-id-571 .speaker-col.view-more {
+  display: none;
+  visibility: none;
+}
+
+/*
+ * Technical Papers
+ */
+#tech-papers-graphic {
+  background-color: white;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+#tech-papers-graphic .graphic-header {
+  background-color: #4767aa;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px 15%;
+  font-size: 18px;
+}
+#tech-papers-graphic .column ul {
+  padding: 25px 35px;
+}
+#tech-papers-graphic .column .column-header {
+  display: block;
+  background-color: #e6af57;
+  text-transform: uppercase;
+  color: #4767aa;
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+}
+@media screen and (min-width: 480px) {
+  #tech-papers-graphic .column {
+    width: 50%;
+    float: left;
+  }
+  #tech-papers-graphic .column.left {
+    border-right: 2px solid #4767aa;
+  }
+}
+/*
+ * Submit Page
+ */
+.page-id-187 .cfs-grid .cfs-col:nth-child(24),
+.page-id-187 .cfs-grid .cfs-col:nth-child(26) {
+  display: none;
+  visibility: hidden;
+}
+
+/*
+ * Interior Hero styles
+ */
+.interior-hero-secondary-content {
+  padding: 35px 0 0;
+  margin-left: 0;
+}
+
+/* Rules for the Red Border in the inclusion table on the Register Single Pages */
+@media all and (min-width: 1201px) {
+  /* Full Conference & Full Conference Supporter Pages */
+  .page-id-2634 .pricing-table--dynamic thead th:nth-child(2),
+  .page-id-2638 .pricing-table--dynamic thead th:nth-child(2) {
+      border-width: 2px 2px 0 2px;
+      border-color: #e1645a;
+  }
+  .page-id-2634 .pricing-table--dynamic tbody > tr > td:nth-child(2),
+  .page-id-2638 .pricing-table--dynamic tbody > tr > td:nth-child(2) {
+      border-width: 1px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+  }
+  .page-id-2634 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(2),
+  .page-id-2638 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(2) {
+      border-width: 1px 2px 2px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+      border-bottom-color: #e1645a;
+  }
+
+
+  /* Exhibits Only Page */
+  .page-id-2602 .pricing-table--dynamic thead th:nth-child(6){
+      border-width: 2px 2px 0 2px;
+      border-color: #e1645a;
+  }
+  .page-id-2602 .pricing-table--dynamic tbody > tr > td:nth-child(6) {
+      border-width: 1px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+  }
+  .page-id-2602 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(6) {
+      border-width: 1px 2px 2px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+      border-bottom-color: #e1645a;
+  }
+
+  /* Virtual Only Page */
+  .page-id-2644 .pricing-table--dynamic thead th:nth-child(3),
+  .page-id-2641 .pricing-table--dynamic thead th:nth-child(3) {
+      border-width: 2px 2px 0 2px;
+      border-color: #e1645a;
+  }
+  .page-id-2644 .pricing-table--dynamic tbody > tr > td:nth-child(3),
+  .page-id-2641 .pricing-table--dynamic tbody > tr > td:nth-child(3) {
+      border-width: 1px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+  }
+  .page-id-2644 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(3),
+  .page-id-2641 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(3) {
+      border-width: 1px 2px 2px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+      border-bottom-color: #e1645a;
+  }
+
+  /* Experience Page */
+  .page-id-2628 .pricing-table--dynamic thead th:nth-child(5) {
+      border-width: 2px 2px 0 2px;
+      border-color: #e1645a;
+  }
+  .page-id-2628 .pricing-table--dynamic tbody > tr > td:nth-child(5) {
+      border-width: 1px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+  }
+  .page-id-2628 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(5) {
+      border-width: 1px 2px 2px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+      border-bottom-color: #e1645a;
+  }
+
+  /* Experience Plus Page */
+  .page-id-2631 .pricing-table--dynamic thead th:nth-child(4) {
+      border-width: 2px 2px 0 2px;
+      border-color: #e1645a;
+  }
+  .page-id-2631 .pricing-table--dynamic tbody > tr > td:nth-child(4) {
+      border-width: 1px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+  }
+  .page-id-2631 .pricing-table--dynamic tbody > tr:last-child > td:nth-child(4) {
+      border-width: 1px 2px 2px 2px;
+      border-right-color: #e1645a;
+      border-left-color: #e1645a;
+      border-bottom-color: #e1645a;
+  }
+}
+
+.registration-lv-content a {
+  color: #e6af57;
+}
+.registration-lv-content a:hover {
+  color: #e1645a;
+}
+
+/* BEGIN - SABA (2022-04-07) - Adjusting Column count for names on Reviewers Page && Adjusting hero image sizing at larger viewport sizes */
+.page-id-2008 .full-width-text-inner p {
+  column-count: 1;
+}
+@media only screen and (min-width: 480px) {
+  .page-id-2008 .full-width-text-inner p {
+    column-count: 2;
+  }
+}
+@media only screen and (min-width: 762px) {
+  .page-id-2008 .full-width-text-inner p {
+    column-count: 3;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .page-id-2008 .full-width-text-inner p {
+    column-count: 4;
+  }
+  .page-id-2008 section.section-interior-hero .interior-hero-media .hero-media-inner img {
+ 	 max-width: 70%;
+  }
+}
+/* END - SABA (2022-04-07) - Adjusting Column count for names on Reviewers Page && Adjusting hero image sizing at larger viewport sizes */
+
+.page-id-1977 figcaption, .page-id-1977 .wp-caption p.wp-caption-text { background: none; }
+
+
+/* START - SABA (2022-06-14) - Linklings date selector button quick fix. Added to stylesheet already, can be removed during next live style push to prod. */
+.large-date-sels div, .small_date_sel_container div {
+  display: inline-block !important;
+}
+.linklings-wp-plugin-contents .date-sels .large-date-sels div, .linklings-wp-plugin-contents .date-sels .small_date_sel_container div {
+  margin: 0 0 10px 10px !important;
+}
+/* END - SABA (2022-06-14) - Linklings date selector button quick fix. Added to stylesheet already, can be removed during next live style push to prod. */
+
+/* Linklings full-program page - Jeremy 06/29/2022 */
+.recording.tag-group-list.tag_group108 > div {
+	padding: 0 0 10px 0;
+	font-style: italic;
+}
+.recording.tag-group-list.tag_group108 > div::before {
+	content: "Note: ";
+}
+/* END Linklings full-program page - Jeremy 06/29/2022 */
+
+/* Added because Jason was OOO and I had to push the speakers section live 06/29/2022 */
+.home #main > section:nth-child(2) {
+	background: #e0e0df;
+}
+/* END Added because Jason was OOO and I had to push the speakers section live 06/29/2022 */
+
+/* two-column on program/event pages was not styled so I made the background white - Jeremy - 07/06/2022 */
+.single-program section.section-two-column-text {
+	background: white;
+}
+/* END two-column on program/event pages was not styled so I made the background white - Jeremy - 07/06/2022 */
+
+/* Job Fair Page, linklinglings shortcode - Jeremy 07/06/2022 */
+.event-type-jobposting.linklings-wp-plugin-contents.presentation-details-program .presentation-title,
+.event-type-jobposting.linklings-wp-plugin-contents.presentation-details-program .job-posting.divider,
+.event-type-jobposting.linklings-wp-plugin-contents.presentation-details-program .job-posting.company,
+.event-type-jobposting.linklings-wp-plugin-contents.presentation-details-program .job-posting.location {
+  display: inline;
+}
+.event-type-jobposting.linklings-wp-plugin-contents.presentation-details-program .presentation-display {
+  border-color: black;
+  padding-top: 1rem;
+  margin: 0;
+}
+.event-type-jobposting.linklings-wp-plugin-contents .event-type-sect.info-section,
+.event-type-jobposting.linklings-wp-plugin-contents .main-page-links {
+  display: none;
+  visibility: hidden;
+}
+/* END Job Fair Page, linklinglings shortcode - Jeremy 07/06/2022 */
+
+/* START (SABA - 2022-07-21) Editing Conference - Media Policies Widget styles to allow for centering of two columns instead of three */
+.page-id-460 .policies-grid {
+  justify-content: center;
+}
+/* Also throwing in some width adjustments for the accordion to allow for it to stretch so that the policies grid doesn't look of-center */
+.page-id-460 .accordion {
+  max-width: 100%;
+}
+/* END (SABA - 2022-07-21) Editing Conference - Media Policies Widget styles to allow for centering of two columns instead of three */
+
+/* The added margin from Linklings plugin css was causing the page content to not fit within the websites built in margins - Jeremy - 08/08/2022 */
+.linklings-wp-plugin-contents.author-index,
+.linklings-wp-plugin-contents.organization-index,
+.linklings-wp-plugin-contents.search-page,
+.linklings-wp-plugin-contents.session-display,
+.linklings-wp-plugin-contents.presentation-display,
+.linklings-wp-plugin-contents .presentation-display,
+.linklings-wp-plugin-contents.presenter-display,
+.linklings-wp-plugin-contents.organization-display {
+  margin: 0 !important;
+}
+/* END The added margin from Linklings plugin css was causing the page content to not fit within the websites built in margins - Jeremy - 08/08/2022 */
+
+/* Was asked to hide "Type" column on mobile by Linklings - Jeremy - 08/08/2022 */
+@media screen and (max-width: 640px) {
+    .page-id-1838 .linklings-wp-plugin-contents .hide-small.type-td {
+    	display: none !important;
+    }
+}
+/* Was asked to hide "Type" column on mobile by Linklings - Jeremy - 08/08/2022 */
+
+@media screen and (max-width: 680px) {
+	/* was asked to remove all margin on mobile for the main scheduling table - Jeremy - 08/08/2022 */
+    .page-id-1838 .linklings-wp-plugin-contents {
+    	margin: 0 -40px 0 -40px;
+    }
+	/* END was asked to remove all margin on mobile for the main scheduling table - Jeremy - 08/08/2022 */
+
+	/* Mobile dropdown sessions had very wide time columns, was asked to fix - Jeremy - 08/08/2022 */
+    .page-id-1838 .linklings-wp-plugin-contents .tablesched table tbody tr td.session-display .presentation-time-td {
+	    min-width: 90px;
+    }
+	/* END Mobile dropdown sessions had very wide time columns, was asked to fix - Jeremy - 08/08/2022 */
+}
+
+/* Asked my Linklings to hide "Type" column on mobile devices - Jeremy - 08/08/2022 */
+@media screen and (max-width: 1120px) {
+  .page-id-1838 .linklings-wp-plugin-contents .hide-small.type-header,
+  .page-id-1838 .linklings-wp-plugin-contents .hide-small.type-td {
+  		display: none !important;
+  }
+}
+/* END Asked my Linklings to hide "Type" column on mobile devices - Jeremy - 08/08/2022 */
+
+/* Was asked my Laura and Mark to show location column again, stays hidden on mobile - Jeremy - 08/08/2022 */
+.linklings-wp-plugin-contents.program .tablesched thead th.header.location-header,
+.linklings-wp-plugin-contents.program .tablesched thead th.header.location-header .hide-med,
+.linklings-wp-plugin-contents.program .tablesched tbody tr.presentation-row td.speaker-td + td {
+  display: table-cell;
+}
+
+@media screen and (min-width: 1121px) {
+  .linklings-wp-plugin-contents.program .tablesched thead th.header.location-header,
+  .linklings-wp-plugin-contents.program .tablesched thead th.header.location-header .hide-med,
+  .linklings-wp-plugin-contents.program .tablesched tbody tr.presentation-row td.speaker-td + td {
+    min-width: 150px;
+  }
+}
+/* END Was asked my Laura and Mark to show location column again, stays hidden on mobile - Jeremy - 08/08/2022 */
+
+/* Create consistent padding on TR and TD of main linklings schuderl so content appears aligned - Jeremy - 08/08/2022 */
+.linklings-wp-plugin-contents .tablesched table thead tr th,
+.linklings-wp-plugin-contents .tablesched td {
+	padding: .4rem;
+}
+/* END Create consistent padding on TR and TD of main linklings schuderl so content appears aligned - Jeremy - 08/08/2022 */
+
+/* Reduce the width of the time column on the scheduler page to make room for the location column on mobile - Jeremy - 08/08/2022 */
+@media screen and (max-width: 680px){
+  .linklings-wp-plugin-contents .tablesched table tbody tr td:nth-child(2) {
+    min-width: 80px;
+  }
+}
+/* END Reduce the width of the time column on the scheduler page to make room for the location column on mobile - Jeremy - 08/08/2022 */
+
+/* Asked my Mark at Linklings to show the "type" column again on My Agenda page - Jeremy - 08/09/2022 */
+@media screen and (min-width: 1120px) {
+  .page-id-1846 .linklings-wp-plugin-contents.program .tablesched thead th.header.type-header,
+  .page-id-1846 .linklings-wp-plugin-contents.program .tablesched tbody tr.presentation-row td.type-td,
+  .page-id-1847 .linklings-wp-plugin-contents.program .tablesched thead th.header.type-header,
+  .page-id-1847 .linklings-wp-plugin-contents.program .tablesched tbody tr.presentation-row td.type-td {
+    display: table-cell;
+  }
+}
+/* END Asked my Mark at Linklings to show the "type" column again on My Agenda page - Jeremy - 08/09/2022 */
+
+/* START - Hiding Interest Areas and Keywords on the Happening Now and My Agenda pages in the Tags Column - Saba - 08/08/2022 */
+.page-id-1847 .linklings-wp-plugin-contents.program .agenda-item .ptrack-list .interest-area,
+.page-id-1847 .linklings-wp-plugin-contents.program .agenda-item .ptrack-list .keyword,
+.page-id-1846 .linklings-wp-plugin-contents.program .agenda-item .ptrack-list .interest-area,
+.page-id-1846 .linklings-wp-plugin-contents.program .agenda-item .ptrack-list .keyword {
+  display: none;
+  visibility: hidden;
+}
+
+.linklings-wp-plugin-contents .registration-category.tag-group-list .program-track.ptrack361,
+.linklings-wp-plugin-contents .presentation-type.tag-group-list .program-track.ptrack361 {
+  display: none;
+  visibility: hidden;
+}
+/* END - Hiding Interest Areas and Keywords on the Happening Now and My Agenda pages in the Tags Column - Saba - 08/08/2022 */
+
+.linklings-wp-plugin-contents .registration-category.tag-group-list .program-track, .linklings-wp-plugin-contents .presentation-type.tag-group-list .program-track {
+  margin-right: 4px;
+}
+
+
+/* (2023-01-30 - Saba) - BEGIN - Bootleg Linklings Styles added for Static Site after Linklings Refresh */
+@media only screen and (min-width: 1120px) {
+  body.page-id-1838 .linklings-wp-plugin-contents.program .main-page-links > div .main-page-link,
+  body.page-id-1838 .linklings-wp-plugin-contents.program .main-page-links > div > span:not([class]),
+  body.page-id-1838 .linklings-wp-plugin-contents.program .main-page-links > div > span:not([class]) .main-page-link.search {
+    width: 33.333333333334% !important;
+  }
+  body.page-id-1838 .linklings-wp-plugin-contents.program .main-page-links > div > span:not([class]) .main-page-link.search {
+    width: 100% !important;
+  }
+
+  body.page-id-1838 .linklings-wp-plugin-contents.program .main-page-links {
+    display: flex;
+    justify-content: center;
+  }
+  body.page-id-1838 .linklings-wp-plugin-contents .main-page-links > div {
+    width: 50%;
+  }
+}
+/* (2023-01-30 - Saba) - BEGIN - Bootleg Linklings Styles added for Static Site after Linklings Refresh */</style>
+
+
+<script type="text/javascript">
+jQuery(document).ready(function( $ ){
+  	$("li.disable > a").removeAttr('href').append("<div class=\"disabled-link-notice\">- Coming soon!");
+
+	// Check to see if there is a blog feed, if not, add text to say coming soon
+	var blogFeed = $("body.blog .posts-listing-wrap.ajax-content-wrap");
+
+	function isEmpty( el ){
+		return !$.trim(el.html())
+  	}
+	if (isEmpty.length && isEmpty(blogFeed)) {
+        blogFeed.text("Check back soon for some great content!");
+    }
+
+// 	$(window).on("load", function(){
+//       	var count;
+// 		$('.addons-grid').each(function(e){
+//         	count = $(this).children().length;
+
+//             if (count == 2) {
+//               $(this).addClass('2-col-addon');
+//             } else if (count == 3) {
+//               $(this).addClass('3-col-addon');
+//             }
+//         });
+// 	});
+
+});</script>
+
+</head>
+<body class="program-template-default single single-program postid-506">
+<div id="page" class="site">
+<a href="#main" class="skip-nav-btn button no-icon-btn">Skip Navigation</a>
+
+<div class="alert-bar">
+  <div class="container">
+    <div class="alert-bar-inner">
+      <p>Thank you for joining us for SIGGRAPH 2022!</p>
+    </div>
+  </div>
+</div>
+
+	<header id="header" role="banner" class="alert-enabled">
+	<div class="container pr-15">
+
+		<div id="logo-wrap">
+			<div id="logo">
+				<a href="https://s2022.siggraph.org/">
+          <svg id="siggraph-logo" data-name="siggraph-2022-logo" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewbox="0 0 190 44.7" style="enable-background:new 0 0 190 44.7" xml:space="preserve" width="190" height="45" version="1.1"><path fill="#ffffff" d="M22.4 0C10 0 0 10 0 22.4c0 12.4 10 22.4 22.4 22.4s22.4-10 22.4-22.4C44.7 10 34.7 0 22.4 0zm-11 5.5c8-5.2 18.3-4 24.3 2.4-4-.7-11.2 1.7-18.6 6.4-7 4.6-12.4 10.3-13.4 14.3-3.3-8.1-.3-17.9 7.7-23.1zM5.3 31.6c-.1-.1-.1-.2-.2-.2 0-.1-.1-.1-.1-.2 0 0 0-.1-.1-.1-.2-.5-.3-1.1-.1-1.9.8-3.7 6.1-9.3 13.1-13.8 9.6-6.2 17.6-7.6 19.6-5.4-2.9-1.3-9.5.7-16 4.9-7.6 5-12.4 11.2-10.6 14 1.1 1.7 4.4 1.7 8.6.2-6.6 3.4-12.4 4.4-14.2 2.5zm17.9-1.8c7.6-5 12.4-11.2 10.6-14-1.1-1.7-4.4-1.7-8.6-.2 6.6-3.3 12.4-4.3 14.2-2.4.1.1.1.2.2.2 0 .1.1.1.1.2v.1c.3.5.3 1.1.1 1.9-.8 3.7-6.1 9.3-13.1 13.8-9.6 6.2-17.6 7.6-19.6 5.4 3 1.2 9.6-.8 16.1-5zm10.1 9.5c-8 5.2-18.3 4-24.3-2.4 4 .7 11.2-1.7 18.6-6.4 7-4.7 12.4-10.4 13.4-14.4 3.3 8.2.3 18-7.7 23.2zM39.7 13.6v-.1zM149.3 31.7h3.1v1.5h-3.1v-1.5zM153.3 30.1V29c.5 0 .8-.1 1-.1.3-.1.6-.2.8-.4.1-.1.2-.3.3-.6 0-.1.1-.2.1-.3h1.3v8h-1.6v-5.5h-1.9zM158.7 30.1V29c.5 0 .8-.1 1-.1.3-.1.6-.2.8-.4.1-.1.2-.3.3-.6 0-.1.1-.2.1-.3h1.3v8h-1.6v-5.5h-1.9z"></path><path fill="#ffffff" d="M169.5 27.5h1.9l2.9 8.1h-1.8l-.5-1.7h-3l-.5 1.7h-1.8l2.8-8.1zm-.1 5h2.1l-1-3.2-1.1 3.2zM175 27.5h1.7v5c0 .6.1 1 .2 1.2.2.5.6.7 1.3.7.7 0 1.1-.2 1.3-.7.1-.3.2-.7.2-1.2v-5h1.7v5c0 .9-.1 1.5-.4 2-.5.9-1.4 1.3-2.8 1.3s-2.4-.4-2.9-1.3c-.3-.5-.4-1.2-.4-2v-5zM188.3 30c-.1-.6-.4-.9-.9-1.2-.3-.1-.6-.2-.9-.2-.7 0-1.2.2-1.6.7-.4.5-.6 1.2-.6 2.2 0 1 .2 1.7.7 2.1.5.4 1 .6 1.6.6.6 0 1-.2 1.4-.5.4-.3.6-.8.7-1.3h-1.9V31h3.4v4.3h-1.1l-.2-1c-.3.4-.6.7-.9.8-.4.3-1 .4-1.6.4-1.1 0-2-.4-2.6-1.1-.7-.7-1.1-1.8-1.1-3.1s.4-2.4 1.1-3.2c.7-.8 1.7-1.2 2.9-1.2 1 0 1.9.3 2.5.8.6.5 1 1.2 1.1 2h-2z"></path><path fill="#ffffff" d="M63.8 14.3c-.5-.4-1.3-.7-2.3-1l-2.3-.5c-.9-.2-1.4-.4-1.7-.5-.4-.2-.6-.5-.6-.9 0-.5.2-.8.6-1.1.4-.3 1-.4 1.6-.4.6 0 1.1.1 1.6.3.6.3.9.8 1 1.5v.1h2.9v-.2c0-1.4-.6-2.5-1.6-3.3-1-.7-2.2-1.1-3.7-1.1-1.7 0-3 .4-3.9 1.2-.9.8-1.3 1.8-1.3 3 0 1.3.5 2.3 1.4 3 .5.4 1.5.7 2.9 1l1.4.3c.8.2 1.4.4 1.8.6.3.2.5.5.5.9 0 .7-.3 1.1-1.1 1.4-.4.1-.9.2-1.6.2-1 0-1.8-.3-2.2-.8-.2-.3-.4-.7-.5-1.3v-.1h-2.9v.2c0 1.4.5 2.5 1.5 3.3 1 .8 2.4 1.2 4.2 1.2 1.7 0 3.1-.4 4-1.2 1-.8 1.4-1.9 1.4-3.1.1-1.1-.3-2-1.1-2.7zM66 7.7h3v13.4h-3zM76.9 16.2h3c-.1.7-.5 1.3-1 1.8-.6.5-1.3.7-2.2.7-.9 0-1.7-.3-2.4-1-.7-.6-1-1.7-1-3.3 0-1.5.3-2.7 1-3.5.6-.8 1.5-1.1 2.5-1.1.5 0 1 .1 1.4.3.8.3 1.2.9 1.4 1.8v.1h3v-.2c-.2-1.3-.8-2.4-1.8-3.2-1-.9-2.4-1.3-4.1-1.3-1.9 0-3.5.7-4.7 2-1.2 1.3-1.8 3-1.8 5.2 0 2.1.6 3.8 1.8 5 1.1 1.2 2.6 1.8 4.4 1.8 1.1 0 2-.2 2.7-.7.4-.2.8-.6 1.2-1.1l.2 1.4h2.1v-7.3h-5.7v2.6zM90.5 16.2h3c-.1.7-.5 1.3-1 1.8-.6.5-1.3.7-2.1.7-.9 0-1.7-.3-2.4-1-.7-.6-1-1.7-1-3.3 0-1.5.3-2.7 1-3.5.6-.8 1.5-1.1 2.5-1.1.5 0 1 .1 1.4.3.8.3 1.2.9 1.4 1.8v.1h3v-.2c-.2-1.3-.8-2.4-1.8-3.2-1-.9-2.4-1.3-4.1-1.3-1.9 0-3.5.7-4.7 2-1.2 1.3-1.8 3-1.8 5.2 0 2.1.6 3.8 1.8 5 1.1 1.2 2.6 1.8 4.4 1.8 1.1 0 2-.2 2.7-.7.4-.2.8-.6 1.2-1.1l.2 1.4h2.1v-7.3h-5.7v2.6zM108.6 19.8c0-.2-.1-.6-.1-1.2v-.9c0-.9-.1-1.6-.4-2.1-.2-.4-.6-.7-1-.9.6-.3 1-.7 1.3-1.2.3-.6.5-1.3.5-1.9 0-.5-.1-1-.3-1.4-.2-.4-.4-.8-.7-1.1-.3-.4-.8-.7-1.3-1-.5-.2-1.2-.3-2.1-.3h-6.4v13.4h3v-5.1h2.5c.7 0 1.2.1 1.4.4.2.2.4.8.4 1.6v1.2c0 .4 0 .8.1 1.2 0 .2.1.4.2.7v.1h3.3v-.6h-.1c-.1-.4-.2-.6-.3-.9zm-7.5-9.5h2.9c.5 0 .9.1 1.2.2.5.2.7.7.7 1.5 0 .7-.2 1.1-.7 1.3-.3.1-.7.2-1.2.2h-2.8v-3.2zM114.5 7.7l-4.8 13.4h3.2l.9-2.7h4.6l.9 2.7h3.3l-4.7-13.4h-3.4zm3.1 8.1h-2.9l1.5-4.5 1.4 4.5zM132.4 8.8c-.8-.7-1.9-1-3.2-1h-5.8v13.4h3v-4.7h2.6c1.4 0 2.6-.3 3.4-1 .8-.7 1.2-1.8 1.2-3.4 0-1.6-.4-2.6-1.2-3.3zm-1.8 3.2c0 .6-.2 1.1-.5 1.4-.3.3-.8.4-1.4.4h-2.3v-3.5h2.3c.6 0 1 .1 1.4.4.4.2.5.7.5 1.3zM142.8 12.7h-4.7v-5h-3v13.4h3v-5.9h4.7v5.9h3.1V7.7h-3.1zM155.5 18.1c.2-.2.7-.5 1.3-1l1-.7c.9-.6 1.5-1.2 1.9-1.7.6-.8.9-1.6.9-2.6 0-1.3-.4-2.3-1.3-3.1-.8-.8-2-1.2-3.4-1.2-1.8 0-3 .7-3.7 2-.4.7-.6 1.6-.6 2.7v.2h2.8v-.1c0-.7.1-1.2.3-1.5.3-.5.7-.8 1.4-.8.5 0 .9.2 1.2.5.3.3.4.8.4 1.3 0 .6-.3 1.2-.7 1.7-.3.4-1.1.9-2.2 1.8-1.4 1-2.2 1.9-2.6 2.8-.4.8-.6 1.6-.6 2.6v.2h9.1v-2.5h-5.5c0-.3.2-.5.3-.6zM165.7 7.8c-1.7 0-2.9.6-3.6 1.8-.7 1.2-1 2.8-1 5 0 2.1.3 3.8 1 5 .7 1.2 1.9 1.8 3.6 1.8 1.7 0 2.9-.6 3.6-1.8.7-1.2 1-2.8 1-5 0-2.1-.3-3.8-1-5-.7-1.2-1.9-1.8-3.6-1.8zm-1.7 6.8c0-1.5.1-2.7.4-3.4.2-.7.7-1 1.3-1 .7 0 1.1.3 1.3 1 .2.7.3 1.9.3 3.4s-.1 2.6-.3 3.3c-.2.7-.6 1.1-1.3 1.1-.7 0-1.1-.3-1.3-1.1-.3-.7-.4-1.8-.4-3.3zM174.8 18.1c.2-.2.7-.5 1.3-1l1-.7c.9-.6 1.5-1.2 1.9-1.7.6-.8.9-1.6.9-2.6 0-1.3-.4-2.3-1.3-3.1-.8-.8-2-1.2-3.4-1.2-1.8 0-3 .7-3.7 2-.4.7-.6 1.6-.6 2.7v.2h2.8v-.1c0-.7.1-1.2.3-1.5.3-.5.7-.8 1.4-.8.5 0 .9.2 1.2.5.3.3.4.8.4 1.3 0 .6-.3 1.2-.7 1.7-.3.4-1.1.9-2.2 1.8-1.4 1-2.2 1.9-2.6 2.8-.4.8-.6 1.6-.6 2.6v.2h9.1v-2.5h-5.5c0-.3.2-.5.3-.6zM184.5 18.5c.1-.2.3-.3.4-.4.2-.2.7-.5 1.3-1l1-.7c.9-.6 1.5-1.2 1.9-1.7.6-.8.9-1.6.9-2.6 0-1.3-.4-2.3-1.3-3.1-.8-.8-2-1.2-3.4-1.2-1.8 0-3 .7-3.7 2-.4.7-.6 1.6-.6 2.7v.2h2.8v-.1c0-.7.1-1.2.3-1.5.3-.5.7-.8 1.4-.8.5 0 .9.2 1.2.5.3.3.4.8.4 1.3 0 .6-.3 1.2-.7 1.7-.3.4-1.1.9-2.2 1.8-1.4 1-2.2 1.9-2.6 2.8-.4.8-.6 1.6-.6 2.6v.2h9.1v-2.5h-5.6z"></path><path fill="#ffffff" d="M59.2 27.5H61l-2.7 8.1h-1.6L54 27.5h1.8l1.7 6.1 1.7-6.1zM63.2 27.5h1.9l2.8 8.1h-1.8l-.5-1.7h-3l-.5 1.7h-1.8l2.9-8.1zm-.1 5h2.1l-1-3.2-1.1 3.2zM68.6 27.5h1.8l3.2 5.6v-5.6h1.6v8.1h-1.7l-3.3-5.7v5.7h-1.6v-8.1zM77.2 28.3c.6-.7 1.5-1 2.5-1 1.3 0 2.3.4 2.9 1.3.3.5.5 1 .6 1.5h-1.7c-.1-.4-.2-.7-.4-.9-.3-.3-.7-.5-1.3-.5-.6 0-1.1.2-1.4.7-.3.5-.5 1.2-.5 2.1 0 .9.2 1.6.5 2 .4.4.8.7 1.4.7.6 0 1-.2 1.3-.6.2-.2.3-.5.4-.9h1.7c-.1.9-.5 1.6-1.1 2.1-.6.6-1.4.8-2.3.8-1.1 0-2-.4-2.7-1.1-.7-.7-1-1.8-1-3.1 0-1.2.4-2.3 1.1-3.1zM90.5 34.8c-.6.6-1.5.9-2.6.9-1.2 0-2-.3-2.6-.9-.9-.7-1.3-1.8-1.3-3.3 0-1.5.4-2.6 1.2-3.3.6-.6 1.5-.9 2.6-.9 1.2 0 2 .3 2.6.9.8.7 1.2 1.8 1.2 3.3.1 1.5-.3 2.6-1.1 3.3zm-1.1-1.2c.4-.5.6-1.2.6-2.1 0-.9-.2-1.6-.6-2.1-.4-.5-.9-.7-1.6-.7-.7 0-1.2.2-1.6.7-.4.5-.6 1.2-.6 2.1s.2 1.6.6 2.1c.4.5.9.7 1.6.7.7 0 1.2-.2 1.6-.7zM92.7 27.5h1.7v4.9c0 .6.1 1 .2 1.2.2.5.6.7 1.3.7.7 0 1.1-.2 1.3-.7.1-.3.2-.7.2-1.2v-4.9h1.7v4.9c0 .9-.1 1.5-.4 2-.5.9-1.4 1.3-2.8 1.3s-2.3-.4-2.8-1.3c-.3-.5-.4-1.1-.4-2v-4.9zM105.2 27.5h1.7l-2.7 8.1h-1.6l-2.7-8.1h1.8l1.7 6.1 1.8-6.1zM113.6 28.9h-4.3v1.7h3.9V32h-3.9v2.1h4.5v1.4h-6.1v-8.1h5.9v1.5zM120 27.7c.3.1.5.3.8.6.2.2.3.4.4.7.1.2.1.5.1.8 0 .4-.1.8-.3 1.1-.2.4-.5.6-1 .8.4.1.6.4.8.6.2.3.2.7.2 1.3v1.2c0 .2.1.4.3.5v.2h-1.9c-.1-.2-.1-.3-.1-.4 0-.2-.1-.5-.1-.7v-.7c0-.5-.1-.9-.3-1-.2-.2-.5-.3-1-.3h-1.6v3.2h-1.6v-8.1h3.9c.7 0 1.1.1 1.4.2zm-3.5 1.2v2.2h1.8c.4 0 .6 0 .8-.1.3-.2.5-.5.5-.9 0-.5-.2-.8-.5-1-.2-.1-.4-.1-.8-.1h-1.8zM122.8 32.4V31h2.1v-2.1h1.4V31h2.1v1.4h-2.1v2.1h-1.4v-2.1h-2.1z"></path><path fill="#ffffff" d="M144.6 27.2c2 0 2.7 1.4 2.7 2.2 0 .8-.4 1.5-1.2 1.7 1 .2 1.5 1 1.5 2 0 1.7-1.5 2.6-3.1 2.6s-3.1-.8-3.1-2.6c0-1 .6-1.8 1.5-2-.8-.2-1.2-.9-1.2-1.7.2-1.4 1.6-2.2 2.9-2.2zm0 7.3c.8 0 1.4-.6 1.4-1.4 0-.8-.6-1.3-1.4-1.3-.8 0-1.5.5-1.5 1.3.1.9.7 1.4 1.5 1.4zm0-3.8c.7 0 1.2-.4 1.2-1.1 0-.4-.2-1.1-1.2-1.1-.7 0-1.3.4-1.3 1.1.1.7.7 1.1 1.3 1.1z"></path></svg>
+					<span class="sr-only">SIGGRAPH 2022</span>
+				</a>
+			</div>
+		</div>
+
+		<nav id="nav">
+			<div class="nav-menu">
+        <ul class="sf-menu">
+          <li id="menu-item-198" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-198"><a href="https://s2022.siggraph.org/about-the-conference/">About the <br>Conference</a>
+            <ul class="sub-menu">
+              <li id="menu-item-2870" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2870"><a href="https://s2022.siggraph.org/conference-supporters/">Conference Supporters</a></li>
+            </ul>
+          </li>
+          <li id="menu-item-197" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-197"><a href="https://s2022.siggraph.org/programs-events/">Programs <br>& Events</a>
+            <ul class="sub-menu">
+              <!-- <li id="menu-item-2925" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2925"><a href="https://s2022.siggraph.org/">Co-Located Events</a></li> -->
+              <li id="menu-item-3197" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3197"><a href="https://s2022.siggraph.org/full-program/">Full Program</a></li>
+              <!-- <li id="menu-item-3264" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3264"><a href="https://s2022.siggraph.org/">Talks – No Record List</a></li> -->
+            </ul>
+          </li>
+          <li id="menu-item-964" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-964"><a>The <br>Exhibition</a>
+            <ul class="sub-menu">
+              <li id="menu-item-418" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-418"><a href="https://s2022.siggraph.org/exhibit-at-siggraph/">Opportunities to Participate</a></li>
+              <li id="menu-item-436" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-436"><a href="https://s2022.siggraph.org/job-fair/">Job Fair</a></li>
+              <li id="menu-item-2918" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2918"><a href="https://s2022.siggraph.org/visit-the-exhibition/">Visit The Exhibition</a></li>
+              <li id="menu-item-3203" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3203"><a href="https://s2022.siggraph.org/siggraph-2022-sponsors/">SIGGRAPH 2022 Sponsors</a></li>
+            </ul>
+          </li>
+          <li id="menu-item-1005" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1005"><a>Plan to <br>Attend</a>
+            <ul class="sub-menu">
+              <li id="menu-item-440" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-440"><a href="https://s2022.siggraph.org/why-attend/">Why Attend?</a></li>
+              <li id="menu-item-462" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-462"><a href="https://s2022.siggraph.org/conference-policies/">Conference Policies</a></li>
+              <li id="menu-item-2993" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2993"><a href="https://s2022.siggraph.org/full-program/">Schedule</a></li>
+              <li id="menu-item-1757" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1757"><a href="https://s2022.siggraph.org/international-resources-center/">International Resources Center</a></li>
+              <!-- <li id="menu-item-2649" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2649"><a href="https://s2022.siggraph.org/">Travel Accommodations</a></li> -->
+              <li id="menu-item-2850" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2850"><a href="https://s2022.siggraph.org/schedule-at-a-glance/">Schedule at a glance</a></li>
+              <li id="menu-item-3179" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3179"><a href="https://s2022.siggraph.org/health-safety/">Health & Safety</a></li>
+            </ul>
+          </li>
+          <li id="menu-item-2291" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2291"><a href="#">Volunteer <br>With Us</a>
+            <ul class="sub-menu">
+              <li id="menu-item-465" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-465"><a href="https://s2022.siggraph.org/conference-volunteers/">Conference Volunteers</a></li>
+              <li id="menu-item-468" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-468"><a href="https://s2022.siggraph.org/acm-siggraph-organization-volunteers/">ACM SIGGRAPH Organization Volunteers</a></li>
+            </ul>
+          </li>
+          <li id="menu-item-2460" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2460"><a href="https://s2022.siggraph.org/programs-events/">Submit to <br>SIGGRAPH</a></li>
+          <li id="menu-item-1826" class="icon-register menu-item menu-item-type-post_type menu-item-object-page menu-item-1826"><a href="https://s2022.siggraph.org/register/">Register <br>Today</a></li>
+        </ul>
+			</div>
+			<div class="header-search">
+				<button data-fancybox data-src="#search-form-wrap" class="no-style-btn"><img src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/images/search.svg" class="svg-inline" alt=""><span class="sr-only">search</span></button>
+			</div>
+		</nav>
+
+		<div id="search-form-wrap">
+			<form action="https://s2022.siggraph.org/" method="get" role="search">
+				<input type="search" name="s" placeholder="Search...">
+			</form>
+		</div>
+
+		<a href="#" id="nav-toggle" class="nav-toggle"><img src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/images/hamburger.svg" alt=""><span class="sr-only">Menu</span></a>
+
+	</div>
+</header>
+
+
+	<main id="main" role="main">
+<div class="program-single-main">
+	<div class="container">
+
+		<div class="program-single-row">
+
+			<div class="program-single-content">
+								<section class="section-interior-hero section-bg-white">
+<div class="container">
+
+	<div class="interior-hero hero-style-image">
+		<div class="interior-hero-text the-content the-content-a-style">
+			<h2 class="sub-head">Groundbreaking Research</h2><h1>Technical Papers</h1><p>In this premier venue for disseminating new scholarly work, where scientists and researchers present the latest industry advancements that inspire new ideas, ignite memorable discussions, and propel us forward.<br>
+</p>
+<p>To explore SIGGRAPH 2022 content in detail, please review Technical Papers’ listing on the ACM Digital Library.</p>
+<p><a class="btn" href="https://dl.acm.org/doi/proceedings/10.1145/3528233" target="_blank" rel="noopener">View Content Details</a></p>
+<p><strong>Technical Papers Fast Forward</strong><br>
+<em>As a resource to prepare participants for watching all Technical Papers presentation videos in the virtual platform, the <strong>Technical Papers Fast Forward</strong> videos will launch on the virtual platform on 25 July. All videos will be available on the virtual platform until 31 October. The Technical Papers program at the in-person conference will feature roundtable discussions with authors.</em></p>
+		</div>
+				<div class="interior-hero-media ">
+			<div class="hero-media-inner">
+				<img width="533" height="356" src="https://s2022.siggraph.org/wp-content/uploads/2020/08/hero-technical-papers.png" class="attachment-full size-full" alt="" loading="lazy" srcset="https://s2022.siggraph.org/wp-content/uploads/2020/08/hero-technical-papers.png 533w,https://s2022.siggraph.org/wp-content/uploads/2020/08/hero-technical-papers-300x200.png 300w,https://s2022.siggraph.org/wp-content/uploads/2020/08/hero-technical-papers-150x100.png 150w,https://s2022.siggraph.org/wp-content/uploads/2020/08/hero-technical-papers-210x140.png 210w" sizes="(max-width: 533px) 100vw, 533px">
+
+			</div>
+
+
+
+		</div>
+			</div>
+
+</div>
+</section><section class="section-full-width-text section-bg-offwhite">
+<div class="container">
+	<div class="full-width-text-inner the-content">
+		<p><em><strong>“I am excited to share the SIGGRAPH 2022 Technical Papers program that showcases the very best of scientific contributions spanning multiple areas of computer graphics and interactive techniques. The works represent innovative research that meaningfully combines machine learning with traditional approaches. New this year, you will find the Conference Papers track that captures exciting emerging ideas which hold the potential to reshape our abilities to capture, manipulate, and experience our real and virtual worlds. Yet again the authors have outdone themselves, and I am looking forward to seeing them present their work at SIGGRAPH 2022. See you soon in Vancouver.”</strong></em></p>
+<p><strong>Niloy Mitra</strong><br>
+<strong>SIGGRAPH 2022 Technical Papers Chair</strong></p>
+<p><strong>Aaron Hertzmann</strong><br>
+<strong>SIGGRAPH 2022 Conference Papers Director</strong></p>
+	</div>
+</div>
+</section><section class="section-full-width-text section-bg-offwhite">
+<div class="container">
+	<div class="full-width-text-inner the-content">
+		<h2>2022 Technical Papers Awards</h2><p><strong>Best Paper Awards</strong></p>
+<p><strong>“<a href="https://s2022.siggraph.org/">Instant Neural Graphics Primitives With a Multiresolution Hash Encoding</a>“</strong><br>
+<i>Thomas Müller, <span class="xn-person">Alex Evans</span>, <span class="xn-person">Christoph Schied</span>, and <span class="xn-person">Alexander Keller</span>, NVIDIA</i></p>
+<p><strong>“<a href="https://s2022.siggraph.org/">DeepPhase: Periodic Autoencoders for Learning Motion Phase Manifolds</a>“</strong><br>
+<i><span class="xn-person">Sebastian Starke</span>, <span class="xn-org">University of Edinburgh</span>/Electronic Arts; <span class="xn-person">Ian Mason</span>, <span class="xn-org">University of Edinburgh</span>; and <span class="xn-person">Taku Komura</span>, <span class="xn-org">University of Hong Kong</span><br>
+</i></p>
+<p><strong>“<a href="https://s2022.siggraph.org/">Spelunking the Deep: Guaranteed Queries on General Neural Implicit Surfaces via Range Analysis</a>“</strong><br>
+<i><span class="xn-person">Nicholas Sharp</span>, <span class="xn-org">University of Toronto</span>; <span class="xn-person">Alec Jacobson</span>, <span class="xn-org">University of Toronto</span>/Adobe<br>
+</i></p>
+<p><strong>“<a href="https://s2022.siggraph.org/">Image Features Influence Reaction Time: A Learned Probabilistic Perceptual Model for Saccade Latency</a>“</strong><br>
+<i>Budmonde Duinkharjav, <span class="xn-org">New York University</span>; <span class="xn-person">Praneeth Chakravarthula</span>, <span class="xn-org">Princeton University</span>/<span class="xn-org">UNC Chapel Hill</span>; <span class="xn-person">Rachel Brown</span>, NVIDIA Research; <span class="xn-person">Anjul Patney</span>, NVIDIA Research; and Qi Sun, <span class="xn-org">New York University</span></i></p>
+<p><strong>“<a href="https://s2022.siggraph.org/">CLIPasso: Semantically Aware Object Sketching</a>“</strong><br>
+<i>Yael Vinker, <span class="xn-org">Tel Aviv University</span>/</i><i>École Polytechnique Fédérale de Lausanne</i><i>; Ehsan Pajouheshgar, </i><i>École Polytechnique Fédérale de Lausanne; </i><i><span class="xn-person">Jessica Y. Bo</span>, </i><i>École Polytechnique Fédérale de Lausanne/ETH; </i><i><span class="xn-person">Roman Christian Bachmann</span>,</i><i> École Polytechnique Fédérale de Lausanne;</i><i> Amit Bermano, <span class="xn-org">Tel Aviv University</span>; Daniel Cohen-Or, <span class="xn-org">Tel Aviv University</span>; <span class="xn-person">Amir Zamir</span>, EPFL; and <span class="xn-person">Ariel Shamir</span>, Reichman University</i></p>
+	</div>
+</div>
+</section><section class="section-full-width-text section-bg-offwhite">
+<div class="container">
+	<div class="full-width-text-inner the-content">
+		<h2>Technical Papers Schedule</h2><p><strong>Monday, 8 August</strong><br>
+9 am-12:15 pm and 4-5:30 pm</p>
+<p><strong>Tuesday, 9 August</strong><br>
+9 am-5:30 pm</p>
+<p><strong>Wednesday, 10 August</strong><br>
+9 am-12:15 pm and 2:15-3:45 pm</p>
+<p><strong>Thursday, 11 August</strong><br>
+9 am-5:45 pm</p>
+	</div>
+</div>
+</section><section class="section-call-for-submissions section-bg-offwhite">
+<div class="container">
+
+	<div class="cfs-wrap">
+
+	<div class="the-content">
+		<div class="cfs-head">
+
+
+
+			<h2>Submit To Technical Papers</h2>		</div>
+		<p><span style="font-weight: 400;">The SIGGRAPH 2022 Technical Papers program is the premier international venue for disseminating and discussing new scholarly work in computer graphics technology and interactive techniques. </span><i><span style="font-weight: 400;">The scientific excellence of the ideas is the predominant acceptance criterion. </span></i><span style="font-weight: 400;">We are looking for high-quality research papers that cover a broad spectrum of areas including but not limited to animation, simulation, imaging, geometry, modeling, rendering, human-computer interaction, haptics, fabrication, robotics, visualization, audio, optics, programming languages, immersive experiences, and machine learning for visual computing.</span></p>
+<p></p>
+<div id="tech-papers-graphic">
+<div class="graphic-header">At SIGGRAPH 2022, there are two ways to submit your paper to the Technical Papers program.</div>
+<div class="column left">
+<div class="column-header">Journal Papers</div>
+<ul>
+<li>Continuation of the same Technical Papers program from previous years</li>
+<li>Ideas are extensively tried and tested</li>
+<li>When submitting use the “acmtog” article style</li>
+<li>No maximum (or minimum) page length</li>
+<li>Published in ACM Transactions on Graphics (TOG)</li>
+</ul>
+</div>
+<div class="column">
+<div class="column-header">Conference Papers</div>
+<ul>
+<li>New program starting in 2022</li>
+<li>Exciting new ideas in a shorter format – papers that might be less polished but still have an impact</li>
+<li>When submitting use the “acmtog” article style</li>
+<li>Double column, 7 pages excluding references. Any appendix should only be included as supplementary material.</li>
+<li>Published in SIGGRAPH Conference Proceedings</li>
+</ul>
+</div>
+</div>
+<p style="text-align: center;"><em>*The review process, deadline and committee are the same for both Journal and Conference Papers.<br>
+More details are in the later sections.</em></p>
+<p><span style="font-weight: 400;">Also, starting in 2022, for the first time we will be giving out Best Technical Papers Awards. Please <span style="text-decoration: underline;"><strong><a href="mailto:TechPapers-s2022@siggraph.org" target="_blank" rel="noopener">contact us</a></strong></span> if you have queries about these changes. </span></p>
+<p>Note: Submissions for Technical Papers are currently closed.</p>
+<div class="clear"></div><a href="mailto:TechPapers-s2022@siggraph.org" class="btn ">Contact Us</a>	</div>
+	</div>
+
+</div>
+</section><section class="section-accordion section-bg-offwhite">
+<div class="container">
+<div class="accordion-wrap">
+
+
+
+		<div class="accordion">
+					<div id="how-to-submit" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>How To Submit</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p>SIGGRAPH 2022 will gather in person in Vancouver and virtually. We look forward to celebrating 49 years of advancements in computer graphics and interactive techniques. We are excited you are submitting your work for consideration.</p>
+<p><strong>NEW IN 2022</strong></p>
+<ul>
+<li>Conference Papers Track</li>
+<li>Best Technical Papers Awards</li>
+</ul>
+<p>Start by reading the information below about how to prepare your submission, including information on formatting, anonymity, resubmissions. Then log into the <a href="https://ssl.linklings.net/conferences/siggraph/">submission portal</a>, select the “New Submission” tab, and then select the Technical Papers form. You will be asked for basic information about your submission.</p>
+<p><strong>Wednesday, 26 January 2022, 22:00 UTC</strong></p>
+<p>Deadline for creating the submission form with the title, the complete list of co-authors, as well as the specification of conflicts of interest (COI) for each co-author. To see what you will need to submit, view the <a href="https://www.siggraph.org/submit/?page=SampleForm&id=TechnicalPaperAbstract&site=siggraph2022" target="_blank" rel="noopener">sample form</a> (Stage 1). Creating a submission form will assign your submission a paper ID, which must be included in your submitted paper.</p>
+<p><strong>Thursday, 27 January 2022, 22:00 UTC</strong></p>
+<p>Deadline for the complete submission, including either the actual PDF paper or an MD5 checksum (which will be required in lieu of the actual files starting at some point on this day). If you wish to submit supplemental material (movies, code, data, etc.) as well, these files (or their MD5 checksums) must also be uploaded by this date and time. To see what you will need to submit, view the <a href="https://www.siggraph.org/submit/?page=SampleForm&id=TechnicalPaperSubmission&site=siggraph2022" target="_blank" rel="noopener">sample form</a> (Stage 2).</p>
+<p><strong>Friday, 28 January 2021, 22:00 UTC</strong></p>
+<p>Deadline for uploading all materials if you used MD5 checksums. No new or changed material may be uploaded. Only files matching MD5 checksums submitted the previous day are valid.</p>
+<p><strong>English Review Service</strong></p>
+<p>Non-native English speakers may optionally use the <a href="/english-review-service-for-submissions/">English Review Service</a> to help improve the text of submissions. Please note that this process takes time, so plan far ahead in order to meet the submission deadline.</p>
+<p><strong>Physical Submission of Supplemental Materials</strong></p>
+<p>We strongly encourage electronic submission of videos and other supplementary materials, since they are easier to distribute to reviewers than physical media. See Submission Requirements for details about electronic supplementary materials and their format. However, in the rare case, if you believe your paper’s reviewers need to see physical supplementary materials, you may mail or ship six copies to arrive by (not be postmarked or sent by) the paper deadline <strong>(Thursday, 27 January, 22:00 UTC/GMT, see Timeline)</strong> at this address:</p>
+<p>Niloy Mitra and Aaron Hertzmann<br>
+℅ Leona Caffey<br>
+Smithbucklin<br>
+330 North Wabash Avenue, Suite 2000<br>
+Chicago, Illinois 60611 USA<br>
+<a href="tel:+13126446610">+1.312.644.6610</a></p>
+<p>All complete submissions received by the deadline will be acknowledged by email. For this purpose, a submission is complete if a paper ID has been assigned and a PDF file of the paper and a representative image have been successfully uploaded. Such submissions will be reviewed unless they are withdrawn by the author. For more information about the papers submission and rebuttal process, please refer to the Technical Papers FAQ.</p>
+<p>For more information about uploading files for your submission, please refer to the Technical Papers FAQ.</p>
+					</div>
+					<a href="#how-to-submit" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="conference-papers-and-journal-papers-tracks" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Conference Papers and Journal Papers Tracks</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p><span style="font-weight: 400;">The SIGGRAPH 2022 technical papers program includes a new Conference Papers track, in addition to the usual Journal Papers track. The Conference Papers track encourages submissions for high-quality, ground-breaking research that fits within a strict 7-page limit (double column), excluding references. Any appendix should only be included as  supplementary material.  The Conference Papers may be more appropriate for research that is less-polished but still potentially-impactful.</span></p>
+<p><span style="font-weight: 400;">Submissions that are 7 pages or less (plus extra pages for references) will be considered for both conference and journal tracks, <span style="text-decoration: underline;"><strong>whereas longer papers will be considered only for journal publication.</strong></span></span></p>
+<p><span style="font-weight: 400;">The submission and review processes will be identical between the two tracks, with each paper receiving at least five double-blind reviews, and evaluated by a single papers committee. </span></p>
+<p><span style="font-weight: 400;">Conference paper reviewers will be instructed to be less demanding about experimental evaluation and polish, in accordance with conference publication, thereby allowing publication of riskier/earlier-stage but still potentially-significant work. </span></p>
+<p><span style="font-weight: 400;">The Journal Paper track continues the SIGGRAPH Technical Papers program from previous years, publishing high-quality, ground-breaking research that are presented at SIGGRAPH and are published in the <em>ACM Transactions in Graphics</em>. Conference papers will also be presented at SIGGRAPH and will be published in the SIGGRAPH Conference Proceedings in the ACM Digital Library.</span></p>
+					</div>
+					<a href="#conference-papers-and-journal-papers-tracks" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="submission-policy" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Submission Policy</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p><strong>Double Submissions</strong></p>
+<p>By submitting a manuscript to the SIGGRAPH Technical Papers program, authors acknowledge that the technical contributions they claim have not been previously published or accepted for publication in another peer-reviewed venue, and that no manuscript substantially similar in content is currently under review or will be submitted to any peer-reviewed venue during the SIGGRAPH review period. Violations constitute grounds for rejection. If you wish to submit revised or extended versions of conference or workshop papers, please directly submit to TOG instead of SIGGRAPH.</p>
+<p><strong>Plagiarism</strong></p>
+<p>A submission to the SIGGRAPH Technical Papers program should describe an original work of the authors. Authors must not use ideas or content originating from others without properly crediting their original sources. Note that such sources are not limited to peer-reviewed publications, but also include patents, textbooks, technical reports, theses, unpublished work posted on arXiv, as well as other posts on the World Wide Web. Failure to comply with this requirement will be considered plagiarism and result in rejection. For more details, please consult the <a href="https://www.acm.org/publications/policies/plagiarism-overview">guidance</a> provided by ACM.</p>
+<p><strong>Prior Art</strong></p>
+<p>Authors are expected to cite, discuss differences and novelty, and compare results, if applicable, with respect to relevant existing publications, provided they have been published in a peer-reviewed venue before the SIGGRAPH submission deadline. This also applies to patents, which undergo a professional reviewing process.</p>
+<p>But what about technical reports, and other non-peer-reviewed publications, such as technical reports or papers posted on arXiv, which we henceforth refer to as prepublications? With the rapid progress of search engines and the increased perusal of arXiv papers by the scientific community, asking authors to thoroughly compare their work to these prepublications imposes an unreasonable burden: a seemingly relevant report that is incomplete in its disclosure or validation might appear online shortly before the deadline. While peer-reviewed publications are certainly not immune to these shortcomings, they have, at least, been judged sufficiently complete and valid by a group of peers. Consequently, authors are not required to discuss and compare their work with recent prepublications (arXiv, technical reports, theses, etc.), although they must properly cite those that inspired them (see “Plagiarism” above). We nevertheless encourage authors to mention all related works they are aware of as good academic practice dictates. Note that with new works posted on arXiv on a daily basis, it is increasingly likely that reviewers might point out similarities between the submitted work and online reports that have been missed by the authors. In this case, authors of conditionally accepted papers should be prepared to cite these prepublications in their final revision as concurrent work, without the burden of having to detail how their work compares to or differs from these prepublications. Authors may want to upload anonymized versions of any relevant tech report or arXiv posting, if the work can be perceived to have overlap, in terms of contribution, with the submission.</p>
+<p><strong>Anonymity</strong></p>
+<p>The SIGGRAPH review process is fully double-blind: the committee members and external reviewers do not know the identity of the authors, and the authors do not know the identity of the reviewers. This anonymity is an integral part of an objective and fair review process, so authors are required to take all reasonable measures to preserve their anonymity. Specific instructions for preserving anonymity in your submission are discussed in the <strong>Submission Requirements</strong> section. Below, we discuss specific situations in which authors may have to mention their own publications and how to handle such disclosures in the context of a SIGGRAPH submission.</p>
+<p><strong>Before Submission</strong></p>
+<p>When citing already published work by the same (or an overlapping) group of authors, the citation should refer to that work in the third person, just as it would refer to any other previously published work by a completely different set of authors. For other relevant work from the same author(s) as the submission, we distinguish between two cases: (A) works that have been submitted for publication elsewhere, but have some relevance to and/or overlap with the submission; and (B) largely overlapping prepublications that are available online at the time of submission (arXiv, technical report, thesis, etc.).</p>
+<ul>
+<li>For case (A), the other work (e.g., tech report, arXiv posting) should be cited anonymously, as well as provided as anonymous supplementary material. The authors must convince the reviewers that the current submission is sufficiently different from the other work, which can be done using an anonymous cover letter that outlines the differences.</li>
+<li>For case (B), namely earlier or largely similar versions of the submission that are publicly available (on arXiv, as a technical report, etc.) are NOT to be cited in the submission, as this would identify the authors. Instead, these prepublications must be listed in the appropriate field of the submission form, titled “Prepublication.” This field is not visible to reviewers.</li>
+</ul>
+<p><strong>After Submission</strong></p>
+<p>Blatant violations of anonymity are not acceptable. However, we also recognize that prepublications, with associated timestamps, and talks have become part of the scientific discourse, and SIGGRAPH allows these means of communication. Specifically, before the final acceptance decision is made, authors are allowed to:</p>
+<ul>
+<li>Authors may, after submitting to SIGGRAPH, archive the submission (as a way to get a timestamp) as an institutional tech report, on arXiv, or using a similar service. It is ok to use the acmtog formatting option. The archive must not mention that this is a SIGGRAPH submission.</li>
+<li>Authors may mention their submission(s) as under review at SIGGRAPH as part of the written materials submitted for job, school, and funding applications, as well as in job talks and interviews. Authors must not present the work in other talks.</li>
+</ul>
+<p>However, to ensure anonymity and respect SIGGRAPH’s dual anonymous review protocol, authors are not allowed to:</p>
+<ul>
+<li>Authors must not discuss the research described in submitted SIGGRAPH papers with the media. Media includes editors/journalists/writers/interviewers of newspapers, radio, television, magazines, as well as public relations and media arms of companies, universities, and other research institutions.</li>
+<li>Authors must not make any posts (e.g., naming the title of the submission, describing the content) about their works under review at SIGGRAPH to social media sites (e.g., Facebook, Twitter, LinkedIn), or mention them (e.g., listing under publications and/or project webpages) on their personal, institutional homepage, or elsewhere that is publicly accessible (note that while institutional tech reports and pre-prints are permitted — see above — listing them on your personal webpage or social media is not).</li>
+</ul>
+<p>We recognize that there are gray areas in these rules, but we ask authors to do their best to protect the dual anonymity of the review process, and not to share the work publicly during the review process, except for the cases recognized above.</p>
+<p><strong>Lobbying Reviewers</strong></p>
+<p>It is strictly prohibited to make any attempt to intervene in the review process. For example, it is inappropriate for an author to contact a committee member or a person they suspect to be a reviewer during the review process and mention the author’s own submission, even if the author does not explicitly ask for a favor. Committee members and reviewers will be asked to report such incidents and subsequently may be marked as conflicted and removed from the review process for that submission. For the most serious interventions, the submission may be rejected without completing the review process.</p>
+					</div>
+					<a href="#submission-policy" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="submission-requirements" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Submission Requirements</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p>Technical Papers authors should prepare their documents according to the <a href="https://www.siggraph.org/learn/instructions-authors/" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?q=https://www.siggraph.org/learn/instructions-authors/&source=gmail&ust=1642441740275000&usg=AOvVaw1W3WClhJ_ef0Nsq4u4ewYB">ACM SIGGRAPH publication guidelines</a>. Submissions to both journal papers and conference papers should be prepared in double column. Please pay particular attention to the citation format for prior ACM SIGGRAPH conference papers, as specified in the ACM SIGGRAPH publication guidelines, because the proper format varies depending on the year of publication.</p>
+<p>If you use LaTeX, please anonymize your initial submission with the following \documentclass command:</p>
+<div>  \documentclass[acmtog,<wbr></wbr>anonymous,review]{acmart}</div>
+<div>and add your assigned paper ID with:</div>
+<div>  \acmSubmissionID{paper ID}</div>
+<p>Please use the same formatting for both journal and/or conference papers submissions. Appendix, if any, should be included as supplementary material.</p>
+<p>Please ensure that you are using version 1.80 or higher of the “acmart” class; earlier versions of the article template will not produce a valid submission. Download the latest acmart class along with other necessary materials <a href="https://www.siggraph.org/learn/instructions-authors/" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?hl=en&q=https://www.siggraph.org/learn/instructions-authors/&source=gmail&ust=1637434156245000&usg=AOvVaw1IS7ESJMAcPnR9kt6IK_Es">here</a>. A LaTeX submission <a href="https://www.siggraph.org/learn/instructions-authors/" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?hl=en&q=https://www.siggraph.org/learn/instructions-authors/&source=gmail&ust=1637434156245000&usg=AOvVaw1IS7ESJMAcPnR9kt6IK_Es">template</a> is provided for your convenience.</p>
+<p>Authors are required to submit fully formatted papers, with graphs, images, and other special areas arranged as intended for final publication, using the ACM SIGGRAPH paper preparation guidelines. Be sure that all pages are numbered and contain your paper’s ID number. You should obtain this paper ID by completing the Online Submission Form before finalizing your paper. If your paper is accepted, you will receive instructions for formatting the final version, which will be different because, among other things, the authors’ names and affiliations will be included, and the pages will not be numbered.</p>
+<p>Authors must submit their papers electronically. The only allowable format is Adobe PDF. We prefer that authors upload supplemental materials (anything except the paper) electronically, but physical submission also is possible. If there is some reason why electronic submission is impossible for you, please contact us via the <strong>Technical Papers Email Contact Form</strong> well before the deadline. See <strong>How to Submit</strong> for more information. For videos, we strongly encourage MP4, and for still images, we strongly encourage JPG or PNG. If you use another format, you are not guaranteed that reviewers will view them. In preparing videos, please choose a reasonable frame size and rate, but be prepared to submit a higher-resolution video if a section of your video is selected for the Papers Preview section of the Electronic Theater. If your supplemental materials amount to more than 100 MB of data, you are not guaranteed that reviewers will download and view them.</p>
+<p><strong>Anonymity</strong></p>
+<p>Remove any information from your submission materials (paper, video, images, data, code, etc.) that identifies you or any of the other authors or any of your institutions or places of work. In addition to not listing your names and affiliations in the paper, please omit acknowledgements (you will be able to add them back upon acceptance). If you are a well-known author, don’t narrate your video; get someone else to do it. You must reference all relevant work completely, including your own and that of the other authors. The detailed policy on how to cite these papers, including prepublications (arXiv, technical reports, etc.), theses, submitted work, and published work, is described in the <strong>Submission Policy</strong>. Please read it carefully before submitting your work.</p>
+<p>Do not include URLs referring to websites that contain vital material for your submission. Such material won’t be considered due to the fact that reviewers cannot access it without endangering the anonymity of the reviewing process.</p>
+<p>Please keep the PDF version anonymous; in particular, note that under some operating systems the “properties” of a PDF file may contain the creator’s name. Also, Version 7 PDF files allow inclusion of a script that will contact the author each time the file is opened. Do not include this script in your PDF file; if we find it, we will reject your paper without review. Make sure that no submitted files contain any information about the authors in the metadata.</p>
+<p>For more information, see the <strong>Anonymity</strong> section of the <strong>Submission Policy</strong>.</p>
+<p><strong>Paper Length</strong></p>
+<p><span style="font-weight: 400;">Journal track submissions have no maximum (or minimum) length. Have a look at previous proceedings to get a sense of the range of paper lengths, where typical lengths are between 8 and 10 pages, not including references, though the variation is large. For journal papers that are conditionally accepted, the final paper length may increase by permission from the primary reviewer.</span></p>
+<p><span style="font-weight: 400;">Conference track submissions are limited to at most 7 pages, plus additional pages for references. Any appendix should only be included as supplementary material. Papers will not be considered for conference publication if they exceed the page limit, are not submitted in the ACM conference format as described above, or appear to alter the format to bypass the page limit. The paper should stand on its own, without unnecessary reliance on supplemental material. For example, main results and discussion of the method must be in the submission; animated results may be included as an accompanying video, along with extra ablation studies and comparisons in the supplemental material.</span></p>
+<p><span style="font-weight: 400;">For all submissions, clarity of writing is considered vital to a high-quality submission. Papers may be perceived as too long if they are repetitive or verbose, or too short if they omit important details or neglect relevant prior art.</span></p>
+<p><strong>Companion Videos</strong></p>
+<p>Papers may be accompanied by a video that is five minutes or less in duration. In recent years, well over half of the accepted papers were accompanied by some kind of video material. To the extent possible, accepted papers should stand on their own, with the video providing supplementary information or visual confirmation of results. However, it is fine to refer to the video in the paper, in which case the video should be submitted under Supplementary Materials, part A in the submission form, as described below. Such a public video should not be included in a submission unless substantively similar footage can appear in the ACM Digital Library. If your paper is accepted and you cannot comply with this requirement because of copyright or permission problems, your acceptance will be rescinded.</p>
+<p><strong>Supplemental Materials</strong></p>
+<p>Authors are invited, but not required, to include supplemental materials such as code and data files (so that reviewers can reproduce results in the paper), additional images or videos, related papers, more detailed explanations, derivations, or results. These materials will be viewed only at the discretion of the reviewers, who are only obligated to read your paper itself. These materials must be anonymized, so that they can be made available to all reviewers. There are two separate parts in the online submission form for uploading supplementary materials:</p>
+<ul>
+<li>A) Anonymous supplemental materials that are considered part of the submission, and that you are committing to provide for the ACM Digital Library if your paper is accepted.</li>
+<li>B) Anonymous materials that you are submitting to help in the review process but do not plan to submit to the Digital Library.</li>
+</ul>
+<p>For instance, in addition to videos, A) may include some code, and a .zip archive containing result images and some text files, such as detailed user-study results or other appendices associated to your submission. B) may include anonymized versions of related papers from the same authors currently under review or in press elsewhere, together with an anonymous cover letter that outlines the differences between the submission and these other papers. In case of resubmission with reviewer continuity, the cover letter explaining how you took into account previous reviews and listing the improvements in your method should be there, too.</p>
+<p><strong>Resubmissions</strong></p>
+<p>If your paper is a revision of a paper that has previously been submitted to a SIGGRAPH or SIGGRAPH Asia conference, we recommend (but do not require) that when you fill out the submission form you identify it as a resubmission, and select the option that allows the previous review materials (reviews, reviewer discussions, summaries, etc.) to be made available to the Technical Papers Committee. Please indicate the latest conference that your paper was submitted to and its paper ID at the time. If you choose to use this option, your paper may be assigned to some or all of the previous reviewers, and all reviewers will have access to suitably anonymized versions of the prior review materials. We encourage you to choose this option if you consider the paper to be derived from the previous version, even if the paper has been substantially rewritten and authors have been added. It will result in more consistent reviews and decrease the chance that a new set of reviewers will want completely different changes than those you made in response to the reviews of your earlier submissions. This option also has the added side benefit of reducing the overall burden on the volunteer reviewing community. Note that simply responding to all earlier criticisms will not guarantee acceptance. If you resubmit with reviewer continuity, you should include a cover letter within the anonymous supplementary materials, part B, in order to explain the changes you made to the paper and how you improved your work and its exposition since the last review cycle.</p>
+<p><strong>Permissions and Copyrights</strong></p>
+<p>You must have permission from the owner or copyright holder to use any images or video (or provide rationale for using them without permission) that you do not own in your submitted paper or supplementary material. ACM has a clear policy and procedures for handling <a href="https://www.acm.org/publications/authors/third-party-material">third-party material</a>. If your submission is accepted, you will be asked to provide a signed rights form, which is required by ACM before your paper can be published. The contact author of each paper will receive an email message from ACM Rights Review containing instructions and a link to the rights form, which is completed online.</p>
+<p>Authors of accepted Technical Papers are required to complete the ACM Rights Form prior to publication. They also are required to upload final versions of all public supplementary materials (Part A) that were originally part of their submission.</p>
+					</div>
+					<a href="#submission-requirements" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="evaluation" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Evaluation</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p>The Technical Papers Committee and a set of external reviewers, both consisting of recognized experts, will review submitted papers. Then, at the committee meeting, the committee will select the papers to be presented at SIGGRAPH 2022 and published in a special issue of <em>ACM Transactions on Graphics</em>.</p>
+<p>The Technical Papers review process will be conducted by (1) the Technical Papers Chair, who was chosen by the SIGGRAPH 2022 Conference Chair and approved by the ACM SIGGRAPH Executive Committee and its Conference Advisory Group; (2) Conference Papers Director; (3) the Technical Papers Advisory Board, consisting of past and future Technical Papers Chairs and other trusted and experienced advisors, chosen by the SIGGRAPH 2022 Technical Papers Chair; (3) the Technical Papers Committee, chosen by the Technical Papers Chair with the assistance of the members of the Technical Papers Advisory Board, and consisting of about 80 people whose expertise spans the entire field; and (4) the Conflict of Interest (COI) Coordinators, also chosen by the Technical Papers Chair. The composition of the COI Coordinators group is similar to the Technical Papers Committee, but the members are disjoint from that committee.</p>
+<p>Both journal and conference track papers will be reviewed by the same Technical Papers Committee. The Technical Papers Chair and the Conference Paper Director will work with the Technical Papers Committee and the tertiary reviewers to evaluate each valid submission.</p>
+<p><strong>The Review Process</strong></p>
+<ol>
+<li>After the submission deadline, the Technical Papers Chair and several others selected by the Technical Papers Chair will conduct the papers sort. During this meeting, they assign each paper to two senior reviewers, called the primary and secondary reviewers, who are members of the Technical Papers Committee. Additionally, each submission is assigned a COI Coordinator. All parties participating in the review process enter their conflict of interest data into the submission system ahead of time. The Technical Papers Chair does not make assignments or review papers. Rather, it is the job of the chair to facilitate the process. Papers that are inappropriate may be rejected during this assignment process, without being sent to any senior reviewers. Papers will normally be rejected at this stage only if they are clearly off topic for SIGGRAPH 2022 or if they are discovered to have been published previously or to have been submitted simultaneously to another conference or journal. For more details, see <strong>Submission Policy</strong>.</li>
+<li>The two assigned senior reviewers may, upon conferring with each other and the Technical Papers Chair, recommend a paper to be rejected without additional review. A paper will normally be rejected at this stage only if it falls into one of the categories listed in phase one, but this fact was not detected during the papers sort. It is possible that a paper also may be rejected at this stage if it solves a problem that is known to be already solved; or if it does not cite (and the authors seem unaware of) important prior work on the same problem and does not address how it is different; or if it has no evaluation via proof, experiment, or analysis; or if it is solving a problem sufficiently minor that the senior reviewers do not believe that it belongs in the program; or if it addresses a topic that is clearly outside the purview of SIGGRAPH.</li>
+<li>Each paper is distributed to three or more additional experts, called tertiary reviewers. Two of them are selected by the primary senior reviewer of that paper, and the third is selected by the secondary senior reviewer. The identity of the authors is not revealed to any of the reviewers. The primary and the secondary reviewer are warned by the submission system, Linklings, if their selection of tertiary reviewers would result in a conflict of interest. In addition, the assigned COI Coordinator does see the identity of the authors and approves the tertiary reviewers selected by the primary and the secondary reviewer after verifying that there is no COI in the assignment. The primary, secondary, and tertiary reviewers all write full reviews. See the <a href="https://www.siggraph.org/submit/?page=SampleReviewForm&id=TechnicalPaperSubmissionReviewForm&site=siggraph2022">Review Form</a> and <a href="/technical-papers-reviewer-instructions-ethics/">Reviewer Instructions</a>. Thus, at least five reviews are written for each paper that has not been rejected during phases one and two. In unusual cases, such as when a tertiary reviewer fails to deliver a review on time, papers may receive only four reviews. However, if a paper receives fewer than four reviews, additional reviewers will be found, possibly from the committee. For more details, see the <strong>Review Process</strong> section in the Technical Papers FAQ.</li>
+<li>After all reviews are complete, the review system allows the authors access to the reviews and scores for their papers on <strong>6 March</strong>. Then, authors have until <strong>11 March, 22:00 UTC/GMT</strong>, to enter rebuttals if they feel the reviewers have made substantive errors or to answer specific questions posed by the reviewers. The rebuttal is confined to 1,000 words in length (plain text), and must be self-contained. For instance, URLs to additional material are not allowed. The rebuttal period is for addressing factual errors in the reviews, not for providing revised text or new results. Any such novel material will be ignored by the reviewers. For more details, see the <strong>Rebuttal Process</strong> section of the Technical Papers FAQ.</li>
+<li>Between the end of the rebuttal period and the committee meeting, the senior reviewers will read the author rebuttals, confer intensively about the paper, and prepare a recommendation for the committee meeting. The three tertiary reviewers will see the author rebuttals and will participate in discussions about the paper. Due to the double-blind review process, the authors must maintain anonymity in their rebuttals. In addition, the tertiary reviewers do not know each other’s identities, so they too must maintain anonymity during the discussion. The preliminary recommendation agreed on at this stage will be either conditionally accepted or rejected. If an agreement on the recommendation cannot be reached, a third option is to table the paper for further review and discussion during the final Technical Papers Committee meeting.</li>
+<li>If a paper is tabled, the senior reviewers will select one or more other members of the Technical Papers Committee to write extra reviews of the paper and be prepared to discuss it in detail at the meeting. The extra reviews will be written during the week before the committee meeting. If consensus still cannot be reached, it is even possible that extra reviews will be assigned during the meeting itself. Any extra review will be provided to the authors after the meeting.</li>
+<li>The full Technical Papers Committee meets to finalize conditional acceptance or rejection of each paper. In cases where a consensus on a paper was not reached during the pre-meeting discussion phase, additional committee members may read the paper, and their evaluations will be taken into account in the decision. Submissions will either be accepted as a journal paper or a conference paper.</li>
+</ol>
+<p>Members of the Technical Papers Committee, including the chair, leave the room when papers for which they have conflicts of interest are discussed. Papers are judged solely on their merit, as determined by the reviews. Although the acceptance rate of SIGGRAPH papers has remained stable in the range of ~20-30%, there is no quota for the number of papers that should be accepted by the SIGGRAPH 2022 Technical Papers Committee; this number will arise organically from the actions of the committee.</p>
+<p><strong>Possible Outcomes for a Paper</strong></p>
+<p>Email notifications of the Technical Papers Committee’s decisions will be sent following the committee meeting (see the Timeline below). The notifications will place each paper in one of the following categories.</p>
+<ol>
+<li><strong>Conditionally accepted Journal Paper for presentation at SIGGRAPH 2022</strong>. <span style="font-weight: 400;">The committee provides a list of required changes that must be performed to the paper for the work to be published. </span></li>
+<li><strong>Conditionally accepted Conference Paper for presentation at SIGGRAPH 2022.</strong> <span style="font-weight: 400;">The committee provides a list of required changes that must be performed to the paper for the work to be published, limited to minor writing changes while satisfying the page limits and without requiring new experiments.</span></li>
+<li><strong>Rejected from SIGGRAPH 2022</strong>. <span style="font-weight: 400;">Submissions that were deemed not suitable for the conference, or too flawed or incomplete to be accepted, will be rejected. In some cases, the reviewers may find enough merit in the submission that they encourage the authors to consider resubmitting to either </span><i><span style="font-weight: 400;">ACM Transactions on Graphics</span></i><span style="font-weight: 400;"> or a future SIGGRAPH conference, with reviewer continuity. The review summary includes a set of suggested changes.</span></li>
+</ol>
+<p>Conditionally accepted papers undergo a second reviewing process, in which a member of the Technical Papers Committee verifies that the final version of the paper is acceptable, i.e., that any required changes have been made, and that other changes made by the authors have not compromised the paper in any way. This second and final stage determines the final acceptance status of all papers. The referees’ decisions are final. Papers that do not satisfy the referees in the second stage of reviewing and/or that are not uploaded in final form by the final deadline, together with the original or revised versions of the submitted supplementary material, will be rejected. One author of the paper must commit to presenting the paper virtually at the SIGGRAPH 2022 conference.</p>
+<p>For papers that were submitted to both conference and journal tracks, and conditionally accepted as journal papers, authors will have the option of either conference or journal publication, and the required changes will be split to specify the requirements for either option.</p>
+					</div>
+					<a href="#evaluation" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="upon-acceptance" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Upon Acceptance</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p>Authors of papers conditionally accepted by the committee must revise their submission for the second round of reviewing and deliver that material to Linklings. Once the reviewers have approved the paper, authors will finalize the preparation of their camera-ready paper and deliver the source of that paper, and any supplemental materials, to TAPS for publication. <span style="font-weight: 400;">Accepted conference papers will appear in the conference proceedings, and journal papers will be published as a special issue of <em>ACM Transactions on Graphics</em>.</span></p>
+<p>TAPS is ACM’s article processing system, which accepts LaTeX or Word source documents and prepares the formatted PDF and HTML5 versions of one’s article for publication in the ACM Digital Library. The use of TAPS replaces the need for authors to prepare and deliver “camera-ready” materials to Linklings. Information on preparing and delivering materials to TAPS can be found <a href="https://homes.cs.washington.edu/~spencer/taps/taps.html" target="_blank" rel="noopener noreferrer">here</a>.</p>
+<p>Notification of conditional acceptances and rejections will be sent to authors, along with any extra reviews and possibly a list of required changes (see Timeline below). A member of the Technical Papers Committee, typically the primary reviewer, will be assigned as referee for the revision cycle.</p>
+<p>A few days after notification, any changes to the paper title, list of authors, or 30-word paper summary will be due back to your referee. Changes to the paper title must be approved by your referee. <span style="font-weight: 400;">Conference Papers may never exceed 7 pages plus references. For Journal Papers, changes to paper length must be approved by the referee, and</span><span style="font-weight: 400;"> extensions of more than one page are unlikely to be granted. </span></p>
+<p>The deadlines for the revised version and final version of your paper are listed in the Timeline below. During the week between these two dates, the referees and authors will communicate via the bulletin board process about the adequacy of the changes in the revisions. Sometimes, changes are not initially considered adequate, or introduce new problems, so further revision may be required. It is recommended to submit the initial revised version sooner than the deadline in order to provide more time for iterated revisions. It is hoped that all conditionally accepted papers will be accepted by the end of this process, but this is not guaranteed. When writing successive revisions, the referee’s job is made easier if authors use a different color for the added or revised text in each new version. (Please remember to remove these colors in the final version.) It also helps to describe the changes in the bulletin board post to which the revision is attached.</p>
+<p><strong>ORCID Mandate</strong></p>
+<p>ACM now <em><strong>requires that all</strong> <strong>accepted</strong> <strong>journal authors</strong> </em>register and provide ACM with valid ORCIDs prior to paper publication. Corresponding authors are responsible for collecting these ORCIDs from co-authors and providing them to ACM as part of the ACM eRights selection process.</p>
+<p>You and your co-authors can create and register your ORCIDs at <a href="https://orcid.org/register" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?q=https://orcid.org/register&source=gmail&ust=1642082226178000&usg=AOvVaw3sIxku-uZl-maWiiPpHcln">https://orcid.org/register</a>. ACM only requires you to complete the initial ORCID registration process. However, ACM encourages you to take the additional step to claim ownership of all of your published works via the ORCID site.</p>
+<p><strong>Pre-Recorded Video Presentation</strong></p>
+<p>For the virtual portion of the conference, the authors of an accepted papers are required to provide a 15-minute pre-recorded video of their presentation. Further details and instructions regarding video specs will be provided upon acceptance. Virtual participation from the author is not required.</p>
+<p><b>In-Person Presentation</b></p>
+<p>For the in-person portion of the conference, one author of an accepted paper is required to present on-site in Vancouver, 8–11 August. If you are accepted, you are required to present live and, following the presentation, participate in an extended attendee interaction during the session. Additional information will be provided upon acceptance.</p>
+<p><strong>Presenter Recognition</strong></p>
+<p>To present your work at SIGGRAPH 2022, the author must be registered at the appropriate registration level.</p>
+<p>You can find a link to the contributor recognition policy <a href="https://s2022.siggraph.org/contributor-benefits/"><strong>here</strong></a>.</p>
+<p><strong>Authorization for Use</strong></p>
+<p>Any material that supports a paper’s acceptance for publication must be available as part of the final publication (see Submission Requirements). Thus, all material uploaded for review in the “public materials that are considered part of the submission” section of the submission form, including supplementary text, images, and videos, are subject to the ACM copyright policy, and the required permission forms must be completed upon acceptance. If it subsequently becomes apparent that the necessary permissions cannot be given for publication of material that is substantially similar to that submitted for review, acceptance of the paper may be withdrawn. Upon acceptance, authors must deliver final versions of their papers and their supplementary material, which will be made available to subscribers to the ACM Digital Library via the web page associated with their TOG papers.</p>
+<p>Please be aware that ACM has updated its rights policy to give authors the options of retaining copyrights on some materials or to pay fees that enable free access. You can read about the policy <a href="https://www.acm.org/publications/policies/copyright-policy" target="_blank" rel="noopener">here</a> or a more concise summary <a href="https://authors.acm.org" target="_blank" rel="noopener">here</a>. Authors of accepted Technical Papers are required to complete the ACM Rights Form prior to publication. For every supplemental file originally uploaded as part of your submission, you must upload either copies of the originally submitted material (now in non-anonymized form) or updated versions of this material to the online submission system’s final versions page <strong>(see the Timeline below for the deadline)</strong>.</p>
+<p><strong>Technical Papers Preview Trailer</strong></p>
+<p>A Technical Papers Preview Trailer will be prepared from selected parts of the videos accompanying accepted papers. The preview will appear in the Computer Animation Festival at the conference and may also be used to publicize the Technical Papers program inside and outside the conference, like on the web. If a section of your video is selected, you will be asked to provide a high-quality rendering of that clip. Therefore, if you submit a video accompanying your paper, please keep your raw data available for that purpose.</p>
+<p><strong>Technical Papers Fast Forward</strong></p>
+<p>In addition to the material that is part of your publication, for the virtual portion of the conference, you will be asked to provide a pre-recorded video for the Technical Papers Fast Forward. The authors will be allowed 30 seconds to summarize the paper and entice attendees to attend their complete paper presentation during the conference week. See the Timeline below for the deadline for the Fast Forward pre-recorded video.</p>
+<p><strong>ACM Rights Management Form</strong></p>
+<p>If your work is accepted for presentation at SIGGRAPH 2022, you must complete the ACM Rights Management Form. The form will be sent to all submitters whose work is accepted.</p>
+<p>Your representative image and text may be used for promotional purposes. Several SIGGRAPH 2022 programs may prepare preview videos for pre-conference promotion of accepted content, which may include a portion of the video you submitted for review. You have the option to grant or deny us the ability to use the representative image and submitted video for these purposes.</p>
+					</div>
+					<a href="#upon-acceptance" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+					<div id="timeline" class="accordion-entry">
+				<a class="accordion-head" href="javascript:;">
+					<div class="accordion-icon">
+						<div class="icon-plus"></div>
+						<div class="icon-minus"></div>
+					</div>
+
+					<h3>Timeline</h3>
+					<div class="accordion-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="14px">
+							<path fill-rule="evenodd" fill="rgb(254, 232, 0)" d="M9.472,14.005 L8.508,12.863 L14.740,7.740 L0.013,7.740 L0.013,6.255 L14.740,6.255 L8.508,1.131 L9.472,-0.009 L17.996,6.997 L9.472,14.005 Z"></path>
+						</svg>
+					</div>
+				</a>
+
+				<div class="accordion-body">
+					<div class="accordion-body-inner the-content">
+					<p>All deadlines are 22:00 UTC/GMT unless otherwise noted.</p>
+<p><strong>26 January 2022</strong><br>
+Submission form deadline<br>
+One of the authors must start a submission in the online submission system and provide basic information about the paper, including the complete list of authors. All authors must enter their complete and valid conflict of interest data in Linklings by this deadline.</p>
+<p><strong>27 January 2022</strong><br>
+Paper deadline<br>
+All information about your submission, such as paper title and length, is required. Additionally, the submitted paper in PDF format and a representative image must be uploaded, along with any video, code, data, and other supplemental material if applicable. Alternatively, MD5 checksums may be uploaded in lieu of any of the files involved in the submission.</p>
+<p><strong>28 January 2022</strong><br>
+Upload deadline<br>
+If MD5 checksums were submitted by the paper deadline (as described above), files that match the checksums must be submitted until this deadline.</p>
+<p><strong>6 March 2022</strong><br>
+Reviews available.</p>
+<p><strong>11 March 2022</strong><br>
+Rebuttals due.</p>
+<p><strong>28 March 2022</strong><br>
+Decisions announced.</p>
+<p><strong>26 April 2022</strong><br>
+Revised paper submitted by authors for final review.</p>
+<p><strong>3 May 2022</strong><br>
+Final version deadline.</p>
+<p><strong>6 June 2022</strong><br>
+30-second pre-recorded Fast Forward video deadline.</p>
+<p><strong>10 June 2022</strong><br>
+On-demand 15-minute pre-recorded video deadline.</p>
+<p><strong>24 July 2022</strong><br>
+Official publication date for both the SIGGRAPH 2022 Conference Papers Proceedings and the Technical Papers TOG Issue (Volume 41, Issue No. 4 of <em>ACM Transactions on Graphics</em>)</p>
+<p><strong>8–11 August 2022</strong><br>
+SIGGRAPH 2022 Conference</p>
+					</div>
+					<a href="#timeline" class="back-to-top">Back to Top</a>
+				</div>
+			</div>
+
+			</div>
+	</div>
+</div>
+</section><section class="section-full-width-text section-bg-offwhite">
+<div class="container">
+	<div class="full-width-text-inner the-content">
+
+	</div>
+</div>
+</section>			</div>
+
+
+	<aside class="sidebar-program">
+	<div class="sidebar-inner">
+					<div class="widget widget-white-box the-content font-size-medium">
+				<h3 class="widget-title">Join Us</h3>
+									<h3>Registration Access</h3>
+					<ul class="registration-access-list">
+											<li title="Full Conference Supporter (FCS)" class="fcs">FCS</li>
+											<li title="Full Conference (FC)" class="fc">FC</li>
+											<li title="Experience Plus (EP)" class="ep">EP</li>
+											<li title="Virtual Conference Supporter (VCS)" class="vcs">VCS</li>
+											<li title="Virtual Conference (VC)" class="vc">VC</li>
+										</ul>
+					<a href="https://s2022.siggraph.org/register/" class="btn btn-widget">Learn More</a>
+
+				<h4>In Person and Virtual (Experience Plus has access to Fast Forward only)</h4>			</div>
+
+
+
+					<div class="widget widget-additional-links">
+				<h4 class="widget-sub-title">Additional Links</h4>
+									<p><a class="btn" href="/technical-papers-committee/" target="_self">Technical Papers – Committee</a></p>
+									<p><a class="btn" href="https://s2022.siggraph.org/wp-content/uploads/2022/03/SIGGRAPH-2022-TECHNICAL-PAPERS-%E2%80%93-CONDITIONALLY-ACCEPTED-PAPERS.pdf" target="_blank">SIGGRAPH 2022 Conditionally Accepted Technical Papers</a></p>
+									<p><a class="btn" href="/reviewers/" target="_self">Reviewers</a></p>
+							</div>
+
+		<div class="widget widget-share">
+			<h4 class="widget-sub-title">Share This Page</h4>
+			<a href="#" class="share-facebook"><i class="fa fa-facebook" aria-hidden="true"></i><span class="sr-only">Facebook</span></a>
+			<a href="#" class="share-twitter"><i class="fa fa-twitter" aria-hidden="true"></i><span class="sr-only">Twitter</span></a>
+			<a href="#" class="share-linkedin"><i class="fa fa-linkedin" aria-hidden="true"></i><span class="sr-only">LinkedIn</span></a>
+		</div>
+
+
+
+
+		<div class="clear"></div>
+
+	</div>
+	</aside>
+
+	<div class="line-sidebar"></div>
+
+
+		</div>
+
+	</div>
+</div>
+
+</main>
+
+<footer id="footer" class="footer" role="contentinfo">
+
+  <div class="footer-top">
+    <div class="container pr-0">
+      <div class="footer-cta-row">
+        <div class="footer-info">
+
+          <div class="footer-cta-info">
+            <h2><span class="top">Join Us At</span><span class="bottom">SIGGRAPH 2022</span></h2>
+            <div class="footer-cta-text-row">
+              <div class="fct-left">
+                <p><strong>Save the Date</strong><br>Conference: 8-11 August<br>Exhibition: 9-11 August</p>
+              </div>
+              <div class="fct-right">
+                <div style="display: none; visibility: hidden;"><strong>Explore On-Demand</strong><br>Details Coming Soon</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-cta-links-row">
+            <div class="footer-cta-link font-size-medium">
+              <a href="https://s2022.siggraph.org/register/">
+                <span class="cta-label">Register</span>
+              </a>
+            </div>
+            <div class="footer-cta-link font-size-medium">
+              <a href="https://s2022.siggraph.org/programs-events/">
+                <span class="cta-label">Submit</span>
+              </a>
+            </div>
+            <div class="footer-cta-link font-size-medium">
+              <a href="https://s2022.siggraph.org/exhibit-at-siggraph/">
+                <span class="cta-label">Exhibit</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<div class="footer-bottom font-size-small">
+    <div class="container pr-15">
+      <div class="footer-bottom-row">
+
+        <div class="footer-logo-wrap">
+          <a href="https://s2022.siggraph.org/">
+            <img src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/images/logo-footer.png" width="189" alt="Sponsored by ACMSIGGRAPH">
+          </a>
+        </div>
+
+        <div class="footer-menu-row">
+
+          <div class="footer-menu-col menu-col-1">
+            <p class="fmc-title">Sponsor SIGGRAPH</p>
+            <ul id="menu-sponsor-siggraph" class="menu">
+              <li id="menu-item-1960" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1960"><a href="/exhibit-at-siggraph/exhibition-opportunities/">Sponsorships & Promotions</a></li>
+              <li id="menu-item-649" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-649" style="color: #e6af57; display: inline-block; font-size: .75rem; line-height: 1.6666666667; padding: 2px 8px 2px 0px; font-weight: 400;">Donations</li>
+            </ul>
+          </div>
+          <div class="footer-menu-col menu-col-2">
+            <p class="fmc-title">Resources</p>
+            <ul id="menu-resources" class="menu">
+              <li id="menu-item-651" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-651"><a href="https://s2022.siggraph.org/for-the-press/">For The Press</a></li>
+              <li id="menu-item-2907" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2907" style="color: #e6af57; display: inline-block; font-size: .75rem; line-height: 1.6666666667; padding: 2px 8px 2px 0px; font-weight: 400;">For Contributors</li>
+            </ul>
+          </div>
+          <div class="footer-menu-col menu-col-3">
+            <p class="fmc-title">Directories</p>
+            <ul id="menu-directories" class="menu">
+              <li id="menu-item-661" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-661"><a href="https://s2022.siggraph.org/sitemap/">Sitemap</a></li>
+              <li id="menu-item-658" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-658"><a href="https://s2022.siggraph.org/siggraph-2022-committee/">2022 Committee</a></li>
+            </ul>
+          </div>
+          <div class="footer-menu-col menu-col-4">
+            <p class="fmc-title">Get in Touch</p>
+            <ul id="menu-get-in-touch" class="menu">
+              <li id="menu-item-637" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-637" style="color: #e6af57; display: inline-block; font-size: .75rem; line-height: 1.6666666667; padding: 2px 8px 2px 0px; font-weight: 400;">Contact Us</li>
+              <li id="menu-item-636" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-636" style="color: #e6af57; display: inline-block; font-size: .75rem; line-height: 1.6666666667; padding: 2px 8px 2px 0px; font-weight: 400;">Join Mailing List</li>
+            </ul>
+          </div>
+          <div class="footer-menu-col menu-col-5">
+            <p class="fmc-title">ACM Policies & Blog</p>
+            <ul id="menu-acm-policies-blog" class="menu">
+              <li id="menu-item-1002" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1002"><a target="_blank" rel="noopener" href="https://www.acm.org/special-interest-groups/volunteer-resources/officers-manual/policy-against-discrimination-and-harassment">Anti-Harassment</a></li>
+              <li id="menu-item-1003" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1003"><a target="_blank" rel="noopener" href="https://www.acm.org/about-acm/privacy-policy">ACM Privacy Policy</a></li>
+              <li id="menu-item-1259" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1259"><a href="https://blog.siggraph.org/">ACM SIGGRAPH Blog</a></li>
+            </ul>
+          </div>
+          <div class="footer-menu-col menu-col-6">
+            <p class="fmc-title">#SIGGRAPH2022</p>
+            <ul id="menu-siggraph2022" class="menu">
+              <li id="menu-item-222" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-222"><a href="https://s2022.siggraph.org/news-events/">News & Events</a></li>
+            </ul>
+            <div class="footer-social">
+              <a href="https://www.facebook.com/SIGGRAPHConferences" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i><span class="sr-only">Facebook</span></a><a href="https://twitter.com/siggraph" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i><span class="sr-only">Twitter</span></a><a href="https://instagram.com/acmsiggraph/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a><a href="https://www.youtube.com/user/ACMSIGGRAPH" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i><span class="sr-only">YouTube</span></a><a href="https://www.linkedin.com/company/acm-siggraph" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i><span class="sr-only">LinkedIn</span></a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+	</div>
+
+	<div class="footer-copyright font-size-small">
+	<div class="container">
+				<p class="footer-copyright-text">© 2023 SIGGRAPH. All rights reserved. The 49th International Conference & Exhibition On Computer Graphics & Interactive Techniques</p>
+			</div>
+	</div>
+
+</footer>
+
+
+</div>
+
+<div id="mobile-nav">
+	<button id="mobile-menu-close" class="no-style-btn">
+		<svg xmlns="http://www.w3.org/2000/svg" version="1" viewbox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg>
+	</button>
+	<ul class="mobile-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-198"><a href="https://s2022.siggraph.org/about-the-conference/">About the <br>Conference</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2870"><a href="https://s2022.siggraph.org/conference-supporters/">Conference Supporters</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-197"><a href="https://s2022.siggraph.org/programs-events/">Programs <br>& Events</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2925"><a href="https://s2022.siggraph.org/">Co-Located Events</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3197"><a href="https://s2022.siggraph.org/full-program/">Full Program</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3264"><a href="https://s2022.siggraph.org/">Talks – No Record List</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-964"><a>The <br>Exhibition</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-418"><a href="https://s2022.siggraph.org/exhibit-at-siggraph/">Opportunities to Participate</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-436"><a href="https://s2022.siggraph.org/job-fair/">Job Fair</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2918"><a href="https://s2022.siggraph.org/visit-the-exhibition/">Visit The Exhibition</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3203"><a href="https://s2022.siggraph.org/siggraph-2022-sponsors/">SIGGRAPH 2022 Sponsors</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1005"><a>Plan to <br>Attend</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-440"><a href="https://s2022.siggraph.org/why-attend/">Why Attend?</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-462"><a href="https://s2022.siggraph.org/conference-policies/">Conference Policies</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2993"><a href="https://s2022.siggraph.org/full-program/">Schedule</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1757"><a href="https://s2022.siggraph.org/international-resources-center/">International Resources Center</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2649"><a href="https://s2022.siggraph.org/">Travel Accommodations</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2850"><a href="https://s2022.siggraph.org/schedule-at-a-glance/">Schedule at a glance</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3179"><a href="https://s2022.siggraph.org/health-safety/">Health & Safety</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2291"><a href="#">Volunteer <br>With Us</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-465"><a href="https://s2022.siggraph.org/conference-volunteers/">Conference Volunteers</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-468"><a href="https://s2022.siggraph.org/acm-siggraph-organization-volunteers/">ACM SIGGRAPH Organization Volunteers</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2460"><a href="https://s2022.siggraph.org/">Submit to <br>SIGGRAPH</a></li>
+<li class="icon-register menu-item menu-item-type-post_type menu-item-object-page menu-item-1826"><a href="https://s2022.siggraph.org/register/">Register <br>Today</a></li>
+	<li class="mobile-menu-search-toggle"><a href="#" data-fancybox data-src="#search-form-wrap">Search Site<span><img src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/images/search.svg" class="svg-inline" alt=""></span></a></li>
+	</ul>
+</div>
+<div id="mobile-nav-overlay"></div>
+
+<script type="text/javascript" id="adrotate-dyngroup-js-extra">
+/* <![CDATA[ */
+var impression_object = {"ajax_url":"http:\/\/siggraph2022static.nnja.co\/static\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/plugins/adrotate-pro/library/jquery.adrotate.dyngroup.js" id="adrotate-dyngroup-js"></script>
+<script type="text/javascript" id="adrotate-clicktracker-js-extra">
+/* <![CDATA[ */
+var click_object = {"ajax_url":"http:\/\/siggraph2022static.nnja.co\/static\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/plugins/adrotate-pro/library/jquery.adrotate.clicktracker.js" id="adrotate-clicktracker-js"></script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-includes/js/dist/vendor/regenerator-runtime.min.js" id="regenerator-runtime-js"></script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-includes/js/dist/vendor/wp-polyfill.min.js" id="wp-polyfill-js"></script>
+<script type="text/javascript" id="contact-form-7-js-extra">
+/* <![CDATA[ */
+var wpcf7 = {"api":{"root":"http:\/\/siggraph2022static.nnja.co\/static\/wp-json\/","namespace":"contact-form-7\/v1"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/plugins/contact-form-7/includes/js/index.js" id="contact-form-7-js"></script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/js/scripts.min.js" id="theme-scripts-js"></script>
+<script type="text/javascript" id="theme-main-js-extra">
+/* <![CDATA[ */
+var local_var = {"ajax_url":"http:\/\/siggraph2022static.nnja.co\/static\/wp-admin\/admin-ajax.php","nonce":"b3cffbdefc"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://s2022.siggraph.org/wp-content/themes/siggraph2022/assets/js/main.js" id="theme-main-js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function(){if(jQuery.fn.gslider) {
+	jQuery('.g-1').gslider({groupid:1,speed:3000,repeat_impressions:'Y'});
+	jQuery('.g-2').gslider({groupid:2,speed:3000,repeat_impressions:'Y'});
+	jQuery('.g-3').gslider({groupid:3,speed:6000,repeat_impressions:'Y'});
+}});
+</script>
+
+
+
+</body>
+</html>

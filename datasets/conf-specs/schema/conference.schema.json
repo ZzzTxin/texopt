@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "texopt 会议排版规范条目",
+  "type": "object",
+  "required": [
+    "schema_version", "id", "name", "abbr", "family",
+    "current_edition", "template_basis",
+    "hard_constraints", "recommended", "history",
+    "texopt_requirement_map", "sources"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "abbr": { "type": "string" },
+    "family": { "enum": ["ml", "nlp", "cv", "ai", "graphics", "data", "systems"] },
+    "official_site": { "type": "string" },
+    "current_edition": { "type": "string" },
+    "focus_editions": { "type": "array", "items": { "type": "string" } },
+    "template_basis": {
+      "type": "object",
+      "required": ["class", "inherits"],
+      "properties": {
+        "class": { "type": "string" },
+        "inherits": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "hard_constraints": { "type": "object", "additionalProperties": { "$ref": "#/definitions/entry" } },
+    "recommended": { "type": "object", "additionalProperties": { "$ref": "#/definitions/entry" } },
+    "statistics": { "type": "object", "additionalProperties": { "$ref": "#/definitions/stat" } },
+    "history": { "type": "array", "items": { "$ref": "#/definitions/change" } },
+    "texopt_requirement_map": {
+      "type": "object",
+      "required": ["requirement_fields", "unsupported_constraints"],
+      "properties": {
+        "requirement_fields": { "type": "object" },
+        "unsupported_constraints": { "type": "array" },
+        "recommended_field_suggestions": { "type": "array" }
+      }
+    },
+    "sources": { "type": "array", "items": { "$ref": "#/definitions/source" } },
+    "open_questions": { "type": "array", "items": { "type": "string" } }
+  },
+  "definitions": {
+    "entry": {
+      "type": "object",
+      "required": ["value", "confidence", "evidence"],
+      "properties": {
+        "value": {},
+        "unit": { "type": ["string", "null"] },
+        "scope": { "enum": ["submission", "camera_ready", "both", "template_default"] },
+        "confidence": { "enum": ["official", "template-implied", "inferred"] },
+        "note": { "type": "string" },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source_id", "quote"],
+            "properties": {
+              "source_id": { "type": "string" },
+              "quote": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "stat": {
+      "type": "object",
+      "required": ["n", "unit", "method", "samples"],
+      "properties": {
+        "mean": { "type": "number" },
+        "median": { "type": "number" },
+        "p10": { "type": "number" },
+        "p90": { "type": "number" },
+        "n": { "type": "integer" },
+        "unit": { "type": "string" },
+        "method": { "type": "string" },
+        "samples": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "change": {
+      "type": "object",
+      "required": ["key", "edition", "year", "value", "source_id"],
+      "properties": {
+        "key": { "type": "string" },
+        "edition": { "type": "string" },
+        "year": { "type": "integer" },
+        "value": {},
+        "source_id": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "kind", "url"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^src-" },
+        "kind": {
+          "enum": ["official-guidelines", "official-template", "style-source", "sample-paper", "third-party"]
+        },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "fetched_at": { "type": "string" },
+        "http_status": { "type": "integer" },
+        "raw_file": { "type": "string" },
+        "sha256": { "type": "string" },
+        "pdf_url": { "type": "string" },
+        "venue": { "type": "string" },
+        "year": { "type": "integer" },
+        "anthology_id": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

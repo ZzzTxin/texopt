@@ -421,10 +421,21 @@ class Perception:
     pdf_pages: int | None
     pdf_info: str = ""
     visual: dict | None = None  # Phase 2：页面级视觉量化（来自实际 PDF）
+    content: dict | None = None  # 会议口径：正文页数区间（scope=content 时才计算）
 
     @property
     def ok(self) -> bool:
         return self.compile.ok
+
+    @property
+    def content_pages_lower(self) -> int | None:
+        """正文页数下界（参考文献之前的完整页数），无信息时为 None。"""
+        return (self.content or {}).get("lower")
+
+    @property
+    def content_pages_upper(self) -> int | None:
+        """正文页数上界（含参考文献首页），无信息时为 None。"""
+        return (self.content or {}).get("upper")
 
     @property
     def overfull_count(self) -> int:
@@ -472,10 +483,19 @@ def perceive(tex_path: str, req=None) -> Perception:
         except Exception as exc:                      # 视觉层失败不影响主链路
             vis = {"error": f"视觉量化失败：{exc}", "pages": [], "defects": []}
 
+    # 会议口径：页数上限针对「正文页」时，量取正文页数区间（参考文献不计）
+    content = None
+    if result.pdf_path and req is not None \
+            and getattr(req, "page_limit_scope", "total") == "content":
+        try:
+            content = engine.content_pages(result.pdf_path)
+        except Exception:                             # 量取失败不影响主链路
+            content = None
+
     return Perception(
         src=src, source=source, compile=result,
         issues=issues, pages=pages, pdf_pages=pdf_pages,
-        pdf_info=cross, visual=vis,
+        pdf_info=cross, visual=vis, content=content,
     )
 
 

@@ -1,0 +1,2120 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <style>html { scroll-padding-top: 70px; /* height of sticky header plus extra */ }</style>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/virtual/js/virtual.js"></script>
+    <meta name="google-site-verification" content="0jwPnVXIAk4FvFdT37dwMmd-kjHF86e5DKwvqlStUW0">
+
+
+    
+    <link rel="stylesheet" href="/static/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css" type="text/css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/core/css/custom.css" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+            processEscapes: true,
+          },
+          options: {
+            ignoreHtmlClass: 'no-mathjax',
+          }
+        };
+    </script>
+
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            nonce="MTdUVVRPV2NXoI0vE69WaQ==" >
+    </script>
+
+    <!--This script keeps local links inside the web app rather than opening them
+in Safari, and has nothing to do with editing or Aloha.-->
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+    (function (document, navigator, standalone) {
+
+        if ((standalone in navigator) && navigator[standalone]) {
+            var curnode, location = document.location, stop = /^(a|html)$/i;
+            document.addEventListener('click', function (e) {
+                curnode = e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                    curnode = curnode.parentNode;
+                }
+
+                if (
+                    'href' in curnode && // is a link
+                    (chref = curnode.href).replace(location.href, '').indexOf('#') && // is not an anchor
+                    (!(/^[a-z\+\.\-]+:/i).test(chref) ||                       // either does not have a proper scheme (relative links)
+                        chref.indexOf(location.protocol + '//' + location.host) === 0) // or is in the same protocol and domain
+                ) {
+                    e.preventDefault();
+                    location.href = curnode.href;
+                }
+            }, false);
+        }
+    })(document, window.navigator, 'standalone');
+</script>
+
+
+<style>
+
+    @media screen and (min-width: 767px) {
+        .blurb {
+            min-height: 260px;
+        }
+    }
+</style>
+    
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+</script>
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+    if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "/static/core/js/jquery-3.6.1.min.js";
+        document.head.appendChild(script);
+    }
+</script>
+
+    
+    <script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+        var $ = jQuery;
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <script src="/static/core/js/ajax-csrf-snippet.js"></script>
+    
+    <link rel="stylesheet" href="/static/fontawesomefree/css/all.min.css">
+    <script src="/static/fontawesomefree/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+
+    <style nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+        body {
+            font-family: Exo;}
+    </style>
+
+
+
+
+
+
+
+
+        
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js" integrity="sha512-lEb9Vp/rkl9g2E/LdHIMFTqz21+LA79f84gqP75fbimHqVTu6483JG1AwJlWLLQ8ezTehty78fObKupq3HSHPQ==" crossorigin="anonymous"></script>
+    <script src="/static/core/js/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="/static/core/js/ajax-csrf-snippet.js" ></script>
+    <script src="/static/virtual/js/virtual.js"></script>
+    
+
+    
+
+    
+    <link rel="canonical" href="https://cvpr.thecvf.com/Conferences/2025/AuthorGuidelines">
+
+    <title>2025 Author Guidelines</title>
+</head>
+
+<body>
+<!-- <h1><a href="#" onclick="alert('CSP Test');">CSP Test</a></h1> -->
+
+
+
+
+<div class="noprint">
+    
+        
+            <!--Navbar start-->
+<header>
+    <a href="#child-menu" class="off-screen">Skip to yearly menu bar</a>
+    <a href="#main" class="off-screen">Skip to main content</a>
+    <div id="id_navbar" class="navbar navbar-expand-sm navbar-dark" aria-label="Main Navigation"
+         style="background-color: #1B427D;">
+        <h2 class="off-screen">Main Navigation</h2>
+        <div class="container-fluid">
+            <div><a class="navbar-brand" href="/" aria-label="Home">
+
+                <img src="/static/core/img/cvpr-navbar-logo.svg" alt="conference_logo" height="40"></a></div>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggler1"
+                    aria-expanded="false" aria-label="Toggle main navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarToggler1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            CVPR
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Profile/create">
+                    <span >
+                        Create Profile
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/PrivacyPolicy">
+                    <span >
+                        Privacy Policy
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://support.conferences.computer.org/cvpr/help-desk">
+                    <span >
+                        Contact CVPR
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/FAQ">
+                    <span >
+                        HELP/FAQ
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/resetpassword">
+                    <span >
+                        Reset / Forgot Password
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/MyStuff">
+                    <span >
+                        My Stuff
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/resetpassword">
+                    <span >
+                        Reset Password
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    
+                </ul>
+
+                
+                <form class="d-flex mx-2" aria-label="Search" role="search" action="/search">
+                    <div class="input-group" role="search" style="outline-color:green;">
+                        <input type="text" class="form-control" placeholder="Search" name="q"
+                               value=""
+                               aria-label="Search" aria-describedby="btnGroupAddon"
+                                id="navbar-search">
+                        <div class="input-group-text btn-primary" id="btnGroupAddon">
+                            <button style="border: none; background-color: transparent; padding: 0;" type="submit" aria-label="execute search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                
+                    <a href="/accounts/login?nextp=/virtual/2025/35706 " class="navbar-brand"><span
+                            class="fa-solid fa-right-to-bracket"></span> Login</a>
+                
+
+            </div>
+        </div>
+    </div>
+</header>
+<!--Navbar end-->
+        
+    
+</div><!--noprint div-->
+
+<!--This holds the whole page including the navbar-->
+<main id="main">
+    
+        
+            <div class="container-fluid">
+                
+<!--Navbar start-->
+
+
+
+
+<div class="container-fluid">
+
+    <div class="dropdown" id="child-menu">
+        <nav class="align-middle navbar navbar-expand-lg mx-4 border border-3 border-top-0 rounded-bottom"
+             style="min-height: 57px; background-color: #F6f6f6;">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggler1029"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarToggler1029">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle border-3  btn btn-primary text-white p-1" style= "background-color: #070bff; font-size: 1.2em;"
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Year: (2025)
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2027">2027
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2026">2026
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2025">2025
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2024">2024
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2023">2023
+                </a>
+                
+            </li>
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Dates">
+                    <span >
+                        Dates
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Calls
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForPapers">
+                    <span >
+                        Call for Papers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForTutorials">
+                    <span >
+                        Call for Tutorial Proposals
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/WorkshopProposals">
+                    <span >
+                        Call for Workshop Proposals
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForMusicalPerformance">
+                    <span >
+                        Call for Musical Performance
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForSocials">
+                    <span >
+                        Call for Socials
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForAIArt">
+                    <span >
+                        Call for AI Art
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForDemos">
+                    <span >
+                        Call for Demos
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CallForDoctoralConsortium">
+                    <span >
+                        Call for Participation: Doctoral Consortium
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Author &amp; Reviewer Guides
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/AuthorGuidelines">
+                    <span >
+                        Author Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/AuthorSuggestedPractices">
+                    <span >
+                        Author Suggested Practices
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/EthicsGuidelines">
+                    <span >
+                        Author Ethics Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/YouTubeVideoPosterUpload">
+                    <span >
+                        YouTube and Poster Art Uploads
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" style="pointer-events: none;   cursor: default;   text-decoration: none;   color: black;">
+                <a class="nav-link p-1"  href="">
+                    <span >
+                        Reviewers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ReviewerGuidelines">
+                    <span >
+                        Reviewer Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/PosterPrintingInformation">
+                    <span >
+                        Oral/Poster Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" style="pointer-events: none;   cursor: default;   text-decoration: none;   color: black;">
+                <a class="nav-link p-1"  href="">
+                    <span >
+                        Authors
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CVPRChanges">
+                    <span >
+                        Changes for 2025
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CompleteYourORProfile">
+                    <span >
+                        How to complete your OpenReview profile
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Clarification">
+                    <span >
+                        Clarification
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://docs.google.com/document/d/1O3xcBy7O93hb9FY6c3Wg7fc8bKvvZFVvF3Ynmjhsmlg/edit?usp=sharing">
+                    <span >
+                        Camera-Ready Submission Instructions
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://docs.google.com/document/d/1t5-TzipreuxSdLqlq5dnJXXrwTdcMy3moNlr4nEZw00/edit?usp=sharing">
+                    <span >
+                        Author Submission Site Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/CVPR2025/Im_Presenting_Social_Toolkit.zip">
+                    <span >
+                        I'm Presenting Social Toolkit
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Attend
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/FAQ">
+                    <span >
+                        <strong>2025 In-person FAQ</strong>
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Pricing2">
+                    <span >
+                        Register
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/InvitationLetter">
+                    <span >
+                        Invitation Letter
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Hotels">
+                    <span >
+                        Book Your Hotel
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/KeynotesAndPanels">
+                    <span >
+                        Keynotes & Panels
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/tutorial-list">
+                    <span >
+                        Tutorials
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/workshop-list">
+                    <span >
+                        Workshops
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/BroadeningParticipation">
+                    <span >
+                        Broadening Participation
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://thecvf-art.com">
+                    <span >
+                        Art Program
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ProgramOverview">
+                    <span >
+                        Program Overview
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/CVPR2025/CVPR_main_conf_2025.pdf">
+                    <span >
+                        Main Conference Program
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://www.scholar-inbox.com/conference/cvpr/2025">
+                    <span >
+                        Scholar Inbox (Paper Recommendation System)
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Expo
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Sponsors">
+                    <span >
+                        Sponsors
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ExhibitorInformation">
+                    <span >
+                        Exhibitor Information
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ExpoSchedule">
+                    <span >
+                        Expo Schedule
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://hallerickson.ungerboeck.com/prod/app85.cshtml?aat=42382b5775704b416d4c42786d3538456845676372793061315862414a5267714b7a624d465848315447303d">
+                    <span >
+                        Sponsor, Exhibitor List &amp; Floor-plan
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/PromotionalOpportunities">
+                    <span >
+                        Promotional Opportunities
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ExhibitorManual">
+                    <span >
+                        2025 Exhibitor Manual
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/PRProfessionals">
+                    <span >
+                        Exhibitor/Sponsor PR Professionals
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Media
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/PressLandingPage">
+                    <span >
+                        Media Center
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/MediaPass">
+                    <span >
+                        Get Media Pass
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/NewsAndResources">
+                    <span >
+                        News and Resources
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Organization
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Organizers">
+                    <span >
+                        Organizing Committee
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/ProgramCommittee">
+                    <span >
+                        Program Committee
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/index.html">
+                    <span >
+                        Conference Site
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Navbar end-->
+
+            </div>
+            <br><br>
+        
+    
+    
+        
+        <div class="container">
+    
+    
+    
+
+    
+    <div class="container">
+        
+            <!--JUst above the HTML in document-snippet.html-->
+            <div> <div>
+<h3><strong>CVPR 2025 Submission Policies</strong></h3>
+
+<p>All authors should carefully review the following policies that govern the submission and review process, as failure to comply with these policies may result in the rejection of your submission as well as possible additional sanctions in the case of dual submissions and plagiarism. In addition, authors are urged to consult <a href="https://cvpr.thecvf.com/Conferences/2025/EthicsGuidelines"><u>ethics guidelines</u></a>, <a href="https://cvpr.thecvf.com/Conferences/2025/AuthorSuggestedPractices"><u>recommended best practices</u></a>, and <a href="https://cvpr.thecvf.com/Conferences/2025/AuthorGuidelines#faq"><u>FAQs</u></a>.</p>
+
+<p><strong>Paper formatting:</strong> Papers are limited to eight pages, including figures and tables, in the CVPR style. Additional pages containing only cited references are allowed. Please download the <a href="https://github.com/cvpr-org/author-kit/releases"><u>CVPR 2025 Author Kit</u></a> for detailed formatting instructions. </p>
+
+<p>Papers that are not properly anonymized, or do not use the template, or have more than eight pages (excluding references) will be rejected without review.</p>
+
+<p><strong>Submission and review process:</strong> CVPR 2025 will be using <a href="https://openreview.net/group?id=thecvf.com/CVPR/2025/Conference"><u>OpenReview</u></a> to manage submissions. Consistent with the review process for previous CVPR conferences, submissions under review will be visible only to their assigned members of the program committee (senior area chairs, area chairs, and reviewers). The reviews and author responses will never be made public, and we will not be soliciting comments from the general public during the reviewing process. </p>
+
+<p>Anyone who plans to submit a paper as an author or a co-author will need to create (or update) their OpenReview profile by the full paper submission deadline. By submitting a paper to CVPR, the authors agree to the review process and understand that papers are processed by the OpenReview system to match each manuscript to the best possible area chairs and reviewers.</p>
+
+<p>Our OpenReview instructions can be found <a href="https://cvpr.thecvf.com/Conferences/2025/CompleteYourORProfile"><u>here</u></a>.</p>
+
+<p>PCs are still facing a huge growth in submissions, and are spending all their energies ensuring that papers find appropriate ACs and reviewers.  For this reason, PCs will NOT:</p>
+
+<ul>
+	<li>  allow late submissions, whatever the reason;</li>
+	<li>  undo OpenReview snarl ups, whatever the reason;</li>
+	<li>  allow you to change author lists after the paper submission deadline, whatever the reason;</li>
+	<li>  explain policies in detail, however puzzling you find them,</li>
+</ul>
+
+<p>and PCs will NOT answer emails on these points.  </p>
+
+<p>If there is some form of OpenReview catastrophe, it will affect A LOT of people and PCs WILL know about it.  There’s no need to tell PCs in this case, they will already be aware of the problem.</p>
+
+<p><strong>Confidentiality</strong>: All members of the program committee (program chairs, senior area chairs, area chairs, and reviewers) are instructed to keep all information about their assigned submissions confidential and not to share or distribute materials for any reason except to facilitate the reviewing of the submitted work. Misuse of confidential information is a severe professional failure and appropriate measures will be taken when brought to the attention of the CVPR organizers. It should be noted, however, that all program committee members are volunteers, and the CVPR organization is not and cannot be held responsible for the consequences if confidentiality is broken due to a violation during the review process.</p>
+
+<p><strong>Conflict responsibilities</strong>: Anyone who plans to submit a paper as an author or a co-author will need to create or update their OpenReview profile. You will be asked to declare two types of conflicts – domain and personal conflicts – by filling out appropriate sections of your OpenReview profile, as described on the <a href="https://cvpr.thecvf.com/Conferences/2025/CompleteYourORProfile"><u>OpenReview instructions page</u></a>. If any author of a submission is found to have incomplete or inaccurate conflict information, the submission may be summarily rejected. <strong>To avoid undeclared conflicts, authors cannot be added or deleted after the paper submission deadline (November 14th).</strong><strong> The author list is considered final after the paper submission deadline (November 14th) and no changes are allowed thereafter, also not for accepted papers. </strong>Moreover, all authors of a paper must have complete OpenReview profiles by the paper submission deadline (November 14th) to avoid desk rejection.</p>
+
+<p><strong>Double blind review</strong>: CVPR reviewing is double blind, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material. Do not provide information that may identify the authors in the acknowledgments (e.g., co-workers and grant IDs) and in the supplementary material (e.g., titles in the movies, or attached papers). Also, do not provide links to websites that identify the authors. Violation of any of these guidelines may lead to rejection without review. If you need to cite any of your own papers that are being submitted concurrently to CVPR or another venue, you should (1) include anonymized versions of those papers in the supplementary material; (2) cite these anonymized papers; and (3) argue in the body of your paper why your CVPR submission is non-trivially different from these concurrent submissions.</p>
+
+<p><strong>Plagiarism</strong>: Plagiarism consists of appropriating the words or results of another, without credit. CVPR 2025's policy on plagiarism is to refer suspected cases to the IEEE Intellectual Property office, which has an established mechanism for dealing with plagiarism and wide powers of excluding offending authors from future conferences and from IEEE journals. You can find information on this office, their procedures, and their definitions of five levels of plagiarism on <a href="https://www.ieee.org/publications_standards/publications/rights/plagiarism.html"><u>this webpage</u></a>. </p>
+
+<p>We will be actively checking for plagiarism. Furthermore, the paper matching system is quite accurate. As a result, it regularly happens that a paper containing plagiarized material goes to a reviewer from whom material was plagiarized. Such reviewers will notice the plagiarism and are very likely to report it.</p>
+
+<p><strong>Dual submissions: </strong>The goals of CVPR are to publish exciting new work for the first time and to avoid duplicating the effort of reviewers. By submitting a manuscript to CVPR, the authors acknowledge that it has not been previously published or accepted for publication in substantially similar form in any peer-reviewed venue including journal, conference or workshop, or archival forum. Furthermore, no publication substantially similar in content (defined as having 20 percent or more overlap) has been or will be registered or submitted to this or another conference, workshop, or journal during the review period. Violation of any of these conditions will lead to rejection, and will be reported to the other venue to which the submission was sent.</p>
+
+<p>A publication, for the purposes of this policy, is defined to be a written work longer than four pages (excluding references) that was submitted for review by peers for either acceptance or rejection, and, after review, was accepted. In particular, this definition of publication does not depend upon whether such an accepted written work appears in a formal proceedings or whether the organizers declare that such work “counts as a publication.” Under the above definition, arXiv preprints and university technical reports are <em>not</em> considered as publications. However, peer-reviewed workshop papers <em>are </em>considered as publications if their length is more than four pages (excluding references), even if they do not appear in a proceedings. </p>
+
+<p>Note that a technical report (departmental, arXiv, etc.) version of the submission that is put up without any form of direct peer-review is NOT considered prior art and does NOT NEED to be cited in the submission; authors may cite such material, but cannot be penalized for not citing it.</p>
+
+<p>We will be actively checking for double submissions.</p>
+
+<p><strong>Supplementary material submission:</strong> By the supplementary material deadline, the authors may optionally submit additional material that was ready at the time of paper submission but could not be included due to constraints of format or space. The authors should refer to the contents of the supplementary material appropriately in the paper. Reviewers will be encouraged to look at it, <em>but are not obligated to do so.</em></p>
+
+<p>Supplementary material may include videos, proofs, additional figures or tables, more detailed analysis of experiments presented in the paper, or a concurrent submission to CVPR or another conference. It may not include results on additional datasets, results obtained with an improved version of the method (e.g., following additional parameter tuning or training), or an updated or corrected version of the submission PDF. Papers with supplementary materials violating the guidelines may be summarily rejected.</p>
+
+<p>We encourage (but do not require) authors to upload their code as part of their supplementary material in order to help reviewers assess the quality of the work. Please see the <a href="https://cvpr2023.thecvf.com/Conferences/2025/AuthorSuggestedPractices"><u>suggested practices</u></a> document for more detailed guidelines about code submission.</p>
+
+<p><strong>Personal and human subjects data:</strong> If a paper makes use of personal data and/or data from human subjects, including personally identifiable information or offensive content, we expect that the collection and use of such data has been conducted carefully in accordance with the <a href="https://cvpr2023.thecvf.com/Conferences/2025/EthicsGuidelines"><u>ethics guidelines</u></a>. In many countries and institutions, the collection and use of personally identifiable data or data from human subjects is subject to approval from an Institutional Review Board (IRB, or equivalent). If the use of such data was approved by an IRB, stating this is sufficient. If the use of such data has not (yet) been approved by an IRB, authors should provide information on any pending approval process, how the data was obtained, as well as discuss if and how consent was obtained (or why it, perhaps, could not be obtained). This discussion can be included either in the main paper or in the supplementary material. If the authors use an existing, published dataset, we encourage (but do not require) them to check how data was collected and whether consent was obtained. </p>
+
+<p>Please see the <a href="https://cvpr2023.thecvf.com/Conferences/2025/AuthorSuggestedPractices"><u>suggested practices</u></a> document for more detailed guidelines and FAQs.</p>
+
+<p>Attendance responsibilities: The authors agree that if the paper is accepted, at least one of the authors will register for the conference and present the paper there.</p>
+
+<p><strong>Publication:</strong> All accepted papers will be made publicly available by the Computer Vision Foundation (CVF) four weeks before the conference. Authors wishing to submit a patent should understand that the paper's official public disclosure is four weeks before the conference or whenever the authors make it publicly available, whichever is first. The conference considers papers confidential until published four weeks before the conference, but notes that multiple organizations will have access during the review and production processes, so those seeking patents should discuss filing dates with their IP council. The conference assumes no liability for early disclosures. More information about CVF is available at <a href="http://www.cv-foundation.org/"><u>http://www.cv-foundation.org/</u></a>.</p>
+
+<p><strong>Restrictions on publicity and media: </strong>The media restriction policy is based on the motion passed in the CVPR 2015 PAMI-TC meeting. According to this motion, "Papers submitted to CVPR must not be discussed with the media until they have been officially accepted for publication. Violations of the embargo will result in the paper being removed from the conference and proceedings".</p>
+
+<p><strong>Authors acting as reviewers:</strong> Given the growth of the number of paper submissions, and per the motion passed in the CVPR 2022 PAMI-TC meeting, we expect all authors to be willing to serve as reviewers if asked to do so. To help us identify qualified reviewers, and to match submissions to reviewers, <em>all authors are required to have an up-to-date OpenReview profile </em>(see <a href="https://cvpr.thecvf.com/Conferences/2025/CompleteYourORProfile"><u>our OpenReview instructions</u></a>).</p>
+
+<p> </p>
+
+<h3>Rebuttal Policies</h3>
+
+<p>After receiving the reviews, the authors may optionally submit a rebuttal to address the reviewers' comments. The rebuttal is limited to a one-page PDF file using the rebuttal template included in the <a href="https://github.com/cvpr-org/author-kit/releases"><u>CVPR 2025 Author Kit</u></a>. Responses longer than one page will simply not be reviewed. This includes responses where the margins and formatting are deemed to have been significantly altered from those specified by the style guide.</p>
+
+<p>The rebuttal must maintain anonymity. It cannot include links, even anonymous ones, to external material such as code, videos, etc.</p>
+
+<p>Per a passed 2018 PAMI-TC motion, reviewers should refrain from requesting significant additional experiments for the rebuttal, or penalize for lack of additional experiments. Authors should refrain from including new contributions or experimental results in the rebuttal, especially when not specifically requested to do so by the reviewers. Reviewers are instructed to disregard any unrequested contributions.</p>
+
+<p>Authors also have the possibility to submit a separate confidential comment to the area chair. Please do so only in exceptional circumstances.</p>
+
+<p> </p>
+
+<h3>Author FAQs</h3>
+
+<p><strong>About Submitting Papers and Supplementary Material</strong></p>
+
+<p><em>Q. What does paper registration deadline mean? What do I need to do until then?</em></p>
+
+<p>A. Until the paper registration deadline, you need to create a submission in OpenReview, add a title and an abstract for your paper, add all your co-authors (and make sure that these OpenReview profiles are complete to avoid extra unnecessary stress at the paper submission deadline).</p>
+
+<p><em>Q. Can we please have an extension on the paper registration or submission deadline?</em></p>
+
+<p>A. NO. Any incomplete submission or a submission not meeting required criteria will be deleted.</p>
+
+<p><em>Q. Can I update my paper’s information (e.g., title, abstract, author list) after the paper registration deadline?</em></p>
+
+<p>A. You can update the title and abstract until the paper submission deadline. You can also add, remove and reorder the author list until the paper submission deadline. However, after the paper registration deadline, you can no longer create new paper submissions.</p>
+
+<p><em>Q. Can I add/remove authors after my paper has been accepted?</em></p>
+
+<p>A. NO. After the paper submission deadline, the author list is considered final. It is also not possible to change the order of the authors.</p>
+
+<p><em>Q. Are there any formatting requirements for PDFs in the supplementary material?</em></p>
+
+<p>A. No. The important thing is that supplementary PDFs are legible and neatly formatted. Many authors choose to use the official CVPR style for any supplementary PDFs as well, but this is not a must. Formatting supplementary documents in a single-column layout is permitted.</p>
+
+<p><em>Q. Can I link to an external webpage from my CVPR submission?</em></p>
+
+<p>A. This is strongly discouraged because it runs a high risk of violating anonymity or the media ban, or circumventing length or deadline restrictions. If you feel you absolutely must link to external materials, see the next question.</p>
+
+<p><em>Q. Can I link to additional image or video material from the supplementary material?</em></p>
+
+<p>A. No. The only links authorized to appear in the supplementary material are links to Anonymous GitHub, which should only be used to submit code.</p>
+
+<p><strong>About Preprints, Anonymity, and Media Promotion</strong></p>
+
+<p><em>Q. Does a Technical Report (departmental, arXiv, etc.) available online count as a prior publication, and therefore is that work ineligible for review and publication at CVPR 2025?</em></p>
+
+<p>A. Please read the dual submission policy above.</p>
+
+<p><em>Q. Does a document on GitHub or other open repositories count as a publication, and therefore is ineligible for review and publication at CVPR 2025?</em></p>
+
+<p>A. GitHub documents are not publications and won't be treated as such. To preserve anonymity, you should not cite your public codebase. You can say that the code will be made publicly available.</p>
+
+<p><em>Q. Does a presentation at a departmental seminar during the review period violate the anonymity or media promotion policy?</em></p>
+
+<p>A. It does not. Presentation of material at an academic talk, without mentioning it as being in submission to CVPR, is acceptable.</p>
+
+<p><em>Q. Can I list my CVPR submission in an application for a job or graduate program?</em></p>
+
+<p>A. Yes. As long as you communicate this information confidentially and to a small group of people, it is OK. However, you <em>should not</em> list CVPR submissions on public websites or on media (see below).</p>
+
+<p><em>Q. Can I post my submission on arXiv? </em></p>
+
+<p>A. Yes. </p>
+
+<p><em>Q. Can I have a video link in my arXiv paper?</em></p>
+
+<p>A. Yes, you may. </p>
+
+<p><em>Q. Can I build a project website related to my arXiv paper?</em></p>
+
+<p>A. Yes, you may.</p>
+
+<p><em>Q. How do I cite my results reported in open challenges?</em></p>
+
+<p>A. To conform with the double blind review policy, you can report results of other challenge participants together with your results in your paper. For your results, however, you should not identify yourself and should not mention your participation in the challenge. Instead, present your results referring to the method proposed in your paper and draw conclusions based on the experimental comparison to other results.</p>
+
+<p><em>Q. Does my submission need to cite arXiv papers that are related to my work?</em></p>
+
+<p>A. Consistent with good academic practice, you need to cite all sources that inspired and informed your own work. This said, asking authors to thoroughly compare their work with arXiv reports that appeared shortly before the submission deadline imposes an unreasonable burden. We also do not wish to discourage the publication of similar ideas that have been developed independently and concurrently. Authors and reviewers should keep the following guidelines in mind:</p>
+
+<ul>
+	<li>Authors are not required to discuss and compare their work with recent arXiv reports, although they must properly cite those that inspired them.</li>
+	<li>To reduce confusion, whenever citing papers that initially appeared on arXiv, the authors should check whether those papers had subsequently been published in a peer-reviewed venue, and to cite those versions accordingly.</li>
+	<li>Failing to cite an arXiv paper or failing to beat its performance SHOULD NOT be sole grounds for rejection.</li>
+	<li>Reviewers SHOULD NOT reject a paper solely because another paper with a similar idea has already appeared on arXiv. If the reviewer suspects plagiarism or academic dishonesty, they are encouraged to bring these concerns to the attention of area and program chairs.</li>
+	<li>It is acceptable for a reviewer to suggest that an author should acknowledge or be aware of something on arXiv.</li>
+</ul>
+
+<p> </p>
+
+<p><strong>The anonymity policy and its interpretation</strong></p>
+
+<p>Standing policy of PAMI-TC says:<br>
+<br>
+"Papers submitted to CVPR must not be discussed with the media until they have been officially accepted for publication. Violation of the embargo will result in the paper being removed from the proceedings”<br>
+<br>
+<em>Q: How will PCs interpret this policy?</em><br>
+<br>
+A: PCs agree that the policy should be interpreted as follows:<br>
+<br>
+The prohibition is on discussion of papers *that have been submitted* rather than papers that *are intended to be submitted*, otherwise the wording would be something like "Potential submissions" rather than "Papers submitted".  Furthermore, it prohibits discussion of papers, not of the underlying technology.<br>
+<br>
+<em>Q: How will PCs interpret "discussed with the media"?</em><br>
+<br>
+A:   PCs interpret the intention of the policy to be that authors should use reasonable care to avoid communicating their identity to referees. An author might argue that, although they set up a webpage describing their paper as "in submission at CVPR 2025", they did not discuss it with the media. PCs strongly discourage this class of argument as not being consistent with the intention of the policy. PCs have nearly arbitrary powers to interpret policy, and if necessary will exercise them in what PCs see as the interests of the community.<br>
+<br>
+<em>Q: What can author A say about work before a paper is submitted?</em><br>
+<br>
+A: Policy prevents discussing a *paper submitted*, but not the essential content of a paper that is to be submitted. So, for example, A can describe the technology; can discuss how wonderful it is for the company; and can describe supporting experiments, etc. None of this violates the policy, because it doesn't discuss a paper submitted to CVPR. But A must avoid discussing the *paper that will be submitted*;  ideally, A says at most that a paper is in preparation and will be submitted to an important venue.<br>
+<br>
+Q: Can author A post a paper on the web, saying that "this paper will be submitted to CVPR25"?<br>
+<br>
+A: PCs discourage this practice, and have asked authors who are known to have done so to stop.  PCs  are concerned that a reasonable interpretation of the policy would see this as an anonymity violation, and subject the paper to desk rejection.  ACs and referees will *not* be instructed to search for anonymity violations, but PCs will react to any such violation that is found.  <br>
+<br>
+Q: Once a paper is submitted, what can author A say about the paper?<br>
+<br>
+A: Author A clearly cannot say publicly:<br>
+<br>
+- our submission to CVPR shows that ….</p>
+
+<p><strong>About Datasets</strong></p>
+
+<p><em>Q. My research uses datasets that have been withdrawn by their creators, such as DukeMTMC-ReID or MS-Celeb-1M. What should I do?</em></p>
+
+<p>A. Generally, papers should not use datasets that have been withdrawn by their creators, as doing so may involve ethical violations or even legal complications. Under some circumstances, authors may feel they need to use such datasets — for example, if fair comparison is impossible in any other way. However, authors who use such datasets should always explain the need to do so carefully and in some detail as such claims will be carefully scrutinized. Note that in many cases alternative datasets exist. The recommended course should be to not use the dataset, and (if necessary) explain that this may affect certain comparisons with prior art. It is a violation of policy for a referee or area chair to require comparison on a dataset that has been withdrawn.</p>
+
+<p><em>Q. My research relies on broadly used public datasets of others, which have not been withdrawn, but for which it is unclear if they have been approved by an IRB. Is this allowed?</em></p>
+
+<p>A. In the case of broadly used datasets that are still offered by their creators, for which IRB approval status is unclear, authors are encouraged to discuss the situation, e.g., why no better alternatives are available.</p>
+
+<p><em>Q. I wish to claim a dataset contribution in my paper, but I either cannot release the data publicly, or am not sure I will be able to do so by the time of publication. Is this an issue?</em></p>
+
+<p>A. YES. If you wish to claim a dataset as one of your contributions, it is expected that your dataset will be ready and available at the time you will be submitting the camera ready paper. If you cannot ensure that you can meet this deadline, then the release of the dataset should not be one of the major scientific contributions of your paper. Note that it is still acceptable to submit work relying on a non-public dataset – you just cannot claim that dataset as one of your contributions, and the paper will have to be evaluated based on its other merits.</p>
+
+<p><strong>About LLMs</strong></p>
+
+<p>Q. What is the LLM Policy for authors in CVPR 2025?</p>
+
+<p>A. Authors may use any tools they find productive in preparing a paper, but must be aware that they are responsible for any misrepresentation, factual inaccuracy or plagiarism in their paper.  Papers containing citations of non-existent material will be rejected when found, and may be rejected without review.   Similarly, papers containing obvious factual inaccuracies will be rejected when found and may be rejected without review.  It is not a defense to a charge of plagiarism or of inaccuracy to argue that "an LLM did it". You are responsible for what you submit.</p>
+
+<p>Q. How will the LLM policy be implemented?</p>
+
+<p>A. Referees who find inaccuracies should act as they usually would; as should AC's.  Glaring examples of citations to non-existent material are very likely to be desk-rejected.</p>
+
+<p><br>
+ </p>
+</div>
+</div>
+        
+    </div>
+
+
+
+    
+        </div>
+    
+
+</main>
+<!--END BLOCK CONTENT-->
+
+
+<!--Footer for the edit button-->
+
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+
+    $(function () {
+        if ($(".editable").length == 0) {
+            $("#editFooter").hide();
+        }
+
+        // Event bindings for edit buttons
+        $('.startEditBtn').on('click', function() {
+            start_edit();
+        });
+        
+        $('.stopEditBtn').on('click', function() {
+            stop_edit();
+        });
+        $('#id_accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.workshopstatus').on('change', function() {
+            changeStatus(this);
+        });
+        $('.action-select').on('change', function() {
+            actionChanged(this);
+        });
+        $('.extra').on('change', function() {
+            extraChanged(this);
+        });
+        $('.filter_workshop').on('change', function() {
+            this.form.submit();
+        });
+        $('.volunteer-status, .recommendation-letter-status').on('change', function() {
+            setStatus(this);
+        });
+        $('.status-form-show').on('change', function() {
+            this.form.submit();
+        });
+        $('.download-form-download').on('change', function() {
+            this.form.submit();
+        });
+        $('.presentation-type-form-presentation-type').on('change', function() {
+            this.form.submit();
+        });
+        $('.export-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.import-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.vol-email-form-to, .vol-email-form-template').on('change', function() {
+            this.form.submit();
+        });
+        $('.organizer-alert').on('click', function() {
+            getUserCreateForm(this.href);
+        });
+    })
+</script>
+
+<script src="/static/core/js/fastclick.min.js" ></script>
+
+<!--We don't know if there are editable tags on the page until after the django template engine has rendered the page. So,
+test in javascript for "editable" tags and if present, load the ckeditor engine dynamically. -->
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+    if (document.getElementsByClassName('editable').length > 0) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/static/core/ckeditor/4.18/ckeditor.js";    // use this for linked script
+      script.onload = function () {
+        console.log("ckeditor loaded");
+        // Initial setup when each editor is ready
+        CKEDITOR.on("instanceReady", function (e) {
+          updateToggleDocName(e.editor);
+        });
+
+        // React to any editor entering/leaving read-only
+        CKEDITOR.on("readOnly", function (e) {
+          updateToggleDocName(e.editor);
+        });
+      };
+        document.body.appendChild(script);
+    }
+
+    function updateToggleDocName(editor) {
+      var id = editor && editor.name;
+      if (!id || id.indexOf("id_") !== 0) return;
+
+      var doc_name_element = document.getElementById("document_name_" + id.slice(3));
+      console.log(doc_name_element);
+      if (!doc_name_element) return;
+
+      doc_name_element.style.display = editor.readOnly ? "none" : "block";
+    }
+
+</script>
+
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+    function fetchContent() {
+        $(".editable").each(function (index) {
+            var myself = this;
+            var docvID = this.getAttribute('id').replace("id_", "");
+            var blurbtext = this.getAttribute("blurbtext");
+            $.ajax({
+                url: "/Admin/RetrieveDocumentVersion",
+                type: "POST",
+                data: {
+                    docvID: docvID,
+                    blurbtext: blurbtext,
+                    csrfmiddlewaretoken: csrftoken,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    myself.setAttribute("contenteditable", "true");
+                    myself.innerHTML = data;
+                    CKEDITOR.inline(myself.id);
+                },
+            });
+        })
+    }
+
+    $("#nopageedit").hide();
+
+    function start_edit() {
+
+        $(".editable").addClass("warning-ring");
+
+        //At the beginning of an edit, we need to replace the content of the
+        //editable div with it's databased content in order to preserve the
+        //template tags. We want the tag, not the rendered tag.
+
+        /* You must remove any countdown.js timers on the page before replacing the page with it's
+        document version otherwise, Javascript will throw an exception.  */
+
+
+        $("[class$='-countdown']").parent().remove();
+        fetchContent();
+        $(".editable").attr("onblur", "ckeditorsave(this)");
+        window.status.bold();
+        window.status = "Click outside the editable area to save. Changes are LIVE!! Refresh page to discard changes.";
+        $("#editpage").hide();
+        $("#noeditpage").show();
+    }
+
+
+    function stop_edit() {
+        ckeditorsave();
+        $("#noeditpage").hide();
+        $("#editpage").show();
+        window.location.reload();
+    }
+
+    function ckeditorsave(event) {
+        for (var name in CKEDITOR.instances) {
+            if (CKEDITOR.instances[name].checkDirty()) {
+                editor = CKEDITOR.instances[name];
+                saveEditable(editor);
+            }
+        }
+    }
+
+    function saveEditable(editor) {
+        var content = editor.getData();
+        var contentId = editor.name;
+        var pageId = window.location.pathname;
+        var originalContent = "N/A";
+        var documentversion = editor.container.getAttribute("id").replace("id_", "");
+        var blurbtext = editor.container.getAttribute("blurbtext");
+        if (contentId.match(/-aloha$/gi)) {
+            contentId = contentId.replace(/-aloha/gi, '');
+        }  /*I'm not sure what this does but it seems like it would matter*/
+        var request = jQuery.ajax({
+            url: "/Admin/SaveDocument",
+            type: "POST",
+            async: false,
+            data: {
+                content: content,
+                originalContent: originalContent,
+                contentId: contentId,
+                pageId: pageId,
+                documentversion: documentversion,
+                blurbtext: blurbtext,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                if (data['message']) {
+                    alert(data['message']);
+                }
+            },
+            error: function (xqXHR, textStatus) {
+                window.status = textStatus;
+                debugger;
+            }
+
+        });
+
+    };
+
+
+</script>
+
+<script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+    jQuery(document).ajaxSend(function (event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+
+
+
+
+
+<div id="successful-page-load" class='hidden'>Successful Page Load</div>
+
+
+
+
+    <!-- v ieee cookie banner v -->
+    <script
+            nonce="MTdUVVRPV2NXoI0vE69WaQ=="
+            src="https://cmp.osano.com/AzyzptTmRlqVd2LRf/5160c710-0794-4bc5-88f4-2d0eb0eae122/osano.js"></script>
+    <link rel="stylesheet" href="https://cookie-consent.ieee.org/ieee-cookie-banner.css" type="text/css"/>
+    <!-- ^ ieee cookie banner ^ -->
+
+    
+    
+        
+            <!-- Google tag (gtag.js) -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-RFDVJCX1E6"></script>
+            <script nonce="MTdUVVRPV2NXoI0vE69WaQ==">
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-RFDVJCX1E6');
+            </script>
+        
+    
+
+
+
+
+
+
+
+
+<br>
+
+<div class="noprint">
+    <footer id="bootstrap-footer" class="text-center text-lg-start bg-light text-muted">
+
+        <div class="text-center p-1 border-top border-dark">
+        </div>
+        <section class="pt-1">
+            <div class="container text-center text-md-start mt-2">
+                <div class="row mt-3">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6">
+                        <h3 id="ContactUs">Contact Us</h3>
+                        <p><a href="https://support.conferences.computer.org/cvpr/help-desk">CVPR Help Desk</a></p>
+                        <p>
+                            Please contact us with questions
+                            about the following topics:
+                        </p>
+                        <p>
+                            Author - Paper Submission,
+                            Author - Open Review Issues,
+                            Author - Camera-Ready Paper,
+                            Registration - General,
+                            Registration - Cancellation,
+                            Childcare/Guests,
+                            Expo/Guests,
+                            Lodging,
+                            Visa Letter,
+                            Reviewer - Open Review Issues,
+                            Reviewer - General Issues,
+                            Area Chair Issues,
+                        </p>
+                        <p><a href="/Help/Contact?select=website">Website and Invitation Letter Help</a></p>
+                        <p>Use the website help link for issues including login, inactive accounts, invitation letters
+                            papers not associated with a registration.
+                        </p>
+                    </div>
+
+                    <div class="col-md-5 col-lg-4 col-xl-3 mx-auto mb-4" style="max-width: 300px;">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-center">
+                            Useful links
+                        </h6>
+                        <div>
+             <div>
+    <table class="table table-borderless">
+        <tbody>
+        <tr>
+            <td><img alt="IEEE Logo" src="https://media.icml.cc/Conferences/CVPR2023/img/ieee_cs_.svg"
+                     style="height:20px; width:66px"></td>
+            <td><a href="https://www.computer.org/">IEEE Computer Society</a></td>
+        </tr>
+        <tr>
+            <td><img alt="" src="https://media.icml.cc/Conferences/CVPR2023/img/CVF-transparent-background.svg"
+                     style="height:20px; width:31px"></td>
+            <td><a href="https://www.thecvf.com/">The Computer Vision Foundation</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <ul>
+        <li><a href="https://www.computer.org/csdl/proceedings/1000147">CVPR Proceedings</a></li>
+        <li><a href="/Conferences/2026/CodeOfConduct">Code of Conduct</a></li>
+    </ul>
+</div>
+            </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            <div>
+             <p><a href="https://openaccess.thecvf.com/menu">CVF Proceedings</a></p>
+            </div>
+        </div>
+
+    </footer>
+</div>
+
+
+
+
+<!-- Footer -->
+
+</body>
+</html>

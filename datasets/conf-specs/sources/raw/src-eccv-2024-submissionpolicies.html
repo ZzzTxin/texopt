@@ -1,0 +1,1853 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <style>html { scroll-padding-top: 70px; /* height of sticky header plus extra */ }</style>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/virtual/js/virtual.js"></script>
+    <meta name="google-site-verification" content="0jwPnVXIAk4FvFdT37dwMmd-kjHF86e5DKwvqlStUW0">
+
+
+    
+    <link rel="stylesheet" href="/static/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css" type="text/css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/core/css/custom.css" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+            processEscapes: true,
+          },
+          options: {
+            ignoreHtmlClass: 'no-mathjax',
+          }
+        };
+    </script>
+
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            nonce="jJ/RcwOC4PY9asK3aH+Bkw==" >
+    </script>
+
+    <!--This script keeps local links inside the web app rather than opening them
+in Safari, and has nothing to do with editing or Aloha.-->
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+    (function (document, navigator, standalone) {
+
+        if ((standalone in navigator) && navigator[standalone]) {
+            var curnode, location = document.location, stop = /^(a|html)$/i;
+            document.addEventListener('click', function (e) {
+                curnode = e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                    curnode = curnode.parentNode;
+                }
+
+                if (
+                    'href' in curnode && // is a link
+                    (chref = curnode.href).replace(location.href, '').indexOf('#') && // is not an anchor
+                    (!(/^[a-z\+\.\-]+:/i).test(chref) ||                       // either does not have a proper scheme (relative links)
+                        chref.indexOf(location.protocol + '//' + location.host) === 0) // or is in the same protocol and domain
+                ) {
+                    e.preventDefault();
+                    location.href = curnode.href;
+                }
+            }, false);
+        }
+    })(document, window.navigator, 'standalone');
+</script>
+
+
+<style>
+
+    @media screen and (min-width: 767px) {
+        .blurb {
+            min-height: 260px;
+        }
+    }
+</style>
+    
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+</script>
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+    if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "/static/core/js/jquery-3.6.1.min.js";
+        document.head.appendChild(script);
+    }
+</script>
+
+    
+    <script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+        var $ = jQuery;
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <script src="/static/core/js/ajax-csrf-snippet.js"></script>
+    
+    <link rel="stylesheet" href="/static/fontawesomefree/css/all.min.css">
+    <script src="/static/fontawesomefree/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+
+    <style nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+        body {
+            font-family: Exo;}
+    </style>
+
+
+
+
+
+
+
+
+        
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js" integrity="sha512-lEb9Vp/rkl9g2E/LdHIMFTqz21+LA79f84gqP75fbimHqVTu6483JG1AwJlWLLQ8ezTehty78fObKupq3HSHPQ==" crossorigin="anonymous"></script>
+    <script src="/static/core/js/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="/static/core/js/ajax-csrf-snippet.js" ></script>
+    <script src="/static/virtual/js/virtual.js"></script>
+    
+
+    
+
+    
+    <link rel="canonical" href="https://eccv.ecva.net/Conferences/2024/SubmissionPolicies">
+
+    <title>Submission policies</title>
+</head>
+
+<body>
+<!-- <h1><a href="#" onclick="alert('CSP Test');">CSP Test</a></h1> -->
+
+
+
+
+<div class="noprint">
+    
+        
+            <!--Navbar start-->
+<header>
+    <a href="#child-menu" class="off-screen">Skip to yearly menu bar</a>
+    <a href="#main" class="off-screen">Skip to main content</a>
+    <div id="id_navbar" class="navbar navbar-expand-sm navbar-dark" aria-label="Main Navigation"
+         style="background-color:#212529">
+        <h2 class="off-screen">Main Navigation</h2>
+        <div class="container-fluid">
+            <div><a class="navbar-brand" href="/" aria-label="Home">
+
+                <img src="/static/core/img/eccv-navbar-logo.svg" alt="conference_logo" height="40"></a></div>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggler1"
+                    aria-expanded="false" aria-label="Toggle main navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarToggler1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle border-3  btn btn-primary text-white p-1" style= "background-color: #070bff; font-size: 1.2 em;"
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Year: (2024)
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2026">2026
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2024">2024
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="https://eccv2022.ecva.net/">2022
+                </a>
+                
+            </li>
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/MyStuff">
+                    <span >
+                        My Stuff
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Profile/create">
+                    <span >
+                        Create Profile
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/resetpassword">
+                    <span >
+                        Reset Password
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    
+                </ul>
+
+                
+                <form class="d-flex mx-2" aria-label="Search" role="search" action="/search">
+                    <div class="input-group" role="search" style="outline-color:green;">
+                        <input type="text" class="form-control" placeholder="Search" name="q"
+                               value=""
+                               aria-label="Search" aria-describedby="btnGroupAddon"
+                                id="navbar-search">
+                        <div class="input-group-text btn-primary" id="btnGroupAddon">
+                            <button style="border: none; background-color: transparent; padding: 0;" type="submit" aria-label="execute search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                
+                    <a href="/accounts/login?nextp=/virtual/2024/poster/2163 " class="navbar-brand"><span
+                            class="fa-solid fa-right-to-bracket"></span> Login</a>
+                
+
+            </div>
+        </div>
+    </div>
+</header>
+<!--Navbar end-->
+        
+    
+</div><!--noprint div-->
+
+<!--This holds the whole page including the navbar-->
+<main id="main">
+    
+        
+            <div class="container-fluid">
+                
+<!--Navbar start-->
+
+
+
+
+<div class="container-fluid">
+
+    <div class="dropdown" id="child-menu">
+        <nav class="align-middle navbar navbar-expand-lg mx-4 border border-3 border-top-0 rounded-bottom"
+             style="min-height: 57px; background-color: #F6f6f6;">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggler631"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarToggler631">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Policies
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/SubmissionPolicies">
+                    <span >
+                        Submission policies
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/EthicsGuidelines">
+                    <span >
+                        Ethics Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/ECCV2024/policies/ECCV%20Commitment%20to%20Sustainability.pdf">
+                    <span >
+                        Commitment to Sustainability
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/ECCV2024/policies/ECCV%20Decalogue.pdf">
+                    <span >
+                        Decalogue
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/ECCV2024/policies/ECCV%20SoMe%20Netiquette.pdf">
+                    <span >
+                        SoMe Netiquette
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Dates">
+                    <span >
+                        Dates
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Organization
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Committees">
+                    <span >
+                        Organizing Committee
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/AreaChairs">
+                    <span >
+                        Area Chairs
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Reviewers">
+                    <span >
+                        Outstanding and Emergency Reviewers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/AllReviewers">
+                    <span >
+                        All Reviewers
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Calls
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForPapers">
+                    <span >
+                        Call for Papers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForWorkshops">
+                    <span >
+                        Call for Workshops
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForTutorials">
+                    <span >
+                        Call for Tutorials
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForDemos">
+                    <span >
+                        Call for Demos
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForDoctoralConsortium">
+                    <span >
+                        Call for Doctoral Consortium
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CallForSpeedMentoring">
+                    <span >
+                        Call for Speed Mentoring
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            For Authors
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/AuthorGuide">
+                    <span >
+                        Submission Guide
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/SubmissionPolicies">
+                    <span >
+                        Submission Policies
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CMTAuthorInstructions">
+                    <span >
+                        CMT Author Instructions
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/AuthorPractices">
+                    <span >
+                        Suggested Practices
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/EthicsGuidelines">
+                    <span >
+                        Ethics Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://www.springernature.com/gp/authors/book-authors-code-of-conduct">
+                    <span >
+                        Springer Nature Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/FAQs">
+                    <span >
+                        FAQs
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/PosterUpload">
+                    <span >
+                        Poster Upload Page
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/youtube/upload">
+                    <span >
+                        YouTube Video Upload
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Expo / Sponsors
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Expo">
+                    <span >
+                        Expo
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Sponsors">
+                    <span >
+                        Sponsors
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/DelegateListWarning">
+                    <span >
+                        Delegate List Warning
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            For Attendees
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Registration">
+                    <span >
+                        Registration
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Milano">
+                    <span >
+                        Milano / Venue
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/VisaInvitationLetterInfo">
+                    <span >
+                        Visa / Invitation Letter / Guarantee Letter
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/MilanTravel">
+                    <span >
+                        Travel
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Hotels">
+                    <span >
+                        Hotels
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/MilanServices">
+                    <span >
+                        Milano Services
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Workshops">
+                    <span >
+                        Accepted Workshops
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Tutorials">
+                    <span >
+                        Accepted Tutorials
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/DEI">
+                    <span >
+                        Diversity Equity and Inclusion
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/MilanoTours">
+                    <span >
+                        Milano Tours
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/SpeedMentoringSchedule">
+                    <span >
+                        Speed Mentoring
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Schedule_and_rooms">
+                    <span >
+                        Schedule
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/ECCV2024/ECCV2024WorkshopPDF.pdf">
+                    <span >
+                        Workshop Program PDF
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://media.eventhosts.cc/Conferences/ECCV2024/ConferenceProgram.pdf">
+                    <span >
+                        Conference Program PDF
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/ProceedingsList">
+                    <span >
+                        2024 Proceedings
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/PosterPrinting">
+                    <span >
+                        Poster Printing
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/careers/#search">
+                    <span >
+                        Job Board
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/Awards">
+                    <span >
+                        2024 Awards
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Help/Contact">
+                    <span >
+                        Contact
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            For Reviewers
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2024/ReviewerGuide">
+                    <span >
+                        Reviewer Guidelines
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2024/index.html">
+                    <span >
+                        Conference Site
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Navbar end-->
+
+            </div>
+            <br><br>
+        
+    
+    
+        
+        <div class="container">
+    
+    
+    
+
+    
+    <div class="container">
+        
+            <!--JUst above the HTML in document-snippet.html-->
+            <div> <div>
+<h1 id="eccv-2024-submission-policies">ECCV 2024 Submission Policies</h1>
+
+<p> </p>
+
+<p><strong>Updates:</strong></p>
+
+<ul>
+	<li>July 6, 2024: The link for the Camera-Ready template has been inserted here below.</li>
+	<li>May 16, 2024: Clarified that external links to content that is NOT part of the submission (e.g., existing software) are allowed.</li>
+	<li>May 9, 2024: Clarified that external links are not permitted as part of the rebuttal.</li>
+	<li>Feb. 11, 2024: Clarified that each author needs to enter their DBLP ID in their CMT profile.</li>
+</ul>
+
+<p> </p>
+
+<p> </p>
+
+<h4><strong>ECCV 2024 Camera-Ready Template for Latex (Overleaf project) can be downloaded <a href="https://www.overleaf.com/read/gqtmnkdjsrwq#102a58">here</a>.</strong></h4>
+
+<p> </p>
+
+<p> </p>
+
+<h3>Submission Policies and Instructions</h3>
+
+<p>All authors must carefully review the following policies that govern the submission and review process, as failure to comply with these policies may result in the rejection of your submission as well as possible additional sanctions in the case of dual submissions and plagiarism. The authors are further urged to consult ECCV 2024’s<span> </span><a href="/Conferences/2024/EthicsGuidelines">ethics guidelines</a>,<span> </span><a href="/Conferences/2024/AuthorPractices">recommended best practices</a>, and<span> </span><a href="/Conferences/2024/FAQs">FAQs</a>.</p>
+
+<p>These policies and guidelines are largely based on those of other recent computer vision conferences, such as ECCV 2022 and CVPR 2024, as well as on the<span> </span><a href="https://www.springernature.com/gp/authors/book-authors-code-of-conduct">Springer Nature Code of Conduct for Book Authors</a>. Since the submission policies are not identical to those of previous conferences, the authors must familiarize themselves with these guidelines before preparing and submitting work to ECCV 2024.</p>
+
+<p><strong>Paper formatting:</strong><span> </span>Papers are limited to<span> </span><strong>14 pages</strong>, including figures and tables, in the LNCS style of Springer. Additional pages containing only cited references are allowed. Please download the ECCV 2024 Author Kit for detailed formatting instructions. Note also that the template<span> </span><strong>has changed since ECCV 2022</strong>. Authors<span> </span><strong>must thus use this new template</strong><span> </span>instead of templates from older conferences.</p>
+
+<p>The ECCV 2024 Author Kit for LaTeX can be obtained in three ways:</p>
+
+<ul>
+	<li>Cloning an<span> </span><a href="https://www.overleaf.com/read/hdqrbdhdnmrv#d6ad4f">Overleaf project</a><span> </span>into your account.</li>
+	<li>Cloning/forking our<span> </span><a href="https://github.com/eccv24/paper-template/tree/v1.1">GitHub repository</a>.</li>
+	<li>Downloading a<span> </span><a href="https://github.com/eccv24/paper-template/archive/refs/tags/v1.1.zip">ZIP file</a>.</li>
+</ul>
+
+<p>Authors wishing to write their paper in Microsoft Word must use the official<span> </span><a href="https://resource-cms.springernature.com/springer-cms/rest/v1/content/19238706/data/v3">Springer LNCS Word template</a><span> </span>and ensure that their submission is formatted to match the formatting set forth in the ECCV 2024 Author Kit as closely as possible.</p>
+
+<p><strong>Papers that are not properly anonymized, do not use the template, or have more than 14 pages (excluding references) may be rejected without review.</strong></p>
+
+<p><strong>Submission and review process:</strong><span> </span>ECCV 2024 will be using<span> </span><a href="https://cmt3.research.microsoft.com/ECCV2024">CMT</a><span> </span>to manage submissions. Consistent with the review process of previous ECCV conferences, submissions under review will be visible only to their assigned members of the program committee (program chairs, area chairs, and reviewers). By submitting a paper to ECCV, the authors agree to the review process and understand that papers are processed by CMT, TPMS (Toronto Paper Matching System), as well as OpenReview to match each manuscript to the best possible area chairs and reviewers. Moreover, the authors agree that papers will be checked for plagiarism using iThenticate.</p>
+
+<p>CMT author instructions can be found<span> </span><a href="/Conferences/2024/CMTInstructions">here</a>.</p>
+
+<p><strong><a id="conflicts" name="conflicts"></a>Conflict responsibilities:</strong><span> </span>It is the primary author’s responsibility to ensure that<span> </span><strong>all authors on their paper have registered their institutional conflicts and their DBLP ID in CMT</strong><span> </span>by the paper registration deadline (Feb 29, 2024 at 13:00 Pacific time). Each author is required to list domains of all institutions they have worked for, or have had very close collaboration with, within the last 3 years (example: mit.edu; ox.ac.uk; microsoft.com).<span> </span><strong>Do not</strong><span> </span>enter the domain of email providers such as gmail.com. Also, each author is required to enter their DBLP ID into their CMT profile (except for authors who have not published any paper that is indexed by DBLP). The institutional conflict information will be used in conjunction with co-authorship conflict information from DBLP to resolve assignments to both reviewers and area chairs.<span> </span><strong>If a paper is found to have an undeclared or incorrect institutional conflict or an undeclared DBLP ID, the paper may be summarily rejected.</strong><span> </span>To avoid undeclared conflicts, authors cannot be added or deleted after the paper registration deadline (Feb 29, 2024 at 13:00 Pacific time), but only reordered. The author list is considered final after the paper submission deadline (Mar 7, 2024 at 13:00 Pacific time) and no changes are allowed thereafter, including for accepted papers.</p>
+
+<p><strong>Confidentiality:</strong><span> </span>The review process of ECCV 2024 is confidential. All members of the program committee (program chairs, area chairs, and reviewers) are instructed to keep all information about their assigned submissions confidential and not to share or distribute materials for any reason except to facilitate the reviewing of the submitted work. Members of the program committee are further instructed that assigned submissions must not be uploaded to and/or processed by large language models (see reviewer guidelines). Misuse of confidential information is a severe professional failure and appropriate measures will be taken when brought to the attention of the ECCV organizers. It should be noted, however, that all program committee members are volunteers, and ECCV as well as ECVA are not and cannot be held responsible for the consequences if confidentiality is broken due to a violation during the review process.</p>
+
+<p><strong>Double blind review:</strong><span> </span>ECCV reviewing is<span> </span><strong>double blind</strong>, in that authors do not know the names of the area chairs or reviewers for their papers, and the area chairs/reviewers cannot, beyond a reasonable doubt, infer the names of the authors from the submission and the additional material. Authors must not provide information that may identify themselves in the paper (e.g., by acknowledging co-workers or grant IDs) and in the supplementary material (e.g., titles in submitted videos, or attached papers). Also authors must not provide links to websites that identify the authors, neither in the paper nor in the supplementary material.<span> </span><strong>Violation of any of these guidelines may lead to rejection without review.</strong><span> </span>If you need to cite any of your own papers that are being submitted concurrently to ECCV or another venue, you should (1) include anonymized versions of those papers in the supplementary material; (2) cite these anonymized papers; and (3) argue in the body of your paper why your ECCV submission is non-trivially different from these concurrent submissions.</p>
+
+<p><strong>Dual submissions:</strong><span> </span>By registering or submitting a manuscript to ECCV, the authors acknowledge that<span> </span><strong>it has not been previously published or accepted for publication in substantially similar form in any peer-reviewed venue</strong><span> </span>including journal, conference or workshop, or archival forum. Furthermore, no publication substantially similar in content has been or will be submitted to another conference, workshop, or journal during the review period. The authors also attest that they did not submit substantially similar submissions to ECCV 2024. Violation of any of these conditions will lead to rejection, and will be reported to the other venue to which the submission was sent, which will typically lead to rejection there as well.</p>
+
+<p>A publication, for the purposes of this policy, is defined to be a written work longer than four pages (excluding references) that was submitted for review by peers for either acceptance or rejection, and, after review, was accepted. In particular, this definition of publication does not depend upon whether such an accepted written work appears in a formal proceedings or whether the organizers declare that such work “counts as a publication.” Under the above definition,<span> </span><strong>arXiv preprints and university technical reports are<span> </span><em>not</em><span> </span>considered as publications</strong>. However, peer-reviewed workshop papers are considered as publications if their length is more than four pages (excluding references), even if they do not appear in proceedings.</p>
+
+<p>Note that a technical report (departmental, arXiv, etc.) version of the submission that is put up without any form of direct peer-review is NOT considered prior art and does NOT NEED to be cited in the submission; authors may cite such material, but cannot be penalized for not citing it.</p>
+
+<p><strong>Additional note regarding arXiv:</strong><span> </span>Papers accepted to ECCV 2024 which did<span> </span><em>not</em><span> </span>appear on arXiv prior to the ECCV 2024 decision announcement will be specially recognized at the conference. This is done to draw extra attention to papers that did not have as much time for public recognition. The details are still being worked out but the recognition may include a visible ribbon at the poster session, a more prominent poster placement, and/or a slightly longer slot for an oral or spotlight presentation. Choosing whether or not to release a paper on arXiv will in no way affect paper acceptance decisions or determination of oral/spotlights.</p>
+
+<p><strong>Plagiarism:</strong><span> </span>Plagiarism consists of appropriating the words or results of another work, without credit, both verbatim or otherwise. To clarify, this includes self-plagiarism, such as double submission discussed above. ECCV 2024’s policy on plagiarism follows the one available in the<span> </span><a href="https://www.springernature.com/gp/authors/book-authors-code-of-conduct">Springer Nature Code of Conduct for Book Authors</a>. Please see, in particular, the information included under the section “Originality” and the details on handling reports of plagiarism, included in the section “Suspected transgression of ethical standards”.</p>
+
+<p>We will be actively checking for plagiarism and will employ software to automatically screen for suspected cases of plagiarism. Furthermore, the paper matching system we use to assign papers to reviewers and area chairs is quite accurate. As a result, it regularly happens that a paper containing plagiarized material goes to a reviewer from whom material was plagiarized; experience shows that such reviewers approach plagiarism cases enthusiastically.</p>
+
+<p><strong>Supplementary material submission:</strong><span> </span>By the supplementary material deadline (Mar 14, 2024 at 13:00 Pacific time), the authors may optionally submit additional material that was ready at the time of paper submission but could not be included due to constraints of format or space. The authors should refer to the contents of the supplementary material appropriately in the paper.<span> </span><strong>Reviewers will be encouraged to look at the supplementary material, but are not obligated to do so</strong>. Consequently, the paper must stand on its own in that the contributions of the work are sufficiently supported by the content in the main paper. Supplementary material may include videos, proofs, additional figures or tables, more detailed analyses of experiments presented in the paper, or a concurrent submission to ECCV or another conference. It may not include results obtained with an improved version of the method (e.g., following additional parameter tuning or training), or an updated or corrected version of the submission PDF.<span> </span><strong>Papers with supplementary materials violating the guidelines may be summarily rejected</strong>.</p>
+
+<p>We encourage (but do not require) authors to upload their code as part of their supplementary material in order to help reviewers assess the quality of the work. Please see the<span> </span><a href="/Conferences/2024/AuthorPractices">suggested practices</a><span> </span>document for more detailed guidelines about code submission.</p>
+
+<p><strong>Registration and attendance responsibilities:</strong><span> </span>Publication of the paper in the ECCV 2024 proceedings of Springer requires that at least one of the authors registers for the conference. It also requires that a camera-ready version that satisfies all formatting requirements is submitted before the camera-ready deadline. We expect each paper to be presented in-person by an author (or an authorized delegate).</p>
+
+<p><strong>Personal and human subjects data:</strong><span> </span>If a paper makes use of personal data and/or data from human subjects, including (but not limited to) personally identifiable information or offensive content, we expect that the collection and use of such data has been conducted carefully in accordance with the<span> </span><a href="/Conferences/2024/EthicsGuidelines">ECCV ethics guidelines</a><span> </span>and the<span> </span><a href="https://www.springernature.com/gp/authors/book-authors-code-of-conduct">Springer Nature Code of Conduct for Book Authors</a>. Please also see the<span> </span><a href="/Conferences/2024/AuthorPractices">suggested practices</a><span> </span>document for more detailed guidelines and<span> </span><a href="/Conferences/2024/FAQs">FAQs</a>.</p>
+
+<p><strong>Authors acting as reviewers:</strong> Given the growth of the number of paper submissions, and following conventions of other computer vision conferences, we expect all authors to be willing to serve as reviewers if asked to do so.</p>
+
+<p><strong>Publication:</strong><span> </span>All accepted papers will be made publicly available by Springer and/or the European Computer Vision Association (ECVA) no earlier than four weeks before the conference. Authors wishing to submit a patent understand that the paper’s official public disclosure is four weeks before the conference or whenever the authors make it publicly available, whichever is first. More information about ECVA is available at<span> </span><a href="https://www.ecva.net/">https://www.ecva.net/</a>.</p>
+
+<p><strong>Restrictions on publicity and media:</strong><span> </span>Any work explicitly identified as an ECCV submission cannot be discussed with the media and cannot be advertised and discussed on social media until the final decision is released to authors. Please see the FAQ below for more details. Violations of the embargo will result in the paper being removed from the conference and proceedings. The embargo period begins from the release of these guidelines on the ECCV 2024 webpage (Dec. 22, 2023); that is,<span> </span><strong>the embargo is effective even before the actual submission to ECCV 2024</strong>.</p>
+
+<p><strong>Rebuttal policies:</strong><span> </span>After receiving the reviews, the authors may optionally submit a rebuttal to address the reviewers’ comments. The rebuttal is limited to a one page PDF file (we use the CVPR two-column format for rebuttal only, to allow more space for responses) using the ECCV 2024 rebuttal template (available on<span> </span><a href="https://www.overleaf.com/read/sdsgzbkmzybj#91a118">Overleaf</a>,<span> </span><a href="https://github.com/eccv24/rebuttal-template/tree/v1.1">GitHub</a>, and as<span> </span><a href="https://github.com/eccv24/rebuttal-template/archive/refs/tags/v1.1.zip">ZIP</a>). Responses longer than one page will simply not be reviewed. This includes responses where the margins and formatting are deemed to have been significantly altered from those specified by the style guide.</p>
+
+<p><strong>The rebuttal must maintain anonymity</strong><span> </span>and <span><span><span><span><span><span>cannot include external links to outside material, videos, code repositories etc. </span></span></span></span></span></span><span><span><span><span><span><span><span>(except for external links to refer to external contents that are NOT part of your submission; for example, referring to existing software used in a submission by a GitHub link is allowed).</span></span></span></span></span></span></span></p>
+
+<p>Following common policy for computer vision conferences, reviewers should refrain from requesting significant additional experiments for the rebuttal, or penalize for a lack of additional experiments. Authors should refrain from including new contributions or experimental results in the rebuttal, especially when not specifically requested to do so by the reviewers.</p>
+
+<p>Authors also have the possibility to submit a separate confidential comment to the area chair. Please do so only in<span> </span><em>exceptional circumstances</em>.</p>
+
+<p><strong>LLM policy:</strong><span> </span>Authors may use any tools they find productive in preparing a paper, but must be aware that they are responsible for the entire content of their paper including any misrepresentation, factual inaccuracy, or plagiarism. Papers containing citations of non-existent material will be rejected when found, and may be rejected without review. Similarly, papers containing obvious factual inaccuracies will be rejected when found and may be rejected without review. It is not a defense to a charge of plagiarism or of inaccuracy to argue that “an LLM did it”. Authors are responsible for what they submit. The authors should be aware that LLMs may repeat part of their training data, which could cause plagiarism issues.</p>
+</div>
+</div>
+        
+    </div>
+
+
+
+    
+        </div>
+    
+
+</main>
+<!--END BLOCK CONTENT-->
+
+
+<!--Footer for the edit button-->
+
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+
+    $(function () {
+        if ($(".editable").length == 0) {
+            $("#editFooter").hide();
+        }
+
+        // Event bindings for edit buttons
+        $('.startEditBtn').on('click', function() {
+            start_edit();
+        });
+        
+        $('.stopEditBtn').on('click', function() {
+            stop_edit();
+        });
+        $('#id_accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.workshopstatus').on('change', function() {
+            changeStatus(this);
+        });
+        $('.action-select').on('change', function() {
+            actionChanged(this);
+        });
+        $('.extra').on('change', function() {
+            extraChanged(this);
+        });
+        $('.filter_workshop').on('change', function() {
+            this.form.submit();
+        });
+        $('.volunteer-status, .recommendation-letter-status').on('change', function() {
+            setStatus(this);
+        });
+        $('.status-form-show').on('change', function() {
+            this.form.submit();
+        });
+        $('.download-form-download').on('change', function() {
+            this.form.submit();
+        });
+        $('.presentation-type-form-presentation-type').on('change', function() {
+            this.form.submit();
+        });
+        $('.export-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.import-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.vol-email-form-to, .vol-email-form-template').on('change', function() {
+            this.form.submit();
+        });
+        $('.organizer-alert').on('click', function() {
+            getUserCreateForm(this.href);
+        });
+    })
+</script>
+
+<script src="/static/core/js/fastclick.min.js" ></script>
+
+<!--We don't know if there are editable tags on the page until after the django template engine has rendered the page. So,
+test in javascript for "editable" tags and if present, load the ckeditor engine dynamically. -->
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+    if (document.getElementsByClassName('editable').length > 0) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/static/core/ckeditor/4.18/ckeditor.js";    // use this for linked script
+      script.onload = function () {
+        console.log("ckeditor loaded");
+        // Initial setup when each editor is ready
+        CKEDITOR.on("instanceReady", function (e) {
+          updateToggleDocName(e.editor);
+        });
+
+        // React to any editor entering/leaving read-only
+        CKEDITOR.on("readOnly", function (e) {
+          updateToggleDocName(e.editor);
+        });
+      };
+        document.body.appendChild(script);
+    }
+
+    function updateToggleDocName(editor) {
+      var id = editor && editor.name;
+      if (!id || id.indexOf("id_") !== 0) return;
+
+      var doc_name_element = document.getElementById("document_name_" + id.slice(3));
+      console.log(doc_name_element);
+      if (!doc_name_element) return;
+
+      doc_name_element.style.display = editor.readOnly ? "none" : "block";
+    }
+
+</script>
+
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+    function fetchContent() {
+        $(".editable").each(function (index) {
+            var myself = this;
+            var docvID = this.getAttribute('id').replace("id_", "");
+            var blurbtext = this.getAttribute("blurbtext");
+            $.ajax({
+                url: "/Admin/RetrieveDocumentVersion",
+                type: "POST",
+                data: {
+                    docvID: docvID,
+                    blurbtext: blurbtext,
+                    csrfmiddlewaretoken: csrftoken,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    myself.setAttribute("contenteditable", "true");
+                    myself.innerHTML = data;
+                    CKEDITOR.inline(myself.id);
+                },
+            });
+        })
+    }
+
+    $("#nopageedit").hide();
+
+    function start_edit() {
+
+        $(".editable").addClass("warning-ring");
+
+        //At the beginning of an edit, we need to replace the content of the
+        //editable div with it's databased content in order to preserve the
+        //template tags. We want the tag, not the rendered tag.
+
+        /* You must remove any countdown.js timers on the page before replacing the page with it's
+        document version otherwise, Javascript will throw an exception.  */
+
+
+        $("[class$='-countdown']").parent().remove();
+        fetchContent();
+        $(".editable").attr("onblur", "ckeditorsave(this)");
+        window.status.bold();
+        window.status = "Click outside the editable area to save. Changes are LIVE!! Refresh page to discard changes.";
+        $("#editpage").hide();
+        $("#noeditpage").show();
+    }
+
+
+    function stop_edit() {
+        ckeditorsave();
+        $("#noeditpage").hide();
+        $("#editpage").show();
+        window.location.reload();
+    }
+
+    function ckeditorsave(event) {
+        for (var name in CKEDITOR.instances) {
+            if (CKEDITOR.instances[name].checkDirty()) {
+                editor = CKEDITOR.instances[name];
+                saveEditable(editor);
+            }
+        }
+    }
+
+    function saveEditable(editor) {
+        var content = editor.getData();
+        var contentId = editor.name;
+        var pageId = window.location.pathname;
+        var originalContent = "N/A";
+        var documentversion = editor.container.getAttribute("id").replace("id_", "");
+        var blurbtext = editor.container.getAttribute("blurbtext");
+        if (contentId.match(/-aloha$/gi)) {
+            contentId = contentId.replace(/-aloha/gi, '');
+        }  /*I'm not sure what this does but it seems like it would matter*/
+        var request = jQuery.ajax({
+            url: "/Admin/SaveDocument",
+            type: "POST",
+            async: false,
+            data: {
+                content: content,
+                originalContent: originalContent,
+                contentId: contentId,
+                pageId: pageId,
+                documentversion: documentversion,
+                blurbtext: blurbtext,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                if (data['message']) {
+                    alert(data['message']);
+                }
+            },
+            error: function (xqXHR, textStatus) {
+                window.status = textStatus;
+                debugger;
+            }
+
+        });
+
+    };
+
+
+</script>
+
+<script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+    jQuery(document).ajaxSend(function (event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+
+
+
+
+
+<div id="successful-page-load" class='hidden'>Successful Page Load</div>
+
+
+
+
+
+    
+        <link href="/static/conf_gdpr/css/conf_gdpr.css" rel="stylesheet">
+        <div id="cookie-bar" style="z-index: 8">
+            <table class="gdpr-statement">
+                <col>
+                <col style="width:120px">
+                <tr>
+                    <td style="padding:5px">
+                        ECCV uses cookies for essential functions only. We do not sell your personal
+                        information.
+                        <a href="/public/PrivacyPolicy">Our Privacy Policy &raquo;&nbsp;</a>
+                    </td>
+                    <td>
+                        <button float-end class="btn btn-light btn-sm btn btn-outline-dark" id="accept_cookies_button" >Accept</button>
+                           
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script nonce="jJ/RcwOC4PY9asK3aH+Bkw==">
+            function accept_cookies() {
+
+                $.ajax({
+                    method: "POST",
+                    url: "/conf_gdpr/accept",
+                    data: {
+                        csrfmiddlewaretoken: csrftoken,
+                    },
+                }).done(function (data) {
+                    console.log(data);
+                    $("#cookie-bar").fadeOut();
+                }).fail(function (jqXHR, textStatus) {
+                    alert(textStatus);
+                });
+            }
+            $("#accept_cookies_button").on("click", () => {
+                accept_cookies();
+            });
+        </script>
+
+    
+
+
+
+
+
+
+
+
+<br>
+<div class="noprint">
+    <footer id="bootstrap-footer" class="text-center text-lg-start bg-light text-muted">
+
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            <div></div>
+        </div>
+        <!-- Copyright -->
+    </footer>
+</div>
+<!-- Footer -->
+
+
+<!-- Footer -->
+
+</body>
+</html>

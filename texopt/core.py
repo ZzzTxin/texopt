@@ -28,9 +28,14 @@ import json
 import os
 import shutil
 
-from . import (actions, advise, engine, perceive as P, proposal, score as S,
-               visual, whitelist)
+from . import (actions, advise, conference as confmod, engine, perceive as P,
+               proposal, score as S, visual, whitelist)
 from .requirements import Requirement
+
+# L 类硬约束修复动作：文档状态（L 数/页数）变化后允许重试。
+# 原因：会议模式下「页数」与「边距/字号」互相牵制——页数降下来后，
+# 之前被回滚的边距修复才能成立；审美/质量类动作保持一次性语义。
+RETRYABLE_KEYS = {"margin_spec", "font_spec", "fleqn"}
 
 
 class Optimizer:
@@ -45,7 +50,7 @@ class Optimizer:
         self.records = []
         self.orig_body = None            # 内容完整性机器校验基准
         self.orig_per = None             # 原稿 Perception（干预代价基准）
-        self._blocked: set[str] = set()  # 失败动作指纹，防重复试错
+        self._blocked: set[str] = set()  # 失败动作指纹（L 类带状态签名可重试），防重复试错
         self._llm_failed: set[str] = set()  # 已失败的 LLM 提案指纹（跨轮阻止）
         self.attempts = 0                # 本轮实际编译验证过的候选动作数
         self.accepted = 0                # 本轮被接受的动作数
@@ -93,16 +98,23 @@ class Optimizer:
         每轮推进一档；失败动作记入 _blocked，避免同状态重复试错。
         """
         req, src = self.req, per.source
+        sig = f"{len(cur_lv)}|{per.pages}"   # 状态签名（防重复试错的粒度）
         cands = []
         cur_margin = src.get("geometry_margin_mm")
         orig_margin = self.orig_per.source.get("geometry_margin_mm")
         cur_font = src["font_pt"]
         orig_font = self.orig_per.source["font_pt"]
         has_page_lv = any("页数" in x for x in cur_lv)
-        pages = per.pages or 0
+        pages = S.judge_pages(per, req) or 0
 
         def add(key, fn, note):
-            if key not in self._blocked \
+            # 指纹含状态签名：文档状态（L 数/页数）变了以后，之前失败的动作可以重试
+            # —— 会议模式下边距与页数互相牵制（页数降下来后，边距才能合法提高），
+            # 否则会出现「页数降下来了但边距还是没修」。
+            # 只有 L 类硬约束修复动作享有重试（审美/质量动作保持原有一次性语义，
+            # 避免改动默认模式下的收敛行为）。
+            stamp = f"{key}@{sig}" if key in RETRYABLE_KEYS else key
+            if stamp not in self._blocked \
                     and all(k != key for k, _, _ in cands):
                 cands.append((key, fn, note))
 
@@ -118,12 +130,17 @@ class Optimizer:
             add("font_spec",
                 lambda s, n=req.font_pt: actions.set_fontsize(s, n),
                 f"字号对齐要求 {cur_font}pt -> {req.font_pt}pt")
+        margin_floor_mode = bool(getattr(req, "margin_is_floor", False))
         if req.margin_mm and cur_margin is not None \
-                and abs(cur_margin - req.margin_mm) > 0.5:
+                and ((cur_margin < req.margin_mm - 0.5) if margin_floor_mode
+                     else abs(cur_margin - req.margin_mm) > 0.5):
             add("margin_spec",
                 lambda s, n=req.margin_mm, c=cur_margin:
                     actions.set_margin(s, n, cur_mm=c),
-                f"页边距对齐要求 {cur_margin:g}mm -> {req.margin_mm:g}mm")
+                (f"页边距低于官方下限，提到 {req.margin_mm:g}mm"
+                 if margin_floor_mode else
+                 f"页边距对齐要求 {cur_margin:g}mm -> {req.margin_mm:g}mm")
+                + f"（当前 {cur_margin:g}mm）")
 
         # 1.5) 结构规范：目录页 / 页眉（属『前置结构』，L 项）
         if req.toc and not src.get("has_toc") \
@@ -182,8 +199,10 @@ class Optimizer:
                     f"松弛：字号 {cur_font}pt -> {cur_font + 1}pt（回近原稿）")
             if cur_margin is not None and orig_margin is not None \
                     and cur_margin < orig_margin - 1e-6 \
-                    and (not req.page_limit or pages <= req.page_limit):
+                    and (not req.page_limit or S.within_limit(per, req)):
                 nxt = min(cur_margin + req.margin_step_mm, orig_margin)
+                if margin_floor_mode and req.margin_mm:
+                    nxt = max(nxt, req.margin_mm)   # 松弛不得低于官方下限
                 add("margin_back",
                     lambda s, n=nxt, c=cur_margin:
                         actions.set_margin(s, n, cur_mm=c),
@@ -305,9 +324,11 @@ class Optimizer:
         cur_lv = cur["l"]
         cur_pages = per.pages
         for key, apply_fn, note in self._candidates(per, cur_lv):
+            sig = f"{len(cur_lv)}|{per.pages}"
+            stamp = f"{key}@{sig}" if key in RETRYABLE_KEYS else key
             out = apply_fn(src)
             if out is None or not out[1]:
-                self._blocked.add(key)
+                self._blocked.add(stamp)
                 continue
             new_src, note_ok = out[0], out[2]
             self.iter += 1
@@ -328,7 +349,7 @@ class Optimizer:
                 return True
             # 回滚
             self._write(src)
-            self._blocked.add(key)
+            self._blocked.add(stamp)
             why = "" if nper.ok else \
                 f"编译失败：{nper.compile.first_error}"
             self._log(f"  [回滚] {note_ok}（{why or '全局评分无改善'}）")
@@ -563,6 +584,23 @@ class Optimizer:
             if len(adv) > 8:
                 self._log(f"  …另 {len(adv) - 8} 条见 advisory.json")
         base = self.baseline or {"a": None, "pages": None}
+        # 会议要求（会议模板）：只报告不伪造，供上层 Agent/报告消费
+        conf = None
+        if getattr(self.req, "conference", None):
+            st = S.page_status(per, self.req) if per else {}
+            conf = {
+                "id": self.req.conference,
+                "page_scope": st.get("scope"),
+                "page_limit": self.req.page_limit,
+                "pages_total": st.get("total"),
+                "content_pages_lower": st.get("content_lower"),
+                "content_pages_upper": st.get("content_upper"),
+                "page_advisory": S.page_advisory(per, self.req) if per else None,
+                "official": self.req.official_constraints,
+                "reasonableness": confmod.reasonableness(per, self.req) if per
+                else {"enabled": False},
+                "unused": getattr(self.req, "unused_template_parts", None) or [],
+            }
         return {"status": status, "l": cur["l"], "a": cur["a"], "i": cur["i"],
                 "pages": per.pages, "tex": self.work_tex,
                 "pdf": per.compile.pdf_path if per and per.ok else None,
@@ -572,7 +610,8 @@ class Optimizer:
                 "ink_mean": (per.visual or {}).get("ink_mean") if per else None,
                 "a_before": base["a"], "pages_before": base["pages"],
                 "total": cur["total"], "total_before": base.get("total"),
-                "blocked": sorted(self._blocked)}
+                "conference": conf,
+                "blocked": sorted({k.split("@")[0] for k in self._blocked})}
 
     def exit_status(self, cur: dict, defects: list | None = None) -> str:
         """出口状态判定（Phase 2：不只看 L，也不只看 A 数字）。
@@ -596,12 +635,18 @@ class Optimizer:
     def _req_summary(self) -> str:
         r = self.req
         parts = []
+        conf = getattr(r, "conference", None)
+        if conf:
+            scope = "正文页" if getattr(r, "page_limit_scope", "total") == "content" \
+                else "总页数"
+            parts.append(f"会议模板 {conf}（页数按{scope}口径）")
         if r.page_limit:
             parts.append(f"页数 ≤ {r.page_limit}")
         if r.font_pt:
             parts.append(f"字号 {r.font_pt}pt")
         if r.margin_mm:
-            parts.append(f"边距 {r.margin_mm:g}mm")
+            parts.append(f"边距 {'≥ ' if getattr(r, 'margin_is_floor', False) else ''}"
+                         f"{r.margin_mm:g}mm")
         parts.append(f"浮动体 [{r.float_spec}]")
         if not r.eq_fleqn_allowed:
             parts.append("公式居中")
@@ -621,6 +666,77 @@ class Optimizer:
             parts.append("图形保真")
         return "，".join(parts) if parts else "无额外要求（纯质量模式）"
 
+    def _conference_section(self, per) -> list:
+        """报告中的「会议要求」段：官方硬约束 → 违规判定；统计 → 合理性核对；
+        模板里本版接不上的字段 → 逐条登记（任务要求 5/7）。"""
+        r = self.req
+        cid = getattr(r, "conference", None)
+        if not cid:
+            return []
+        oc = getattr(r, "official_constraints", None) or {}
+
+        def v(x):
+            if x is None:
+                return "—"
+            return json.dumps(x, ensure_ascii=False) if isinstance(x, (dict, list)) else str(x)
+
+        out = ["## 会议要求（会议模板 templates-v2）\n",
+               f"- 会议模板：**{cid}**（官方要求仅作 L 判定；真实论文统计仅作合理性参考）",
+               f"- 页数口径：**{oc.get('page_limit_scope')}**"
+               f"（官方 references_counted={v(oc.get('references_counted'))}）；"
+               f"本次 page_limit={r.page_limit}，实测正文页上界="
+               f"{getattr(per, 'content_pages_upper', None)}"
+               if per else "- 页数口径：—",
+               "", "### 官方规定 → 违规判定（L 项）\n",
+               "| 官方硬约束 | 值 | texopt 用法（对应字段） |",
+               "|---|---|---|",
+               f"| 正文页上限 | {v(oc.get('page_limit_content'))} | L `page_limit`={r.page_limit}",
+               f"| 总页上限 | {v(oc.get('page_limit_total'))} | 参考（部分会议用）",
+               f"| 参考文献计页 | {v(oc.get('references_counted'))} | 决定页数口径 = {oc.get('page_limit_scope')}",
+               f"| 纸张尺寸 | {v(oc.get('paper_size'))} | 参考（本版不改 documentclass）",
+               f"| 栏数 | {v(oc.get('columns'))} | 参考（本版不改 documentclass）",
+               f"| 正文字号 | {v(oc.get('body_font_size_pt'))} | L `font_pt`={r.font_pt}",
+               f"| 页边距（四边） | {v(oc.get('margins_mm'))} | L `margin_mm`={r.margin_mm}（取最小边）",
+               f"| 双盲匿名 | {v(oc.get('anonymity'))} | 仅记录（无对应动作）",
+               f"| paper checklist | {v(oc.get('checklist_required'))} | 仅记录（内容层）",
+               f"| 录用加页 | {v(oc.get('camera_ready_extra_pages'))} | 本次按投稿版，不加页",
+               ""]
+        pa = S.page_advisory(per, r) if per else None
+        if pa:
+            out += [f"> 页数提示：{pa}", ""]
+
+        rr = confmod.reasonableness(per, r) if per else {"enabled": False}
+        if rr.get("enabled"):
+            out += ["### 真实论文统计 → 合理性核对（仅参考，不参与判定）\n",
+                    f"（样本 n={rr.get('sample_n')}，可信度 {rr.get('level')}；"
+                    "下列偏差只说明『与常见论文不同』，**不判违规、不影响评分**）\n",
+                    "| 指标 | 本文档 | 真实论文区间(P25–P75) | 状态 |",
+                    "|---|---|---|---|"]
+            for c in rr.get("checks", []):
+                ref = c.get("reference") or {}
+                if "p25" in ref:
+                    ref_s = f"{ref.get('p25')}–{ref.get('p75')}"
+                else:
+                    ref_s = json.dumps(ref, ensure_ascii=False)
+                obs = (json.dumps(c["observed"], ensure_ascii=False)
+                       if isinstance(c["observed"], dict) else c["observed"])
+                out.append(f"| {c['name']} | {obs}{c.get('unit', '')} "
+                           f"| {ref_s} | {c['status']} |")
+            for d in rr.get("deviations", []):
+                out.append(f"\n> 参考：{d}")
+            out.append("")
+        elif getattr(r, "soft_targets", None):
+            out += ["### 真实论文统计 → 合理性核对\n",
+                    "未能量取可比指标（数据不足），不臆测。", ""]
+
+        unused = getattr(r, "unused_template_parts", None) or []
+        if unused:
+            out += [f"### 模板中暂未接入的内容（{len(unused)} 项，已记录不强行接入）\n",
+                    "详见 `datasets/conf-specs/summary/texopt-integration-report.md`。"
+                    "（主要为：栏数/纸张/字体族等需换文档类的项、匿名与 checklist 等无动作的项、"
+                    "样本统计类项。）", ""]
+        return out
+
     # ------------------------------------------------------------- 落盘
     def _save_state(self, status: str, per=None, cur=None):
         state = {
@@ -632,7 +748,7 @@ class Optimizer:
                 "i": cur["i"] if cur else None,
                 "total": cur["total"] if cur else None,
             },
-            "blocked_actions": sorted(self._blocked),
+            "blocked_actions": sorted({k.split("@")[0] for k in self._blocked}),
             "llm_failed_proposals": sorted(self._llm_failed),
             "visual": (per.visual if per and per.visual else None),
             "visual_defects": (per.visual.get("defects") if per and per.visual
@@ -676,7 +792,11 @@ class Optimizer:
         L = ["# texopt 论文排版优化报告\n",
              f"- 输入文档：`{self.original}`",
              f"- 排版要求：{self._req_summary()}",
-             f"- 最终页数：{per.pages if per and per.ok else '—'}",
+             (f"- 最终页数：{per.pages}（正文页数（参考文献之前，含参考文献首页）= "
+              f"{getattr(per, 'content_pages_upper', None)}；"
+              f"判定口径：{S.page_status(per, r)['label']}）"
+              if per and per.ok and getattr(per, "content_pages_upper", None)
+              else f"- 最终页数：{per.pages if per and per.ok else '—'}"),
              f"- 全局评分：L 违规 {len(cur['l'])} 项 | A（审美）= {cur['a']} | "
              f"I（干预代价）= {cur['i']}",
              f"- 结果：**{status}**",
@@ -691,7 +811,8 @@ class Optimizer:
                           + ("；已按要求清理阅读辅助/告示块"
                              if (r.strip_reading_aids
                                  or r.remove_warning_boxes) else "")),
-            "页数限制": (f"{per.pages} 页"
+            "页数限制": (f"{S.judge_pages(per, r)} 页"
+                         f"（{S.page_status(per, r)['label']}；PDF 共 {per.pages} 页）"
                          + (f" ≤ {r.page_limit}" if r.page_limit else "（未要求）"))
                         if per and per.pages else "—",
             "目录页": ("已含 \\tableofcontents" if per and per.source.get("has_toc")
@@ -712,6 +833,9 @@ class Optimizer:
                 L.append(f"  - {v}")
         L.append("")
 
+        # ---- 会议要求（会议模板 templates-v2；指定 --conference 时才有） ----
+        L += self._conference_section(per)
+
         # 迭代轨迹
         L += ["## 迭代轨迹（每步 = 整篇重编译后全局重评）\n",
               "（来源 rule = 确定性闭环；llm = 模型在环提案，均过同一验收函数）\n",
@@ -730,7 +854,8 @@ class Optimizer:
         if self._blocked or self._llm_failed:
             L += ["### 被阻止/已失败的动作（防重复试错）\n"]
             if self._blocked:
-                L.append("- 规则闭环失败动作：" + "，".join(sorted(self._blocked)))
+                L.append("- 规则闭环失败动作：" + "，".join(
+                    sorted({k.split("@")[0] for k in self._blocked})))
             if self._llm_failed:
                 L.append(f"- LLM 失败提案指纹 {len(self._llm_failed)} 条（同提案跨轮跳过）")
             L.append("")
@@ -772,8 +897,8 @@ class Optimizer:
                 L.append("")
 
         if status == "EXHAUSTED":
-            diff = (per.pages - r.page_limit) if per and per.pages \
-                and r.page_limit else "?"
+            jp = S.judge_pages(per, r) if per else None
+            diff = (jp - r.page_limit) if jp and r.page_limit else "?"
             L += ["## 未达标分析与建议\n",
                   "纯排版手段（页边距至下限、字号、浮动体、图片归一）已穷尽，"
                   f"仍差约 **{diff} 页**。下一步属于语义层（Key point 1 的"
@@ -844,7 +969,8 @@ class Optimizer:
         for h in (per.issues.get("hygiene", []) if per and per.ok else []):
             key = kind2key.get(h["kind"])
             note = ("（已进入闭环尝试，被视觉/全局评分判负已回滚 → 说明改它反而更差；"
-                    "需作者决策）" if key and key in self._blocked else
+                    "需作者决策）" if key and any(
+                        k.split("@")[0] == key for k in self._blocked) else
                     ("（暂无对应确定性动作，需作者决策）"
                      if key is None else ""))
             todo.append(f"[卫生/{h['kind']}] 第{h['line']}行：{h['detail']}{note}")

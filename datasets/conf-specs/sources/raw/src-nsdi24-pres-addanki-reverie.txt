@@ -1,0 +1,143 @@
+Reverie: Low Pass Filter-Based Switch Buffer Sharing for Datacenters with RDMA and TCP Traffic | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Reverie: Low Pass Filter-Based Switch Buffer Sharing for Datacenters with RDMA and TCP Traffic
+
+ Vamsi Addanki, TU Berlin; Wei Bai, Microsoft Research; Stefan Schmid, TU Berlin; Maria Apostolaki, Princeton University 
+
+ The switch buffers in datacenters today are shared by traffic classes with different loss tolerance and reaction to congestion signals. In particular, while legacy applications use loss-tolerant transport, e.g., DCTCP, newer applications require lossless datacenter transport, e.g., RDMA over Converged Ethernet. The allocation of buffers for this diverse traffic mix is managed by a buffer-sharing scheme. Unfortunately, as we analytically show in this paper, the buffer-sharing practices of today's datacenters pose a fundamental limitation to effectively isolate RDMA and TCP while also maximizing burst absorption . We identify two root causes: (i) the buffer-sharing for RDMA and TCP relies on two independent and often conflicting views of the buffer, namely ingress and egress; and (ii) the buffer-sharing scheme micromanages the buffer and overreacts to the changes in its occupancy during transient congestion.
+
+ In this paper, we present Reverie, a buffer-sharing scheme, which, unlike prior works, is suitable for both lossless and loss-tolerant traffic classes, providing isolation as well as superior burst absorption. At the core of Reverie lies a unified (consolidated ingress and egress) admission control that jointly optimizes the buffers for both traffic classes. Reverie, allocates buffer based on a low-pass filter that naturally absorbs bursty queue lengths during transient congestion within the buffer limits. Our evaluation shows that Reverie can improve the performance of RDMA as well as TCP in terms of flow completion times by up to 33%.
+
+ NSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {295539,
+
+ author = {Vamsi Addanki and Wei Bai and Stefan Schmid and Maria Apostolaki},
+
+ title = {Reverie: Low Pass {Filter-Based} Switch Buffer Sharing for Datacenters with {RDMA} and {TCP} Traffic},
+
+ booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-39-7},
+
+ address = {Santa Clara, CA},
+
+ pages = {651--668},
+
+ url = {https://www.usenix.org/conference/nsdi24/presentation/addanki-reverie},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Addanki PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

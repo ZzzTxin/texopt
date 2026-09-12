@@ -1,0 +1,41 @@
+ICCV 2025 Open Access Repository 
+
+ ICCV 2025 open access 
+
+ These ICCV 2025 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ GCRayDiffusion: Pose-Free Surface Reconstruction via Geometric Consistent Ray Diffusion
+
+ Li-Heng Chen, Zi-Xin Zou, Chang Liu, Tianjiao Jing, Yan-Pei Cao, Shi-Sheng Huang, Hongbo Fu, Hua Huang ; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2025, pp. 25335-25345
+
+ Abstract 
+
+ Accurate surface reconstruction from unposed images is crucial for efficient 3D object or scene creation. However, it remains challenging, particularly for the joint camera pose estimation. Previous approaches have achieved impressive pose-free surface reconstruction results in dense-view settings, but could easily fail for sparse-view scenarios without sufficient visual overlap. In this paper, we propose a new technique for pose-free surface reconstruction, which follows triplane-based signed distance field (SDF) learning but regularizes the learning by explicit points sampled from ray-based diffusion of camera pose estimation. Our key contribution is a novel Geometric Consistent Ray Diffusion model (GCRayDiffusion), where we represent camera poses as neural bundle rays and regress the distribution of noisy rays via a diffusion model. More importantly, we further condition the denoising process of RGRayDiffusion using the triplane-based SDF of the entire scene, which provides effective 3D consistent regularization to achieve multi-view consistent camera pose estimation. Finally, we incorporate RGRayDiffusion into the triplane-based SDF learning by introducing on-surface geometric regularization from the sampling points of the neural bundle rays, which leads to highly accurate pose-free surface reconstruction results even for sparse-view inputs. Extensive evaluations on public datasets show that our GCRayDiffusion achieves more accurate camera pose estimation than previous approaches, with geometrically more consistent surface reconstruction results, especially given sparse-view inputs.
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Chen_2025_ICCV,
+ author = {Chen, Li-Heng and Zou, Zi-Xin and Liu, Chang and Jing, Tianjiao and Cao, Yan-Pei and Huang, Shi-Sheng and Fu, Hongbo and Huang, Hua},
+ title = {GCRayDiffusion: Pose-Free Surface Reconstruction via Geometric Consistent Ray Diffusion},
+ booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+ month = {October},
+ year = {2025},
+ pages = {25335-25345}
+}

@@ -1,0 +1,984 @@
+{
+  "schema_version": "1.0",
+  "id": "sosp",
+  "name": "ACM SIGOPS Symposium on Operating Systems Principles",
+  "abbr": "SOSP",
+  "family": "systems",
+  "official_site": "https://sigops.org/s/conferences/sosp/2025/",
+  "current_edition": "SOSP 2025",
+  "focus_editions": [
+    "2025",
+    "2024",
+    "2023"
+  ],
+  "template_basis": {
+    "class": "acmart (sigplan option)",
+    "inherits": "acmart",
+    "url": "https://sigops.org/s/conferences/sosp/2025/cfp.html"
+  },
+  "hard_constraints": {
+    "page_limit_content": {
+      "value": 12,
+      "unit": "pages",
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿技术内容（含文字/图/表）上限 12 页",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Submissions may have at most 12 pages of technical content, including all text, figures, tables, etc."
+        }
+      ]
+    },
+    "references_counted": {
+      "value": false,
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "参考文献不计入 12 页技术内容上限",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Bibliographic references are not included in the 12-page limit."
+        }
+      ]
+    },
+    "paper_size": {
+      "value": "a4 or letter",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "允许 A4 或 US letter 纸",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+        }
+      ]
+    },
+    "text_width_mm": {
+      "value": 178,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "版心宽 178mm（7in）",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+        }
+      ]
+    },
+    "text_height_mm": {
+      "value": 229,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "版心高 229mm（9in）",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use A4 or US letter paper size, with all text and figures fitting inside a 178 x 229 mm (7 x 9 in) block centered on the page"
+        }
+      ]
+    },
+    "columns": {
+      "value": 2,
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "双栏",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "using two columns separated by 8 mm (0.33 in) of whitespace"
+        }
+      ]
+    },
+    "column_gap_mm": {
+      "value": 8,
+      "unit": "mm",
+      "scope": "both",
+      "confidence": "official",
+      "note": "栏间距 8mm（0.33in）",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "using two columns separated by 8 mm (0.33 in) of whitespace"
+        }
+      ]
+    },
+    "body_font_size_pt": {
+      "value": 10,
+      "unit": "pt",
+      "scope": "both",
+      "confidence": "official",
+      "note": "正文 10pt、12pt（单倍）行距",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+        }
+      ]
+    },
+    "line_spacing": {
+      "value": "single",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "单倍行距",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+        }
+      ]
+    },
+    "body_font_family": {
+      "value": "Times Roman / Linux Libertine or similar",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "Times Roman、Linux Libertine 等 10pt 字体",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Use 10-point font (typeface Times Roman, Linux Libertine, etc.) on 12-point (single-spaced) leading."
+        }
+      ]
+    },
+    "anonymity": {
+      "value": "double-blind",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "投稿双盲",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "SOSP will use double-blind reviewing."
+        }
+      ]
+    },
+    "page_numbering": {
+      "value": "numbered",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "所有页需编号，文内引用需超链接",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "All pages should be numbered, and references within the paper should be hyperlinked."
+        }
+      ]
+    },
+    "supplementary_policy": {
+      "value": "optional separate document; paper must stand alone",
+      "unit": null,
+      "scope": "submission",
+      "confidence": "official",
+      "note": "补充材料可选、单独文档",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2024-cfp",
+          "quote": "Authors may optionally include supplementary material as a separate document."
+        }
+      ]
+    },
+    "template_file": {
+      "value": "acmart (sigplan option, 10pt)",
+      "unit": null,
+      "scope": "template_default",
+      "confidence": "official",
+      "note": "官方推荐 ACM SIGPLAN acmart 模板（sigplan,10pt）",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2025-cfp",
+          "quote": "\\documentclass[sigplan,10pt]{acmart}"
+        }
+      ]
+    }
+  },
+  "recommended": {
+    "float_placement_rules": {
+      "value": "use official SIGPLAN/ACM templates (rules auto-applied)",
+      "unit": null,
+      "scope": "both",
+      "confidence": "official",
+      "note": "用官方模板可自动满足多数格式规则",
+      "evidence": [
+        {
+          "source_id": "src-sosp-2025-cfp",
+          "quote": "Most of these rules are automatically applied when using the official SIGPLAN LaTeX or MS Word templates from the ACM."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "pdf_pages": {
+      "mean": 23.571,
+      "median": 17.0,
+      "p10": 14.0,
+      "p90": 67.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 14.0,
+      "max": 67.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "content_pages": {
+      "mean": 15.714,
+      "median": 14.0,
+      "p10": 1.0,
+      "p90": 40.0,
+      "n": 7,
+      "unit": "pages",
+      "min": 1.0,
+      "max": 40.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "body_font_pt": {
+      "mean": 9.857,
+      "median": 10.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "text_width_pt": {
+      "mean": 489.857,
+      "median": 504.8,
+      "p10": 399.1,
+      "p90": 505.6,
+      "n": 7,
+      "unit": "pt",
+      "min": 399.1,
+      "max": 505.6,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "column_gap_pt": {
+      "mean": 23.867,
+      "median": 23.9,
+      "p10": 23.8,
+      "p90": 23.9,
+      "n": 6,
+      "unit": "pt",
+      "min": 23.8,
+      "max": 23.9,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "margins_left_mm": {
+      "mean": 20.729,
+      "median": 18.8,
+      "p10": 18.6,
+      "p90": 32.5,
+      "n": 7,
+      "unit": "mm",
+      "min": 18.6,
+      "max": 32.5,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "margins_right_mm": {
+      "mean": 21.529,
+      "median": 19.0,
+      "p10": 18.9,
+      "p90": 36.8,
+      "n": 7,
+      "unit": "mm",
+      "min": 18.9,
+      "max": 36.8,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "margins_top_mm": {
+      "mean": 21.471,
+      "median": 21.9,
+      "p10": 17.3,
+      "p90": 26.2,
+      "n": 7,
+      "unit": "mm",
+      "min": 17.3,
+      "max": 26.2,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "margins_bottom_mm": {
+      "mean": 27.457,
+      "median": 26.1,
+      "p10": 22.7,
+      "p90": 36.4,
+      "n": 7,
+      "unit": "mm",
+      "min": 22.7,
+      "max": 36.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "figures": {
+      "mean": 14.571,
+      "median": 17.0,
+      "p10": 9.0,
+      "p90": 19.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 9.0,
+      "max": 19.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "tables": {
+      "mean": 4.571,
+      "median": 3.0,
+      "p10": 0.0,
+      "p90": 11.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 11.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "equations": {
+      "mean": 1.714,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 8.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 8.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "algorithms": {
+      "mean": 0.286,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "refs": {
+      "mean": 73.429,
+      "median": 79.0,
+      "p10": 16.0,
+      "p90": 131.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 16.0,
+      "max": 131.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "footnotes_est": {
+      "mean": 0.143,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_paper",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "figs_per_page": {
+      "mean": 2.127,
+      "median": 1.2,
+      "p10": 0.475,
+      "p90": 9.0,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.475,
+      "max": 9.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "tables_per_page": {
+      "mean": 0.38,
+      "median": 0.275,
+      "p10": 0.0,
+      "p90": 1.0,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 1.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "equations_per_page": {
+      "mean": 0.12,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.533,
+      "n": 7,
+      "unit": "per_page",
+      "min": 0.0,
+      "max": 0.533,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "fig_width_frac_median": {
+      "mean": 0.509,
+      "median": 0.476,
+      "p10": 0.432,
+      "p90": 0.776,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.432,
+      "max": 0.776,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "fig_height_frac_median": {
+      "mean": 0.147,
+      "median": 0.129,
+      "p10": 0.09,
+      "p90": 0.236,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.09,
+      "max": 0.236,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "full_width_fig_frac": {
+      "mean": 0.101,
+      "median": 0.056,
+      "p10": 0.0,
+      "p90": 0.263,
+      "n": 7,
+      "unit": "ratio",
+      "min": 0.0,
+      "max": 0.263,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "caption_font_pt": {
+      "mean": 9.714,
+      "median": 10.0,
+      "p10": 9.0,
+      "p90": 10.0,
+      "n": 7,
+      "unit": "pt",
+      "min": 9.0,
+      "max": 10.0,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    },
+    "lines_per_page": {
+      "mean": 94.786,
+      "median": 100.4,
+      "p10": 54.5,
+      "p90": 108.4,
+      "n": 7,
+      "unit": "per_page",
+      "min": 54.5,
+      "max": 108.4,
+      "method": "tools/measure_pdf.py (pdfminer 字形级几何)",
+      "samples": [
+        "s-sosp-2025-001",
+        "s-sosp-2025-002",
+        "s-sosp-2025-003",
+        "s-sosp-2025-004",
+        "s-sosp-2025-005",
+        "s-sosp-2025-006",
+        "s-sosp-2024-001"
+      ]
+    }
+  },
+  "history": [
+    {
+      "key": "page_limit_content",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": 12,
+      "source_id": "src-sosp-2023-cfp",
+      "note": "12 页技术内容上限"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "SOSP 2024",
+      "year": 2024,
+      "value": 12,
+      "source_id": "src-sosp-2024-cfp",
+      "note": "维持 12 页"
+    },
+    {
+      "key": "page_limit_content",
+      "edition": "SOSP 2025",
+      "year": 2025,
+      "value": 12,
+      "source_id": "src-sosp-2025-cfp",
+      "note": "维持 12 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": false,
+      "source_id": "src-sosp-2023-cfp",
+      "note": "参考文献不计入 12 页"
+    },
+    {
+      "key": "references_counted",
+      "edition": "SOSP 2025",
+      "year": 2025,
+      "value": false,
+      "source_id": "src-sosp-2025-cfp",
+      "note": "仍不计入"
+    },
+    {
+      "key": "anonymity",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": "double-blind",
+      "source_id": "src-sosp-2023-cfp",
+      "note": "双盲"
+    },
+    {
+      "key": "anonymity",
+      "edition": "SOSP 2025",
+      "year": 2025,
+      "value": "double-blind",
+      "source_id": "src-sosp-2025-cfp",
+      "note": "仍双盲；投稿用注册 paper ID 替代作者名"
+    },
+    {
+      "key": "paper_size",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": "a4 or letter",
+      "source_id": "src-sosp-2023-cfp",
+      "note": "A4 或 US letter"
+    },
+    {
+      "key": "column_gap_mm",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": 8,
+      "source_id": "src-sosp-2023-cfp",
+      "note": "栏间距 8mm（0.33in）"
+    },
+    {
+      "key": "template_file",
+      "edition": "SOSP 2023",
+      "year": 2023,
+      "value": "acmart (sigplan)",
+      "source_id": "src-sosp-2023-cfp",
+      "note": "推荐 ACM SIGPLAN acmart"
+    },
+    {
+      "key": "camera_ready_policy",
+      "edition": "SOSP 2025",
+      "year": 2025,
+      "value": "conditional acceptance + shepherd",
+      "source_id": "src-sosp-2025-cfp",
+      "note": "2025 起为有条件接受"
+    }
+  ],
+  "texopt_requirement_map": {
+    "note": "SOSP 与 OSDI/NSDI 共用 12 页 / 双栏 / 10pt / 7x9in 版心规格，但官方模板为 ACM SIGPLAN acmart（非 USENIX sty）。font_pt=10；margin_mm 取等效单边 19.05mm（letter 下 7in 版心；A4 下约 16mm，取较严的 19.05mm）",
+    "requirement_fields": {
+      "page_limit": 12,
+      "font_pt": 10,
+      "margin_mm": 19.05,
+      "overwide_fig_threshold_mm": 178.0
+    },
+    "unsupported_constraints": [
+      {
+        "key": "paper_size",
+        "value": "a4 or letter",
+        "why": "Requirement 无纸张尺寸字段，且 SOSP 允许二选一"
+      },
+      {
+        "key": "columns",
+        "value": 2,
+        "why": "Requirement 无栏数字段"
+      },
+      {
+        "key": "margins_mm",
+        "value": {
+          "top": 25.4,
+          "bottom": 25.4,
+          "left": 19.05,
+          "right": 19.05
+        },
+        "why": "单一 margin_mm 无法表达非对称边距；且 A4/letter 下不同"
+      },
+      {
+        "key": "page_limit_content",
+        "value": 12,
+        "why": "语义为技术内容页数（参考文献另计），需'计数范围'支持"
+      },
+      {
+        "key": "page_numbering",
+        "value": "numbered",
+        "why": "texopt 不控制页码"
+      },
+      {
+        "key": "body_font_family",
+        "value": "Times Roman / Linux Libertine",
+        "why": "Requirement 无字体族字段"
+      }
+    ],
+    "recommended_field_suggestions": [
+      {
+        "field": "columns",
+        "type": "int",
+        "example": 2,
+        "rationale": "校验栏数"
+      },
+      {
+        "field": "allowed_paper_sizes",
+        "type": "list",
+        "example": [
+          "a4",
+          "letter"
+        ],
+        "rationale": "部分会议允许两种纸张"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-sosp-2025-cfp",
+      "kind": "official-guidelines",
+      "title": "SOSP 2025 Call for Papers",
+      "url": "https://sigops.org/s/conferences/sosp/2025/cfp.html",
+      "fetched_at": "2026-09-12T10:18:54+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp-2025-cfp.html",
+      "sha256": "4acfa02692ea4301ebcab0ed33686d2378f0c1b4d1afa10edd3928479c21dd9b",
+      "note": "SOSP 2025 CFP：12 页技术内容、A4/US letter、双栏、10pt；双盲；conditional acceptance"
+    },
+    {
+      "id": "src-sosp-2024-cfp",
+      "kind": "official-guidelines",
+      "title": "SOSP 2024 Call for Papers",
+      "url": "https://sigops.org/s/conferences/sosp/2024/cfp.html",
+      "fetched_at": "2026-09-12T10:18:56+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp-2024-cfp.html",
+      "sha256": "ae8b7b755226be9609755a6cfcbb6ec6c8556c836b02957c8ed704f922e037ef",
+      "note": "SOSP 2024 CFP：12 页技术内容规则"
+    },
+    {
+      "id": "src-sosp-2023-cfp",
+      "kind": "official-guidelines",
+      "title": "SOSP 2023 Call for Papers",
+      "url": "https://sosp2023.mpi-sws.org/cfp.html",
+      "fetched_at": "2026-09-12T10:20:02+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp-2023-cfp.html",
+      "sha256": "e98dfe80a2ae3c938bfd4e61ab0f15269bdcf14b2998dd8733da86ee73e78b5a",
+      "note": "SOSP 2023 CFP：12 页技术内容规则"
+    },
+    {
+      "id": "src-sosp-2025-accepted",
+      "kind": "official-guidelines",
+      "title": "SOSP 2025 Accepted Papers (official)",
+      "url": "https://sigops.org/s/conferences/sosp/2025/accepted.html",
+      "fetched_at": "2026-09-12T10:26:38+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp-2025-accepted.html",
+      "sha256": "7096099ed3679d1421a95c3d0b1722bc04f8516da6eaef7c3011fcd0f372fb39",
+      "note": "SIGOPS 官方录用列表，用于佐证样本论文属 SOSP 2025"
+    },
+    {
+      "id": "src-sosp25-pie",
+      "kind": "sample-paper",
+      "title": "Pie: A Programmable Serving System for Emerging LLM Applications",
+      "url": "https://arxiv.org/abs/2510.24051",
+      "fetched_at": "2026-09-12T10:36:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-pie.html",
+      "sha256": "5a9aeb3ad939e73bf9d01b424350a90ff513a10178e216fa2bc3b96472a83a3d",
+      "pdf_url": "https://arxiv.org/pdf/2510.24051",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment 写明 SOSP 2025；arXiv 版为会议论文"
+    },
+    {
+      "id": "src-sosp25-orq",
+      "kind": "sample-paper",
+      "title": "ORQ: Complex Analytics on Private Data with Strong Security Guarantees",
+      "url": "https://arxiv.org/abs/2509.10793",
+      "fetched_at": "2026-09-12T10:36:50+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-orq.html",
+      "sha256": "b56c0b1f76c481859ac77cf62d659e49d5a4d03f50df70022830a4ea2bb2eabc",
+      "pdf_url": "https://arxiv.org/pdf/2509.10793",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment：Extended version, appeared at SOSP 2025"
+    },
+    {
+      "id": "src-sosp25-ufork",
+      "kind": "sample-paper",
+      "title": "μFork: Supporting POSIX fork Within a Single-Address-Space OS",
+      "url": "https://arxiv.org/abs/2509.09439",
+      "fetched_at": "2026-09-12T10:36:52+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-ufork.html",
+      "sha256": "db7db8c520670852c7e8e4c5c493f4cbcb4d68fa9754f26fbad0dc7805784f69",
+      "pdf_url": "https://arxiv.org/pdf/2509.09439",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment：Accepted to appear at SOSP 2025"
+    },
+    {
+      "id": "src-sosp25-hedrarag",
+      "kind": "sample-paper",
+      "title": "HedraRAG: Coordinating LLM Generation and Database Retrieval in Heterogeneous RAG Serving",
+      "url": "https://arxiv.org/abs/2507.09138",
+      "fetched_at": "2026-09-12T10:36:53+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-hedrarag.html",
+      "sha256": "90473ee67186a7f02cc6751cb306a376b71b77d0fca4bd6fade92bcc865632ab",
+      "pdf_url": "https://arxiv.org/pdf/2507.09138",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment：Accepted by SOSP 2025"
+    },
+    {
+      "id": "src-sosp25-knighter",
+      "kind": "sample-paper",
+      "title": "KNighter: Transforming Static Analysis with LLM-Synthesized Checkers",
+      "url": "https://arxiv.org/abs/2503.09002",
+      "fetched_at": "2026-09-12T10:36:53+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-knighter.html",
+      "sha256": "f7716dbc96fa5593ae7080dca302fb1e59f56fe515c9ca2928fcf899afed91d7",
+      "pdf_url": "https://arxiv.org/pdf/2503.09002",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment：SOSP 2025"
+    },
+    {
+      "id": "src-sosp25-diffkv",
+      "kind": "sample-paper",
+      "title": "DiffKV: Differentiated Memory Management for Large Language Models with Parallel KV Compaction",
+      "url": "https://arxiv.org/abs/2412.03131",
+      "fetched_at": "2026-09-12T10:36:54+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp25-diffkv.html",
+      "sha256": "9cfb2023bfea2501d221463317d40138671c75622d60e9bba94370024d4c928b",
+      "pdf_url": "https://arxiv.org/pdf/2412.03131",
+      "venue": "SOSP 2025",
+      "year": 2025,
+      "note": "arXiv 落地页 comment：SOSP 2025"
+    },
+    {
+      "id": "src-sosp24-powerinfer",
+      "kind": "sample-paper",
+      "title": "PowerInfer: Fast Large Language Model Serving with a Consumer-grade GPU",
+      "url": "https://arxiv.org/abs/2312.12456",
+      "fetched_at": "2026-09-12T10:36:55+08:00",
+      "http_status": "200",
+      "raw_file": "sources/raw/src-sosp24-powerinfer.html",
+      "sha256": "afc82a7ca5a6c94a023b1f87e61678edf15a718d7a6294f15552793c359e6d87",
+      "pdf_url": "https://arxiv.org/pdf/2312.12456",
+      "venue": "SOSP 2024",
+      "year": 2024,
+      "note": "arXiv 落地页 comment：SOSP 2024"
+    }
+  ],
+  "open_questions": [
+    "SOSP 未在 CFP 明文给出页边距数值，仅给 7x9in 版心 + A4/letter，边距需换算（template-implied）。",
+    "SOSP 未规定录用后是否可加页（无 'camera-ready extra pages' 明文）。",
+    "SOSP 未指定参考文献样式；acmart 默认 ACMReferenceFormat 但 CFP 未写明。",
+    "SOSP 图题/表题位置无明文。",
+    "SOSP 2024/2025 部分录用论文仅见于 arXiv（comment 标注），会议正式版在 ACM DL（本机 403 无法直接归档 PDF）。",
+    "SOSP 官方录用列表页仅列标题与作者，无每篇 PDF 直链。"
+  ]
+}
