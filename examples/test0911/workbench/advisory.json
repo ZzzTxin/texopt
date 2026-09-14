@@ -1,6 +1,6 @@
 {
-  "status": "DONE",
-  "count": 2,
+  "status": "NEEDS_REVIEW",
+  "count": 0,
   "allowed_actions": [
     "inject_quality_macros",
     "drop_fleqn",
@@ -31,34 +31,5 @@
     "normalize_fig_width",
     "set_fig_width"
   ],
-  "items": [
-    {
-      "id": "title_size-10",
-      "kind": "title_size",
-      "line": 10,
-      "severity": "cosmetic",
-      "location": "",
-      "issue": "文档标题字号 Huge 过大（建议不超过 LARGE）",
-      "suggestion": "文档标题字号超出层级上限；标题字号应交给文档类（闭环已自动压回上限）",
-      "edit_hint": "",
-      "suggested_actions": [
-        "normalize_title"
-      ],
-      "source_line": "\\title{\\Huge A Very Long and Poorly Designed Title That Takes Too Much Space and Makes the First Page Look Ridiculous}"
-    },
-    {
-      "id": "parskip-6",
-      "kind": "parskip",
-      "line": 6,
-      "severity": "moderate",
-      "location": "",
-      "issue": "\\parskip=14pt（14.0pt）过大，整篇段落间距失衡",
-      "suggestion": "\\parskip 过大（整篇段距）——每页都会显得松散、留白偏多；建议收敛到 ≤ 8pt 或交给文档类默认（闭环已自动收敛）",
-      "edit_hint": "",
-      "suggested_actions": [
-        "normalize_parskip"
-      ],
-      "source_line": "\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{14pt}\\setlength{\\textfloatsep}{2pt}\\setlength{\\intextsep}{1pt}\\setlength{\\abovedisplayskip}{2pt}\\setlength{\\belowdisplayskip}{2pt}\\setlength{\\columnsep}{3pt}\\setlength{\\headheight}{8pt}"
-    }
-  ]
+  "items": []
 }

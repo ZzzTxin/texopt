@@ -44,7 +44,7 @@ class Optimizer:
         self.original = os.path.abspath(original_tex)
         self.req = req
         self.outdir = outdir
-        self.work_tex = os.path.join(outdir, "paper.tex")
+        self.work_tex = os.path.join(outdir, os.path.basename(self.original))
         self.resume = resume            # True：沿用已有工作副本（模型在环续跑）
         self.iter = 0
         self.records = []
@@ -78,6 +78,24 @@ class Optimizer:
     def _write(self, text: str):
         with open(self.work_tex, "w", encoding="utf-8") as f:
             f.write(text)
+
+    def _prepare_workdir(self):
+        """复制完整 LaTeX 工程到工作区，并建立 paper.tex 工作副本。"""
+        src_dir = os.path.dirname(self.original)
+
+        for name in os.listdir(src_dir):
+            src = os.path.join(src_dir, name)
+
+            # 避免把 workbench 自己再次复制进去
+            if os.path.abspath(src) == os.path.abspath(self.outdir):
+                continue
+
+            dst = os.path.join(self.outdir, name)
+
+            if os.path.isdir(src):
+                shutil.copytree(src, dst, dirs_exist_ok=True)
+            else:
+                shutil.copy2(src, dst)
 
     def _record(self, note: str, per, cur, accepted: bool, compile_ok: bool,
                 source: str = "rule", detail: str = ""):
@@ -390,7 +408,7 @@ class Optimizer:
                         "reason": f"没有可续跑的工作副本 {self.work_tex}；"
                                   "请先跑一次确定性闭环"}
         else:
-            shutil.copyfile(self.original, self.work_tex)   # 原件只读，工作副本
+            self._prepare_workdir()
 
         per = P.perceive(self.work_tex, self.req)
         if not per.ok:
@@ -997,7 +1015,7 @@ class Optimizer:
 
         L.append("> 内容完整性：正文内容（文字/公式/引用/图表内容）全程零改动（机器"
                  "diff 校验，白名单排版参数除外）；原文件只读，结果在工作副本 "
-                 "`paper.tex`（连同 PDF）。")
+                 f"`{os.path.basename(self.work_tex)}`（连同 PDF）。")
         with open(os.path.join(self.outdir, "report.md"), "w",
                   encoding="utf-8") as f:
             f.write("\n".join(L))
