@@ -14,6 +14,7 @@ analyze_templates.py —— 为“模板设计”任务做数据侧统计。
 """
 import json
 import os
+import re
 import statistics as st
 from collections import Counter, defaultdict
 
@@ -99,11 +100,23 @@ def main():
         meas = {}
         for sid in sample_ids:
             mp = os.path.join(ROOT, "samples", "_measurements", f"{sid}.json")
-            if os.path.exists(mp):
-                meas[sid] = jload(mp)["measured"]
-            else:
+            if not os.path.exists(mp):
                 anomalies.append({"conference": conf_id, "type": "missing_measurement",
                                   "sample_id": sid, "detail": "measurements 文件缺失"})
+                continue
+            mrec = jload(mp)
+            # 测量缓存里除了成功记录，还有 build_dataset.py 写的失败占位
+            # （{"sample_id","pdf_url","error"}，没有 measured）。这些不能当成功样本用，
+            # 但也绝不能把整个脚本掀翻——记成异常，下次 build_dataset.py 会自动重试测量。
+            if not mrec.get("measured"):
+                anomalies.append({
+                    "conference": conf_id, "type": "measurement_failed", "sample_id": sid,
+                    "detail": re.sub(r"\s+", " ", str(mrec.get("error") or "缓存里没有 measured 字段"))[:200]})
+                continue
+            meas[sid] = mrec["measured"]
+        if len(meas) != len(sample_ids):
+            print(f"  ! {conf_id}: {len(sample_ids) - len(meas)}/{len(sample_ids)} 篇样本无可用测量"
+                  f"（已记入 anomalies.md）", flush=True)
 
         ids = list(meas.keys())
         g = lambda fn: [fn(meas[s]) for s in ids]

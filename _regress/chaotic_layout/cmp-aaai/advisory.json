@@ -1,0 +1,64 @@
+{
+  "status": "DONE",
+  "count": 2,
+  "allowed_actions": [
+    "inject_quality_macros",
+    "drop_fleqn",
+    "set_fontsize",
+    "set_margin",
+    "insert_toc",
+    "add_header",
+    "color_headings",
+    "strip_reading_aids",
+    "remove_warning_boxes",
+    "sanitize_float_specs",
+    "remove_manual_pagebreak",
+    "remove_excessive_vspace",
+    "normalize_local_font_size",
+    "normalize_heading_size",
+    "reduce_list_spacing",
+    "add_hyphenation_points",
+    "normalize_title",
+    "normalize_parskip",
+    "normalize_header",
+    "remove_mid_multicols",
+    "reduce_oversized_figures",
+    "shrink_oversized_figures",
+    "break_long_urls",
+    "fix_table_width",
+    "balance_pages",
+    "set_float_spec",
+    "normalize_fig_width",
+    "set_fig_width"
+  ],
+  "items": [
+    {
+      "id": "title_size-10",
+      "kind": "title_size",
+      "line": 10,
+      "severity": "cosmetic",
+      "location": "",
+      "issue": "文档标题字号 Huge 过大（建议不超过 LARGE）",
+      "suggestion": "文档标题字号超出层级上限；标题字号应交给文档类（闭环已自动压回上限）",
+      "edit_hint": "",
+      "suggested_actions": [
+        "normalize_title"
+      ],
+      "source_line": "\\title{\\Huge A Very Long and Poorly Designed Title That Takes Too Much Space and Makes the First Page Look Ridiculous}"
+    },
+    {
+      "id": "parskip-6",
+      "kind": "parskip",
+      "line": 6,
+      "severity": "moderate",
+      "location": "",
+      "issue": "\\parskip=14pt（14.0pt）过大，整篇段落间距失衡",
+      "suggestion": "\\parskip 过大（整篇段距）——每页都会显得松散、留白偏多；建议收敛到 ≤ 8pt 或交给文档类默认（闭环已自动收敛）",
+      "edit_hint": "",
+      "suggested_actions": [
+        "normalize_parskip"
+      ],
+      "source_line": "\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{14pt}\\setlength{\\textfloatsep}{2pt}\\setlength{\\intextsep}{1pt}\\setlength{\\abovedisplayskip}{2pt}\\setlength{\\belowdisplayskip}{2pt}\\setlength{\\columnsep}{3pt}\\setlength{\\headheight}{8pt}"
+    }
+  ]
+}

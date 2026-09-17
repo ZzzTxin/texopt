@@ -58,7 +58,7 @@ UA='Mozilla/5.0 (X11; Linux x86_64) texopt-dataset/1.0 (+academic layout researc
 if [ -s "$OUT" ] && [ "${3:-}${FORCE:-}" != "--force" ]; then
   STATUS="cached"
 else
-  CODE=$(curl -sSL --max-time 60 -A "$UA" -w '%{http_code}' -o "$OUT" "$URL" 2>/dev/null || echo 000)
+  CODE=$(curl -sSL --compressed --max-time 60 -A "$UA" -w '%{http_code}' -o "$OUT" "$URL" 2>/dev/null || echo 000)
   STATUS="$CODE"
   [ "$STATUS" = "000" ] && rm -f "$OUT"
 fi
