@@ -1,0 +1,147 @@
+Anvil: Verifying Liveness of Cluster Management Controllers | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate 
+
+ Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Anvil: Verifying Liveness of Cluster Management Controllers
+
+ Xudong Sun, Wenjie Ma, Jiawei Tyler Gu, and Zicheng Ma, University of Illinois Urbana-Champaign; Tej Chajed, University of Wisconsin-Madison; Jon Howell, Andrea Lattuada, and Oded Padon, VMware Research; Lalith Suresh, Feldera; Adriana Szekeres, VMware Research; Tianyin Xu, University of Illinois Urbana-Champaign 
+
+ Awarded Best Paper!
+
+ Modern clouds depend crucially on an extensible ecosystem of thousands of controllers, each managing critical systems (e.g., a ZooKeeper cluster). A controller continuously reconciles the current state of the system to a desired state according to a declarative description. However, controllers have bugs that make them never achieve the desired state, due to concurrency, asynchrony, and failures; there are cases where after an inopportune failure, a controller can make no further progress. Formal verification is promising for avoiding bugs in distributed systems, but most work so far focused on safety, whereas reconciliation is fundamentally not a safety property.
+
+ This paper develops the first tool to apply formal verification to the problem of controller correctness, with a general specification we call eventually stable reconciliation, written as a concise temporal logic liveness property. We present Anvil, a framework for developing controller implementations in Rust and verifying that the controllers correctly implement eventually stable reconciliation. We use Anvil to verify three Kubernetes controllers for managing ZooKeeper, RabbitMQ, and FluentBit, which can readily be deployed in Kubernetes platforms and are comparable in terms of features and performance to widely used unverified controllers.
+
+ OSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST)
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {298734,
+
+ author = {Xudong Sun and Wenjie Ma and Jiawei Tyler Gu and Zicheng Ma and Tej Chajed and Jon Howell and Andrea Lattuada and Oded Padon and Lalith Suresh and Adriana Szekeres and Tianyin Xu},
+
+ title = {Anvil: Verifying Liveness of Cluster Management Controllers},
+
+ booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-40-3},
+
+ address = {Santa Clara, CA},
+
+ pages = {649--666},
+
+ url = {https://www.usenix.org/conference/osdi24/presentation/sun-xudong},
+
+ publisher = {USENIX Association},
+
+ month = jul
+
+}
+
+ Download 
+
+ Sun PDF 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors Exhibitor Services 
+
+ About Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

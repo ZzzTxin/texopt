@@ -1,0 +1,41 @@
+CVPR 2025 Open Access Repository 
+
+ CVPR 2025 open access 
+
+ These CVPR 2025 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ Difference Inversion: Interpolate and Isolate the Difference with Token Consistency for Image Analogy Generation
+
+ Hyunsoo Kim, Donghyun Kim, Suhyun Kim ; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2025, pp. 18250-18259
+
+ Abstract 
+
+ How can we generate an image B' that satisfies A:A'::B:B', given the input images A,A' and B? Recent works have tackled this challenge through approaches like visual in-context learning or visual instruction. However, these methods are typically limited to specific models (InstructPix2Pix. Inpainting models) rather than general diffusion models (Stable Diffusion, SDXL). This dependency may lead to inherited biases or lower editing capabilities. In this paper, we propose Difference Inversion, a method that isolates only the difference from A and A' and applies it to B to generate a plausible B'. To address model dependency, it is crucial to structure prompts in the form of a "Full Prompt" suitable for input to stable diffusion models, rather than using an "Instruction Prompt". To this end, we accurately extract the Difference between A and A' and combine it with the prompt of B, enabling a plug-and-play application of the difference. To extract a precise difference, we first identify it through 1) Delta Interpolation. Additionally, to ensure accurate training, we propose the 2) Token Consistency Loss and 3) Zero Initialization of Token Embeddings. Our extensive experiments demonstrate that Difference Inversion outperforms existing baselines both quantitatively and qualitatively, indicating its ability to generate more feasible B' in a model-agnostic manner.
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Kim_2025_CVPR,
+ author = {Kim, Hyunsoo and Kim, Donghyun and Kim, Suhyun},
+ title = {Difference Inversion: Interpolate and Isolate the Difference with Token Consistency for Image Analogy Generation},
+ booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+ month = {June},
+ year = {2025},
+ pages = {18250-18259}
+}

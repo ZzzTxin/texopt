@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Search Engine Info --><title>Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs</title><meta name="description" content="Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEsS Chandra Mouli,&nbsp;Danielle C. Maddix,&nbsp;Shima Alizadeh,&nb..."><!-- Solution from http://stackoverflow.com/questions/31593297/using-execcommand-javascript-to-copy-hidden-text-to-clipboard -->
+<script src="https://proceedings.mlr.press/v235/assets/js/copy_input.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://proceedings.mlr.press/v235/assets/js/download.js"></script>
+<meta name="citation_publisher" content="PMLR"/><meta name="citation_title" content="Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs"/><meta name="citation_language" content="en"/>
+<meta name="citation_abstract_html_url" content="https://proceedings.mlr.press/v235/mouli24a.html"/><meta name="citation_pdf_url" content="https://raw.githubusercontent.com/mlresearch/v235/main/assets/mouli24a/mouli24a.pdf"><meta name="citation_firstpage" content="36372"><meta name="citation_lastpage" content="36418"><meta name="citation_author" content="S Chandra Mouli"><meta name="citation_author" content="Danielle C. Maddix"><meta name="citation_author" content="Shima Alizadeh"><meta name="citation_author" content="Gaurav Gupta"><meta name="citation_author" content="Andrew Stuart"><meta name="citation_author" content="Michael W. Mahoney"><meta name="citation_author" content="Bernie Wang"><meta name="citation_publication_date" content="2024/07/08"><meta name="citation_inbook_title" content="International Conference on Machine Learning"/><meta name="citation_conference_title" content="International Conference on Machine Learning"/><meta name="citation_issn" content="2640-3498"><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs"/><meta name="twitter:site" content="@MLResearchPress" /><meta name="twitter:description" content="Existing work in scientific machine learning (SciML) has shown that data-driven learning of solution operators can provide a fast approximate alternative to ..."/><meta name="twitter:image" content="https://proceedings.mlr.press/v235/assets/images/logo-pmlr.png"/>
+<meta name="twitter:image:alt" content="PMLR Logo"/><meta property="og:title" content="Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs"/>
+<meta property="og:description" content="Existing work in scientific machine learning (SciML) has shown that data-driven learning of solution operators can provide a fast approximate alternative to classical numerical partial differential..."/>
+<meta property="og:type" content="article"/><meta property="article:published_time" content="2024-07-08T00:00:00+00:00"><meta property="og:url" content="https://proceedings.mlr.press/v235/mouli24a.html"/><meta property="og:image" content="https://proceedings.mlr.press/v235/assets/images/logo-pmlr.png"/><meta property="og:site_name" content="PMLR"/><!-- Style Info -->
+  <link rel="stylesheet" type="text/css" href="https://proceedings.mlr.press/v235/assets/css/pmlr.css" />
+  <style>.hero-text {
+    color: #303030;
+  }</style>
+
+  <!-- Icon Info -->
+  <link rel="shortcut icon" href="https://proceedings.mlr.press/v235/assets/images/favicon-pmlr.ico" type="image/x-icon">
+  <link rel="icon" href="https://proceedings.mlr.press/v235/assets/images/favicon-pmlr.ico" type="image/x-icon">
+
+  <!-- Feed Info --><link type="application/atom+xml" rel="alternate" href="https://proceedings.mlr.press/v235/feed.xml" title="Proceedings of Machine Learning Research" /><!-- Scripting info --><!-- Solution from http://stackoverflow.com/questions/31593297/using-execcommand-javascript-to-copy-hidden-text-to-clipboard -->
+<script src="https://proceedings.mlr.press/v235/assets/js/copy_input.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://proceedings.mlr.press/v235/assets/js/download.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92432422-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+          autoNumber: "AMS"
+        }
+      },
+      tex2jax: {
+      inlineMath: [ ['$','$'], ['\\(', '\\)'] ],
+      displayMath: [ ['$$','$$'], ['\\[', '\\]'] ],
+      processEscapes: true,
+    }
+  });
+</script>
+<script  async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <!-- User custom header -->
+</head>
+
+
+
+
+
+
+<body>
+
+
+<header class="site-header">
+  <div class="wrapper">
+    
+
+
+<div class="hero-image">
+  <div class="hero-text">
+    <a href="/" target="_top"><img src="/v235/assets/images/logo-pmlr.svg" alt="[International Conference on Machine Learning Logo]"></a>
+    Proceedings of Machine Learning Research
+  </div>
+</div>
+
+
+    <nav class="site-nav">
+  <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+  <label for="nav-trigger">
+  <span class="menu-icon"><svg viewBox="0 0 18 15" width="18px" height="15px">
+  <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+</svg>
+</span>
+  </label>
+  <div class="trigger"><a class="page-link" href="https://proceedings.mlr.press/v235/">Volume 235</a><a class="page-link" href="https://www.jmlr.org/">JMLR</a> 
+    <a class="page-link" href="https://data.mlr.press/">DMLR</a> 
+    <a class="page-link" href="https://jmlr.org/tmlr/">TMLR</a> 
+    <a class="page-link" href="https://www.jmlr.org/mloss">MLOSS</a>
+    <a class="page-link" href="/faq.html">FAQ</a>
+    <a class="page-link" href="/spec.html">Submission Format</a>
+    <a class="page-link" href="https://proceedings.mlr.press//v235/assets/rss/feed.xml">
+      <img src="https://proceedings.mlr.press/v235/assets/images/RSS.gif" class="rss" alt="RSS Feed">
+    </a>
+  </div>
+</nav>
+
+  </div>
+</header>
+
+
+
+
+
+<main class="page-content" aria-label="Content"><div class="wrapper">
+
+
+<p style="text-align:right">[<a href="https://github.com/mlresearch/v235/edit/gh-pages/_posts/2024-07-08-mouli24a.md" target="_blank" onclick="ga('send', 'event', 'Edit Page', 'Edit', 'https://github.com/mlresearch/v235/edit/gh-pages/_posts/2024-07-08-mouli24a.md', 13);">edit</a>]</p>
+
+<article class="post-content">
+  <h1>Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs</h1><span class="authors">S Chandra Mouli,&nbsp;Danielle C. Maddix,&nbsp;Shima Alizadeh,&nbsp;Gaurav Gupta,&nbsp;Andrew Stuart,&nbsp;Michael W. Mahoney,&nbsp;Bernie Wang</span>
+<div id="info"><i>Proceedings of the 41st International Conference on Machine Learning</i>,&nbsp;PMLR 235:36372-36418,&nbsp;2024.
+  </div> <!-- info -->
+  
+  <h4>Abstract</h4>
+  <div id="abstract" class="abstract">
+    Existing work in scientific machine learning (SciML) has shown that data-driven learning of solution operators can provide a fast approximate alternative to classical numerical partial differential equation (PDE) solvers. Of these, Neural Operators (NOs) have emerged as particularly promising. We observe that several uncertainty quantification (UQ) methods for NOs fail for test inputs that are even moderately out-of-domain (OOD), even when the model approximates the solution well for in-domain tasks. To address this limitation, we show that ensembling several NOs can identify high-error regions and provide good uncertainty estimates that are well-correlated with prediction errors. Based on this, we propose a cost-effective alternative, DiverseNO, that mimics the properties of the ensemble by encouraging diverse predictions from its multiple heads in the last feed-forward layer. We then introduce Operator-ProbConserv, a method that uses these well-calibrated UQ estimates within the ProbConserv framework to update the model. Our empirical results show that Operator-ProbConserv enhances OOD model performance for a variety of challenging PDE problems and satisfies physical constraints such as conservation laws.
+  </div>
+  <h4>Cite this Paper</h4>
+<hr class="bibhr">
+
+<div class="bibbuttongroup row row--justified">
+  <div class="bibbuttontext column">
+    BibTeX
+  </div>
+  <div class="column">
+  <div class="codebox">
+    <code class="citecode" id="bibtex">@InProceedings{pmlr-v235-mouli24a,
+  title = 	 {Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for {PDE}s},
+  author =       {Mouli, S Chandra and Maddix, Danielle C. and Alizadeh, Shima and Gupta, Gaurav and Stuart, Andrew and Mahoney, Michael W. and Wang, Bernie},
+  booktitle = 	 {Proceedings of the 41st International Conference on Machine Learning},
+  pages = 	 {36372--36418},
+  year = 	 {2024},
+  editor = 	 {Salakhutdinov, Ruslan and Kolter, Zico and Heller, Katherine and Weller, Adrian and Oliver, Nuria and Scarlett, Jonathan and Berkenkamp, Felix},
+  volume = 	 {235},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {21--27 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {https://raw.githubusercontent.com/mlresearch/v235/main/assets/mouli24a/mouli24a.pdf},
+  url = 	 {https://proceedings.mlr.press/v235/mouli24a.html},
+  abstract = 	 {Existing work in scientific machine learning (SciML) has shown that data-driven learning of solution operators can provide a fast approximate alternative to classical numerical partial differential equation (PDE) solvers. Of these, Neural Operators (NOs) have emerged as particularly promising. We observe that several uncertainty quantification (UQ) methods for NOs fail for test inputs that are even moderately out-of-domain (OOD), even when the model approximates the solution well for in-domain tasks. To address this limitation, we show that ensembling several NOs can identify high-error regions and provide good uncertainty estimates that are well-correlated with prediction errors. Based on this, we propose a cost-effective alternative, DiverseNO, that mimics the properties of the ensemble by encouraging diverse predictions from its multiple heads in the last feed-forward layer. We then introduce Operator-ProbConserv, a method that uses these well-calibrated UQ estimates within the ProbConserv framework to update the model. Our empirical results show that Operator-ProbConserv enhances OOD model performance for a variety of challenging PDE problems and satisfies physical constraints such as conservation laws.}
+}
+</code>
+  </div>
+  <button class="button"  id="button-bibtex1" onclick="CopyToClipboard('bibtex');  ga('send', 'event', 'Ref Copy', 'CopyToClipboard', '/v235/pmlr-v235-mouli24a.bib', 15);">Copy to Clipboard</button>
+  <button class="button" id="button-bibtex2" onclick="DownloadTexToFile('pmlr-v235-mouli24a.bib', 'bibtex'); ga('send', 'event', 'Ref Downloads', 'Download', '/v235/pmlr-v235-mouli24a.bib', 16);">Download</button>
+  </div>
+</div>
+
+
+<div class="bibbuttongroup row row--justified">
+  <div class="bibbuttontext column">
+    Endnote
+  </div>
+  <div class="column">
+  <div class="codebox">
+    <code class="citecode" id="endnote">%0 Conference Paper
+%T Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs
+%A S Chandra Mouli
+%A Danielle C. Maddix
+%A Shima Alizadeh
+%A Gaurav Gupta
+%A Andrew Stuart
+%A Michael W. Mahoney
+%A Bernie Wang
+%B Proceedings of the 41st International Conference on Machine Learning
+%C Proceedings of Machine Learning Research
+%D 2024
+%E Ruslan Salakhutdinov
+%E Zico Kolter
+%E Katherine Heller
+%E Adrian Weller
+%E Nuria Oliver
+%E Jonathan Scarlett
+%E Felix Berkenkamp	
+%F pmlr-v235-mouli24a
+%I PMLR
+%P 36372--36418
+%U https://proceedings.mlr.press/v235/mouli24a.html
+%V 235
+%X Existing work in scientific machine learning (SciML) has shown that data-driven learning of solution operators can provide a fast approximate alternative to classical numerical partial differential equation (PDE) solvers. Of these, Neural Operators (NOs) have emerged as particularly promising. We observe that several uncertainty quantification (UQ) methods for NOs fail for test inputs that are even moderately out-of-domain (OOD), even when the model approximates the solution well for in-domain tasks. To address this limitation, we show that ensembling several NOs can identify high-error regions and provide good uncertainty estimates that are well-correlated with prediction errors. Based on this, we propose a cost-effective alternative, DiverseNO, that mimics the properties of the ensemble by encouraging diverse predictions from its multiple heads in the last feed-forward layer. We then introduce Operator-ProbConserv, a method that uses these well-calibrated UQ estimates within the ProbConserv framework to update the model. Our empirical results show that Operator-ProbConserv enhances OOD model performance for a variety of challenging PDE problems and satisfies physical constraints such as conservation laws.
+</code>
+  </div>
+  <button class="button"  id="button-endnote1" onclick="CopyToClipboard('endnote');  ga('send', 'event', 'Ref Copy', 'CopyToClipboard', '/v235/pmlr-v235-mouli24a.enw', 15);">Copy to Clipboard</button>
+  <button class="button" id="button-endnote2" onclick="DownloadTexToFile('pmlr-v235-mouli24a.enw', 'endnote'); ga('send', 'event', 'Ref Downloads', 'Download', '/v235/pmlr-v235-mouli24a.enw', 16);">Download</button>
+  </div>
+</div>
+
+
+
+<div class="bibbuttongroup row row--justified">
+  <div class="bibbuttontext column">
+    APA
+  </div>
+  <div class="column">
+  <div class="codebox">
+    <code class="citecode" id="apa">Mouli, S.C., Maddix, D.C., Alizadeh, S., Gupta, G., Stuart, A., Mahoney, M.W. & Wang, B.. (2024). Using Uncertainty Quantification to Characterize and Improve Out-of-Domain Learning for PDEs. <i>Proceedings of the 41st International Conference on Machine Learning</i>, in <i>Proceedings of Machine Learning Research</i> 235:36372-36418 Available from https://proceedings.mlr.press/v235/mouli24a.html.
+
+</code>
+  </div>
+  <button class="button"  id="button-apa1" onclick="CopyToClipboard('apa');  ga('send', 'event', 'Ref Copy', 'CopyToClipboard', '/v235/pmlr-v235-mouli24a.txt', 15);">Copy to Clipboard</button>
+  <button class="button" id="button-apa2" onclick="DownloadTexToFile('pmlr-v235-mouli24a.txt', 'apa'); ga('send', 'event', 'Ref Downloads', 'Download', '/v235/pmlr-v235-mouli24a.txt', 16);">Download</button>
+  </div>
+</div>
+
+<hr class="bibhr">
+
+
+  
+  <h4>Related Material</h4>
+  <div id="extras">
+    <ul>
+      <li><a href="https://raw.githubusercontent.com/mlresearch/v235/main/assets/mouli24a/mouli24a.pdf" target="_blank" onclick="ga('send', 'event', 'PDF Downloads', 'Download', 'https://raw.githubusercontent.com/mlresearch/v235/main/assets/mouli24a/mouli24a.pdf', 10);">Download PDF</a></li>
+      <li><a href="https://openreview.net/forum?id=Y50K6DSrWo" target="_blank" onclick="ga('send', 'event', 'OpenReview site', 'Openreview', 'https://openreview.net/forum?id=Y50K6DSrWo', 10);">OpenReview</a></li>
+    </ul>
+  </div>
+  
+
+</article>
+
+
+
+
+
+
+
+
+
+      </div>
+    </main>
+
+
+<footer class="site-footer">
+  <div class="wrapper">
+    <p>This site last compiled Tue, 30 Jun 2026 09:16:41 +0000</p>
+      <div class="footer-left"><i><a href="https://github.com/mlresearch/v235">Github Account</a></i>
+      </div>
+      <div class="footer-right">Copyright &copy; <a href="https://proceedings.mlr.press">The authors and PMLR</a> 2026.<a href="https://twitter.com/MLResearchPress"><i class="icon-twitter"></i>&nbsp;MLResearchPress</a></div>
+  </div>
+</footer>
+
+
+
+
+
+</body>
+
+</html>

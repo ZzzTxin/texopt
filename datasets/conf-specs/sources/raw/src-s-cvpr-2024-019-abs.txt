@@ -1,0 +1,40 @@
+CVPR 2024 Open Access Repository 
+
+ CVPR 2024 open access 
+
+ These CVPR 2024 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ Towards the Uncharted: Density-Descending Feature Perturbation for Semi-supervised Semantic Segmentation
+
+ Xiaoyang Wang, Huihui Bai, Limin Yu, Yao Zhao, Jimin Xiao ; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024, pp. 3303-3312
+
+ Abstract 
+
+ Semi-supervised semantic segmentation allows model to mine effective supervision from unlabeled data to complement label-guided training. Recent research has primarily focused on consistency regularization techniques exploring perturbation-invariant training at both the image and feature levels. In this work we proposed a novel feature-level consistency learning framework named Density-Descending Feature Perturbation (DDFP). Inspired by the low-density separation assumption in semi-supervised learning our key insight is that feature density can shed a light on the most promising direction for the segmentation classifier to explore which is the regions with lower density. We propose to shift features with confident predictions towards lower-density regions by perturbation injection. The perturbed features are then supervised by the predictions on the original features thereby compelling the classifier to explore less dense regions to effectively regularize the decision boundary. Central to our method is the estimation of feature density. To this end we introduce a lightweight density estimator based on normalizing flow allowing for efficient capture of the feature density distribution in an online manner. By extracting gradients from the density estimator we can determine the direction towards less dense regions for each feature. The proposed DDFP outperforms other designs on feature-level perturbations and shows state of the art performances on both Pascal VOC and Cityscapes dataset under various partition protocols. The project is available at https://github.com/Gavinwxy/DDFP.
+
+ Related Material 
+
+[ pdf ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Wang_2024_CVPR,
+ author = {Wang, Xiaoyang and Bai, Huihui and Yu, Limin and Zhao, Yao and Xiao, Jimin},
+ title = {Towards the Uncharted: Density-Descending Feature Perturbation for Semi-supervised Semantic Segmentation},
+ booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+ month = {June},
+ year = {2024},
+ pages = {3303-3312}
+}

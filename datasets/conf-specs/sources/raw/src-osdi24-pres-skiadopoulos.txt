@@ -1,0 +1,147 @@
+High-throughput and Flexible Host Networking for Accelerated Computing | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate 
+
+ Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ High-throughput and Flexible Host Networking for Accelerated Computing
+
+ Athinagoras Skiadopoulos, Zhiqiang Xie, and Mark Zhao, Stanford University; Qizhe Cai and Saksham Agarwal, Cornell University; Jacob Adelmann, David Ahern, Carlo Contavalli, Michael Goldflam, Vitaly Mayatskikh, Raghu Raja, and Daniel Walton, Enfabrica; Rachit Agarwal, Cornell University; Shrijeet Mukherjee, Enfabrica; Christos Kozyrakis, Stanford University 
+
+ Modern network hardware is able to meet the stringent bandwidth demands of applications like GPU-accelerated AI. However, existing host network stacks offer a hard tradeoff between performance (in terms of sustained throughput when compared to network hardware capacity) and flexibility (in terms of the ability to select, customize, and extend different network protocols).
+
+ This paper explores a clean-slate approach to simultaneously offer high performance and flexibility. We present a co-design of the NIC hardware and the software stack to achieve this. The key idea in our design is the physical separation of the data path (payload transfer between network and application buffers) and the control path (header processing and transport-layer decisions). The NIC enables a high-performance zero-copy data path, independent of the placement of the application (CPU, GPU, FPGA, or other accelerators). The software stack provides a flexible control path by enabling the integration of any network protocol, executing in any environment (in the kernel, in user space, or in an accelerator).
+
+ We implement and evaluate ZeroNIC, a prototype that combines an FPGA-based NIC with a software stack that integrates the Linux TCP protocol. We demonstrate that ZeroNIC achieves RDMA-like throughput while maintaining the benefits of robust protocols like TCP under various network perturbations. For instance, ZeroNIC enables a single TCP flow to saturate a 100Gbps link while utilizing only 17% of a single CPU core. ZeroNIC improves NCCL and Redis throughput by 2.66X and 3.71X, respectively, over Linux TCP on a Mellanox ConnectX-6 NIC, without requiring application modifications.
+
+ OSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST)
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {298709,
+
+ author = {Athinagoras Skiadopoulos and Zhiqiang Xie and Mark Zhao and Qizhe Cai and Saksham Agarwal and Jacob Adelmann and David Ahern and Carlo Contavalli and Michael Goldflam and Vitaly Mayatskikh and Raghu Raja and Daniel Walton and Rachit Agarwal and Shrijeet Mukherjee and Christos Kozyrakis},
+
+ title = {High-throughput and Flexible Host Networking for Accelerated Computing},
+
+ booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-40-3},
+
+ address = {Santa Clara, CA},
+
+ pages = {405--423},
+
+ url = {https://www.usenix.org/conference/osdi24/presentation/skiadopoulos},
+
+ publisher = {USENIX Association},
+
+ month = jul
+
+}
+
+ Download 
+
+ Skiadopoulos PDF 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors Exhibitor Services 
+
+ About Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

@@ -1,0 +1,400 @@
+\documentclass{article}
+\usepackage[preprint]{neurips_2026}
+\raggedbottom
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{float}
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{0pt}
+\newcommand{\srr}{\mathrm{SRR}}
+
+\title{Silent Revision: Measuring Undisclosed Change in the Safety Frameworks of Frontier AI Developers}
+\author{Louis Yiven Zhu\\ University of Oxford\\ \texttt{yiven.zhu@oii.ox.ac.uk}}
+
+
+% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
+\emergencystretch=1.5em
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\doublehyphendemerits=5000
+\finalhyphendemerits=5000
+% ===== texopt end =====
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Frontier AI developers publish safety frameworks that commit them to evidencing whether their models are dangerous. The European Union and California now treat these documents as instruments of accountability, and both already impose duties on their revision. Neither requires the revision to be legible, in the sense that a reader could learn from the developer's own account what changed. We introduce the \emph{silent revision rate}, the share of material changes to a framework's commitments that the developer's published account does not identify, and we release the versioned, hash-pinned corpus needed to compute it. The corpus contains every public version of the safety frameworks of the twelve developers that have published one, together with each provider's changelog, redline or announcement. We trace 710 commitment instances across twelve consecutive version pairs, code them against a frozen codebook, and adjudicate 244 individually. Three findings follow. First, 67\% of material changes (95\% CI 62 to 72) are silent under a strict standard and 53\% under a lenient one, falling to 49\% at section granularity. Second, silence appears to track the form of the account, since narrative announcements run at 74\% against 63\% for itemised changelogs, whereas account length in words barely matters; on the test that respects nesting the difference is suggestive. Third, 77\% of traced changes weaken or remove a commitment, and in seven of eight pairs weakenings are more often silent than strengthenings. The statutory remedy therefore exists and specifies the wrong artefact. A justification explains why a framework changed, an enumeration states what changed, and only the latter makes revision auditable. We argue that publication duties should carry an enumeration duty, which one provider already meets, voluntarily and incompletely.
+\end{abstract}
+
+% ==================================================================
+\section{Introduction}
+\label{sec:intro}
+
+A standard that can be revised without anyone noticing is not a standard that anyone can be held to. Ananny and Crawford \citep{ananny2018seeing} argued that the transparency ideal confuses seeing with knowing, and frontier AI safety frameworks now illustrate the distinction precisely. Every major developer of frontier AI models publishes a document stating how it will decide whether a model is too dangerous to train or release. These documents carry different names, among them Responsible Scaling Policy, Preparedness Framework and Frontier Safety Framework. Each nonetheless defines capability thresholds, commits the developer to evaluations that establish whether a model has crossed one, and specifies the consequence when it has. In the vocabulary of the social sciences they are standards, because they render a contested notion of catastrophic risk commensurable as levels and procedures \citep{espeland1998commensuration,timmermans2010world}, and they function as regulatory science, because their authority rests on the visible propriety of the procedure that produces a judgement \citep{jasanoff1990fifth,porter1995trust}.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig0_pipeline.pdf}
+\caption{The silent revision rate as a measurement construct. Material changes between versions (left) reach a reader through the text and through the developer's account, whose completeness varies by regime (centre); aligning the two classifies each change as announced, partially announced or silent (right). The pooled ratio shown is developed within pairs in Section~\ref{sec:results}.}
+\label{fig:pipeline}
+\end{figure}
+
+That authority has since acquired legal force in two jurisdictions. The European Union's General-Purpose AI Code of Practice requires signatories to maintain a safety and security framework and to provide the AI Office with each update \citep{eu2025gpai}. California's Transparency in Frontier Artificial Intelligence Act requires large developers to publish a frontier AI framework and, on any material modification, to publish the modified framework with a justification within thirty days \citep{california2025sb53}. Framework text is consequently the object that regulators, auditors and the public consult when they ask what a developer has promised, and a growing literature assesses it \citep{stelling2025evaluating,alaga2024grading,kasirzadeh2024measurement,pistillo2025towards,metr2024common,dsit2023emerging}.
+
+Every one of those assessments scores a framework at a moment in time. Frameworks are revised, however, and both statutes are content with a snapshot of the revised document. The most thorough assessment to date noted in passing that without changelogs an outsider cannot distinguish adaptation from weakening \citep{stelling2025evaluating}, and that observation identifies the missing measurement this paper supplies. The question sits at the decision end of evaluation science. We do not ask whether an evaluation measures what it claims; we ask whether a commitment to run it can be relied on once published.
+
+We therefore put three questions to the corpus, in order of increasing specificity. \textbf{RQ1} concerns magnitude. When a developer revises its framework, what share of the material changes to its commitments can a reader identify from the developer's own account? \textbf{RQ2} concerns form. Does the kind of account a developer publishes, whether a redline, an itemised changelog, a narrative announcement or nothing, correspond to how much change stays silent? \textbf{RQ3} concerns direction. Do commitments tend to strengthen or weaken across revisions, and does the visibility of a change depend on its direction?
+
+Answering these questions requires two things that did not previously exist, a corpus and a measure. We assemble every public version of the safety frameworks of the twelve developers that published one after the 2024 AI Seoul Summit, together with each developer's account of each revision. We then define the \emph{silent revision rate} as the share of material changes to a framework's commitments that the account does not identify. Figure~\ref{fig:pipeline} shows the construct, and a frozen codebook with two explicit thresholds operationalises it and exposes the judgement it embeds.
+
+We argue that the auditability of a safety framework depends on the legibility of its revision, that legibility is measurable from the public record, and that in the current record it is low and non-random. We contribute (i) the corpus, comprising 43 labelled framework versions and silent same-label re-uploads, 9 companion documents and every revision account; (ii) the measure and codebook, with a granularity check on the denominator; (iii) first estimates with confidence intervals across twelve version pairs, and the finding that weakenings are more often silent than strengthenings within seven of eight pairs; and (iv) a compliance-gap argument, since both jurisdictions already impose a justification duty on revision while justification-style accounts are the least legible form in the corpus.
+
+% ==================================================================
+\section{Background}
+\label{sec:background}
+
+After the 2024 Seoul Summit, twelve developers published frameworks describing how they manage catastrophic risk from their most capable models, a development Anderljung et al.\ \citep{anderljung2023frontier} anticipated and Karnofsky \citep{karnofsky2024ifthen} named the if-then commitment. A literature quickly formed around the documents. The UK government \citep{dsit2023emerging} and METR \citep{metr2024common} catalogued their common elements; Schuett et al.\ \citep{schuett2023towards} surveyed expert opinion; Alaga et al.\ \citep{alaga2024grading} proposed a grading rubric; Koessler et al.\ \citep{koessler2024risk} analysed threshold design; Kasirzadeh \citep{kasirzadeh2024measurement} identified six measurement challenges; and Pistillo \citep{pistillo2025towards} and Campos et al.\ \citep{campos2025frontier} argued for specificity and alignment with established risk management. The most thorough assessment, by Stelling et al.\ \citep{stelling2025evaluating}, scores twelve providers against 65 criteria. Every one of these instruments scores a snapshot; Stelling et al.\ report changes for the two providers that happened to revise during their window but do not carry longitudinal tracking out.
+
+A second body of work concerns what developers disclose, and it establishes both the expectation of documentation and its limits. Model cards \citep{mitchell2019model} and datasheets \citep{gebru2021datasheets} set the template, Liang et al.\ \citep{liang2024systematic} showed across 32,111 model cards how unevenly it is filled, the Foundation Model Transparency Index \citep{bommasani2023fmti,bommasani2024fmti,wan2025fmti} finds developer transparency declining after an initial improvement, and Bommasani et al.\ \citep{bommasani2024reports} and Kolt et al.\ \citep{kolt2024responsible} set out what responsible reporting should contain. All of this measures whether a developer discloses a category of information, and none of it measures whether a disclosed document's later revision is itself disclosed, which is the second-order property this paper isolates. Mittelstadt \citep{mittelstadt2019principles} made the parallel point about ethics principles, which bind nobody until something converts them into enforceable practice.
+
+That conversion is the concern of the auditing literature which supplies our institutional frame. Raji et al.\ \citep{raji2020closing,raji2022outsider} defined internal algorithmic audit and argued that it cannot substitute for third-party oversight, and Costanza-Chock et al.\ \citep{costanzachock2022who} recommended mandatory public disclosure of audit results as the condition of the ecosystem's credibility. Wachter et al.\ \citep{wachter2017why} showed how far a provision as written can sit from what a reader obtains under it. Our measure belongs to this tradition as an outsider-oversight instrument applied to the governing documents themselves, and our governance argument extends the disclosure recommendation from audit results to the revision of the standards audited against.
+
+Whereas those bodies of work define the object, a third supplies the method. Jacobs and Wallach \citep{jacobs2021measurement} imported measurement modelling into the study of algorithmic systems, Wallach et al.\ \citep{wallach2025position} formalised the path from background concept to instrument, and Weidinger et al.\ \citep{weidinger2025toward} and R\"ottger et al.\ \citep{rottger2025safetyprompts,rottger2024political} showed what an evaluation science requires of its instruments; we treat the silent revision rate as such an instrument. The closest methodological precedent for our corpus lies outside AI governance, in Amos et al.'s longitudinal study of over a million privacy policies from the Internet Archive \citep{amos2021privacy}; we add the comparator the measure needs, namely the provider's own account of each change. The closest effort in subject matter is The Midas Project's AI Safety Watchtower \citep{midas2024watchtower}, a nonprofit monitor that has tracked sixteen companies' policy documents for unannounced edits since 2024. It documents the phenomenon without defining a measure, reporting reliability or testing for asymmetry, and this paper is its first systematic measurement.
+
+Finally, the social-scientific study of organisations supplies two candidate mechanisms, and we keep them distinct because the results discriminate between them. Vaughan \citep{vaughan1996challenger} explains the Challenger launch decision through structural secrecy, the routine consequence of specialisation that prevents any part of an organisation from seeing the aggregate of its own deviations. That mechanism predicts uneven silence, because the people who know which changes they intended write the changelog and everything outside their attention falls outside the record; it does not predict directional silence. Meyer and Rowan \citep{meyer1977institutionalized} and Brunsson \citep{brunsson1989organization} describe organisations that decouple the formal structure they display from the activity they conduct, and that mechanism does predict that unfavourable changes will be less visible than favourable ones.
+
+% ==================================================================
+\section{Corpus}
+\label{sec:corpus}
+
+We collected every publicly released version of the standing catastrophic-risk policy of each of the twelve developers that published one following the Seoul Summit (Appendix~\ref{apx:manifest} lists them). Alongside each version we collected the provider's own account of the revision, whether an in-document changelog, a version-history table, a published redline or the announcement post released with the version. Following Stelling et al.\ \citep{stelling2025evaluating}, we exclude system and model cards because they report point-in-time implementation.
+
+Before retrieving anything, we established each provider's version list from primary sources, consulting framework pages and version histories first, then announcement posts, then Internet Archive capture histories. Secondary trackers located candidates but never served as sole evidence, and we never inferred a version from a numbering gap. We stored each file as published together with a plain-text extraction, a SHA-256 hash recomputed from disk and its provenance, and all nine passages that Stelling et al.\ quote with page references matched.
+
+The resulting manifest has 52 rows, of which 43 are framework rows and 9 are companion documents. Thirty-five files came from providers, fourteen from the Internet Archive and one from a gated portal; three known versions could not be retrieved. Seven providers have at least two labelled versions and enter the drift analysis. Anthropic has nine versions, Google DeepMind four and xAI five, while OpenAI, Meta, Microsoft and Naver have two each. In addition, providers replaced nine files at the same URL or under the same version label with changed text and no new identifier, and we retain these as separate rows because a reader who downloaded the framework before and after would hold different documents bearing the same name (Appendix~\ref{apx:variants}).
+
+Because a commitment that leaves a framework may reappear elsewhere, we also collected companion documents and consulted them to distinguish removal from relocation. One companion is itself a finding. Anthropic's Frontier Compliance Framework carries an itemised changelog describing four versions between December 2025 and July 2026, while the three earlier texts have been withdrawn from the portal that hosts them, so a reader can see what Anthropic says changed but cannot verify it. The same document commits to a changelog with justifications within thirty days of any material update, which tracks the statutory language of TFAIA almost verbatim (Appendix~\ref{apx:fcf}).
+
+Across the nineteen consecutive labelled pairs, providers account for revision in four ways. A \emph{redline} is a full marked-up diff, published by Anthropic for every RSP revision from version 2.2 onward (five pairs). An \emph{itemised} account is a changelog listing individual changes (six pairs). A \emph{narrative} account is prose describing the revision, typically an announcement post (four pairs). \emph{None} means no account of any kind (four pairs, all xAI). We treat the four as an ordered typology of legibility, with the caveat that a redline shows every textual change without saying which are material or in which direction they move (Section~\ref{sec:limits}). Appendix~\ref{apx:pairs} assigns every pair. We release the corpus, manifest, codebook, coding sheets, adjudication notes and scripts, with data under CC BY 4.0 and code under MIT (\url{https://github.com/louisyzhu/frontier-safety-framework-corpus}). Every statistic is recomputed from the released coding sheet by the released script; the coding itself is an archived output of the procedure in Section~\ref{sec:method} and is reproducible only by re-running it (Appendix~\ref{apx:repro}).
+
+% ==================================================================
+\section{Method}
+\label{sec:method}
+
+The procedure is systematic content analysis in Krippendorff's sense \citep{krippendorff2019content}, applied to legally operative documents in the manner Hall and Wright \citep{hall2008systematic} set out for judicial opinions, and it takes its validity vocabulary from Adcock and Collier \citep{adcock2001measurement}. Krippendorff identifies unitising as the decision that most shapes a content analysis and is least visible in its results. Our unit is a \emph{commitment}, a statement in which the provider commits itself to a practice at any strength from \emph{must} to \emph{may}. Present-tense statements of practice count as commitments at the strongest rung, because in a policy document the descriptive present is the standing-commitment register. We code every commitment into one of nine categories (Appendix~\ref{apx:codebook}). Six are \emph{evidentiary}, because they concern how the provider will evidence risk or capability, namely scope of evaluation (EC1), trigger and threshold (EC2), method (EC3), third-party involvement (EC4), disclosure (EC5) and the consequence a result obligates (EC6). Three further strata, governance (G), security (S) and mitigation (M), are coded for completeness and reported separately.
+
+For each consecutive version pair $(v_i, v_{i+1})$ we trace every commitment in $v_i$ to its counterpart in $v_{i+1}$, and we scan $v_{i+1}$ for commitments with no antecedent. Each traced commitment receives one of six outcomes, namely retained (R), strengthened (S), weakened (W), removed (X), relocated (L), which means it survives only in a companion document or a non-binding recommendations section, or added (A). When a commitment moves in both directions at once we code W by rule and flag it MIX. A change is \emph{material} if it alters at least one of six dimensions, namely scope, threshold or trigger, actor, obligation strength, disclosure scope or consequence. These six are one operationalisation of the systematised concept, chosen because each corresponds to a way the same commitment could bind differently, and Adcock and Collier's content-validation question, whether the indicators exhaust the concept, is answered in Appendix~\ref{apx:codebook} with the alternatives considered. Two rules follow drafting doctrine. The obligation ladder from \emph{must} through \emph{may} follows the mandatory and permissive distinction that Scalia and Garner \citep{scalia2012reading} catalogue, and an enumeration introduced by ``including'' is read as scope-defining on the same authority, so that shortening it is material, whereas one introduced by ``for example'' is illustrative. We note that TFAIA uses ``material modification'' without defining it; our definition is the narrower one, since it applies to individual commitments and not to the framework as a whole.
+
+For each material change we then ask whether a reader of the provider's account of this revision, and nothing else, would learn that this commitment changed in this direction. We record the answer with four codes. A change is \emph{announced} (ANN) when the answer is yes, including where the account names a class of commitments and states the direction of travel. It is \emph{partially announced} (ANN-P) when the account names the commitment or its class but not the direction or substance. It is \emph{silent} (SIL) when an account exists and does not identify the change even at class level, and \emph{no changelog} (NCL) when the provider published no account. Only the provider's own publications count as an account.
+
+Let $M_p$ denote the set of material changes on pair $p$, partitioned into announced $A_p$, partially announced $P_p$ and silent $S_p$. We define
+\begin{equation}
+\srr^{\mathrm{strict}}_p = \frac{|S_p| + |P_p|}{|M_p|}, \qquad
+\srr^{\mathrm{lenient}}_p = \frac{|S_p|}{|M_p|}, \qquad
+\srr^{\mathrm{strict}}_p - \srr^{\mathrm{lenient}}_p = \frac{|P_p|}{|M_p|} .
+\label{eq:srr}
+\end{equation}
+The difference between the two forms is exactly the share of partially announced changes, and it exposes the judgement the measure embeds. The denominator is a granularity choice, since splitting one commitment into three raises silence mechanically when accounts describe change at class level, so we recompute the rate at section granularity (Appendix~\ref{apx:robust}). Every rate carries a Wilson score interval, which Brown, Cai and DasGupta \citep{brown2001interval} recommend over the Wald interval at the small $n$ of several pairs \citep{wilson1927probable}. The corpus is a census and not a sample, and we report intervals in the sense Berk, Western and Weiss \citep{berk1995statistical} give them for apparent populations, as statements about the process that generated the observed revisions. On a redlined pair every textual change is shown, so $\srr$ equals zero and we report those five pairs as regime-complete without tracing them.
+
+For RQ2, because changes cluster within pairs and a change-level Fisher test overstates precision \citep{cameron2015practitioner}, our primary test is an exact permutation over the 56 assignments of the eight pair labels to three narrative and five itemised; rank correlations between the rate and the account's length in words and its number of provider-published items test whether verbosity or enumeration explains silence. For RQ3 we report the weakening share per pair and under leave-one-provider-out, since no theory predicts symmetric revision, and we compare silence between weakenings and strengthenings pooled and within each pair. All comparisons are descriptive associations within the corpus.
+
+Coding then proceeded in two stages, a first pass and an adjudication of it. The first pass was produced by an agentic language-model system of the Claude family operating under the frozen codebook as its sole instruction, with the two versions, the candidate-sentence list and the revision account as inputs. Pangakis et al.\ \citep{pangakis2023automated} show that the accuracy of such annotation varies by task and must be validated against human labels for each construct, and Gilardi et al.\ \citep{gilardi2023chatgpt} show that it can match trained annotators when it is; we follow the first finding and do not presume the second. The pass produced 710 rows, each carrying verbatim text from both versions, a rationale, a confidence grade and, for material changes, a verbatim quotation from the account or a record that none was found. Every quoted field was verified against the corpus text (2{,}130 checks), which establishes quotation fidelity only. The first author then adjudicated 244 of the 710 rows individually from the passages, the account and the codebook, comprising every row touched by a post-first-pass clarification, every low-confidence material row and the fifty agreement-sample rows; adjudication changed 4 outcome codes and 54 announcement codes, 46 of them from SIL to ANN-P. Because the adjudicator designed the codebook and holds the hypothesis, the direction of that drift matters, and it ran against the strict finding. We accepted the remaining 466 rows after a spot-check of 45 produced one change (Appendix~\ref{apx:adjudication}).
+
+Reliability is the one point at which this version remains incomplete. We prepared a stratified sample of fifty units spanning every traced pair and all six outcomes for independent coding by a second coder, and we release the sample, its instructions and the script that computes Krippendorff's $\alpha$ \citep{krippendorff2019content,hayes2007answering}. The second coding was incomplete at submission, so agreement is not reported here (Section~\ref{sec:limits}); in its absence, adjudication's alteration of 0.6\% of outcome codes and 7.6\% of announcement codes and the spot-check's one change in 45 stand in as weaker indicators.
+
+% ==================================================================
+\section{Results}
+\label{sec:results}
+
+Turning first to \textbf{RQ1}, most material change proves not to be identifiable in the provider's own account. Across the eight pairs with a revision account, 257 of 383 material changes are silent under the strict reading, a rate of 0.67 (95\% CI 0.62 to 0.72), and 203 of 383 under the lenient reading, a rate of 0.53 (0.48 to 0.58). Every such pair exceeds 0.55 on the strict reading (Table~\ref{tab:pairs}; Figure~\ref{fig:srr}). Evidentiary commitments run at 0.65 and 0.48, non-evidentiary strata at 0.72 and 0.63, and provider aggregates from 0.61 (OpenAI) to 0.81 (Microsoft) (Appendix~\ref{apx:category}). The rate depends on granularity, as it must. Collapsing to section level yields 99 units, of which 0.49 (0.40 to 0.59) are silent under the strict reading and 0.34 under the lenient one, and 0.66 under a majority rule within each section (Appendix~\ref{apx:robust}). The commitment-level rate is what a reader of one commitment experiences and the section-level rate is what a reader of the document experiences; both leave most change unaccounted for.
+
+\begin{table}[t]
+\centering\scriptsize\setlength{\tabcolsep}{3pt}
+\caption{Twelve traced pairs. $n_{v_i}$ counts commitments traced from the earlier version; Mat.\ counts material changes including additions; W aggregates weakened, removed and relocated; $\srr_s$ and $\srr_l$ are the strict and lenient rates (intervals in Appendix~\ref{apx:stats}). Anthropic's five redlined pairs are regime-complete and not traced. Naver's 2024 version exists publicly only as an English summary page, so that pair over-counts additions.}
+\label{tab:pairs}
+\begin{tabular}{llrrrrrrrrrr}
+\toprule
+Pair & Regime & $n_{v_i}$ & Mat. & W & S & A & ANN & ANN-P & SIL & $\srr_s$ & $\srr_l$ \\
+\midrule
+\input{data/table1_rows.tex}
+\end{tabular}
+\end{table}
+
+For \textbf{RQ2}, silence appears to track the form of the account and does not track its length. On the permutation test that respects nesting, the pooled strict difference between narrative pairs (0.74; 0.66 to 0.81) and itemised pairs (0.63; 0.57 to 0.69) is suggestive, at $p = 0.071$ for the pooled difference and $p = 0.089$ for the difference in per-pair means; the change-level Fisher test, which overstates precision, gives $p = 0.041$. On the lenient reading the difference disappears (odds ratio 1.19, $p = 0.46$), so any regime effect lives in partial announcement. Account length explains little. Across the eight pairs the rank correlation between the strict rate and the account's length in words is $-0.17$, whereas the correlation with the number of discrete items the provider published is $-0.58$ (Appendix~\ref{apx:robust}). Microsoft's six items cover 21 material changes at 0.81 and OpenAI's twelve cover 41 at 0.61, so what lowers silence is enumeration at the level of the change. The gradient is also visible within a single provider. Anthropic alone publishes redlines, for five of its seven revisions, yet its largest revision, from version 2.2 to 3.0, is one it did not redline, and 51 of that revision's 86 material changes are silent even under the lenient reading; the account explains at length why unilateral pause commitments were removed and does not enumerate. Among the changes it does not identify are the removal of the commitment to delete model weights where security safeguards cannot be met, and the replacement of a commitment to pause training when a model outstrips implemented safeguards with a commitment to ``act promptly to reduce interim risk'' (Appendix~\ref{apx:examples}).
+
+For \textbf{RQ3}, the direction of change is predominantly weakening, and weakening is more often silent than strengthening within providers as well as across them. Of 299 traced material changes across all twelve pairs, 229 weaken, remove or relocate a commitment, a share of 0.77 (0.72 to 0.81). Nine of the twelve pairs show a weakening majority, the exceptions being DeepMind 3.0 to 3.1 (0.44), Meta (0.48) and xAI's four-change August to December 2025 pair, and dropping any one provider leaves the share between 0.70 and 0.79 (Appendix~\ref{apx:robust}). Excluding relocations or mixed changes leaves it at 0.76 and 0.73. A further 174 commitments are additions, concentrated in Meta's 2026 revision (57) and Anthropic's version 3.0 (26). Visibility depends on direction. Among changes with an account, weakenings are silent at 0.75 (135 of 181) and strengthenings at 0.50 (25 of 50), an odds ratio of 2.93 (Fisher's exact test, $p = 0.002$); additions fall between at 0.64 (97 of 152), and removals are the most silent outcome with more than four cases at 0.83 (35 of 42), the four relocations all being silent. The asymmetry holds inside pairs. In seven of the eight pairs with an account, weakenings are more often silent than strengthenings, by margins from 0.03 to 0.67; the exception is Anthropic 1.0 to 2.0, where strengthenings are silent more often by 0.13. Providers therefore announce the instruments they add far more readily than the commitments they loosen, and they do so revision by revision.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.74\linewidth]{figures/fig1_srr_by_pair.pdf}
+\caption{Silent revision rate by pair, strict (filled) and lenient (open), grouped by disclosure regime. The right margin gives $n$ and the ANN, ANN-P and SIL counts; the xAI pairs published no account and have no defined rate.}
+\label{fig:srr}
+\end{figure}
+
+Two further observations bear on the regulatory argument of Section~\ref{sec:discussion}. First, splitting the pairs by the date of the later version around 1 January 2026, when TFAIA took effect, the three pairs closed before it run at 0.61 strict (90 of 147) and the five closed after at 0.71 (167 of 236), with the weakening share unchanged at 0.78 and 0.76; three pairs a side carry no causal claim, but the justification duty coincided with no reduction in silence. Second, the trigger-and-threshold category (68 material changes) recurrently loses a quantitative anchor, as when DeepMind's R\&D threshold moved from ``substantially accelerating (e.g.\ 2x) from 2020--2024 rates'' to ``substantially accelerating from historical rates'' while the announcement reported that capability levels had been ``sharpened''; third-party involvement is the smallest category (21 changes, 18 with an account, 0.67 silent), and OpenAI's Beta commitment to ``continue to enable external research and government access'' disappears in version 2 without mention in any of its twelve changelog items (Appendix~\ref{apx:examples}; Appendix~\ref{apx:variants} covers the nine same-label re-uploads, two of which are material).
+
+% ==================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+We claimed that revision legibility is measurable from the public record and that in the current record it is low and non-random. The rate is computable for every pair with an account, and two-thirds of material change is silent on the strict reading and one-half on the lenient. Of the two non-randomness claims, the direction result is established, holding within seven of eight pairs without pooling, whereas the regime result is suggestive on the test that respects nesting. The regime pattern fits Vaughan's structural secrecy, because a changelog written by the people who intended the changes records a revision as the organisation understood itself to be making it, so accounts differ in what they enumerate and not in how much they say.
+
+The direction result does not fit structural secrecy, and it fits decoupling. Structural secrecy predicts uneven silence yet gives no reason for silence to track the direction that reflects badly on the organisation, whereas Meyer and Rowan's ceremonial conformity and Brunsson's organised hypocrisy predict that pattern, since an organisation displaying a formal structure to outsiders describes what it adds and is quieter about what it loosens. We do not infer intent, since the people who write changelogs may simply champion the new instruments. Either way, visibility and content are not independent, so a reader who relies on the account alone sees without knowing \citep{ananny2018seeing}, and that gap is now a number.
+
+Taken together, these findings identify a compliance gap in both regulatory regimes. TFAIA requires a large frontier developer that makes a material modification to publish the modified framework and a justification within thirty days \citep{california2025sb53}, and the EU Code requires signatories to update their framework at least annually and to give the AI Office each update within five business days \citep{eu2025gpai}. Both regimes therefore already impose a duty on revision, and both specify the wrong artefact, since a justification explains why the framework changed whereas an enumeration states what changed, commitment by commitment and with direction. Our data show that justification-style accounts are the least legible form in the corpus, that length does not help, and that silence did not fall after the duty took effect. Anthropic's compliance framework, whose Section 7.1 tracks the TFAIA language and then adds a changelog (Appendix~\ref{apx:fcf}), shows what drafting can produce one step past the statute, and the same provider demonstrates the remedy's voluntariness, since it redlines five of seven revisions but not the largest, and has withdrawn three compliance-framework versions whose changelog cannot be checked. That record argues for a mandate, and we propose an enumeration duty. The developer should list each material change to a commitment, with its direction, in a form a reader can check against the text, since auditability is a property of how records are kept \citep{power1997audit}; a redline satisfies the duty mechanically.
+
+% ==================================================================
+\section{Limitations}
+\label{sec:limits}
+
+We state the limitations in decreasing order of consequence. Inter-coder agreement is not yet reported, so the interpretive codes carry the reliability of one adjudicated coding, which bounds precision without affecting the corpus or the direction of the findings; an archival version must report $\alpha$. The first-pass coder's sampling parameters were also not fixed, so seed re-runs are owed.
+
+The next limitation concerns the typology and its top rung. Redlines score zero by construction, and the construction is partly circular, because a marked-up document shows every change without identifying which are material or in which direction they move. The regime is also chosen by the provider, and Anthropic's one non-redlined revision since 2.2 is its largest, so the effect may be partly selection, which eight pairs cannot separate.
+
+Two further limitations concern statistical inference and what silence can show. Changes nest within pairs, so we rely on the permutation test, and the corpus has no comparison class, so we cannot say whether two-thirds is high against other regulated standards; silence is evidence about external visibility only, and the term names an observable and not a motive. Finally, every claim about a named company is traceable to a hash-pinned text and a verbatim quotation, and we commit to a public errata policy and to versioning the corpus.
+
+% ==================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+Frontier safety frameworks have become load-bearing in two legal regimes, so we built the corpus required to read them across time and defined a measure of revision legibility. A reader cannot identify two-thirds of material change from the provider's own account, the invisible share skews toward loosening within and across providers, and the visible share depends on whether the account enumerates, which neither regime requires.
+
+\section*{Acknowledgements}
+The author thanks Emilio Barkett for early discussion of this project, and Paul R\"ottger, whose advice prompted the author to pursue empirical work in AI safety. A version of this paper is under review at the AI \& Science workshop (AISciK) at NeurIPS 2026. Large language model tools assisted with reference checking and the appendices, and produced the first-pass coding of commitment rows against the frozen codebook as described and validated in Section~\ref{sec:method}; the author reviewed all of it and takes full responsibility for the content.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+% ==================================================================
+
+\appendix
+\section*{Appendices}
+Each appendix names the section and claim of the main text it supports. Appendix~\ref{apx:glossary} defines every term, abbreviation and acronym. Appendices~\ref{apx:codebook} and \ref{apx:calibration} reproduce the frozen codebook rules and the calibration examples that anchored coding (Section~\ref{sec:method}). Appendix~\ref{apx:stats} derives the statistics and Appendix~\ref{apx:robust} reports the robustness analyses (Sections~\ref{sec:method} and \ref{sec:results}). Appendix~\ref{apx:examples} quotes both versions of every change discussed in Sections~\ref{sec:results} and \ref{sec:discussion}. Appendix~\ref{apx:adjudication} tabulates the coding procedure. Appendices~\ref{apx:category} and \ref{apx:direction} give further results, Appendices~\ref{apx:pairs} to \ref{apx:fcf} tabulate the corpus described in Section~\ref{sec:corpus}, and Appendices~\ref{apx:repro} and \ref{apx:manifest} state what the release contains and how each number can be recomputed.
+
+\section{Glossary of terms, abbreviations and acronyms}
+\label{apx:glossary}
+Table~\ref{tab:glossary} defines the terms the paper uses in a technical sense and expands every abbreviation; Section~\ref{sec:method} introduces each in context.
+\begin{table}[tbp]\centering\small
+\caption{Terms, abbreviations and acronyms used in the paper.}
+\label{tab:glossary}
+\begin{tabular}{lp{9.4cm}}
+\toprule Term & Meaning \\ \midrule
+Commitment & A statement in which the provider commits itself to a practice at any strength; the unit of analysis \\
+Material change & A change to a commitment that alters scope, threshold or trigger, actor, obligation strength, disclosure scope or consequence \\
+Revision account & The provider's own published statement of what changed in a revision (changelog, version table, redline or announcement post) \\
+Disclosure regime & The form of the revision account: redline, itemised, narrative or none \\
+Silent revision rate ($\srr$) & The share of material changes the revision account does not identify (Equation~\ref{eq:srr}); strict counts partial announcement as silent, lenient does not \\
+Companion document & A document the provider publishes alongside the framework, consulted to distinguish removal from relocation \\
+Silent same-label re-upload & A file replaced at the same URL or version label with changed text and no new identifier \\
+Evidentiary category & A commitment category concerning how risk or capability will be evidenced (EC1 to EC6) \\
+ANN / ANN-P / SIL / NCL & Announced / partially announced / silent / no changelog (announcement codes) \\
+R / S / W / X / L / A & Retained / strengthened / weakened / removed / relocated / added (outcome codes) \\
+MIX & Flag for a commitment that both strengthens and weakens; coded W by rule \\
+EC1 to EC6 & Scope of evaluation, trigger and threshold, method, third-party involvement, disclosure, consequence \\
+G / S / M & Governance / security / mitigation strata (non-evidentiary) \\
+RSP, PF, FSF, RMF & Responsible Scaling Policy (Anthropic), Preparedness Framework (OpenAI), Frontier Safety Framework (DeepMind), Risk Management Framework (xAI) \\
+FCF & Frontier Compliance Framework (Anthropic companion document) \\
+CCL & Critical capability level (DeepMind's threshold term) \\
+ASL & AI Safety Level (Anthropic's threshold term) \\
+TFAIA & California Transparency in Frontier Artificial Intelligence Act (SB 53) \\
+EU Code & General-Purpose AI Code of Practice under the EU AI Act \\
+CI & 95\% Wilson score confidence interval \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Codebook v0.2 (frozen 3 September 2026)}
+\label{apx:codebook}
+This appendix reproduces the rules that Section~\ref{sec:method} summarises. Coders applied these rules and nothing else; the full document, including the change history, is in the release.
+\subsection{Inclusion}
+A row is a commitment if the provider is the grammatical subject (we, our, the company name, a named internal role) and the sentence carries a commitment verb or modal (will, must, commit, shall, intend, aim, expect, may, could, consider, plan) or states a practice in the descriptive present. Conditional commitments (``if X, we will Y'') are included. Statements describing the risk landscape, defining terms, describing other parties' obligations, or reporting a past point-in-time evaluation are excluded.
+\subsection{Categories}
+EC1 scope of evaluation (which capabilities or risk domains will be evaluated); EC2 trigger and threshold (when evaluations must occur and what result constitutes crossing); EC3 method (how evaluations are conducted); EC4 third-party involvement (external evaluation, government access, audits); EC5 disclosure (what evaluation methods and results will be published, to whom, when); EC6 consequence linkage (what action a specified result obligates). G governance and oversight; S security and containment; M mitigation and deployment measures not expressed as a consequence of an evaluation result.
+\subsection{Tracing}
+For each pair, start from the commitment list of $v_i$ and locate each commitment's counterpart in $v_{i+1}$, which is the passage governing the same category and the same object. Renumbering, relocation to a different section and rewording do not break correspondence. Relocation to a companion document or to a recommendations section is its own outcome (L). Then scan $v_{i+1}$ for commitments with no counterpart (A).
+\subsection{Outcomes}
+R retained (no material change); S strengthened (at least one materiality dimension moves toward greater obligation, broader scope, lower threshold, more third-party involvement or more disclosure); W weakened (at least one dimension moves the other way); X removed; L relocated; A added. Both directions present in one commitment yields W and the MIX flag.
+\subsection{Materiality}
+A change is material if it alters scope; threshold or trigger; actor (including addition or removal of a third party); obligation strength on the scale \emph{must / will / commit to / present-tense practice} $>$ \emph{intend to / aim to / expect to} $>$ \emph{may / could / consider} $>$ \emph{recommend / encourage}; disclosure scope; or consequence. Not material are rewording at the same force, reorganisation, typographical changes, updated cross-references, and changes to illustrative examples that do not alter the rule. Broadening a suspension condition is a change to consequence. Enumerations introduced by ``including'' or forming the operative content are scope-defining; enumerations introduced by ``e.g.'', ``for example'' or ``such as'' are illustrative.
+\subsection{Alternatives considered for the materiality construct}
+Three alternative operationalisations were considered and rejected before coding. Counting every textual edit (as a redline does) makes no distinction between rewording and change of obligation and would inflate the denominator with editorial changes. Scoring against an external rubric of framework quality (for instance the 65 criteria of Stelling et al.) measures the level of a framework and not the change in an individual commitment, and it would leave changes to commitments outside the rubric uncounted. Coding obligation strength alone (the modal ladder) would miss changes of scope, actor and consequence, which account for most of the material changes in the corpus. The six dimensions were chosen because each names a distinct way in which the same commitment can bind differently, and the released coding sheet records which dimension each material change engaged so that the choice can be revisited.
+\subsection{Announcement status}
+Compare each material change against the provider's own account of the revision, which comprises an in-document changelog or version table, prose in the document describing what changed, the provider's announcement post, or a provider-published redline. ANN when a reader of the account alone would know that this commitment changed in this direction, including class-level mentions that state direction; ANN-P when the account names the commitment or its class without direction or substance; SIL when the account exists and does not identify the change even at class level, with generic lines not counting; NCL when no account exists. Commentary by individuals, including employees in a personal capacity, is not a provider account.
+\subsection{Clarifications adopted after the first pass}
+(1) Present-tense practice statements are commitments at the top rung. (2) Enumerations follow the scope-defining and illustrative rule above. (3) Both-direction changes are W with MIX. (4) Class-level changelog lines without direction are ANN-P. (5) A commitment that leaves the RSP at version 3.0 and appears in a companion in the corpus is L, with the temporal caveat noted; OpenAI's Frontier Governance Framework post-dates PF version 2 by thirteen months and is not consulted for that pair. (6) In xAI's February to August 2025 revision, the ``may also provide'' sentence is a disclosure commitment (EC5) and its own row; the external red-team testing commitment traces to a different sentence and is W on the actor dimension.
+
+\section{Calibration examples}
+\label{apx:calibration}
+The following cases anchored the coding described in Section~\ref{sec:method}. They are drawn from the corpus and from Stelling et al.'s Tables 9 and 10 \citep{stelling2025evaluating}, and each was verified against the primary documents.
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{A, announced weakening (ANN, W).} Anthropic RSP 2.2 to 3.0 removed unilateral pause commitments and separated company commitments from industry recommendations; the accompanying account explains the change.
+\item \textbf{B, silent weakening (SIL, W).} OpenAI Preparedness Framework Beta to version 2, footnote 6, provides that models distilled, fine-tuned or quantised from a model below a High threshold will ordinarily not require additional safety measures; the twelve-item changelog does not mention it.
+\item \textbf{C, announced consequence change (ANN, W).} OpenAI version 2, Section 4.3, allows safeguards to be adjusted if another developer releases a High or Critical system without comparable safeguards; changelog item 11 states it.
+\item \textbf{D, weakening with no account (NCL, W).} xAI February to August 2025 replaced its commitment to external red-team testing of safeguards; no account exists.
+\item \textbf{E, not material (R).} Renumbered capability levels with identical modal force and scope.
+\item \textbf{F, de-commensuration of a threshold (W, EC2).} DeepMind FSF 2.0 to 3.0 replaced ``substantially accelerating (e.g.\ 2x) from 2020--2024 rates'' with ``substantially accelerating from historical rates''.
+\item \textbf{G, loss of specificity (W, EC3).} FSF 2.0 listed what post-market monitoring draws on; FSF 3.0 says ``post-market monitoring''.
+\item \textbf{H, modal drift (W, EC6).} ``The safety case will be updated through red-teaming'' became safety cases ``may be updated if deemed necessary''.
+\item \textbf{I, marginal-risk provision (W, EC6).} FSF 3.0 allows marginal risk relative to competitors to inform deployment decisions; FSF 2.0 had no such provision.
+\item \textbf{J, governance de-naming (W, G).} Three named councils became ``appropriate governance function''.
+\item \textbf{K, announced removal with rationale (ANN).} Anthropic's version 3.0 account explains the removal of unilateral pause commitments at length.
+\end{itemize}
+
+\section{Statistical derivations}
+\label{apx:stats}
+This appendix supports the intervals and tests reported in Section~\ref{sec:results} and specified in Section~\ref{sec:method}.
+\paragraph{Wilson score interval.} For $k$ silent changes among $n$ material changes and $z = 1.96$, the interval for the rate $p$ is
+\begin{equation}
+\frac{1}{1+z^2/n}\left[\hat p + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat p(1-\hat p)}{n} + \frac{z^2}{4n^2}}\right], \qquad \hat p = k/n,
+\end{equation}
+which unlike the Wald interval remains inside $[0,1]$; Brown, Cai and DasGupta \citep{brown2001interval} recommend it for small $n$ on coverage grounds \citep{wilson1927probable}.
+\paragraph{Per-pair intervals.} Strict rates with 95\% intervals are Anthropic 1.0 to 2.0, 0.57 (0.45, 0.67); Anthropic 2.2 to 3.0, 0.73 (0.63, 0.82); OpenAI, 0.61 (0.46, 0.74); DeepMind 2.0 to 3.0, 0.73 (0.56, 0.86); DeepMind 3.0 to 3.1, 0.56 (0.37, 0.72); Meta, 0.69 (0.58, 0.78); Microsoft, 0.81 (0.60, 0.92); Naver, 0.77 (0.57, 0.90). Lenient rates are Anthropic 1.0 to 2.0, 0.50 (0.39, 0.61); Anthropic 2.2 to 3.0, 0.59 (0.49, 0.69); OpenAI, 0.46 (0.32, 0.61); DeepMind 2.0 to 3.0, 0.53 (0.36, 0.70); DeepMind 3.0 to 3.1, 0.48 (0.31, 0.66); Meta, 0.53 (0.42, 0.63); Microsoft, 0.67 (0.45, 0.83); Naver, 0.45 (0.27, 0.65).
+\paragraph{Regime comparison (RQ2).} The exact permutation test is the primary test. It assigns the narrative label to each of the $\binom{8}{3} = 56$ subsets of three pairs, recomputes the pooled strict difference, and reports the share of assignments at or above the observed difference of 0.106; that share is $0.071$. On the difference in per-pair means (observed 0.101) the share is $0.089$. For reference, pooled strict silence is 155 of 245 on itemised pairs and 102 of 138 on narrative pairs, and Fisher's exact test on the $2 \times 2$ table gives an odds ratio of 1.65 and $p = 0.041$; on the lenient reading the counts are 128 of 245 and 75 of 138, odds ratio 1.19, $p = 0.46$. The change-level test overstates precision because changes cluster within pairs \citep{cameron2015practitioner}.
+\paragraph{Direction (RQ3).} Among 299 traced material changes, 229 are W, X or L, a share of 0.77 with Wilson interval (0.72, 0.81). Excluding the 44 MIX-flagged changes gives 186 of 255, share 0.73 (0.67, 0.78); excluding the four relocations gives 225 of 295, share 0.76. Per-pair and leave-one-provider-out shares appear in Appendix~\ref{apx:robust}. Among changes with an account, strict silence is 135 of 181 for weakenings, 25 of 50 for strengthenings and 97 of 152 for additions; Fisher's exact test on weakenings against strengthenings gives an odds ratio of 2.93 and $p = 0.002$. By outcome, strict silence is 96 of 135 for W, 35 of 42 for X, 4 of 4 for L, 25 of 50 for S and 97 of 152 for A.
+\paragraph{Multiple comparisons.} Appendix~\ref{apx:category} reports nine category rates with intervals and no test; the paper draws no inference from differences between categories.
+\paragraph{Reliability (planned).} For two coders and nominal data, Krippendorff's $\alpha = 1 - D_o / D_e$, where $D_o$ is the observed disagreement across the coded units and $D_e$ the disagreement expected by chance from the marginal distribution of values \citep{krippendorff2019content}. The released script computes $\alpha$ separately for materiality, outcome and announcement status, with a bootstrap 95\% interval over units.
+
+\section{Robustness analyses}
+\label{apx:robust}
+This appendix supports the granularity, account-length, per-pair direction and within-pair asymmetry results reported in Section~\ref{sec:results}.
+\paragraph{Granularity.} Collapsing material changes to the section of $v_i$ in which they occur yields 99 section-level units across the eight pairs with an account. A unit counts as announced if any change in it is ANN and as partially announced if any is ANN-P and none is ANN. The strict rate at this granularity is 0.49 (0.40, 0.59) and the lenient rate 0.34 (0.26, 0.44). Under a majority rule, in which a unit is silent if more than half its changes are, the strict figure is 0.66.
+\paragraph{Account length and enumeration.} Table~\ref{tab:robust} gives, for each pair, the length of the revision account in words, the number of discrete items the provider published in it (bulleted, numbered or labelled entries, counted by hand from the account), the number of material changes with an account, the number the account identifies (ANN), and the strict rate. Across the eight pairs the Spearman correlation between the strict rate and words is $-0.17$, between the rate and words per material change $+0.17$ (the two values coincide in magnitude by chance of the rank ordering), between the rate and items $-0.58$, and between the rate and items per material change $-0.17$. The count of identified changes (ANN) is not used as a predictor because the rate is defined as its complement.
+\paragraph{Before and after TFAIA.} Splitting the eight accounted pairs by the date of the later version around 1 January 2026, the three pairs closed before (Anthropic 1.0 to 2.0, OpenAI, DeepMind 2.0 to 3.0) run at 0.61 strict (90 of 147) and 0.50 lenient, and the five closed after run at 0.71 strict (167 of 236) and 0.55 lenient. Across all twelve pairs the weakening share is 0.78 (108 of 139) before and 0.76 (121 of 160) after.
+\paragraph{Direction by pair and by provider.} Table~\ref{tab:robust} also gives the weakening share for each of the twelve pairs and, for the eight pairs with an account, the strict silence of weakenings and of strengthenings separately. Nine of twelve pairs show a weakening majority. Table~\ref{tab:loo} gives the pooled weakening share after dropping each provider in turn; it lies between 0.70 and 0.79.
+\begin{table}[tbp]\centering\scriptsize
+\caption{Per-pair robustness quantities. Words and Items describe the revision account; Mat.\ (acct) and ANN count material changes on pairs with an account and those the account identifies; Traced counts material changes excluding additions, over which Weak.\ share is computed; the last column gives strict silence among weakenings and among strengthenings, with counts.}
+\label{tab:robust}
+\resizebox{\linewidth}{!}{\input{data/appendixM1_pairs.tex}}
+\end{table}
+\begin{table}[tbp]\centering\small
+\caption{Leave-one-provider-out weakening share among traced material changes.}
+\label{tab:loo}
+\input{data/appendixM2_loo.tex}
+\end{table}
+
+\section{Verbatim text for every change discussed in the main text}
+\label{apx:examples}
+Each entry gives the commitment identifier from the released tracing sheet, the earlier and later text as extracted, the provider's account where one exists, and the adjudication note. Sections~\ref{sec:results} and \ref{sec:discussion} cite these entries.
+\sloppy
+\input{data/appendix_examples.tex}
+
+\section{Adjudication procedure}
+\label{apx:adjudication}
+Table~\ref{tab:adjudication} tabulates the two-stage coding procedure described in Section~\ref{sec:method}; the adjudication sheet with every first-pass code, adjudicated code and note is released alongside the corpus.
+\begin{table}[tbp]\centering\small
+\caption{Coding and adjudication counts.}
+\label{tab:adjudication}
+\input{data/adjudication_stats.tex}
+\end{table}
+
+\section{Silent revision rate by commitment category}
+\label{apx:category}
+Table~\ref{tab:cat} supports the category figures cited in Section~\ref{sec:results}. Mat.\ counts all material changes; $n$ counts those on pairs with a revision account. Strict intervals are EC1 (0.34, 0.69), EC2 (0.53, 0.77), EC3 (0.60, 0.83), EC4 (0.44, 0.84), EC5 (0.53, 0.80), EC6 (0.44, 0.69), G (0.65, 0.85), S (0.46, 0.78), M (0.55, 0.84). No test is applied across categories.
+\begin{table}[tbp]\centering\small
+\caption{Silent revision rate by commitment category, strict and lenient.}
+\label{tab:cat}
+\begin{tabular}{llrrrr}
+\toprule Code & Category & Mat. & $n$ & $\srr_s$ & $\srr_l$ \\ \midrule
+\input{data/table2_category.tex}
+\end{tabular}
+\end{table}
+
+
+\section{Direction of material change by pair}
+\label{apx:direction}
+Figure~\ref{fig:direction} displays the direction counts that Table~\ref{tab:pairs} summarises and that Section~\ref{sec:results} analyses under RQ3.
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\linewidth]{figures/fig2_direction_by_pair.pdf}
+\caption{Direction of material change by version pair, in the same row order as Figure~\ref{fig:srr}. Segment counts appear inside the segment where they fit and in the right-margin columns for every row; \emph{mix} counts changes moving in both directions and coded weakened by rule. The tag at the left of each row gives the disclosure regime.}
+\label{fig:direction}
+\end{figure}
+
+
+\section{All labelled version pairs and disclosure regimes}
+\label{apx:pairs}
+Table~\ref{tab:allpairs} assigns each of the nineteen consecutive labelled pairs in the corpus to a disclosure regime and records whether it was traced, supporting the typology in Section~\ref{sec:corpus}.
+\begin{table}[tbp]\centering\tiny
+\caption{Labelled version pairs, regimes and revision-account sources.}
+\label{tab:allpairs}
+\begin{tabular}{lllllp{4.5cm}}
+\toprule Provider & From & To & Regime & Traced & Source of the account \\ \midrule
+\input{data/appendixA_pairs.tex}
+\end{tabular}
+\end{table}
+
+
+\section{Silent same-label re-uploads}
+\label{apx:variants}
+Table~\ref{tab:variants} lists the nine files replaced without a new version identifier and the materiality decision for each differing passage, supporting the final paragraph of Section~\ref{sec:results}.
+\begin{table}[tbp]\centering\tiny
+\caption{Silent same-label re-uploads and the materiality of each difference.}
+\label{tab:variants}
+\resizebox{\linewidth}{!}{\begin{tabular}{lp{1.8cm}p{2.4cm}llp{6.6cm}}
+\toprule Provider & Base & Variant & Material & Cat. & Change \\ \midrule
+\input{data/appendixB_variants.tex}
+\end{tabular}}
+\end{table}
+
+
+\section{Anthropic's Frontier Compliance Framework changelog}
+\label{apx:fcf}
+The July 2026 document (version 2) carries the changelog in Table~\ref{tab:fcf}, reproduced verbatim from its page 17. Versions 1, 1.1 and 1.2 were not available on the hosting portal at the time of collection. Section~\ref{sec:corpus} treats the withdrawal as a fifth disclosure pattern, and Section~\ref{sec:discussion} reads the document's Section 7.1 as compliance drafting under TFAIA.
+\begin{table}[tbp]\centering\small
+\caption{Frontier Compliance Framework changelog, version 2.}
+\label{tab:fcf}
+\begin{tabular}{llp{9cm}}
+\toprule Version & Date & Entry \\ \midrule
+v.2 & 24 July 2026 & (i) Revised the Sabotage and Loss of Control Tier 2 (Automated R\&D) threshold in Section 2.4 to align with updates to Anthropic's Responsible Scaling Policy (v3.4) (ii) minor terminology corrections in Section 4. \\
+v1.2 & 8 June 2026 & (i) Revised Sabotage and Loss of Control Tier 2 (Automated R\&D) threshold in Section 2.4 to better reflect the underlying threat model and clarify how the threshold is operationalized, (ii) revised our threshold for novel chemical/biological weapons production to better track the threat model of concern; and (iii) made minor terminology changes consistent with updates to Anthropic's Responsible Scaling Policy (v3.1, 3.2). \\
+v1.1 & 2 March 2026 & Revised risk tiers in Section 2.4 across all four systemic risk categories to better align with our evolving threat models and capability assessments. Introduced nascent risk tiers for Harmful Manipulation. \\
+v.1 & 19 December 2025 & Initial Version \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Reproducibility statement}
+\label{apx:repro}
+This appendix states what the release contains, what each reported number depends on, and which parts of the pipeline can be recomputed by a reader. Sections~\ref{sec:corpus} and \ref{sec:method} refer to it.
+
+\paragraph{Release contents.} The repository contains (i) the corpus: every retrieved framework and companion document as published, with a plain-text extraction of each and a SHA-256 hash recomputed from disk; (ii) \texttt{manifest.csv}, one row per document with provider, version label, date, source, retrieval provenance and hash; (iii) the revision accounts, one file per labelled pair, with their source and retrieval date; (iv) the frozen codebook, version 0.2 of 3 September 2026, with its change history; (v) the coding sheet \texttt{tracing\_FINAL.csv}, 710 rows, carrying the first-pass codes, the adjudicated codes, the adjudication notes, the verbatim passages and the changelog pointers; (vi) the second-coder sample, its instructions and the agreement script; and (vii) the analysis scripts that produce every table and figure in the paper from (v).
+
+\paragraph{Reproducibility tiers.} Every statistic in Sections~\ref{sec:results} and \ref{sec:discussion} and every appendix table is recomputed from the released coding sheet by the released scripts; a reader who runs them obtains the numbers in the paper exactly. The coding sheet itself is an archived output. The first pass was produced by a language-model system whose sampling parameters were not fixed, and the adjudication was performed by the first author, so the sheet is reproducible only by re-running the procedure described in Section~\ref{sec:method}, and a re-run would yield a sheet that agrees with the released one to the degree that the planned seed re-runs and second coding will measure. The corpus and manifest are reproducible in the strongest sense, since every file is hash-pinned and its retrieval source is recorded, and a reader can re-retrieve each provider-hosted document and compare hashes.
+
+\paragraph{Environment.} The scripts require Python 3.10 or later with \texttt{scipy} and \texttt{matplotlib}; no other dependency is used. Figures are produced by \texttt{make\_figures.py}; the exact permutation test and Wilson intervals are implemented in the analysis script and use no external statistical package beyond \texttt{scipy.stats} for Fisher's exact test.
+
+\paragraph{Versioning and errata.} The corpus is versioned by release tag. Any correction to a code, a hash or a manifest row is recorded in an errata file in the repository with the date, the affected row and the reason, and the paper's figures are regenerated from the corrected sheet. Provider documents are never altered; a document replaced by its provider is added as a new row and the earlier row is retained.
+
+
+\section{Corpus manifest}
+\label{apx:manifest}
+Table~\ref{tab:manifest} lists every row of the released manifest described in Section~\ref{sec:corpus}. C marks companion documents; Acct.\ records whether a provider revision account exists; SHA gives the first eight hexadecimal characters of the SHA-256 hash of the retrieved file.
+\begin{table}[tbp]\centering\tiny
+\caption{Corpus manifest.}
+\label{tab:manifest}
+\resizebox{\linewidth}{!}{\begin{tabular}{lp{3.2cm}llllll}
+\toprule Provider & Document & Version & Date & C & Source & Acct. & SHA \\ \midrule
+\input{data/appendixC_manifest.tex}
+\end{tabular}}
+\end{table}
+
+\end{document}

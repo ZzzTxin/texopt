@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <title>ICCV 2023 Open Access Repository</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/conf.css">
+<meta name="citation_title" content="InterFormer: Real-time Interactive Image Segmentation">
+<meta name="citation_author" content="Huang, You">
+<meta name="citation_author" content="Yang, Hao">
+<meta name="citation_author" content="Sun, Ke">
+<meta name="citation_author" content="Zhang, Shengchuan">
+<meta name="citation_author" content="Cao, Liujuan">
+<meta name="citation_author" content="Jiang, Guannan">
+<meta name="citation_author" content="Ji, Rongrong">
+<meta name="citation_publication_date" content="2023">
+<meta name="citation_conference_title" content="Proceedings of the IEEE/CVF International Conference on Computer Vision">
+<meta name="citation_firstpage" content="22301">
+<meta name="citation_lastpage" content="22311">
+<meta name="citation_pdf_url" content="https://openaccess.thecvf.com/content/ICCV2023/papers/Huang_InterFormer_Real-time_Interactive_Image_Segmentation_ICCV_2023_paper.pdf">
+</head>
+<body>
+<div id="header">
+    <div id="header_left">
+        <a href="https://iccv2023.thecvf.com/"><img src="/img/iccv2023_logo.svg" width="175" border="0" alt="ICCV 2023"></a>
+        <a href="https://www.thecvf.com/"><img src="/img/cropped-cvf-s.jpg" width="175" height="112" border="0" alt="CVF"></a>
+    </div>
+    <div id="header_right">
+        <div id="header_title">
+            <a href="https://iccv2023.thecvf.com/">ICCV 2023</a> <a href="/menu" class="a_monochrome">open access</a>
+        </div>
+        <div id="help">
+            These ICCV 2023 papers are the Open Access versions, provided by the
+<a href="https://www.thecvf.com/">Computer Vision Foundation.</a><br>
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+        </div>
+        <div id="disclaimer">
+            This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.<br><br>
+            <form action="/ICCV2023" method="post">
+                <input type="text" name="query">
+                <input type="submit" value="Search">
+            </form>
+
+        </div>
+    </div>
+    <div id="header_sponsor">
+        <p style="vertical-align:center; text-align: center"> <strong>Powered by:</strong></p>
+        <img src="/img/ms-azure-logo.png" width="100" alt="Microsoft Azure">
+        <p> </p>
+        <p> </p>
+        <p style="vertical-align:center; text-align: center"> <strong>Sponsored by:</strong></p>
+        <img src="/img/amazon-logo.png" width="100" alt="Amazon">
+        <img src="/img/facebook_logo.jpg" width="100" alt="Facebook">
+        <img src="/img/Google_2015_logo.svg" width="100" alt="Google">
+    </div>
+</div>
+<div class="clear"></div>
+<div id="content">    <dl>
+    <div id="papertitle">
+        InterFormer: Real-time Interactive Image Segmentation
+    <dd>
+    </div>
+    <div id="authors">        <br><b><i>You Huang, Hao Yang, Ke Sun, Shengchuan Zhang, Liujuan Cao, Guannan Jiang, Rongrong Ji</i></b>; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2023, pp. 22301-22311
+    </div>
+    <font size="5">
+    <br><b>Abstract</b>
+    </font>
+    <br><br>
+    <div id="abstract">
+    Interactive image segmentation enables annotators to efficiently perform pixel-level annotation for segmentation tasks. However, the existing interactive segmentation pipeline suffers from inefficient computations of interactive models because of the following two issues. First, annotators&#x27; later click is based on models&#x27; feedback of annotators&#x27; former click. This serial interaction is unable to utilize model&#x27;s parallelism capabilities. Second, in each interaction step, the model handles the invariant image along with the sparse variable clicks, resulting in a process that&#x27;s highly repetitive and redundant. For efficient computations, we propose a method named InterFormer that follows a new pipeline to address these issues. InterFormer extracts and preprocesses the computationally time-consuming part i.e. image processing from the existing process. Specifically, InterFormer employs a large vision transformer (ViT) on high-performance devices to preprocess images in parallel, and then uses a lightweight module called interactive multi-head self attention (I-MSA) for interactive segmentation. Furthermore, the I-MSA module&#x27;s deployment on low-power devices extends the practical application of interactive segmentation. The I-MSA module utilizes the preprocessed features to efficiently response to the annotator inputs in real-time. The experiments on several datasets demonstrate the effectiveness of InterFormer, which outperforms previous interactive segmentation models in terms of computational efficiency and segmentation quality, achieve real-time high-quality interactive segmentation on CPU-only devices. The code is available at https://github.com/YouHuang67/InterFormer.
+    </div>
+    <font size="5">
+    <br><b>Related Material</b>
+    </font>
+    <br><br>    <dd>
+[<a href="/content/ICCV2023/papers/Huang_InterFormer_Real-time_Interactive_Image_Segmentation_ICCV_2023_paper.pdf">pdf</a>]
+[<a href="/content/ICCV2023/supplemental/Huang_InterFormer_Real-time_Interactive_ICCV_2023_supplemental.zip">supp</a>]
+[<a href="http://arxiv.org/abs/2304.02942">arXiv</a>]
+<div class="link2">[<a class="fakelink" onclick="$(this).siblings('.bibref').slideToggle()">bibtex</a>]
+<div class="bibref pre-white-space">@InProceedings{Huang_2023_ICCV,
+    author    = {Huang, You and Yang, Hao and Sun, Ke and Zhang, Shengchuan and Cao, Liujuan and Jiang, Guannan and Ji, Rongrong},
+    title     = {InterFormer: Real-time Interactive Image Segmentation},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2023},
+    pages     = {22301-22311}
+}</div>
+</div>        
+</dd></dl></div>
+</body>
+</html>

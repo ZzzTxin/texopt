@@ -1,0 +1,281 @@
+Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models - ACL Anthology 
+ ACL Anthology 
+ 
+ About Announcements 
+ Communication channels 
+ Related work 
+ Copyright 
+ 
+ Credits 
+ Volunteer 
+ Development 
+ Feedback 
+ 
+ Using Author directory 
+ Citing papers 
+ Links in the Anthology 
+ Data access 
+ 
+ All FAQs 
+ 
+ Details
+
+ Anthology identifiers 
+ Names 
+ ORCID iDs 
+ DOIs 
+ Verified authors 
+ 
+ Contributions Submissions 
+ Corrections 
+ Maintain author pages 
+ Attachments 
+ 
+ GitHub 
+
+ Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models 
+ Zhengxin Zhang ,
+ Dan Zhao ,
+ Xupeng Miao ,
+ Gabriele Oliaro ,
+ Zhihao Zhang ,
+ Qing Li ,
+ Yong Jiang ,
+ Zhihao Jia 
+
+ Correct Metadata for 
+ 
+ Use this form to create a GitHub issue with structured data describing the correction. You will need a GitHub account.
+Once you create that issue, the correction will be reviewed by a staff member.
+ ⚠️ Mobile Users: Submitting this form to create a new issue will only work with github.com, not the GitHub Mobile app.
+ Important : The Anthology treat PDFs as authoritative. Please use this form only to correct data
+that is out of line with the PDF. See our corrections
+guidelines if you need to change the PDF.
+ Title 
+ Adjust the title. Retain tags such as
+<fixed-case>. 
+ 
+ Authors 
+ Adjust author names and order to match the
+PDF. 
+ Add Author Abstract 
+ Correct abstract if needed. Retain XML formatting tags such as <tex-math>. You may use <b>...</b> for bold , <i>...</i> for italic , <u>...</u> for underline , <sc>...</sc> for small-caps , <tt>...<tt> for typewriter text , <url>...</url> for URLs, <a href=...> for hyperlinks, and <par/> for paragraph breaks. 
+ 
+ Verification against PDF 
+ Ensure that the new title/authors match the snapshot below. (If there
+is no snapshot or it is too small, consult the PDF .) 
+ Authors concatenated from the text boxes above: 
+
+ ALL author names match the snapshot above—including
+middle initials, hyphens, and accents. 
+ Create GitHub issue for staff review 
+
+ Abstract
+ Finetuning large language models (LLMs) has been empirically effective on a variety of downstream tasks. Existing approaches to finetuning an LLM either focus on parameter-efficient finetuning, which only updates a small number of trainable parameters, or attempt to reduce the memory footprint during the training phase of the finetuning. Typically, the memory footprint during finetuning stems from three contributors: model weights, optimizer states, and intermediate activations. However, existing works still require considerable memory, and none can simultaneously mitigate the memory footprint of all three sources. In this paper, we present quantized side tuing (QST), which enables memory-efficient and fast finetuning of LLMs by operating through a dual-stage process. First, QST quantizes an LLM’s model weights into 4-bit to reduce the memory footprint of the LLM’s original weights. Second, QST introduces a side network separated from the LLM, which utilizes the hidden states of the LLM to make task-specific predictions. Using a separate side network avoids performing back-propagation through the LLM, thus reducing the memory requirement of the intermediate activations. Finally, QST leverages several low-rank adaptors and gradient-free downsample modules to significantly reduce the trainable parameters, so as to save the memory footprint of the optimizer states. Experiments show that QST can reduce the total memory footprint by up to 2.3× and speed up the finetuning process by up to 3 × while achieving competent performance compared with the state-of-the-art. When it comes to full finetuning, QST can reduce the total memory footprint up to 7 × . 
+
+ Anthology ID: 2024.acl-long.1 Volume: Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) Month: August Year: 2024 Address: Bangkok, Thailand Editors: Lun-Wei Ku ,
+ Andre Martins ,
+ Vivek Srikumar Venue: ACL SIG: Publisher: Association for Computational Linguistics Note: Pages: 1–17 Language: URL: https://aclanthology.org/2024.acl-long.1/ DOI: 10.18653/v1/2024.acl-long.1 Award: Outstanding Paper Award 
+ 
+ Bibkey: zhang-etal-2024-quantized Cite (ACL): Zhengxin Zhang, Dan Zhao, Xupeng Miao, Gabriele Oliaro, Zhihao Zhang, Qing Li, Yong Jiang, and Zhihao Jia. 2024. Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models . In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 1–17, Bangkok, Thailand. Association for Computational Linguistics. Cite (Informal): Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models (Zhang et al., ACL 2024) Copy Citation: BibTeX 
+ Markdown 
+ MODS XML 
+ Endnote 
+ More
+options… PDF: https://aclanthology.org/2024.acl-long.1.pdf 
+ PDF 
+ Cite 
+ Search 
+ 
+ Fix data 
+
+ Export citation
+ 
+ BibTeX 
+ MODS XML 
+ Endnote 
+ Preformatted 
+ @inproceedings{zhang-etal-2024-quantized,
+ title = "Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models",
+ author = "Zhang, Zhengxin and
+ Zhao, Dan and
+ Miao, Xupeng and
+ Oliaro, Gabriele and
+ Zhang, Zhihao and
+ Li, Qing and
+ Jiang, Yong and
+ Jia, Zhihao",
+ editor = "Ku, Lun-Wei and
+ Martins, Andre and
+ Srikumar, Vivek",
+ booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+ month = aug,
+ year = "2024",
+ address = "Bangkok, Thailand",
+ publisher = "Association for Computational Linguistics",
+ url = "https://aclanthology.org/2024.acl-long.1/",
+ doi = "10.18653/v1/2024.acl-long.1",
+ pages = "1--17",
+ abstract = "Finetuning large language models (LLMs) has been empirically effective on a variety of downstream tasks. Existing approaches to finetuning an LLM either focus on parameter-efficient finetuning, which only updates a small number of trainable parameters, or attempt to reduce the memory footprint during the training phase of the finetuning. Typically, the memory footprint during finetuning stems from three contributors: model weights, optimizer states, and intermediate activations. However, existing works still require considerable memory, and none can simultaneously mitigate the memory footprint of all three sources. In this paper, we present quantized side tuing (QST), which enables memory-efficient and fast finetuning of LLMs by operating through a dual-stage process. First, QST quantizes an LLM{'}s model weights into 4-bit to reduce the memory footprint of the LLM{'}s original weights. Second, QST introduces a side network separated from the LLM, which utilizes the hidden states of the LLM to make task-specific predictions. Using a separate side network avoids performing back-propagation through the LLM, thus reducing the memory requirement of the intermediate activations. Finally, QST leverages several low-rank adaptors and gradient-free downsample modules to significantly reduce the trainable parameters, so as to save the memory footprint of the optimizer states. Experiments show that QST can reduce the total memory footprint by up to 2.3{\texttimes} and speed up the finetuning process by up to 3$\times$ while achieving competent performance compared with the state-of-the-art. When it comes to full finetuning, QST can reduce the total memory footprint up to 7$\times$."
+} Download as
+File 
+ Copy to Clipboard 
+
+ <?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="zhang-etal-2024-quantized">
+ <titleInfo>
+ <title>Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Zhengxin</namePart>
+ <namePart type="family">Zhang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Dan</namePart>
+ <namePart type="family">Zhao</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Xupeng</namePart>
+ <namePart type="family">Miao</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Gabriele</namePart>
+ <namePart type="family">Oliaro</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zhihao</namePart>
+ <namePart type="family">Zhang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Qing</namePart>
+ <namePart type="family">Li</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Yong</namePart>
+ <namePart type="family">Jiang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zhihao</namePart>
+ <namePart type="family">Jia</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <dateIssued>2024-08</dateIssued>
+ </originInfo>
+ <typeOfResource>text</typeOfResource>
+ <relatedItem type="host">
+ <titleInfo>
+ <title>Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Lun-Wei</namePart>
+ <namePart type="family">Ku</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Andre</namePart>
+ <namePart type="family">Martins</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Vivek</namePart>
+ <namePart type="family">Srikumar</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <publisher>Association for Computational Linguistics</publisher>
+ <place>
+ <placeTerm type="text">Bangkok, Thailand</placeTerm>
+ </place>
+ </originInfo>
+ <genre authority="marcgt">conference publication</genre>
+ </relatedItem>
+ <abstract>Finetuning large language models (LLMs) has been empirically effective on a variety of downstream tasks. Existing approaches to finetuning an LLM either focus on parameter-efficient finetuning, which only updates a small number of trainable parameters, or attempt to reduce the memory footprint during the training phase of the finetuning. Typically, the memory footprint during finetuning stems from three contributors: model weights, optimizer states, and intermediate activations. However, existing works still require considerable memory, and none can simultaneously mitigate the memory footprint of all three sources. In this paper, we present quantized side tuing (QST), which enables memory-efficient and fast finetuning of LLMs by operating through a dual-stage process. First, QST quantizes an LLM’s model weights into 4-bit to reduce the memory footprint of the LLM’s original weights. Second, QST introduces a side network separated from the LLM, which utilizes the hidden states of the LLM to make task-specific predictions. Using a separate side network avoids performing back-propagation through the LLM, thus reducing the memory requirement of the intermediate activations. Finally, QST leverages several low-rank adaptors and gradient-free downsample modules to significantly reduce the trainable parameters, so as to save the memory footprint of the optimizer states. Experiments show that QST can reduce the total memory footprint by up to 2.3× and speed up the finetuning process by up to 3\times while achieving competent performance compared with the state-of-the-art. When it comes to full finetuning, QST can reduce the total memory footprint up to 7\times.</abstract>
+ <identifier type="citekey">zhang-etal-2024-quantized</identifier>
+ <identifier type="doi">10.18653/v1/2024.acl-long.1</identifier>
+ <location>
+ <url>https://aclanthology.org/2024.acl-long.1/</url>
+ </location>
+ <part>
+ <date>2024-08</date>
+ <extent unit="page">
+ <start>1</start>
+ <end>17</end>
+ </extent>
+ </part>
+</mods>
+</modsCollection>
+ Download as
+File 
+ Copy to Clipboard 
+
+ %0 Conference Proceedings
+%T Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models
+%A Zhang, Zhengxin
+%A Zhao, Dan
+%A Miao, Xupeng
+%A Oliaro, Gabriele
+%A Zhang, Zhihao
+%A Li, Qing
+%A Jiang, Yong
+%A Jia, Zhihao
+%Y Ku, Lun-Wei
+%Y Martins, Andre
+%Y Srikumar, Vivek
+%S Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)
+%D 2024
+%8 August
+%I Association for Computational Linguistics
+%C Bangkok, Thailand
+%F zhang-etal-2024-quantized
+%X Finetuning large language models (LLMs) has been empirically effective on a variety of downstream tasks. Existing approaches to finetuning an LLM either focus on parameter-efficient finetuning, which only updates a small number of trainable parameters, or attempt to reduce the memory footprint during the training phase of the finetuning. Typically, the memory footprint during finetuning stems from three contributors: model weights, optimizer states, and intermediate activations. However, existing works still require considerable memory, and none can simultaneously mitigate the memory footprint of all three sources. In this paper, we present quantized side tuing (QST), which enables memory-efficient and fast finetuning of LLMs by operating through a dual-stage process. First, QST quantizes an LLM’s model weights into 4-bit to reduce the memory footprint of the LLM’s original weights. Second, QST introduces a side network separated from the LLM, which utilizes the hidden states of the LLM to make task-specific predictions. Using a separate side network avoids performing back-propagation through the LLM, thus reducing the memory requirement of the intermediate activations. Finally, QST leverages several low-rank adaptors and gradient-free downsample modules to significantly reduce the trainable parameters, so as to save the memory footprint of the optimizer states. Experiments show that QST can reduce the total memory footprint by up to 2.3× and speed up the finetuning process by up to 3\times while achieving competent performance compared with the state-of-the-art. When it comes to full finetuning, QST can reduce the total memory footprint up to 7\times.
+%R 10.18653/v1/2024.acl-long.1
+%U https://aclanthology.org/2024.acl-long.1/
+%U https://doi.org/10.18653/v1/2024.acl-long.1
+%P 1-17 Download as
+File 
+ Copy to Clipboard 
+
+ Markdown (Informal)
+ [Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models](https://aclanthology.org/2024.acl-long.1/) (Zhang et al., ACL 2024)
+ Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models (Zhang et al., ACL 2024)
+ ACL
+ Zhengxin Zhang, Dan Zhao, Xupeng Miao, Gabriele Oliaro, Zhihao Zhang, Qing Li, Yong Jiang, and Zhihao Jia. 2024. Quantized Side Tuning: Fast and Memory-Efficient Tuning of Quantized Large Language Models . In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 1–17, Bangkok, Thailand. Association for Computational Linguistics.
+ Copy Markdown to
+Clipboard 
+ Copy ACL to
+Clipboard 
+
+ACL materials are Copyright © 1963–2026 ACL; other materials are copyrighted by their respective copyright holders. Materials prior to 2016 here are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 International License . Permission is granted to make copies for the purposes of teaching and research. Materials published in or after 2016 are licensed on a Creative Commons Attribution 4.0 International License .
+ The ACL Anthology is managed and built by the ACL Anthology team of volunteers.
+ Site last built on 15 September 2026 at 12:04 UTC with commit f27fde6 .

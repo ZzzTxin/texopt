@@ -1,0 +1,41 @@
+ICCV 2023 Open Access Repository 
+
+ ICCV 2023 open access 
+
+ These ICCV 2023 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ InterFormer: Real-time Interactive Image Segmentation
+
+ You Huang, Hao Yang, Ke Sun, Shengchuan Zhang, Liujuan Cao, Guannan Jiang, Rongrong Ji ; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2023, pp. 22301-22311
+
+ Abstract 
+
+ Interactive image segmentation enables annotators to efficiently perform pixel-level annotation for segmentation tasks. However, the existing interactive segmentation pipeline suffers from inefficient computations of interactive models because of the following two issues. First, annotators' later click is based on models' feedback of annotators' former click. This serial interaction is unable to utilize model's parallelism capabilities. Second, in each interaction step, the model handles the invariant image along with the sparse variable clicks, resulting in a process that's highly repetitive and redundant. For efficient computations, we propose a method named InterFormer that follows a new pipeline to address these issues. InterFormer extracts and preprocesses the computationally time-consuming part i.e. image processing from the existing process. Specifically, InterFormer employs a large vision transformer (ViT) on high-performance devices to preprocess images in parallel, and then uses a lightweight module called interactive multi-head self attention (I-MSA) for interactive segmentation. Furthermore, the I-MSA module's deployment on low-power devices extends the practical application of interactive segmentation. The I-MSA module utilizes the preprocessed features to efficiently response to the annotator inputs in real-time. The experiments on several datasets demonstrate the effectiveness of InterFormer, which outperforms previous interactive segmentation models in terms of computational efficiency and segmentation quality, achieve real-time high-quality interactive segmentation on CPU-only devices. The code is available at https://github.com/YouHuang67/InterFormer.
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Huang_2023_ICCV,
+ author = {Huang, You and Yang, Hao and Sun, Ke and Zhang, Shengchuan and Cao, Liujuan and Jiang, Guannan and Ji, Rongrong},
+ title = {InterFormer: Real-time Interactive Image Segmentation},
+ booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+ month = {October},
+ year = {2023},
+ pages = {22301-22311}
+}

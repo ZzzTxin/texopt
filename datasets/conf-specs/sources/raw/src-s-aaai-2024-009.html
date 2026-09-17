@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en-US" xml:lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		DeepAccident: A Motion and Accident Prediction Benchmark for V2X Autonomous Driving
+							| Proceedings of the AAAI Conference on Artificial Intelligence
+			</title>
+
+	
+<meta name="generator" content="Open Journal Systems 3.3.0.22" />
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<meta name="DC.Creator.PersonalName" content="Tianqi Wang"/>
+<meta name="DC.Creator.PersonalName" content="Sukmin Kim"/>
+<meta name="DC.Creator.PersonalName" content="Ji Wenxuan"/>
+<meta name="DC.Creator.PersonalName" content="Enze Xie"/>
+<meta name="DC.Creator.PersonalName" content="Chongjian Ge"/>
+<meta name="DC.Creator.PersonalName" content="Junsong Chen"/>
+<meta name="DC.Creator.PersonalName" content="Zhenguo Li"/>
+<meta name="DC.Creator.PersonalName" content="Ping Luo"/>
+<meta name="DC.Date.created" scheme="ISO8601" content="2024-03-24"/>
+<meta name="DC.Date.dateSubmitted" scheme="ISO8601" content="2020-09-10"/>
+<meta name="DC.Date.issued" scheme="ISO8601" content="2024-03-25"/>
+<meta name="DC.Date.modified" scheme="ISO8601" content="2024-03-25"/>
+<meta name="DC.Description" xml:lang="en" content="Safety is the primary priority of autonomous driving. Nevertheless, no published dataset currently supports the direct and explainable safety evaluation for autonomous driving. In this work, we propose DeepAccident, a large-scale dataset generated via a realistic simulator containing diverse accident scenarios that frequently occur in real-world driving. The proposed DeepAccident dataset includes 57K annotated frames and 285K annotated samples, approximately 7 times more than the large-scale nuScenes dataset with 40k annotated samples. In addition, we propose a new task, end-to-end motion and accident prediction, which can be used to directly evaluate the accident prediction ability for different autonomous driving algorithms. Furthermore, for each scenario, we set four vehicles along with one infrastructure to record data, thus providing diverse viewpoints for accident scenarios and enabling V2X (vehicle-to-everything) research on perception and prediction tasks. Finally, we present a baseline V2X model named V2XFormer that demonstrates superior performance for motion and accident prediction and 3D object detection compared to the single-vehicle model."/>
+<meta name="DC.Format" scheme="IMT" content="application/pdf"/>
+<meta name="DC.Format" scheme="IMT" content=""/>
+<meta name="DC.Identifier" content="28370"/>
+<meta name="DC.Identifier.pageNumber" content="5599-5606"/>
+<meta name="DC.Identifier.DOI" content="10.1609/aaai.v38i6.28370"/>
+<meta name="DC.Identifier.URI" content="https://ojs.aaai.org/index.php/AAAI/article/view/28370"/>
+<meta name="DC.Language" scheme="ISO639-1" content="en"/>
+<meta name="DC.Rights" content="Copyright (c) 2024 Association for the Advancement of Artificial Intelligence"/>
+<meta name="DC.Rights" content=""/>
+<meta name="DC.Source" content="Proceedings of the AAAI Conference on Artificial Intelligence"/>
+<meta name="DC.Source.ISSN" content="2374-3468"/>
+<meta name="DC.Source.Issue" content="6"/>
+<meta name="DC.Source.Volume" content="38"/>
+<meta name="DC.Source.URI" content="https://ojs.aaai.org/index.php/AAAI"/>
+<meta name="DC.Subject" xml:lang="en" content="CV: Vision for Robotics &amp; Autonomous Driving"/>
+<meta name="DC.Subject" xml:lang="en" content="CV: 3D Computer Vision"/>
+<meta name="DC.Subject" xml:lang="en" content="CV: Adversarial Attacks &amp; Robustness"/>
+<meta name="DC.Subject" xml:lang="en" content="CV: Motion &amp; Tracking"/>
+<meta name="DC.Subject" xml:lang="en" content="ROB: Multimodal Perception &amp; Sensor Fusion"/>
+<meta name="DC.Subject" xml:lang="en" content="ROB: Multi-Robot Systems"/>
+<meta name="DC.Title" content="DeepAccident: A Motion and Accident Prediction Benchmark for V2X Autonomous Driving"/>
+<meta name="DC.Type" content="Text.Serial.Journal"/>
+<meta name="DC.Type.articleType" content="AAAI Technical Track on Computer Vision V"/>
+<meta name="gs_meta_revision" content="1.1"/>
+<meta name="citation_journal_title" content="Proceedings of the AAAI Conference on Artificial Intelligence"/>
+<meta name="citation_journal_abbrev" content="AAAI"/>
+<meta name="citation_issn" content="2374-3468"/> 
+<meta name="citation_author" content="Tianqi Wang"/>
+<meta name="citation_author_institution" content="The University of Hong Kong"/>
+<meta name="citation_author" content="Sukmin Kim"/>
+<meta name="citation_author_institution" content="The University of Hong Kong"/>
+<meta name="citation_author" content="Ji Wenxuan"/>
+<meta name="citation_author_institution" content="The University of Hong Kong"/>
+<meta name="citation_author" content="Enze Xie"/>
+<meta name="citation_author_institution" content="Huawei Noah's Ark Lab"/>
+<meta name="citation_author" content="Chongjian Ge"/>
+<meta name="citation_author_institution" content="The University of Hong Kong"/>
+<meta name="citation_author" content="Junsong Chen"/>
+<meta name="citation_author_institution" content="Dalian University of Technology"/>
+<meta name="citation_author" content="Zhenguo Li"/>
+<meta name="citation_author_institution" content="Huawei Noah's Ark Lab"/>
+<meta name="citation_author" content="Ping Luo"/>
+<meta name="citation_author_institution" content="The University of Hong Kong"/>
+<meta name="citation_title" content="DeepAccident: A Motion and Accident Prediction Benchmark for V2X Autonomous Driving"/>
+<meta name="citation_language" content="en"/>
+<meta name="citation_date" content="2024/03/24"/>
+<meta name="citation_volume" content="38"/>
+<meta name="citation_issue" content="6"/>
+<meta name="citation_firstpage" content="5599"/>
+<meta name="citation_lastpage" content="5606"/>
+<meta name="citation_doi" content="10.1609/aaai.v38i6.28370"/>
+<meta name="citation_abstract_html_url" content="https://ojs.aaai.org/index.php/AAAI/article/view/28370"/>
+<meta name="citation_keywords" xml:lang="en" content="CV: Vision for Robotics &amp; Autonomous Driving"/>
+<meta name="citation_keywords" xml:lang="en" content="CV: 3D Computer Vision"/>
+<meta name="citation_keywords" xml:lang="en" content="CV: Adversarial Attacks &amp; Robustness"/>
+<meta name="citation_keywords" xml:lang="en" content="CV: Motion &amp; Tracking"/>
+<meta name="citation_keywords" xml:lang="en" content="ROB: Multimodal Perception &amp; Sensor Fusion"/>
+<meta name="citation_keywords" xml:lang="en" content="ROB: Multi-Robot Systems"/>
+<meta name="citation_pdf_url" content="https://ojs.aaai.org/index.php/AAAI/article/download/28370/28724"/>
+<link rel="alternate" type="application/atom+xml" href="https://ojs.aaai.org/index.php/AAAI/gateway/plugin/WebFeedGatewayPlugin/atom">
+<link rel="alternate" type="application/rdf+xml" href="https://ojs.aaai.org/index.php/AAAI/gateway/plugin/WebFeedGatewayPlugin/rss">
+<link rel="alternate" type="application/rss+xml" href="https://ojs.aaai.org/index.php/AAAI/gateway/plugin/WebFeedGatewayPlugin/rss2">
+	<link rel="stylesheet" href="https://ojs.aaai.org/index.php/AAAI/$$$call$$$/page/page/css?name=stylesheet" type="text/css" /><link rel="stylesheet" href="https://ojs.aaai.org/index.php/AAAI/$$$call$$$/page/page/css?name=font" type="text/css" /><link rel="stylesheet" href="https://ojs.aaai.org/lib/pkp/styles/fontawesome/fontawesome.css?v=3.3.0.22" type="text/css" /><link rel="stylesheet" href="https://ojs.aaai.org/public/journals/2/styleSheet.css?d=2024-03-25+02%3A25%3A25" type="text/css" />
+</head>
+<body class="pkp_page_article pkp_op_view" dir="ltr">
+
+	<div class="pkp_structure_page">
+
+				<header class="pkp_structure_head" id="headerNavigationContainer" role="banner">
+						
+ <nav class="cmp_skip_to_content" aria-label="Jump to content links">
+	<a href="#pkp_content_main">Skip to main content</a>
+	<a href="#siteNav">Skip to main navigation menu</a>
+		<a href="#pkp_content_footer">Skip to site footer</a>
+</nav>
+
+			<div class="pkp_head_wrapper">
+
+				<div class="pkp_site_name_wrapper">
+					<button class="pkp_site_nav_toggle">
+						<span>Open Menu</span>
+					</button>
+										<div class="pkp_site_name">
+																<a href="						https://ojs.aaai.org/index.php/AAAI/index
+					" class="is_text">Proceedings of the AAAI Conference on Artificial Intelligence</a>
+										</div>
+				</div>
+
+				
+				<nav class="pkp_site_nav_menu" aria-label="Site Navigation">
+					<a id="siteNav"></a>
+					<div class="pkp_navigation_primary_row">
+						<div class="pkp_navigation_primary_wrapper">
+																				<ul id="navigationPrimary" class="pkp_navigation_primary pkp_nav_list">
+								<li class="">
+				<a href="https://ojs.aaai.org/index.php/AAAI/issue/current">
+					Current
+				</a>
+							</li>
+								<li class="">
+				<a href="https://ojs.aaai.org/index.php/AAAI/issue/archive">
+					Archives
+				</a>
+							</li>
+															<li class="">
+				<a href="https://ojs.aaai.org/index.php/AAAI/about">
+					About
+				</a>
+									<ul>
+																					<li class="">
+									<a href="https://ojs.aaai.org/index.php/AAAI/about">
+										About the Journal
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://ojs.aaai.org/index.php/AAAI/about/submissions">
+										Submissions
+									</a>
+								</li>
+																																									<li class="">
+									<a href="https://ojs.aaai.org/index.php/AAAI/about/privacy">
+										Privacy Statement
+									</a>
+								</li>
+																												<li class="">
+									<a href="https://ojs.aaai.org/index.php/AAAI/about/contact">
+										Contact
+									</a>
+								</li>
+																		</ul>
+							</li>
+			</ul>
+
+				
+
+																						<div class="pkp_navigation_search_wrapper">
+									<a href="https://ojs.aaai.org/index.php/AAAI/search" class="pkp_search pkp_search_desktop">
+										<span class="fa fa-search" aria-hidden="true"></span>
+										Search
+									</a>
+								</div>
+													</div>
+					</div>
+					<div class="pkp_navigation_user_wrapper" id="navigationUserWrapper">
+							<ul id="navigationUser" class="pkp_navigation_user pkp_nav_list">
+															<li class="profile">
+				<a href="https://ojs.aaai.org/index.php/AAAI/login">
+					Login
+				</a>
+							</li>
+										</ul>
+
+					</div>
+				</nav>
+			</div><!-- .pkp_head_wrapper -->
+		</header><!-- .pkp_structure_head -->
+
+						<div class="pkp_structure_content has_sidebar">
+			<div class="pkp_structure_main" role="main">
+				<a id="pkp_content_main"></a>
+
+<div class="page page_article">
+			<nav class="cmp_breadcrumbs" role="navigation" aria-label="You are here:">
+	<ol>
+		<li>
+			<a href="https://ojs.aaai.org/index.php/AAAI/index">
+				Home
+			</a>
+			<span class="separator">/</span>
+		</li>
+		<li>
+			<a href="https://ojs.aaai.org/index.php/AAAI/issue/archive">
+				Archives
+			</a>
+			<span class="separator">/</span>
+		</li>
+					<li>
+				<a href="https://ojs.aaai.org/index.php/AAAI/issue/view/581">
+					Vol. 38 No. 6: AAAI-24 Technical Tracks 6
+				</a>
+				<span class="separator">/</span>
+			</li>
+				<li class="current" aria-current="page">
+			<span aria-current="page">
+									AAAI Technical Track on Computer Vision V
+							</span>
+		</li>
+	</ol>
+</nav>
+	
+		  	 <article class="obj_article_details">
+
+		
+	<h1 class="page_title">
+		DeepAccident: A Motion and Accident Prediction Benchmark for V2X Autonomous Driving
+	</h1>
+
+	
+	<div class="row">
+		<div class="main_entry">
+
+							<section class="item authors">
+					<h2 class="pkp_screen_reader">Authors</h2>
+					<ul class="authors">
+											<li>
+							<span class="name">
+								Tianqi Wang
+							</span>
+															<span class="affiliation">
+									The University of Hong Kong
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Sukmin Kim
+							</span>
+															<span class="affiliation">
+									The University of Hong Kong
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Ji Wenxuan
+							</span>
+															<span class="affiliation">
+									The University of Hong Kong
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Enze Xie
+							</span>
+															<span class="affiliation">
+									Huawei Noah&#039;s Ark Lab
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Chongjian Ge
+							</span>
+															<span class="affiliation">
+									The University of Hong Kong
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Junsong Chen
+							</span>
+															<span class="affiliation">
+									Dalian University of Technology
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Zhenguo Li
+							</span>
+															<span class="affiliation">
+									Huawei Noah&#039;s Ark Lab
+																	</span>
+																				</li>
+											<li>
+							<span class="name">
+								Ping Luo
+							</span>
+															<span class="affiliation">
+									The University of Hong Kong
+																	</span>
+																				</li>
+										</ul>
+				</section>
+			
+																												<section class="item doi">
+						<h2 class="label">
+														DOI:
+						</h2>
+						<span class="value">
+							<a href="https://doi.org/10.1609/aaai.v38i6.28370">
+								https://doi.org/10.1609/aaai.v38i6.28370
+							</a>
+						</span>
+					</section>
+							
+									<section class="item keywords">
+				<h2 class="label">
+										Keywords:
+				</h2>
+				<span class="value">
+											CV: Vision for Robotics &amp; Autonomous Driving, 											CV: 3D Computer Vision, 											CV: Adversarial Attacks &amp; Robustness, 											CV: Motion &amp; Tracking, 											ROB: Multimodal Perception &amp; Sensor Fusion, 											ROB: Multi-Robot Systems									</span>
+			</section>
+			
+										<section class="item abstract">
+					<h2 class="label">Abstract</h2>
+					Safety is the primary priority of autonomous driving. Nevertheless, no published dataset currently supports the direct and explainable safety evaluation for autonomous driving. In this work, we propose DeepAccident, a large-scale dataset generated via a realistic simulator containing diverse accident scenarios that frequently occur in real-world driving. The proposed DeepAccident dataset includes 57K annotated frames and 285K annotated samples, approximately 7 times more than the large-scale nuScenes dataset with 40k annotated samples. In addition, we propose a new task, end-to-end motion and accident prediction, which can be used to directly evaluate the accident prediction ability for different autonomous driving algorithms. Furthermore, for each scenario, we set four vehicles along with one infrastructure to record data, thus providing diverse viewpoints for accident scenarios and enabling V2X (vehicle-to-everything) research on perception and prediction tasks. Finally, we present a baseline V2X model named V2XFormer that demonstrates superior performance for motion and accident prediction and 3D object detection compared to the single-vehicle model.
+				</section>
+			
+			
+
+																																																																				
+						
+		</div><!-- .main_entry -->
+
+		<div class="entry_details">
+
+										<div class="item cover_image">
+					<div class="sub_item">
+													<a href="https://ojs.aaai.org/index.php/AAAI/issue/view/581">
+								<img loading="lazy" src="https://ojs.aaai.org/public/journals/2/AAAI24Proceedings-Cover.jpg" alt="AAAI-24 / IAAI-24 / EAAI-24 Proceedings Cover">
+							</a>
+											</div>
+				</div>
+			
+										<div class="item galleys">
+					<h2 class="pkp_screen_reader">
+						Downloads
+					</h2>
+					<ul class="value galleys_links">
+													<li>
+								
+	
+							
+
+<a class="obj_galley_link pdf" href="https://ojs.aaai.org/index.php/AAAI/article/view/28370/28724">
+
+		
+	PDF
+
+	</a>
+							</li>
+													<li>
+								
+	
+							
+
+<a class="obj_galley_link file" href="https://ojs.aaai.org/index.php/AAAI/article/view/28370/28725">
+
+		
+	Video/Poster
+
+	</a>
+							</li>
+											</ul>
+				</div>
+						
+						<div class="item published">
+				<section class="sub_item">
+					<h2 class="label">
+						Published
+					</h2>
+					<div class="value">
+																			<span>2024-03-24</span>
+																	</div>
+				</section>
+							</div>
+			
+										<div class="item citation">
+					<section class="sub_item citation_display">
+						<h2 class="label">
+							How to Cite
+						</h2>
+						<div class="value">
+							<div id="citationOutput" role="region" aria-live="polite">
+								<div class="csl-bib-body">
+  <div class="csl-entry">Wang, T., Kim, S., Wenxuan, J., Xie, E., Ge, C., Chen, J., … Luo, P. (2024). DeepAccident: A Motion and Accident Prediction Benchmark for V2X Autonomous Driving. <i>Proceedings of the AAAI Conference on Artificial Intelligence</i>, <i>38</i>(6), 5599–5606. https://doi.org/10.1609/aaai.v38i6.28370</div>
+</div>
+							</div>
+							<div class="citation_formats">
+								<button class="cmp_button citation_formats_button" aria-controls="cslCitationFormats" aria-expanded="false" data-csl-dropdown="true">
+									More Citation Formats
+								</button>
+								<div id="cslCitationFormats" class="citation_formats_list" aria-hidden="true">
+									<ul class="citation_formats_styles">
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/acm-sig-proceedings?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/acm-sig-proceedings?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													ACM
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/acs-nano?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/acs-nano?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													ACS
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/apa?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/apa?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													APA
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/associacao-brasileira-de-normas-tecnicas?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													ABNT
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/chicago-author-date?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/chicago-author-date?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													Chicago
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/harvard-cite-them-right?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/harvard-cite-them-right?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													Harvard
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/ieee?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/ieee?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													IEEE
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/modern-language-association?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/modern-language-association?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													MLA
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/turabian-fullnote-bibliography?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													Turabian
+												</a>
+											</li>
+																					<li>
+												<a
+													rel="nofollow"
+													aria-controls="citationOutput"
+													href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/vancouver?submissionId=28370&amp;publicationId=26654"
+													data-load-citation
+													data-json-href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/get/vancouver?submissionId=28370&amp;publicationId=26654&amp;return=json"
+												>
+													Vancouver
+												</a>
+											</li>
+																			</ul>
+																			<div class="label">
+											Download Citation
+										</div>
+										<ul class="citation_formats_styles">
+																							<li>
+													<a href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/download/ris?submissionId=28370&amp;publicationId=26654">
+														<span class="fa fa-download"></span>
+														Endnote/Zotero/Mendeley (RIS)
+													</a>
+												</li>
+																							<li>
+													<a href="https://ojs.aaai.org/index.php/AAAI/citationstylelanguage/download/bibtex?submissionId=28370&amp;publicationId=26654">
+														<span class="fa fa-download"></span>
+														BibTeX
+													</a>
+												</li>
+																					</ul>
+																	</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			
+										<div class="item issue">
+
+											<section class="sub_item">
+							<h2 class="label">
+								Issue
+							</h2>
+							<div class="value">
+								<a class="title" href="https://ojs.aaai.org/index.php/AAAI/issue/view/581">
+									Vol. 38 No. 6: AAAI-24 Technical Tracks 6
+								</a>
+							</div>
+						</section>
+					
+											<section class="sub_item">
+							<h2 class="label">
+								Section
+							</h2>
+							<div class="value">
+								AAAI Technical Track on Computer Vision V
+							</div>
+						</section>
+					
+									</div>
+			
+															
+						
+			
+
+		</div><!-- .entry_details -->
+	</div><!-- .row -->
+
+</article>
+
+	
+
+</div><!-- .page -->
+
+	</div><!-- pkp_structure_main -->
+
+									<div class="pkp_structure_sidebar left" role="complementary" aria-label="Sidebar">
+				<div class="pkp_block block_information">
+	<h2 class="title">Information</h2>
+	<div class="content">
+		<ul>
+							<li>
+					<a href="https://ojs.aaai.org/index.php/AAAI/information/readers">
+						For Readers
+					</a>
+				</li>
+										<li>
+					<a href="https://ojs.aaai.org/index.php/AAAI/information/authors">
+						For Authors
+					</a>
+				</li>
+										<li>
+					<a href="https://ojs.aaai.org/index.php/AAAI/information/librarians">
+						For Librarians
+					</a>
+				</li>
+					</ul>
+	</div>
+</div>
+<div class="pkp_block block_hosted_by">
+	<div class="content">
+		<ul><li>
+			<a href="https://pkpservices.sfu.ca/" id="hostedByLogo" target="_blank"><img loading="lazy" src="https://ojs.aaai.org/plugins/blocks/hostedBy/icons/pkpps.svg" style="border: 0; margin-bottom: 8px; width: 80%"/></a>
+			<p>
+				Part of the<br />
+				<a href="https://pkpservices.sfu.ca/" id="hostedBy" target="_blank">PKP Publishing Services Network</a>
+			</p>
+		</li></ul>
+</div>
+</div>
+
+			</div><!-- pkp_sidebar.left -->
+			</div><!-- pkp_structure_content -->
+
+<div class="pkp_structure_footer_wrapper" role="contentinfo">
+	<a id="pkp_content_footer"></a>
+
+	<div class="pkp_structure_footer">
+
+					<div class="pkp_footer_content">
+				<p>Copyright © 2024, Association for the Advancement of Artificial Intelligence</p>
+			</div>
+		
+		<div class="pkp_brand_footer" role="complementary">
+			<a href="https://ojs.aaai.org/index.php/AAAI/about/aboutThisPublishingSystem">
+				<img loading="lazy" alt="More information about the publishing system, Platform and Workflow by OJS/PKP." src="https://ojs.aaai.org/templates/images/ojs_brand.png">
+			</a>
+		</div>
+	</div>
+</div><!-- pkp_structure_footer_wrapper -->
+
+</div><!-- pkp_structure_page -->
+
+<script src="https://ojs.aaai.org/lib/pkp/lib/vendor/components/jquery/jquery.min.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/lib/pkp/lib/vendor/components/jqueryui/jquery-ui.min.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/plugins/themes/default/js/lib/popper/popper.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/plugins/themes/default/js/lib/bootstrap/util.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/plugins/themes/default/js/lib/bootstrap/dropdown.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/plugins/themes/default/js/main.js?v=3.3.0.22" type="text/javascript"></script><script src="https://ojs.aaai.org/plugins/generic/citationStyleLanguage/js/articleCitation.js?v=3.3.0.22" type="text/javascript"></script>
+
+
+</body>
+</html>

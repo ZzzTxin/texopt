@@ -1,0 +1,143 @@
+Accelerating Neural Recommendation Training with Embedding Scheduling | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Accelerating Neural Recommendation Training with Embedding Scheduling
+
+ Chaoliang Zeng, Xudong Liao, Xiaodian Cheng, Han Tian, Xinchen Wan, Hao Wang, and Kai Chen, iSING Lab, Hong Kong University of Science and Technology 
+
+ Deep learning recommendation models (DLRM) are extensively adopted to support many online services. Typical DLRM training frameworks adopt the parameter server (PS) in CPU servers to maintain memory-intensive embedding tables, and leverage GPU workers with embedding cache to accelerate compute-intensive neural network computation and enable fast embedding lookups. However, such distributed systems suffer from significant communication overhead caused by the embedding transmissions between workers and PS. Prior work reduces the number of cache embedding transmissions by compromising model accuracy, including oversampling hot embeddings or applying staleness-tolerant updates.
+
+ This paper reveals that many of such transmissions can be avoided given the predictability and infrequency natures of in-cache embedding accesses in distributed training. Based on this observation, we explore a new direction to accelerate distributed DLRM training without compromising model accuracy, i.e., embedding scheduling—with the core idea of proactively determining "where embeddings should be trained" and "which embeddings should be synchronized" to increase the cache hit rate and decrease unnecessary updates, thus achieving a low communication overhead. To realize this idea, we design Herald, a real-time embedding scheduler consisting of two main components: an adaptive location-aware inputs allocator to determine where embeddings should be trained and an optimal communication plan generator to determine which embeddings should be synchronized. Our experiments with real-world workloads show that Herald reduces 48%-89% embedding transmissions, leading up to 2.11× and up to 1.61× better performance with TCP and RDMA, respectively, over 100 Gbps Ethernet for end-to-end DLRM training.
+
+ NSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {295593,
+
+ author = {Chaoliang Zeng and Xudong Liao and Xiaodian Cheng and Han Tian and Xinchen Wan and Hao Wang and Kai Chen},
+
+ title = {Accelerating Neural Recommendation Training with Embedding Scheduling},
+
+ booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-39-7},
+
+ address = {Santa Clara, CA},
+
+ pages = {1141--1156},
+
+ url = {https://www.usenix.org/conference/nsdi24/presentation/zeng},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Zeng PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

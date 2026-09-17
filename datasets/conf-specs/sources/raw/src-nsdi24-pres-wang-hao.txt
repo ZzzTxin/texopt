@@ -1,0 +1,145 @@
+Towards Domain-Specific Network Transport for Distributed DNN Training | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Towards Domain-Specific Network Transport for Distributed DNN Training
+
+ Hao Wang and Han Tian, iSING Lab, Hong Kong University of Science and Technology; Jingrong Chen, Duke University; Xinchen Wan, Jiacheng Xia, and Gaoxiong Zeng, iSING Lab, Hong Kong University of Science and Technology; Wei Bai, Microsoft; Junchen Jiang, University of Chicago; Yong Wang and Kai Chen, iSING Lab, Hong Kong University of Science and Technology 
+
+ The nature of machine learning (ML) applications exposes rich characteristics to underlying network transport, yet little work has been done so far to systematically exploit these properties in transport layer design. This paper takes the initiative to pursue a domain-specific network transport, called MLT, for distributed DNN training that fully embraces several unique characteristics of machine learning.
+
+ At its heart, MLT employs three simple-yet-effective techniques to form a 3-step progressive scheme against long tail latency caused by transient packet drops and queueing. First, it leverages the independencies among gradient updates to enable per-packet load balancing to minimize network hotspots without worrying about packet re-ordering. Then, if hotspot arises, it performs priority queueing/dropping by differentiating gradients based on their layers and magnitudes to optimize model convergence and accuracy. Lastly, if drop occurs, it enables bounded-loss tolerance—a certain amount of gradient losses tolerated by the DNN training without affecting the final model performance.
+
+ MLT is readily deployable with commodity switches and imposes minimal modifications on popular DNN training libraries (e.g., TensorFlow, MXNet and PyTorch) and communication routines (e.g., PS and Ring All-reduce). We show, via both testbed experiments and simulations, that MLT can effectively optimize network tail latency and achieve up to 62.2% better end-to-end training time over prior work.
+
+ NSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {295627,
+
+ author = {Hao Wang and Han Tian and Jingrong Chen and Xinchen Wan and Jiacheng Xia and Gaoxiong Zeng and Wei Bai and Junchen Jiang and Yong Wang and Kai Chen},
+
+ title = {Towards {Domain-Specific} Network Transport for Distributed {DNN} Training},
+
+ booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-39-7},
+
+ address = {Santa Clara, CA},
+
+ pages = {1421--1443},
+
+ url = {https://www.usenix.org/conference/nsdi24/presentation/wang-hao},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Wang PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

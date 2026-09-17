@@ -1,0 +1,41 @@
+CVPR 2024 Open Access Repository 
+
+ CVPR 2024 open access 
+
+ These CVPR 2024 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ Mining Supervision for Dynamic Regions in Self-Supervised Monocular Depth Estimation
+
+ Hoang Chuong Nguyen, Tianyu Wang, Jose M. Alvarez, Miaomiao Liu ; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024, pp. 10446-10455
+
+ Abstract 
+
+ This paper focuses on self-supervised monocular depth estimation in dynamic scenes trained on monocular videos. Existing methods jointly estimate pixel-wise depth and motion relying mainly on an image reconstruction loss. Dynamic regions remain a critical challenge for these methods due to the inherent ambiguity in depth and motion estimation resulting in inaccurate depth estimation. This paper proposes a self-supervised training framework exploiting pseudo depth labels for dynamic regions from training data. The key contribution of our framework is to decouple depth estimation for static and dynamic regions of images in the training data. We start with an unsupervised depth estimation approach which provides reliable depth estimates for static regions and motion cues for dynamic regions and allows us to extract moving object information at the instance level. In the next stage we use an object network to estimate the depth of those moving objects assuming rigid motions. Then we propose a new scale alignment module to address the scale ambiguity between estimated depths for static and dynamic regions. We can then use the depth labels generated to train an end-to-end depth estimation network and improve its performance. Extensive experiments on the Cityscapes and KITTI datasets show that our self-training strategy consistently outperforms existing self-/unsupervised depth estimation methods.
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Nguyen_2024_CVPR,
+ author = {Nguyen, Hoang Chuong and Wang, Tianyu and Alvarez, Jose M. and Liu, Miaomiao},
+ title = {Mining Supervision for Dynamic Regions in Self-Supervised Monocular Depth Estimation},
+ booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+ month = {June},
+ year = {2024},
+ pages = {10446-10455}
+}

@@ -1,0 +1,127 @@
+{
+  "status": "NEEDS_REVIEW",
+  "pages": 1,
+  "scores": {
+    "l_violations": [],
+    "a": 2.4,
+    "i": 3.0,
+    "total": 5.4
+  },
+  "blocked_actions": [
+    "page_balance"
+  ],
+  "llm_failed_proposals": [],
+  "visual": {
+    "n": 1,
+    "pages": [
+      {
+        "ink_ratio": 0.0054,
+        "top_blank": 0.144,
+        "bottom_blank": 0.605,
+        "content_height": 0.251,
+        "max_gap": 0.605,
+        "max_gap_at": 0.697,
+        "band": 0.0,
+        "band_at": 0.0,
+        "left_blank": 0.118,
+        "right_blank": 0.12,
+        "top_bottom_ratio": 250.4,
+        "page": 1
+      }
+    ],
+    "ink_mean": 0.0054,
+    "ink_min": 0.0054,
+    "ink_max": 0.0054,
+    "defects": [
+      {
+        "kind": "bottom_blank",
+        "page": 1,
+        "severity": "high",
+        "metric": 0.605,
+        "detail": "第1页底部空白达 60%"
+      },
+      {
+        "kind": "mid_gap",
+        "page": 1,
+        "severity": "high",
+        "metric": 0.605,
+        "detail": "第1页中部有 60% 页高的连续空洞（位置 0.70）"
+      },
+      {
+        "kind": "near_empty",
+        "page": 1,
+        "severity": "high",
+        "metric": 0.0054,
+        "detail": "第1页几乎空白（墨迹 0.54%）"
+      }
+    ],
+    "severity_max": "high"
+  },
+  "visual_defects": [
+    {
+      "kind": "bottom_blank",
+      "page": 1,
+      "severity": "high",
+      "metric": 0.605,
+      "detail": "第1页底部空白达 60%"
+    },
+    {
+      "kind": "mid_gap",
+      "page": 1,
+      "severity": "high",
+      "metric": 0.605,
+      "detail": "第1页中部有 60% 页高的连续空洞（位置 0.70）"
+    },
+    {
+      "kind": "near_empty",
+      "page": 1,
+      "severity": "high",
+      "metric": 0.0054,
+      "detail": "第1页几乎空白（墨迹 0.54%）"
+    }
+  ],
+  "steps": [
+    {
+      "iteration": 1,
+      "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+      "source": "rule",
+      "l": [
+        "字号 10pt 不符合要求 11pt"
+      ],
+      "a": 2.4,
+      "i": 0.0,
+      "total": 1000002.4,
+      "pages": 1,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": ""
+    },
+    {
+      "iteration": 2,
+      "action": "文档字号 10pt -> 11pt",
+      "source": "rule",
+      "l": [],
+      "a": 2.4,
+      "i": 3.0,
+      "total": 5.4,
+      "pages": 1,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": ""
+    },
+    {
+      "iteration": 3,
+      "action": "注入 \\raggedbottom（页面底部自然收底，减少留白/拉伸）",
+      "source": "rule",
+      "l": [],
+      "a": 2.4,
+      "i": 3.0,
+      "total": 5.4,
+      "pages": 1,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "全局评分无改善"
+    }
+  ],
+  "note": "steps 中 source=rule 为确定性闭环，source=llm 为模型在环提案；全部经整篇重编译后全局重评，accepted=false 即已回滚。"
+}

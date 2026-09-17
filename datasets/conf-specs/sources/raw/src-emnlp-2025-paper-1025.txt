@@ -1,0 +1,316 @@
+s1: Simple test-time scaling - ACL Anthology 
+ ACL Anthology 
+ 
+ About Announcements 
+ Communication channels 
+ Related work 
+ Copyright 
+ 
+ Credits 
+ Volunteer 
+ Development 
+ Feedback 
+ 
+ Using Author directory 
+ Citing papers 
+ Links in the Anthology 
+ Data access 
+ 
+ All FAQs 
+ 
+ Details
+
+ Anthology identifiers 
+ Names 
+ ORCID iDs 
+ DOIs 
+ Verified authors 
+ 
+ Contributions Submissions 
+ Corrections 
+ Maintain author pages 
+ Attachments 
+ 
+ GitHub 
+
+ s1: Simple test-time scaling 
+ Niklas Muennighoff ,
+ Zitong Yang ,
+ Weijia Shi ,
+ Xiang Lisa Li ,
+ Li Fei-Fei ,
+ Hannaneh Hajishirzi ,
+ Luke Zettlemoyer ,
+ Percy Liang ,
+ Emmanuel Candès ,
+ Tatsunori Hashimoto 
+
+ Correct Metadata for 
+ 
+ Use this form to create a GitHub issue with structured data describing the correction. You will need a GitHub account.
+Once you create that issue, the correction will be reviewed by a staff member.
+ ⚠️ Mobile Users: Submitting this form to create a new issue will only work with github.com, not the GitHub Mobile app.
+ Important : The Anthology treat PDFs as authoritative. Please use this form only to correct data
+that is out of line with the PDF. See our corrections
+guidelines if you need to change the PDF.
+ Title 
+ Adjust the title. Retain tags such as
+<fixed-case>. 
+ 
+ Authors 
+ Adjust author names and order to match the
+PDF. 
+ Add Author Abstract 
+ Correct abstract if needed. Retain XML formatting tags such as <tex-math>. You may use <b>...</b> for bold , <i>...</i> for italic , <u>...</u> for underline , <sc>...</sc> for small-caps , <tt>...<tt> for typewriter text , <url>...</url> for URLs, <a href=...> for hyperlinks, and <par/> for paragraph breaks. 
+ 
+ Verification against PDF 
+ Ensure that the new title/authors match the snapshot below. (If there
+is no snapshot or it is too small, consult the PDF .) 
+ Authors concatenated from the text boxes above: 
+
+ ALL author names match the snapshot above—including
+middle initials, hyphens, and accents. 
+ Create GitHub issue for staff review 
+
+ Abstract
+ Test-time scaling is a promising new approach to language modeling that uses extra test-time compute to improve performance. Recently, OpenAI’s o1 model showed this capability but did not publicly share its methodology, leading to many replication efforts. We seek the simplest approach to achieve test-time scaling and strong reasoning performance. First, we curate a small dataset s1K of 1,000 questions paired with reasoning traces relying on three criteria we validate through ablations: difficulty, diversity, and quality. Second, we develop budget forcing to control test-time compute by forcefully terminating the model’s thinking process or lengthening it by appending “Wait” multiple times to the model’s generation when it tries to end. This can lead the model to double-check its answer, often fixing incorrect reasoning steps. After supervised finetuning the Qwen2.5-32B-Instruct language model on s1K and equipping it with budget forcing, our model s1 exceeds o1-preview on competition math questions by up to 27% (MATH and AIME24). Further, scaling s1 with budget forcing allows extrapolating beyond its performance without test-time intervention: from 50% to 57% on AIME24. Our model, data, and code are open-source at https://github.com/simplescaling/s1 . 
+
+ Anthology ID: 2025.emnlp-main.1025 Volume: Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing Month: November Year: 2025 Address: Suzhou, China Editors: Christos Christodoulopoulos ,
+ Tanmoy Chakraborty ,
+ Carolyn Rose ,
+ Violet Peng Venue: EMNLP SIG: Publisher: Association for Computational Linguistics Note: Pages: 20275–20321 Language: URL: https://aclanthology.org/2025.emnlp-main.1025/ DOI: 10.18653/v1/2025.emnlp-main.1025 Bibkey: muennighoff-etal-2025-s1 Cite (ACL): Niklas Muennighoff, Zitong Yang, Weijia Shi, Xiang Lisa Li, Li Fei-Fei, Hannaneh Hajishirzi, Luke Zettlemoyer, Percy Liang, Emmanuel Candès, and Tatsunori Hashimoto. 2025. s1: Simple test-time scaling . In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 20275–20321, Suzhou, China. Association for Computational Linguistics. Cite (Informal): s1: Simple test-time scaling (Muennighoff et al., EMNLP 2025) Copy Citation: BibTeX 
+ Markdown 
+ MODS XML 
+ Endnote 
+ More
+options… PDF: https://aclanthology.org/2025.emnlp-main.1025.pdf Checklist: 
+ 2025.emnlp-main.1025.checklist.pdf 
+ PDF 
+ Cite 
+ Search 
+ 
+ Checklist 
+ 
+ Fix data 
+
+ Export citation
+ 
+ BibTeX 
+ MODS XML 
+ Endnote 
+ Preformatted 
+ @inproceedings{muennighoff-etal-2025-s1,
+ title = "s1: Simple test-time scaling",
+ author = "Muennighoff, Niklas and
+ Yang, Zitong and
+ Shi, Weijia and
+ Li, Xiang Lisa and
+ Fei-Fei, Li and
+ Hajishirzi, Hannaneh and
+ Zettlemoyer, Luke and
+ Liang, Percy and
+ Cand{\`e}s, Emmanuel and
+ Hashimoto, Tatsunori",
+ editor = "Christodoulopoulos, Christos and
+ Chakraborty, Tanmoy and
+ Rose, Carolyn and
+ Peng, Violet",
+ booktitle = "Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing",
+ month = nov,
+ year = "2025",
+ address = "Suzhou, China",
+ publisher = "Association for Computational Linguistics",
+ url = "https://aclanthology.org/2025.emnlp-main.1025/",
+ doi = "10.18653/v1/2025.emnlp-main.1025",
+ pages = "20275--20321",
+ ISBN = "979-8-89176-332-6",
+ abstract = "Test-time scaling is a promising new approach to language modeling that uses extra test-time compute to improve performance. Recently, OpenAI{'}s o1 model showed this capability but did not publicly share its methodology, leading to many replication efforts. We seek the simplest approach to achieve test-time scaling and strong reasoning performance. First, we curate a small dataset s1K of 1,000 questions paired with reasoning traces relying on three criteria we validate through ablations: difficulty, diversity, and quality. Second, we develop budget forcing to control test-time compute by forcefully terminating the model{'}s thinking process or lengthening it by appending ``Wait'' multiple times to the model{'}s generation when it tries to end. This can lead the model to double-check its answer, often fixing incorrect reasoning steps. After supervised finetuning the Qwen2.5-32B-Instruct language model on s1K and equipping it with budget forcing, our model s1 exceeds o1-preview on competition math questions by up to 27{\%} (MATH and AIME24). Further, scaling s1 with budget forcing allows extrapolating beyond its performance without test-time intervention: from 50{\%} to 57{\%} on AIME24. Our model, data, and code are open-source at \url{https://github.com/simplescaling/s1}."
+} Download as
+File 
+ Copy to Clipboard 
+
+ <?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="muennighoff-etal-2025-s1">
+ <titleInfo>
+ <title>s1: Simple test-time scaling</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Niklas</namePart>
+ <namePart type="family">Muennighoff</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zitong</namePart>
+ <namePart type="family">Yang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Weijia</namePart>
+ <namePart type="family">Shi</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Xiang</namePart>
+ <namePart type="given">Lisa</namePart>
+ <namePart type="family">Li</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Li</namePart>
+ <namePart type="family">Fei-Fei</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Hannaneh</namePart>
+ <namePart type="family">Hajishirzi</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Luke</namePart>
+ <namePart type="family">Zettlemoyer</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Percy</namePart>
+ <namePart type="family">Liang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Emmanuel</namePart>
+ <namePart type="family">Candès</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Tatsunori</namePart>
+ <namePart type="family">Hashimoto</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <dateIssued>2025-11</dateIssued>
+ </originInfo>
+ <typeOfResource>text</typeOfResource>
+ <relatedItem type="host">
+ <titleInfo>
+ <title>Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Christos</namePart>
+ <namePart type="family">Christodoulopoulos</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Tanmoy</namePart>
+ <namePart type="family">Chakraborty</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Carolyn</namePart>
+ <namePart type="family">Rose</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Violet</namePart>
+ <namePart type="family">Peng</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <publisher>Association for Computational Linguistics</publisher>
+ <place>
+ <placeTerm type="text">Suzhou, China</placeTerm>
+ </place>
+ </originInfo>
+ <genre authority="marcgt">conference publication</genre>
+ <identifier type="isbn">979-8-89176-332-6</identifier>
+ </relatedItem>
+ <abstract>Test-time scaling is a promising new approach to language modeling that uses extra test-time compute to improve performance. Recently, OpenAI’s o1 model showed this capability but did not publicly share its methodology, leading to many replication efforts. We seek the simplest approach to achieve test-time scaling and strong reasoning performance. First, we curate a small dataset s1K of 1,000 questions paired with reasoning traces relying on three criteria we validate through ablations: difficulty, diversity, and quality. Second, we develop budget forcing to control test-time compute by forcefully terminating the model’s thinking process or lengthening it by appending “Wait” multiple times to the model’s generation when it tries to end. This can lead the model to double-check its answer, often fixing incorrect reasoning steps. After supervised finetuning the Qwen2.5-32B-Instruct language model on s1K and equipping it with budget forcing, our model s1 exceeds o1-preview on competition math questions by up to 27% (MATH and AIME24). Further, scaling s1 with budget forcing allows extrapolating beyond its performance without test-time intervention: from 50% to 57% on AIME24. Our model, data, and code are open-source at https://github.com/simplescaling/s1.</abstract>
+ <identifier type="citekey">muennighoff-etal-2025-s1</identifier>
+ <identifier type="doi">10.18653/v1/2025.emnlp-main.1025</identifier>
+ <location>
+ <url>https://aclanthology.org/2025.emnlp-main.1025/</url>
+ </location>
+ <part>
+ <date>2025-11</date>
+ <extent unit="page">
+ <start>20275</start>
+ <end>20321</end>
+ </extent>
+ </part>
+</mods>
+</modsCollection>
+ Download as
+File 
+ Copy to Clipboard 
+
+ %0 Conference Proceedings
+%T s1: Simple test-time scaling
+%A Muennighoff, Niklas
+%A Yang, Zitong
+%A Shi, Weijia
+%A Li, Xiang Lisa
+%A Fei-Fei, Li
+%A Hajishirzi, Hannaneh
+%A Zettlemoyer, Luke
+%A Liang, Percy
+%A Candès, Emmanuel
+%A Hashimoto, Tatsunori
+%Y Christodoulopoulos, Christos
+%Y Chakraborty, Tanmoy
+%Y Rose, Carolyn
+%Y Peng, Violet
+%S Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing
+%D 2025
+%8 November
+%I Association for Computational Linguistics
+%C Suzhou, China
+%@ 979-8-89176-332-6
+%F muennighoff-etal-2025-s1
+%X Test-time scaling is a promising new approach to language modeling that uses extra test-time compute to improve performance. Recently, OpenAI’s o1 model showed this capability but did not publicly share its methodology, leading to many replication efforts. We seek the simplest approach to achieve test-time scaling and strong reasoning performance. First, we curate a small dataset s1K of 1,000 questions paired with reasoning traces relying on three criteria we validate through ablations: difficulty, diversity, and quality. Second, we develop budget forcing to control test-time compute by forcefully terminating the model’s thinking process or lengthening it by appending “Wait” multiple times to the model’s generation when it tries to end. This can lead the model to double-check its answer, often fixing incorrect reasoning steps. After supervised finetuning the Qwen2.5-32B-Instruct language model on s1K and equipping it with budget forcing, our model s1 exceeds o1-preview on competition math questions by up to 27% (MATH and AIME24). Further, scaling s1 with budget forcing allows extrapolating beyond its performance without test-time intervention: from 50% to 57% on AIME24. Our model, data, and code are open-source at https://github.com/simplescaling/s1.
+%R 10.18653/v1/2025.emnlp-main.1025
+%U https://aclanthology.org/2025.emnlp-main.1025/
+%U https://doi.org/10.18653/v1/2025.emnlp-main.1025
+%P 20275-20321 Download as
+File 
+ Copy to Clipboard 
+
+ Markdown (Informal)
+ [s1: Simple test-time scaling](https://aclanthology.org/2025.emnlp-main.1025/) (Muennighoff et al., EMNLP 2025)
+ s1: Simple test-time scaling (Muennighoff et al., EMNLP 2025)
+ ACL
+ Niklas Muennighoff, Zitong Yang, Weijia Shi, Xiang Lisa Li, Li Fei-Fei, Hannaneh Hajishirzi, Luke Zettlemoyer, Percy Liang, Emmanuel Candès, and Tatsunori Hashimoto. 2025. s1: Simple test-time scaling . In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 20275–20321, Suzhou, China. Association for Computational Linguistics.
+ Copy Markdown to
+Clipboard 
+ Copy ACL to
+Clipboard 
+
+ACL materials are Copyright © 1963–2026 ACL; other materials are copyrighted by their respective copyright holders. Materials prior to 2016 here are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 International License . Permission is granted to make copies for the purposes of teaching and research. Materials published in or after 2016 are licensed on a Creative Commons Attribution 4.0 International License .
+ The ACL Anthology is managed and built by the ACL Anthology team of volunteers.
+ Site last built on 15 September 2026 at 12:04 UTC with commit f27fde6 .

@@ -1,0 +1,91 @@
+Learning Multi-Level Features with Matryoshka Sparse Autoencoders 
+
+ Proceedings of Machine Learning Research
+
+ Volume 267 JMLR 
+ DMLR 
+ TMLR 
+ MLOSS 
+ FAQ 
+ Submission Format 
+
+ [ edit ]
+
+ Learning Multi-Level Features with Matryoshka Sparse Autoencoders
+ Bart Bussmann, Noa Nabeshima, Adam Karvonen, Neel Nanda 
+ Proceedings of the 42nd International Conference on Machine Learning , PMLR 267:6077-6101, 2025.
+
+ Abstract
+
+ Sparse autoencoders (SAEs) have emerged as a powerful tool for interpreting neural networks by extracting the concepts represented in their activations. However, choosing the size of the SAE dictionary (i.e. number of learned concepts) creates a tension: as dictionary size increases to capture more relevant concepts, sparsity incentivizes features to be split or absorbed into more specific features, leaving high-level features missing or warped. We introduce Matryoshka SAEs, a novel variant that addresses these issues by simultaneously training multiple nested dictionaries of increasing size, forcing the smaller dictionaries to independently reconstruct the inputs without using the larger dictionaries. This organizes features hierarchically - the smaller dictionaries learn general concepts, while the larger dictionaries learn more specific concepts, without incentive to absorb the high-level features. We train Matryoshka SAEs on Gemma-2-2B and TinyStories and find superior performance on sparse probing and targeted concept erasure tasks, more disentangled concept representations, and reduced feature absorption. While there is a minor tradeoff with reconstruction performance, we believe Matryoshka SAEs are a superior alternative for practical tasks, as they enable training arbitrarily large SAEs while retaining interpretable features at different levels of abstraction.
+
+ Cite this Paper
+
+ BibTeX
+
+ @InProceedings{pmlr-v267-bussmann25a,
+ title = {Learning Multi-Level Features with Matryoshka Sparse Autoencoders},
+ author = {Bussmann, Bart and Nabeshima, Noa and Karvonen, Adam and Nanda, Neel},
+ booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+ pages = {6077--6101},
+ year = {2025},
+ editor = {Singh, Aarti and Fazel, Maryam and Hsu, Daniel and Lacoste-Julien, Simon and Berkenkamp, Felix and Maharaj, Tegan and Wagstaff, Kiri and Zhu, Jerry},
+ volume = {267},
+ series = {Proceedings of Machine Learning Research},
+ month = {13--19 Jul},
+ publisher = {PMLR},
+ pdf = {https://raw.githubusercontent.com/mlresearch/v267/main/assets/bussmann25a/bussmann25a.pdf},
+ url = {https://proceedings.mlr.press/v267/bussmann25a.html},
+ abstract = {Sparse autoencoders (SAEs) have emerged as a powerful tool for interpreting neural networks by extracting the concepts represented in their activations. However, choosing the size of the SAE dictionary (i.e. number of learned concepts) creates a tension: as dictionary size increases to capture more relevant concepts, sparsity incentivizes features to be split or absorbed into more specific features, leaving high-level features missing or warped. We introduce Matryoshka SAEs, a novel variant that addresses these issues by simultaneously training multiple nested dictionaries of increasing size, forcing the smaller dictionaries to independently reconstruct the inputs without using the larger dictionaries. This organizes features hierarchically - the smaller dictionaries learn general concepts, while the larger dictionaries learn more specific concepts, without incentive to absorb the high-level features. We train Matryoshka SAEs on Gemma-2-2B and TinyStories and find superior performance on sparse probing and targeted concept erasure tasks, more disentangled concept representations, and reduced feature absorption. While there is a minor tradeoff with reconstruction performance, we believe Matryoshka SAEs are a superior alternative for practical tasks, as they enable training arbitrarily large SAEs while retaining interpretable features at different levels of abstraction.}
+}
+
+ Copy to Clipboard 
+ Download 
+
+ Endnote
+
+ %0 Conference Paper
+%T Learning Multi-Level Features with Matryoshka Sparse Autoencoders
+%A Bart Bussmann
+%A Noa Nabeshima
+%A Adam Karvonen
+%A Neel Nanda
+%B Proceedings of the 42nd International Conference on Machine Learning
+%C Proceedings of Machine Learning Research
+%D 2025
+%E Aarti Singh
+%E Maryam Fazel
+%E Daniel Hsu
+%E Simon Lacoste-Julien
+%E Felix Berkenkamp
+%E Tegan Maharaj
+%E Kiri Wagstaff
+%E Jerry Zhu 
+%F pmlr-v267-bussmann25a
+%I PMLR
+%P 6077--6101
+%U https://proceedings.mlr.press/v267/bussmann25a.html
+%V 267
+%X Sparse autoencoders (SAEs) have emerged as a powerful tool for interpreting neural networks by extracting the concepts represented in their activations. However, choosing the size of the SAE dictionary (i.e. number of learned concepts) creates a tension: as dictionary size increases to capture more relevant concepts, sparsity incentivizes features to be split or absorbed into more specific features, leaving high-level features missing or warped. We introduce Matryoshka SAEs, a novel variant that addresses these issues by simultaneously training multiple nested dictionaries of increasing size, forcing the smaller dictionaries to independently reconstruct the inputs without using the larger dictionaries. This organizes features hierarchically - the smaller dictionaries learn general concepts, while the larger dictionaries learn more specific concepts, without incentive to absorb the high-level features. We train Matryoshka SAEs on Gemma-2-2B and TinyStories and find superior performance on sparse probing and targeted concept erasure tasks, more disentangled concept representations, and reduced feature absorption. While there is a minor tradeoff with reconstruction performance, we believe Matryoshka SAEs are a superior alternative for practical tasks, as they enable training arbitrarily large SAEs while retaining interpretable features at different levels of abstraction.
+
+ Copy to Clipboard 
+ Download 
+
+ APA
+
+ Bussmann, B., Nabeshima, N., Karvonen, A. & Nanda, N.. (2025). Learning Multi-Level Features with Matryoshka Sparse Autoencoders. Proceedings of the 42nd International Conference on Machine Learning , in Proceedings of Machine Learning Research 267:6077-6101 Available from https://proceedings.mlr.press/v267/bussmann25a.html.
+
+ Copy to Clipboard 
+ Download 
+
+ Related Material
+
+ Download PDF 
+
+ OpenReview 
+
+ This site last compiled Mon, 13 Jul 2026 17:55:28 +0000
+
+ Github Account 
+
+ Copyright © The authors and PMLR 2026. MLResearchPress

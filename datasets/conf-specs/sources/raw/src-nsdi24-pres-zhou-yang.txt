@@ -1,0 +1,144 @@
+DINT: Fast In-Kernel Distributed Transactions with eBPF | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ DINT: Fast In-Kernel Distributed Transactions with eBPF
+
+ Yang Zhou, Harvard University; Xingyu Xiang, Peking University; Matthew Kiley, Harvard University; Sowmya Dharanipragada, Cornell University; Minlan Yu, Harvard University 
+
+ Serializable distributed in-memory transactions are important building blocks for data center applications. To achieve high throughput and low latency, existing distributed transaction systems eschew the kernel networking stack and rely heavily on kernel-bypass networking techniques such as RDMA and DPDK. However, kernel-bypass networking techniques generally suffer from security, isolation, protection, maintainability, and debuggability issues, while the kernel networking stack supports these properties well, but performs poorly.
+
+ We present DINT, a kernel networking stack-based distributed transaction system that achieves kernel-bypass-like throughput and latency. To gain the performance back under the kernel stack, DINT offloads frequent-path transaction operations directly into the kernel via eBPF techniques without kernel modifications or customized kernel modules, avoiding most of the kernel stack overheads. DINT does not lose the good properties of the kernel stack, as eBPF is a kernel-native
+technique on modern OSes. On typical transaction workloads, DINT even achieves up to 2.6× higher throughput than using a DPDK-based kernel-bypass stack, while only adding at most 10%/16% average/99th-tail unloaded latency.
+
+ NSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {295513,
+
+ author = {Yang Zhou and Xingyu Xiang and Matthew Kiley and Sowmya Dharanipragada and Minlan Yu},
+
+ title = {{DINT}: Fast {In-Kernel} Distributed Transactions with {eBPF}},
+
+ booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-39-7},
+
+ address = {Santa Clara, CA},
+
+ pages = {401--417},
+
+ url = {https://www.usenix.org/conference/nsdi24/presentation/zhou-yang},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Zhou PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

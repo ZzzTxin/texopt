@@ -1,0 +1,147 @@
+Fast and Scalable In-network Lock Management Using Lock Fission | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate 
+
+ Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Fast and Scalable In-network Lock Management Using Lock Fission
+
+ Hanze Zhang, Institute of Parallel and Distributed Systems, SEIEE, Shanghai Jiao Tong University; Shanghai AI Laboratory; MoE Key Lab of Artificial Intelligence, AI Institute, Shanghai Jiao Tong University; Ke Cheng, Institute of Parallel and Distributed Systems, SEIEE, Shanghai Jiao Tong University; Engineering Research Center for Domain-specific Operating Systems, Ministry of Education, China; Rong Chen, Institute of Parallel and Distributed Systems, SEIEE, Shanghai Jiao Tong University; Shanghai AI Laboratory; Engineering Research Center for Domain-specific Operating Systems, Ministry of Education, China; Haibo Chen, Institute of Parallel and Distributed Systems, SEIEE, Shanghai Jiao Tong University; Engineering Research Center for Domain-specific Operating Systems, Ministry of Education, China; Key Laboratory of System Software (Chinese Academy of Sciences) 
+
+ Distributed lock services are extensively utilized in distributed systems to serialize concurrent accesses to shared resources. The need for fast and scalable lock services has become more pronounced with decreasing task execution times and expanding dataset scales. However, traditional lock managers, reliant on server CPUs to handle lock requests, experience significant queuing delays in lock grant latency. Advanced network hardware (e.g. programmable switches) presents an avenue to manage locks without queuing delays due to their high packet processing power. Nevertheless, their constrained memory capacity restricts the manageable lock scale, thereby limiting their effect in large-scale workloads.
+
+ This paper presents FISSLOCK, a fast and scalable distributed lock service that exploits the programmable switch to improve (tail) latency and peak throughput for millions of locks. The key idea behind FISSLOCK is the concept of lock fission, which decouples lock management into grant decision and participant maintenance. FISSLOCK leverages the programmable switch to decide lock grants synchronously and relies on servers to maintain participants (i.e., holders and waiters) asynchronously. By using the programmable switch for routing, FISSLOCK enables on-demand fine-grained lock migration, thereby reducing the lock grant and release delays. FISSLOCK carefully designs and implements grant decision procedure on the programmable switch, supporting over one million locks. Evaluation using various benchmarks and a real-world application shows the efficiency of FISSLOCK. Compared to the state-of-the-art switch-based approach (NetLock), FISSLOCK cuts up to 79.1% (from 43.0%) of median lock grant time in the microbenchmark and improves transaction throughput for TATP and TPC-C by 1.76× and 2.28×, respectively.
+
+ OSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST)
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {298693,
+
+ author = {Hanze Zhang and Ke Cheng and Rong Chen and Haibo Chen},
+
+ title = {Fast and Scalable In-network Lock Management Using Lock Fission},
+
+ booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-40-3},
+
+ address = {Santa Clara, CA},
+
+ pages = {251--268},
+
+ url = {https://www.usenix.org/conference/osdi24/presentation/zhang-hanze},
+
+ publisher = {USENIX Association},
+
+ month = jul
+
+}
+
+ Download 
+
+ Zhang PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors Exhibitor Services 
+
+ About Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

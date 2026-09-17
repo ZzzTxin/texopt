@@ -1,0 +1,41 @@
+ICCV 2025 Open Access Repository 
+
+ ICCV 2025 open access 
+
+ These ICCV 2025 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ Extending Foundational Monocular Depth Estimators to Fisheye Cameras with Calibration Tokens
+
+ Suchisrit Gangopadhyay, Jung-Hee Kim, Xien Chen, Patrick Rim, Hyoungseob Park, Alex Wong ; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2025, pp. 5198-5209
+
+ Abstract 
+
+ We propose a method to extend foundational monocular depth estimators (FMDEs), trained on perspective images, to fisheye images. Despite being trained on tens of millions of images, FMDEs are susceptible to the covariate shift introduced by changes in camera calibration (intrinsic, distortion) parameters, leading to erroneous depth estimates. Our method aligns the distribution of latent embeddings encoding fisheye images to those of perspective images, enabling the reuse of FMDEs for fisheye cameras without retraining or finetuning. To this end, we introduce a set of Calibration Tokens as a light-weight adaptation mechanism that modulates the latent embeddings for alignment. By exploiting the already expressive latent space of FMDEs, we posit that modulating their embeddings avoids the negative impact of artifacts and loss introduced in conventional recalibration or map projection to a canonical reference frame in the image space. Our method is self-supervised and does not require fisheye images but leverages publicly available large-scale perspective image datasets. This is done by recalibrating perspective images to fisheye images, and enforcing consistency between their estimates during training. We evaluate our approach with several FMDEs, on both indoors and outdoors, where we consistently improve over state-of-the-art methods using a single set of tokens for both. Code available at: https://github.com/JungHeeKim29/calibration-token.
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+[ arXiv ]
+ [ bibtex ]
+ @InProceedings{Gangopadhyay_2025_ICCV,
+ author = {Gangopadhyay, Suchisrit and Kim, Jung-Hee and Chen, Xien and Rim, Patrick and Park, Hyoungseob and Wong, Alex},
+ title = {Extending Foundational Monocular Depth Estimators to Fisheye Cameras with Calibration Tokens},
+ booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+ month = {October},
+ year = {2025},
+ pages = {5198-5209}
+}

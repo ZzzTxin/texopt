@@ -1,0 +1,95 @@
+LCA-on-the-Line: Benchmarking Out of Distribution Generalization with Class Taxonomies 
+
+ Proceedings of Machine Learning Research
+
+ Volume 235 JMLR 
+ DMLR 
+ TMLR 
+ MLOSS 
+ FAQ 
+ Submission Format 
+
+ [ edit ]
+
+ LCA-on-the-Line: Benchmarking Out of Distribution Generalization with Class Taxonomies
+ Jia Shi, Gautam Rajendrakumar Gare, Jinjin Tian, Siqi Chai, Zhiqiu Lin, Arun Balajee Vasudevan, Di Feng, Francesco Ferroni, Shu Kong 
+ Proceedings of the 41st International Conference on Machine Learning , PMLR 235:44887-44908, 2024.
+
+ Abstract
+
+ We tackle the challenge of predicting models’ Out-of-Distribution (OOD) performance using in-distribution (ID) measurements without requiring OOD data. Existing evaluations with “Effective robustness”, which use ID accuracy as an indicator of OOD accuracy, encounter limitations when models are trained with diverse supervision and distributions, such as class labels ( Vision Models, VMs, on ImageNet ) and textual descriptions ( Visual-Language Models, VLMs, on LAION ). VLMs often generalize better to OOD data than VMs despite having similar or lower ID performance. To improve the prediction of models’ OOD performance from ID measurements, we introduce the Lowest Common Ancestor (LCA)-on-the-Line framework. This approach revisits the established concept of LCA distance, which measures the hierarchical distance between labels and predictions within a predefined class hierarchy, such as WordNet. We assess 75 models using ImageNet as the ID dataset and five significantly shifted OOD variants, uncovering a strong linear correlation between ID LCA distance and OOD top-1 accuracy. Our method provides a compelling alternative for understanding why VLMs tend to generalize better. Additionally, we propose a technique to construct a taxonomic hierarchy on any dataset using $K$-means clustering, demonstrating that LCA distance is robust to the constructed taxonomic hierarchy. Moreover, we demonstrate that aligning model predictions with class taxonomies, through soft labels or prompt engineering, can enhance model generalization. Open source code in our Project Page.
+
+ Cite this Paper
+
+ BibTeX
+
+ @InProceedings{pmlr-v235-shi24c,
+ title = {{LCA}-on-the-Line: Benchmarking Out of Distribution Generalization with Class Taxonomies},
+ author = {Shi, Jia and Gare, Gautam Rajendrakumar and Tian, Jinjin and Chai, Siqi and Lin, Zhiqiu and Vasudevan, Arun Balajee and Feng, Di and Ferroni, Francesco and Kong, Shu},
+ booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+ pages = {44887--44908},
+ year = {2024},
+ editor = {Salakhutdinov, Ruslan and Kolter, Zico and Heller, Katherine and Weller, Adrian and Oliver, Nuria and Scarlett, Jonathan and Berkenkamp, Felix},
+ volume = {235},
+ series = {Proceedings of Machine Learning Research},
+ month = {21--27 Jul},
+ publisher = {PMLR},
+ pdf = {https://raw.githubusercontent.com/mlresearch/v235/main/assets/shi24c/shi24c.pdf},
+ url = {https://proceedings.mlr.press/v235/shi24c.html},
+ abstract = {We tackle the challenge of predicting models’ Out-of-Distribution (OOD) performance using in-distribution (ID) measurements without requiring OOD data. Existing evaluations with “Effective robustness”, which use ID accuracy as an indicator of OOD accuracy, encounter limitations when models are trained with diverse supervision and distributions, such as class labels ( Vision Models, VMs, on ImageNet ) and textual descriptions ( Visual-Language Models, VLMs, on LAION ). VLMs often generalize better to OOD data than VMs despite having similar or lower ID performance. To improve the prediction of models’ OOD performance from ID measurements, we introduce the Lowest Common Ancestor (LCA)-on-the-Line framework. This approach revisits the established concept of LCA distance, which measures the hierarchical distance between labels and predictions within a predefined class hierarchy, such as WordNet. We assess 75 models using ImageNet as the ID dataset and five significantly shifted OOD variants, uncovering a strong linear correlation between ID LCA distance and OOD top-1 accuracy. Our method provides a compelling alternative for understanding why VLMs tend to generalize better. Additionally, we propose a technique to construct a taxonomic hierarchy on any dataset using $K$-means clustering, demonstrating that LCA distance is robust to the constructed taxonomic hierarchy. Moreover, we demonstrate that aligning model predictions with class taxonomies, through soft labels or prompt engineering, can enhance model generalization. Open source code in our Project Page.}
+}
+
+ Copy to Clipboard 
+ Download 
+
+ Endnote
+
+ %0 Conference Paper
+%T LCA-on-the-Line: Benchmarking Out of Distribution Generalization with Class Taxonomies
+%A Jia Shi
+%A Gautam Rajendrakumar Gare
+%A Jinjin Tian
+%A Siqi Chai
+%A Zhiqiu Lin
+%A Arun Balajee Vasudevan
+%A Di Feng
+%A Francesco Ferroni
+%A Shu Kong
+%B Proceedings of the 41st International Conference on Machine Learning
+%C Proceedings of Machine Learning Research
+%D 2024
+%E Ruslan Salakhutdinov
+%E Zico Kolter
+%E Katherine Heller
+%E Adrian Weller
+%E Nuria Oliver
+%E Jonathan Scarlett
+%E Felix Berkenkamp 
+%F pmlr-v235-shi24c
+%I PMLR
+%P 44887--44908
+%U https://proceedings.mlr.press/v235/shi24c.html
+%V 235
+%X We tackle the challenge of predicting models’ Out-of-Distribution (OOD) performance using in-distribution (ID) measurements without requiring OOD data. Existing evaluations with “Effective robustness”, which use ID accuracy as an indicator of OOD accuracy, encounter limitations when models are trained with diverse supervision and distributions, such as class labels ( Vision Models, VMs, on ImageNet ) and textual descriptions ( Visual-Language Models, VLMs, on LAION ). VLMs often generalize better to OOD data than VMs despite having similar or lower ID performance. To improve the prediction of models’ OOD performance from ID measurements, we introduce the Lowest Common Ancestor (LCA)-on-the-Line framework. This approach revisits the established concept of LCA distance, which measures the hierarchical distance between labels and predictions within a predefined class hierarchy, such as WordNet. We assess 75 models using ImageNet as the ID dataset and five significantly shifted OOD variants, uncovering a strong linear correlation between ID LCA distance and OOD top-1 accuracy. Our method provides a compelling alternative for understanding why VLMs tend to generalize better. Additionally, we propose a technique to construct a taxonomic hierarchy on any dataset using $K$-means clustering, demonstrating that LCA distance is robust to the constructed taxonomic hierarchy. Moreover, we demonstrate that aligning model predictions with class taxonomies, through soft labels or prompt engineering, can enhance model generalization. Open source code in our Project Page.
+
+ Copy to Clipboard 
+ Download 
+
+ APA
+
+ Shi, J., Gare, G.R., Tian, J., Chai, S., Lin, Z., Vasudevan, A.B., Feng, D., Ferroni, F. & Kong, S.. (2024). LCA-on-the-Line: Benchmarking Out of Distribution Generalization with Class Taxonomies. Proceedings of the 41st International Conference on Machine Learning , in Proceedings of Machine Learning Research 235:44887-44908 Available from https://proceedings.mlr.press/v235/shi24c.html.
+
+ Copy to Clipboard 
+ Download 
+
+ Related Material
+
+ Download PDF 
+
+ OpenReview 
+
+ This site last compiled Tue, 30 Jun 2026 09:16:41 +0000
+
+ Github Account 
+
+ Copyright © The authors and PMLR 2026. MLResearchPress

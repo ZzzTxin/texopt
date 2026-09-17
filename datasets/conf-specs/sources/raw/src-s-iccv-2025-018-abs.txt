@@ -1,0 +1,40 @@
+ICCV 2025 Open Access Repository 
+
+ ICCV 2025 open access 
+
+ These ICCV 2025 papers are the Open Access versions, provided by the
+ Computer Vision Foundation. 
+
+Except for the watermark, they are identical to the accepted versions;
+the final published version of the proceedings is available on IEEE Xplore.
+
+ This material is presented to ensure timely dissemination of scholarly and technical work.
+Copyright and all rights therein are retained by authors or by other copyright holders.
+All persons copying this information are expected to adhere to the terms and constraints invoked 
+by each author's copyright.
+
+ Powered by: 
+
+ Sponsored by: 
+
+ Free-MoRef: Instantly Multiplexing Context Perception Capabilities of Video-MLLMs within Single Inference
+
+ Kuo Wang, Quanlong Zheng, Junlin Xie, Yanhao Zhang, Jinguo Luo, Haonan Lu, Liang Lin, Fan Zhou, Guanbin Li ; Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2025, pp. 22499-22508
+
+ Abstract 
+
+ Video Multimodal Large Language Models (Video-MLLM) have achieved remarkable advancements in video understanding tasks. However, constrained by the context length limitation in the underlying LLMs, existing Video-MLLMs typically exhibit suboptimal performance on long video scenarios. To understand extended input frames, common solutions span token compression and streaming inference techniques, which sacrifice feature granularity or inference efficiency. Differently, to efficiently achieve comprehensive understanding of longer frame inputs, we draw ideas from MoE and propose a training-free approach Free-MoRef, which instantly multiplexes the context perception capabilities of Video-MLLMs within one inference pass. Specifically, Free-MoRef reconstructs the vision tokens into several short sequences as multi-references. Subsequently, we introduce MoRef-attention, which gathers clues from the multi-reference chunks in parallel to summarize unified query activations. After the shadow layers in LLMs, a reference fusion step is derived to compose a final mixed reasoning sequence with key tokens from parallel chunks, which compensates the cross-reference vision interactions that are neglected in MoRef-attention. By splitting and fusing the long vision token sequences, Free-MoRef achieves improved performance under much lower computing costs in reasoning multiplexed context length, demonstrating strong efficiency and effectiveness. Experiments on VideoMME, MLVU, LongVideoBench show that Free-MoRef achieves full perception of 2xto 8xlonger input frames without compression on a single A100 GPU while keeping instant responses, thereby bringing significant performance gains, even surpassing dedicatedly trained long-video-MLLMs. Codes are available at https://github.com/wkfdb/Free-MoRef
+
+ Related Material 
+
+[ pdf ]
+[ supp ]
+ [ bibtex ]
+ @InProceedings{Wang_2025_ICCV,
+ author = {Wang, Kuo and Zheng, Quanlong and Xie, Junlin and Zhang, Yanhao and Luo, Jinguo and Lu, Haonan and Lin, Liang and Zhou, Fan and Li, Guanbin},
+ title = {Free-MoRef: Instantly Multiplexing Context Perception Capabilities of Video-MLLMs within Single Inference},
+ booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+ month = {October},
+ year = {2025},
+ pages = {22499-22508}
+}

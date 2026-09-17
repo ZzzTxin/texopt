@@ -1,0 +1,149 @@
+VeriSMo: A Verified Security Module for Confidential VMs | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate 
+
+ Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ VeriSMo: A Verified Security Module for Confidential VMs
+
+ Ziqiao Zhou, Microsoft Research; Anjali, University of Wisconsin-Madison; Weiteng Chen, Microsoft Research; Sishuai Gong, Purdue University; Chris Hawblitzel and Weidong Cui, Microsoft Research 
+
+ Awarded Best Paper!
+
+ Hardware vendors have introduced confidential VM architectures (e.g., AMD SEV-SNP, Intel TDX and Arm CCA) in recent years. They eliminate the trust in the hypervisor and lead to the need for security modules such as AMD Secure VMService Module (SVSM). These security modules aim to provide a guest with security features that previously were offered by the hypervisor. Since the security of such modules is critical, Rust is used to implement them for its known memory safety features. However, using Rust for implementation does not guarantee correctness, and the use of unsafe Rust compromises the memory safety guarantee.
+
+ In this paper, we introduce VERISMO, the first verified security module for confidential VMs on AMD SEV-SNP. VERISMO is fully functional and provides security features such as code integrity, runtime measurement, and secret management. More importantly, as a Rust-based implementation, VERISMO is fully verified for functional correctness, secure information flow, and VM confidentiality and integrity. The key challenge in verifying VERISMO is that the untrusted hypervisor can interrupt VERISMO's execution and modify the hardware state at any time. We address this challenge by dividing verification into two layers. The upper layer handles the concurrent hypervisor execution, while the lower layer handles VERISMO's own concurrent execution. When compared with a C-based implementation, VERISMO achieves similar performance. When verifying VERISMO, we identified a subtle requirement for VM confidentiality and found that it was overlooked by AMD SVSM. This demonstrates the necessity for formal verification.
+
+ OSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST)
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {298728,
+
+ author = {Ziqiao Zhou and Anjali and Weiteng Chen and Sishuai Gong and Chris Hawblitzel and Weidong Cui},
+
+ title = {{VeriSMo}: A Verified Security Module for Confidential {VMs}},
+
+ booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-40-3},
+
+ address = {Santa Clara, CA},
+
+ pages = {599--614},
+
+ url = {https://www.usenix.org/conference/osdi24/presentation/zhou},
+
+ publisher = {USENIX Association},
+
+ month = jul
+
+}
+
+ Download 
+
+ Zhou PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors Exhibitor Services 
+
+ About Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

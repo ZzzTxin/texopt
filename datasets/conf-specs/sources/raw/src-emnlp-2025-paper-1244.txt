@@ -1,0 +1,325 @@
+Temporal Scaling Law for Large Language Models - ACL Anthology 
+ ACL Anthology 
+ 
+ About Announcements 
+ Communication channels 
+ Related work 
+ Copyright 
+ 
+ Credits 
+ Volunteer 
+ Development 
+ Feedback 
+ 
+ Using Author directory 
+ Citing papers 
+ Links in the Anthology 
+ Data access 
+ 
+ All FAQs 
+ 
+ Details
+
+ Anthology identifiers 
+ Names 
+ ORCID iDs 
+ DOIs 
+ Verified authors 
+ 
+ Contributions Submissions 
+ Corrections 
+ Maintain author pages 
+ Attachments 
+ 
+ GitHub 
+
+ Temporal Scaling Law for Large Language Models 
+ Yizhe Xiong ,
+ Xiansheng Chen ,
+ Xin Ye ,
+ Hui Chen ,
+ Zijia Lin ,
+ Haoran Lian ,
+ Zhenpeng Su ,
+ Wei Huang ,
+ Jianwei Niu ,
+ Jungong Han ,
+ Guiguang Ding 
+
+ Correct Metadata for 
+ 
+ Use this form to create a GitHub issue with structured data describing the correction. You will need a GitHub account.
+Once you create that issue, the correction will be reviewed by a staff member.
+ ⚠️ Mobile Users: Submitting this form to create a new issue will only work with github.com, not the GitHub Mobile app.
+ Important : The Anthology treat PDFs as authoritative. Please use this form only to correct data
+that is out of line with the PDF. See our corrections
+guidelines if you need to change the PDF.
+ Title 
+ Adjust the title. Retain tags such as
+<fixed-case>. 
+ 
+ Authors 
+ Adjust author names and order to match the
+PDF. 
+ Add Author Abstract 
+ Correct abstract if needed. Retain XML formatting tags such as <tex-math>. You may use <b>...</b> for bold , <i>...</i> for italic , <u>...</u> for underline , <sc>...</sc> for small-caps , <tt>...<tt> for typewriter text , <url>...</url> for URLs, <a href=...> for hyperlinks, and <par/> for paragraph breaks. 
+ 
+ Verification against PDF 
+ Ensure that the new title/authors match the snapshot below. (If there
+is no snapshot or it is too small, consult the PDF .) 
+ Authors concatenated from the text boxes above: 
+
+ ALL author names match the snapshot above—including
+middle initials, hyphens, and accents. 
+ Create GitHub issue for staff review 
+
+ Abstract
+ Recently, Large Language Models (LLMs) have been widely adopted in a wide range of tasks, leading to increasing attention towards the research on how scaling LLMs affects their performance. Existing works, termed Scaling Laws, have discovered that the final test loss of LLMs scales as power-laws with model size, computational budget, and dataset size. However, the temporal change of the test loss of an LLM throughout its pretraining process remains unexplored, though it is valuable in many aspects, such as selecting better hyperparameters directly on the target LLM. In this paper, we propose the novel concept of Temporal Scaling Law, studying how the test loss of an LLM evolves as the training steps scale up. In contrast to modeling the test loss as a whole in a coarse-grained manner, we break it down and dive into the fine-grained test loss of each token position, and further develop a dynamic hyperbolic-law. Afterwards, we derive the much more precise temporal scaling law by studying the temporal patterns of the parameters in the dynamic hyperbolic-law. Results on both in-distribution (ID) and out-of-distribution (OOD) validation datasets demonstrate that our temporal scaling law accurately predicts the test loss of LLMs across training steps. Our temporal scaling law has broad practical applications. First, it enables direct and efficient hyperparameter selection on the target LLM, such as data mixture proportions. Secondly, viewing the LLM pretraining dynamics from the token position granularity provides some insights to enhance the understanding of LLM pretraining. 
+
+ Anthology ID: 2025.emnlp-main.1244 Volume: Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing Month: November Year: 2025 Address: Suzhou, China Editors: Christos Christodoulopoulos ,
+ Tanmoy Chakraborty ,
+ Carolyn Rose ,
+ Violet Peng Venue: EMNLP SIG: Publisher: Association for Computational Linguistics Note: Pages: 24463–24483 Language: URL: https://aclanthology.org/2025.emnlp-main.1244/ DOI: 10.18653/v1/2025.emnlp-main.1244 Bibkey: xiong-etal-2025-temporal Cite (ACL): Yizhe Xiong, Xiansheng Chen, Xin Ye, Hui Chen, Zijia Lin, Haoran Lian, Zhenpeng Su, Wei Huang, Jianwei Niu, Jungong Han, and Guiguang Ding. 2025. Temporal Scaling Law for Large Language Models . In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 24463–24483, Suzhou, China. Association for Computational Linguistics. Cite (Informal): Temporal Scaling Law for Large Language Models (Xiong et al., EMNLP 2025) Copy Citation: BibTeX 
+ Markdown 
+ MODS XML 
+ Endnote 
+ More
+options… PDF: https://aclanthology.org/2025.emnlp-main.1244.pdf Checklist: 
+ 2025.emnlp-main.1244.checklist.pdf 
+ PDF 
+ Cite 
+ Search 
+ 
+ Checklist 
+ 
+ Fix data 
+
+ Export citation
+ 
+ BibTeX 
+ MODS XML 
+ Endnote 
+ Preformatted 
+ @inproceedings{xiong-etal-2025-temporal,
+ title = "Temporal Scaling Law for Large Language Models",
+ author = "Xiong, Yizhe and
+ Chen, Xiansheng and
+ Ye, Xin and
+ Chen, Hui and
+ Lin, Zijia and
+ Lian, Haoran and
+ Su, Zhenpeng and
+ Huang, Wei and
+ Niu, Jianwei and
+ Han, Jungong and
+ Ding, Guiguang",
+ editor = "Christodoulopoulos, Christos and
+ Chakraborty, Tanmoy and
+ Rose, Carolyn and
+ Peng, Violet",
+ booktitle = "Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing",
+ month = nov,
+ year = "2025",
+ address = "Suzhou, China",
+ publisher = "Association for Computational Linguistics",
+ url = "https://aclanthology.org/2025.emnlp-main.1244/",
+ doi = "10.18653/v1/2025.emnlp-main.1244",
+ pages = "24463--24483",
+ ISBN = "979-8-89176-332-6",
+ abstract = "Recently, Large Language Models (LLMs) have been widely adopted in a wide range of tasks, leading to increasing attention towards the research on how scaling LLMs affects their performance. Existing works, termed Scaling Laws, have discovered that the final test loss of LLMs scales as power-laws with model size, computational budget, and dataset size. However, the temporal change of the test loss of an LLM throughout its pretraining process remains unexplored, though it is valuable in many aspects, such as selecting better hyperparameters \textit{directly} on the target LLM. In this paper, we propose the novel concept of Temporal Scaling Law, studying how the test loss of an LLM evolves as the training steps scale up. In contrast to modeling the test loss as a whole in a coarse-grained manner, we break it down and dive into the fine-grained test loss of each token position, and further develop a dynamic hyperbolic-law. Afterwards, we derive the much more precise temporal scaling law by studying the temporal patterns of the parameters in the dynamic hyperbolic-law. Results on both in-distribution (ID) and out-of-distribution (OOD) validation datasets demonstrate that our temporal scaling law accurately predicts the test loss of LLMs across training steps. Our temporal scaling law has broad practical applications. First, it enables direct and efficient hyperparameter selection on the target LLM, such as data mixture proportions. Secondly, viewing the LLM pretraining dynamics from the token position granularity provides some insights to enhance the understanding of LLM pretraining."
+} Download as
+File 
+ Copy to Clipboard 
+
+ <?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="xiong-etal-2025-temporal">
+ <titleInfo>
+ <title>Temporal Scaling Law for Large Language Models</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Yizhe</namePart>
+ <namePart type="family">Xiong</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Xiansheng</namePart>
+ <namePart type="family">Chen</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Xin</namePart>
+ <namePart type="family">Ye</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Hui</namePart>
+ <namePart type="family">Chen</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zijia</namePart>
+ <namePart type="family">Lin</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Haoran</namePart>
+ <namePart type="family">Lian</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Zhenpeng</namePart>
+ <namePart type="family">Su</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Wei</namePart>
+ <namePart type="family">Huang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Jianwei</namePart>
+ <namePart type="family">Niu</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Jungong</namePart>
+ <namePart type="family">Han</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Guiguang</namePart>
+ <namePart type="family">Ding</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <dateIssued>2025-11</dateIssued>
+ </originInfo>
+ <typeOfResource>text</typeOfResource>
+ <relatedItem type="host">
+ <titleInfo>
+ <title>Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Christos</namePart>
+ <namePart type="family">Christodoulopoulos</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Tanmoy</namePart>
+ <namePart type="family">Chakraborty</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Carolyn</namePart>
+ <namePart type="family">Rose</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Violet</namePart>
+ <namePart type="family">Peng</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <publisher>Association for Computational Linguistics</publisher>
+ <place>
+ <placeTerm type="text">Suzhou, China</placeTerm>
+ </place>
+ </originInfo>
+ <genre authority="marcgt">conference publication</genre>
+ <identifier type="isbn">979-8-89176-332-6</identifier>
+ </relatedItem>
+ <abstract>Recently, Large Language Models (LLMs) have been widely adopted in a wide range of tasks, leading to increasing attention towards the research on how scaling LLMs affects their performance. Existing works, termed Scaling Laws, have discovered that the final test loss of LLMs scales as power-laws with model size, computational budget, and dataset size. However, the temporal change of the test loss of an LLM throughout its pretraining process remains unexplored, though it is valuable in many aspects, such as selecting better hyperparameters directly on the target LLM. In this paper, we propose the novel concept of Temporal Scaling Law, studying how the test loss of an LLM evolves as the training steps scale up. In contrast to modeling the test loss as a whole in a coarse-grained manner, we break it down and dive into the fine-grained test loss of each token position, and further develop a dynamic hyperbolic-law. Afterwards, we derive the much more precise temporal scaling law by studying the temporal patterns of the parameters in the dynamic hyperbolic-law. Results on both in-distribution (ID) and out-of-distribution (OOD) validation datasets demonstrate that our temporal scaling law accurately predicts the test loss of LLMs across training steps. Our temporal scaling law has broad practical applications. First, it enables direct and efficient hyperparameter selection on the target LLM, such as data mixture proportions. Secondly, viewing the LLM pretraining dynamics from the token position granularity provides some insights to enhance the understanding of LLM pretraining.</abstract>
+ <identifier type="citekey">xiong-etal-2025-temporal</identifier>
+ <identifier type="doi">10.18653/v1/2025.emnlp-main.1244</identifier>
+ <location>
+ <url>https://aclanthology.org/2025.emnlp-main.1244/</url>
+ </location>
+ <part>
+ <date>2025-11</date>
+ <extent unit="page">
+ <start>24463</start>
+ <end>24483</end>
+ </extent>
+ </part>
+</mods>
+</modsCollection>
+ Download as
+File 
+ Copy to Clipboard 
+
+ %0 Conference Proceedings
+%T Temporal Scaling Law for Large Language Models
+%A Xiong, Yizhe
+%A Chen, Xiansheng
+%A Ye, Xin
+%A Chen, Hui
+%A Lin, Zijia
+%A Lian, Haoran
+%A Su, Zhenpeng
+%A Huang, Wei
+%A Niu, Jianwei
+%A Han, Jungong
+%A Ding, Guiguang
+%Y Christodoulopoulos, Christos
+%Y Chakraborty, Tanmoy
+%Y Rose, Carolyn
+%Y Peng, Violet
+%S Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing
+%D 2025
+%8 November
+%I Association for Computational Linguistics
+%C Suzhou, China
+%@ 979-8-89176-332-6
+%F xiong-etal-2025-temporal
+%X Recently, Large Language Models (LLMs) have been widely adopted in a wide range of tasks, leading to increasing attention towards the research on how scaling LLMs affects their performance. Existing works, termed Scaling Laws, have discovered that the final test loss of LLMs scales as power-laws with model size, computational budget, and dataset size. However, the temporal change of the test loss of an LLM throughout its pretraining process remains unexplored, though it is valuable in many aspects, such as selecting better hyperparameters directly on the target LLM. In this paper, we propose the novel concept of Temporal Scaling Law, studying how the test loss of an LLM evolves as the training steps scale up. In contrast to modeling the test loss as a whole in a coarse-grained manner, we break it down and dive into the fine-grained test loss of each token position, and further develop a dynamic hyperbolic-law. Afterwards, we derive the much more precise temporal scaling law by studying the temporal patterns of the parameters in the dynamic hyperbolic-law. Results on both in-distribution (ID) and out-of-distribution (OOD) validation datasets demonstrate that our temporal scaling law accurately predicts the test loss of LLMs across training steps. Our temporal scaling law has broad practical applications. First, it enables direct and efficient hyperparameter selection on the target LLM, such as data mixture proportions. Secondly, viewing the LLM pretraining dynamics from the token position granularity provides some insights to enhance the understanding of LLM pretraining.
+%R 10.18653/v1/2025.emnlp-main.1244
+%U https://aclanthology.org/2025.emnlp-main.1244/
+%U https://doi.org/10.18653/v1/2025.emnlp-main.1244
+%P 24463-24483 Download as
+File 
+ Copy to Clipboard 
+
+ Markdown (Informal)
+ [Temporal Scaling Law for Large Language Models](https://aclanthology.org/2025.emnlp-main.1244/) (Xiong et al., EMNLP 2025)
+ Temporal Scaling Law for Large Language Models (Xiong et al., EMNLP 2025)
+ ACL
+ Yizhe Xiong, Xiansheng Chen, Xin Ye, Hui Chen, Zijia Lin, Haoran Lian, Zhenpeng Su, Wei Huang, Jianwei Niu, Jungong Han, and Guiguang Ding. 2025. Temporal Scaling Law for Large Language Models . In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 24463–24483, Suzhou, China. Association for Computational Linguistics.
+ Copy Markdown to
+Clipboard 
+ Copy ACL to
+Clipboard 
+
+ACL materials are Copyright © 1963–2026 ACL; other materials are copyrighted by their respective copyright holders. Materials prior to 2016 here are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 International License . Permission is granted to make copies for the purposes of teaching and research. Materials published in or after 2016 are licensed on a Creative Commons Attribution 4.0 International License .
+ The ACL Anthology is managed and built by the ACL Anthology team of volunteers.
+ Site last built on 15 September 2026 at 12:04 UTC with commit f27fde6 .

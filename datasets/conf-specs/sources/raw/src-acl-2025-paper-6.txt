@@ -1,0 +1,283 @@
+Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process - ACL Anthology 
+ ACL Anthology 
+ 
+ About Announcements 
+ Communication channels 
+ Related work 
+ Copyright 
+ 
+ Credits 
+ Volunteer 
+ Development 
+ Feedback 
+ 
+ Using Author directory 
+ Citing papers 
+ Links in the Anthology 
+ Data access 
+ 
+ All FAQs 
+ 
+ Details
+
+ Anthology identifiers 
+ Names 
+ ORCID iDs 
+ DOIs 
+ Verified authors 
+ 
+ Contributions Submissions 
+ Corrections 
+ Maintain author pages 
+ Attachments 
+ 
+ GitHub 
+
+ Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process 
+ Ermo Hua ,
+ Biqing Qi ,
+ Kaiyan Zhang ,
+ Kai Tian ,
+ Xingtai Lv ,
+ Ning Ding ,
+ Bowen Zhou 
+
+ Correct Metadata for 
+ 
+ Use this form to create a GitHub issue with structured data describing the correction. You will need a GitHub account.
+Once you create that issue, the correction will be reviewed by a staff member.
+ ⚠️ Mobile Users: Submitting this form to create a new issue will only work with github.com, not the GitHub Mobile app.
+ Important : The Anthology treat PDFs as authoritative. Please use this form only to correct data
+that is out of line with the PDF. See our corrections
+guidelines if you need to change the PDF.
+ Title 
+ Adjust the title. Retain tags such as
+<fixed-case>. 
+ 
+ Authors 
+ Adjust author names and order to match the
+PDF. 
+ Add Author Abstract 
+ Correct abstract if needed. Retain XML formatting tags such as <tex-math>. You may use <b>...</b> for bold , <i>...</i> for italic , <u>...</u> for underline , <sc>...</sc> for small-caps , <tt>...<tt> for typewriter text , <url>...</url> for URLs, <a href=...> for hyperlinks, and <par/> for paragraph breaks. 
+ 
+ Verification against PDF 
+ Ensure that the new title/authors match the snapshot below. (If there
+is no snapshot or it is too small, consult the PDF .) 
+ Authors concatenated from the text boxes above: 
+
+ ALL author names match the snapshot above—including
+middle initials, hyphens, and accents. 
+ Create GitHub issue for staff review 
+
+ Abstract
+ Supervised Fine-Tuning (SFT) and Preference Optimization (PO) are key processes for aligning Language Models (LMs) with human preferences post pre-training. While SFT excels in efficiency and PO in effectiveness, they are often combined sequentially without integrating their optimization objectives. This approach ignores the opportunities to bridge their paradigm gap and take the strengths from both. In this paper, we interpret SFT and PO with two sub-processes — Preference Estimation and Transition Optimization — defined at token level within the Markov Decision Process (MDP). This modeling shows that SFT is only a special case of PO with inferior estimation and optimization. PO estimates the model’s preference by its entire generation, while SFT only scores model’s subsequent predicted tokens based on prior tokens from ground truth answer. These priors deviates from model’s distribution, hindering the preference estimation and transition optimization. Building on this view, we introduce Intuitive Fine-Tuning (IFT) to integrate SFT and PO into a single process. Through a temporal residual connection, IFT brings better estimation and optimization by capturing LMs’ intuitive sense of its entire answers. But it solely relies on a single policy and the same volume of non-preference-labeled data as SFT. Our experiments show that IFT performs comparably or even superiorly to SFT and some typical PO methods across several tasks, particularly those requires generation, reasoning, and fact-following abilities. An explainable Frozen Lake game further validates the effectiveness of IFT for getting competitive policy. 
+
+ Anthology ID: 2025.acl-long.6 Volume: Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) Month: July Year: 2025 Address: Vienna, Austria Editors: Wanxiang Che ,
+ Joyce Nabende ,
+ Ekaterina Shutova ,
+ Mohammad Taher Pilehvar Venue: ACL SIG: Publisher: Association for Computational Linguistics Note: Pages: 121–136 Language: URL: https://aclanthology.org/2025.acl-long.6/ DOI: 10.18653/v1/2025.acl-long.6 Bibkey: hua-etal-2025-intuitive Cite (ACL): Ermo Hua, Biqing Qi, Kaiyan Zhang, Kai Tian, Xingtai Lv, Ning Ding, and Bowen Zhou. 2025. Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process . In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 121–136, Vienna, Austria. Association for Computational Linguistics. Cite (Informal): Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process (Hua et al., ACL 2025) Copy Citation: BibTeX 
+ Markdown 
+ MODS XML 
+ Endnote 
+ More
+options… PDF: https://aclanthology.org/2025.acl-long.6.pdf 
+ PDF 
+ Cite 
+ Search 
+ 
+ Fix data 
+
+ Export citation
+ 
+ BibTeX 
+ MODS XML 
+ Endnote 
+ Preformatted 
+ @inproceedings{hua-etal-2025-intuitive,
+ title = "Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process",
+ author = "Hua, Ermo and
+ Qi, Biqing and
+ Zhang, Kaiyan and
+ Tian, Kai and
+ Lv, Xingtai and
+ Ding, Ning and
+ Zhou, Bowen",
+ editor = "Che, Wanxiang and
+ Nabende, Joyce and
+ Shutova, Ekaterina and
+ Pilehvar, Mohammad Taher",
+ booktitle = "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+ month = jul,
+ year = "2025",
+ address = "Vienna, Austria",
+ publisher = "Association for Computational Linguistics",
+ url = "https://aclanthology.org/2025.acl-long.6/",
+ doi = "10.18653/v1/2025.acl-long.6",
+ pages = "121--136",
+ ISBN = "979-8-89176-251-0",
+ abstract = "Supervised Fine-Tuning (SFT) and Preference Optimization (PO) are key processes for aligning Language Models (LMs) with human preferences post pre-training. While SFT excels in efficiency and PO in effectiveness, they are often combined sequentially without integrating their optimization objectives. This approach ignores the opportunities to bridge their paradigm gap and take the strengths from both. In this paper, we interpret SFT and PO with two sub-processes {---} \textit{Preference Estimation} and \textit{Transition Optimization} {---} defined at token level within the Markov Decision Process (MDP). This modeling shows that SFT is only a special case of PO with inferior estimation and optimization. PO estimates the model{'}s preference by its entire generation, while SFT only scores model{'}s subsequent predicted tokens based on prior tokens from ground truth answer. These priors deviates from model{'}s distribution, hindering the preference estimation and transition optimization. Building on this view, we introduce \textbf{Intuitive Fine-Tuning (IFT)} to integrate SFT and PO into a single process. Through a temporal residual connection, IFT brings better estimation and optimization by capturing LMs' intuitive sense of its entire answers. But it solely relies on a single policy and the same volume of non-preference-labeled data as SFT. Our experiments show that IFT performs comparably or even superiorly to SFT and some typical PO methods across several tasks, particularly those requires generation, reasoning, and fact-following abilities. An explainable Frozen Lake game further validates the effectiveness of IFT for getting competitive policy."
+} Download as
+File 
+ Copy to Clipboard 
+
+ <?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns="http://www.loc.gov/mods/v3">
+<mods ID="hua-etal-2025-intuitive">
+ <titleInfo>
+ <title>Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Ermo</namePart>
+ <namePart type="family">Hua</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Biqing</namePart>
+ <namePart type="family">Qi</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Kaiyan</namePart>
+ <namePart type="family">Zhang</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Kai</namePart>
+ <namePart type="family">Tian</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Xingtai</namePart>
+ <namePart type="family">Lv</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Ning</namePart>
+ <namePart type="family">Ding</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Bowen</namePart>
+ <namePart type="family">Zhou</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">author</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <dateIssued>2025-07</dateIssued>
+ </originInfo>
+ <typeOfResource>text</typeOfResource>
+ <relatedItem type="host">
+ <titleInfo>
+ <title>Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</title>
+ </titleInfo>
+ <name type="personal">
+ <namePart type="given">Wanxiang</namePart>
+ <namePart type="family">Che</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Joyce</namePart>
+ <namePart type="family">Nabende</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Ekaterina</namePart>
+ <namePart type="family">Shutova</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <name type="personal">
+ <namePart type="given">Mohammad</namePart>
+ <namePart type="given">Taher</namePart>
+ <namePart type="family">Pilehvar</namePart>
+ <role>
+ <roleTerm authority="marcrelator" type="text">editor</roleTerm>
+ </role>
+ </name>
+ <originInfo>
+ <publisher>Association for Computational Linguistics</publisher>
+ <place>
+ <placeTerm type="text">Vienna, Austria</placeTerm>
+ </place>
+ </originInfo>
+ <genre authority="marcgt">conference publication</genre>
+ <identifier type="isbn">979-8-89176-251-0</identifier>
+ </relatedItem>
+ <abstract>Supervised Fine-Tuning (SFT) and Preference Optimization (PO) are key processes for aligning Language Models (LMs) with human preferences post pre-training. While SFT excels in efficiency and PO in effectiveness, they are often combined sequentially without integrating their optimization objectives. This approach ignores the opportunities to bridge their paradigm gap and take the strengths from both. In this paper, we interpret SFT and PO with two sub-processes — Preference Estimation and Transition Optimization — defined at token level within the Markov Decision Process (MDP). This modeling shows that SFT is only a special case of PO with inferior estimation and optimization. PO estimates the model’s preference by its entire generation, while SFT only scores model’s subsequent predicted tokens based on prior tokens from ground truth answer. These priors deviates from model’s distribution, hindering the preference estimation and transition optimization. Building on this view, we introduce Intuitive Fine-Tuning (IFT) to integrate SFT and PO into a single process. Through a temporal residual connection, IFT brings better estimation and optimization by capturing LMs’ intuitive sense of its entire answers. But it solely relies on a single policy and the same volume of non-preference-labeled data as SFT. Our experiments show that IFT performs comparably or even superiorly to SFT and some typical PO methods across several tasks, particularly those requires generation, reasoning, and fact-following abilities. An explainable Frozen Lake game further validates the effectiveness of IFT for getting competitive policy.</abstract>
+ <identifier type="citekey">hua-etal-2025-intuitive</identifier>
+ <identifier type="doi">10.18653/v1/2025.acl-long.6</identifier>
+ <location>
+ <url>https://aclanthology.org/2025.acl-long.6/</url>
+ </location>
+ <part>
+ <date>2025-07</date>
+ <extent unit="page">
+ <start>121</start>
+ <end>136</end>
+ </extent>
+ </part>
+</mods>
+</modsCollection>
+ Download as
+File 
+ Copy to Clipboard 
+
+ %0 Conference Proceedings
+%T Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process
+%A Hua, Ermo
+%A Qi, Biqing
+%A Zhang, Kaiyan
+%A Tian, Kai
+%A Lv, Xingtai
+%A Ding, Ning
+%A Zhou, Bowen
+%Y Che, Wanxiang
+%Y Nabende, Joyce
+%Y Shutova, Ekaterina
+%Y Pilehvar, Mohammad Taher
+%S Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)
+%D 2025
+%8 July
+%I Association for Computational Linguistics
+%C Vienna, Austria
+%@ 979-8-89176-251-0
+%F hua-etal-2025-intuitive
+%X Supervised Fine-Tuning (SFT) and Preference Optimization (PO) are key processes for aligning Language Models (LMs) with human preferences post pre-training. While SFT excels in efficiency and PO in effectiveness, they are often combined sequentially without integrating their optimization objectives. This approach ignores the opportunities to bridge their paradigm gap and take the strengths from both. In this paper, we interpret SFT and PO with two sub-processes — Preference Estimation and Transition Optimization — defined at token level within the Markov Decision Process (MDP). This modeling shows that SFT is only a special case of PO with inferior estimation and optimization. PO estimates the model’s preference by its entire generation, while SFT only scores model’s subsequent predicted tokens based on prior tokens from ground truth answer. These priors deviates from model’s distribution, hindering the preference estimation and transition optimization. Building on this view, we introduce Intuitive Fine-Tuning (IFT) to integrate SFT and PO into a single process. Through a temporal residual connection, IFT brings better estimation and optimization by capturing LMs’ intuitive sense of its entire answers. But it solely relies on a single policy and the same volume of non-preference-labeled data as SFT. Our experiments show that IFT performs comparably or even superiorly to SFT and some typical PO methods across several tasks, particularly those requires generation, reasoning, and fact-following abilities. An explainable Frozen Lake game further validates the effectiveness of IFT for getting competitive policy.
+%R 10.18653/v1/2025.acl-long.6
+%U https://aclanthology.org/2025.acl-long.6/
+%U https://doi.org/10.18653/v1/2025.acl-long.6
+%P 121-136 Download as
+File 
+ Copy to Clipboard 
+
+ Markdown (Informal)
+ [Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process](https://aclanthology.org/2025.acl-long.6/) (Hua et al., ACL 2025)
+ Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process (Hua et al., ACL 2025)
+ ACL
+ Ermo Hua, Biqing Qi, Kaiyan Zhang, Kai Tian, Xingtai Lv, Ning Ding, and Bowen Zhou. 2025. Intuitive Fine-Tuning: Towards Simplifying Alignment into a Single Process . In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 121–136, Vienna, Austria. Association for Computational Linguistics.
+ Copy Markdown to
+Clipboard 
+ Copy ACL to
+Clipboard 
+
+ACL materials are Copyright © 1963–2026 ACL; other materials are copyrighted by their respective copyright holders. Materials prior to 2016 here are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 International License . Permission is granted to make copies for the purposes of teaching and research. Materials published in or after 2016 are licensed on a Creative Commons Attribution 4.0 International License .
+ The ACL Anthology is managed and built by the ACL Anthology team of volunteers.
+ Site last built on 15 September 2026 at 12:04 UTC with commit f27fde6 .

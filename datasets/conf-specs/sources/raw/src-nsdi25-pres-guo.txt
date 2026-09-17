@@ -1,0 +1,139 @@
+The Benefits and Limitations of User Interrupts for Preemptive Userspace Scheduling | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Schedule 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ The Benefits and Limitations of User Interrupts for Preemptive Userspace Scheduling
+
+ Linsong Guo, Danial Zuberi, Tal Garfinkel, and Amy Ousterhout, UC San Diego 
+
+ Preemptive scheduling promises to mitigate head-of-line blocking and enable flexible scheduling while retaining a simple programming model. Despite this, preemption is underutilized in server-side software today. Instead, high-performance datacenter systems and language runtimes often rely on cooperative concurrency, or else use preemption only at very coarse timescales, limiting its effectiveness. A key reason that preemption is underutilized today is that existing preemption mechanisms have high and unpredictable overheads.
+
+ Intel recently introduced support for user interrupts, a new feature that offers an opportunity to change this. By enabling interrupts to be sent and received entirely in user space, user interrupts can significantly lower the overhead of preemption. In this paper, we shed light on how user interrupts impact the landscape of preemption mechanisms. We build two user-level schedulers that leverage user interrupts for low-overhead preemption. We find that user interrupts are not a panacea. For example, they provide limited benefits when other software layers constrain the kinds of scheduling policies that can be used. Still, user interrupts can match or exceed the performance of existing mechanisms for all but the highest preemption rates, while achieving much more consistent overheads and retaining a user friendly programming model.
+
+ NSDI '25 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {306001,
+
+ author = {Linsong Guo and Danial Zuberi and Tal Garfinkel and Amy Ousterhout},
+
+ title = {The Benefits and Limitations of User Interrupts for Preemptive Userspace Scheduling},
+
+ booktitle = {22nd USENIX Symposium on Networked Systems Design and Implementation (NSDI 25)},
+
+ year = {2025},
+
+ isbn = {978-1-939133-46-5},
+
+ address = {Philadelphia, PA},
+
+ pages = {1015--1032},
+
+ url = {https://www.usenix.org/conference/nsdi25/presentation/guo},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Guo PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Schedule Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

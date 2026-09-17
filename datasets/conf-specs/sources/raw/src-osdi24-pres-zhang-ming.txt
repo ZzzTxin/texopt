@@ -1,0 +1,145 @@
+Motor: Enabling Multi-Versioning for Distributed Transactions on Disaggregated Memory | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate 
+
+ Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Motor: Enabling Multi-Versioning for Distributed Transactions on Disaggregated Memory
+
+ Ming Zhang, Yu Hua, and Zhijun Yang, Wuhan National Laboratory for Optoelectronics, School of Computer, Huazhong University of Science and Technology 
+
+ In modern datacenters, memory disaggregation unpacks monolithic servers to build network-connected distributed compute and memory pools to improve resource utilization and deliver high performance. The compute pool leverages distributed transactions to access remote data in the memory pool to provide atomicity and strong consistency. Existing single-versioning designs have been constrained due to limited system concurrency and high logging overheads. Although the multi-versioning design in the conventional monolithic servers is promising to offer high concurrency and reduce logging overheads, which however fails to work in the disaggregated memory. In order to bridge the gap between the multi-versioning design and the disaggregated memory, we propose Motor that holistically redesigns the version structure and transaction protocol to enable multi-versioning for fast distributed transaction processing on the disaggregated memory. To efficiently organize different versions of data in the memory pool, Motor leverages a new consecutive version tuple (CVT) structure to store the versions together in a continuous manner, which allows the compute pool to obtain the target version in a single network round trip. On top of CVT, Motor leverages a fully one-sided RDMA-based MVCC protocol to support fast distributed transactions with flexible isolation levels. Experimental results demonstrate that Motor improves the throughput by up to 98.1% and reduces the latency by up to 55.8% compared with state-of-the-art systems.
+
+ OSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST)
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {298750,
+
+ author = {Ming Zhang and Yu Hua and Zhijun Yang},
+
+ title = {Motor: Enabling {Multi-Versioning} for Distributed Transactions on Disaggregated Memory},
+
+ booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-40-3},
+
+ address = {Santa Clara, CA},
+
+ pages = {801--819},
+
+ url = {https://www.usenix.org/conference/osdi24/presentation/zhang-ming},
+
+ publisher = {USENIX Association},
+
+ month = jul
+
+}
+
+ Download 
+
+ Zhang PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session 
+
+ Participate Call for Papers 
+
+ Requirements for Authors 
+
+ Call for Artifacts 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Sponsors Exhibitor Services 
+
+ About Symposium Organizers 
+
+ Past Symposia 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038

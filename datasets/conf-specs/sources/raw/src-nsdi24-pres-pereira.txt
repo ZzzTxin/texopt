@@ -1,0 +1,144 @@
+Automatic Parallelization of Software Network Functions | USENIX 
+
+ Back to USENIX Sign In 
+ Conferences 
+
+ Attend 
+
+ Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program 
+
+ Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate 
+
+ Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors 
+
+ Exhibitor Services 
+
+ About 
+
+ Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ Automatic Parallelization of Software Network Functions
+
+ Francisco Pereira, Fernando M. V. Ramos, and Luis Pedrosa, INESC-ID, Instituto Superior Técnico, University of Lisbon 
+
+ Software network functions (NFs) trade-off flexibility and ease of deployment for an increased challenge of performance. The traditional way to increase NF performance is by distributing traffic to multiple CPU cores, but this poses a significant challenge: how to parallelize an NF without breaking its semantics? We propose Maestro, a tool that analyzes a sequential implementation of an NF and automatically generates an enhanced parallel version that carefully configures the NIC's Receive Side Scaling mechanism to distribute traffic across cores, while preserving semantics. When possible, Maestro orchestrates a shared-nothing architecture, with each core operating independently without shared memory coordination, maximizing performance. Otherwise, Maestro choreographs a fine-grained read-write locking mechanism that optimizes operation for typical Internet traffic. We parallelized 8 software NFs and show that they generally scale-up linearly until bottlenecked by PCIe when using small packets or by 100~Gbps line-rate with typical Internet traffic.
+Maestro further outperforms modern hardware-based transactional memory mechanisms, even for challenging parallel-unfriendly workloads.
+
+ NSDI '24 Open Access Sponsored by
+King Abdullah University of Science and Technology (KAUST) 
+
+ Open Access Media 
+ USENIX is committed to Open Access to the research presented at our events. Papers and proceedings are freely available to everyone once the event begins. Any video, audio, and/or slides that are posted after the event are also free and open to everyone. Support USENIX and our commitment to Open Access.
+
+ BibTeX
+ @inproceedings {295663,
+
+ author = {Francisco Pereira and Fernando M.V. Ramos and Luis Pedrosa},
+
+ title = {Automatic Parallelization of Software Network Functions},
+
+ booktitle = {21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+
+ year = {2024},
+
+ isbn = {978-1-939133-39-7},
+
+ address = {Santa Clara, CA},
+
+ pages = {1531--1550},
+
+ url = {https://www.usenix.org/conference/nsdi24/presentation/pereira},
+
+ publisher = {USENIX Association},
+
+ month = apr
+
+}
+
+ Download 
+
+ Pereira PDF 
+
+ Pereira Paper (Prepublication) PDF 
+
+ View the slides 
+
+ Presentation Video 
+
+ Attend Registration Information 
+
+ Registration Discounts 
+
+ Grant Opportunities 
+
+ Venue, Hotel, and Travel 
+
+ Program Program at a Glance 
+
+ Technical Sessions 
+
+ Activities 
+
+ Poster Session and Reception 
+
+ Participate Call for Papers 
+
+ Call for Posters 
+
+ Instructions for Presenters 
+
+ Mentorship Program 
+
+ Sponsors Exhibitor Services 
+
+ About Past Symposia 
+
+ Symposium Organizers 
+
+ Conference Policies 
+
+ Code of Conduct 
+
+ Questions 
+
+ LinkedIn Facebook Youtube Twitter Mastodon 
+
+ Privacy Policy 
+
+ Contact Us 
+
+ © USENIX 
+
+ EIN 13-3055038
