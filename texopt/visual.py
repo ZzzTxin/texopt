@@ -116,38 +116,23 @@ def page_proxy(pgm_path: str, ink_threshold: int = 200,
                empty_ratio: float = 0.004) -> dict:
     """单页像素代理（**实验性，非人类审美评分**）。
 
-    返回：
+    2026-09-28 去重：本函数曾有一套独立的 PGM 扫描实现，与下面的
+    `page_metrics()` 重复且各有飘移风险（盘点阶段 0 发现）。现在改为
+    `page_metrics()` 的**薄适配层**，只做字段改名，保证两处永远一致。
+
+    返回（键名保持向后兼容）：
       ink_ratio        墨迹占比（暗像素/总像素）
       top_bottom_ratio 上下半页墨迹比（视觉重心粗代理；越偏离 1 越失衡）
       max_empty_band   最大连续近空白行的长度占比（留白粗代理）
       max_empty_pos    该空白带的垂直中心位置（0=页顶,1=页底）
     """
-    w, h, data = _parse_pgm(pgm_path)
-    dark = bytearray(w * h)
-    for p in range(w * h):
-        dark[p] = 1 if data[p] < ink_threshold else 0
-    total = w * h
-    ink = sum(dark)
-    rows = [sum(dark[r * w:(r + 1) * w]) for r in range(h)]
-    # 上半 / 下半墨迹
-    half = h // 2
-    top = sum(rows[:half]) or 1
-    bot = sum(rows[half:]) or 1
-    # 最大连续近空白行带
-    best_len = best_start = 0
-    cur = 0
-    for r in range(h):
-        if rows[r] <= max(1, int(empty_ratio * w)):
-            cur += 1
-            if cur > best_len:
-                best_len, best_start = cur, r - cur + 1
-        else:
-            cur = 0
+    m = page_metrics(pgm_path, ink_threshold=ink_threshold,
+                     row_empty_ratio=empty_ratio)
     return {
-        "ink_ratio": round(ink / total, 4),
-        "top_bottom_ratio": round(top / bot, 3),
-        "max_empty_band": round(best_len / h, 4) if h else 0.0,
-        "max_empty_pos": round((best_start + best_len / 2) / h, 3) if h else 0.0,
+        "ink_ratio": m["ink_ratio"],
+        "top_bottom_ratio": m["top_bottom_ratio"],
+        "max_empty_band": m["max_gap"],
+        "max_empty_pos": m["max_gap_at"],
     }
 
 
@@ -166,17 +151,19 @@ def visual_report(pdf_path: str, outdir: str, dpi: int = 110,
     grays, gerr = render_gray(pdf_path, gdir, dpi=proxy_dpi)
     proxies, metrics = [], []
     for i, g in enumerate(grays, start=1):
+        # 2026-09-28：一次解析同时产出 metrics 与 proxies（此前两套各扫一遍）
         try:
-            m = page_proxy(g)
-            m["page"] = i
-            proxies.append(m)
-        except Exception as exc:                        # 单页失败不影响整体
-            proxies.append({"page": i, "error": str(exc)})
-        try:
-            mm = page_metrics(g)
+            m = page_metrics(g)
+            mm = dict(m)
             mm["page"] = i
             metrics.append(mm)
-        except Exception as exc:
+            px = {"page": i, "ink_ratio": m["ink_ratio"],
+                  "top_bottom_ratio": m["top_bottom_ratio"],
+                  "max_empty_band": m["max_gap"],
+                  "max_empty_pos": m["max_gap_at"]}
+            proxies.append(px)
+        except Exception as exc:                        # 单页失败不影响整体
+            proxies.append({"page": i, "error": str(exc)})
             metrics.append({"page": i, "error": str(exc)})
     for g in grays:
         try:

@@ -24,7 +24,8 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from texopt import actions, proposal, score as S, visual, whitelist  # noqa: E402
+from texopt import (actions, page_metrics as PM, proposal, score as S,  # noqa: E402
+                   visual, whitelist)
 from texopt import perceive as P                                      # noqa: E402
 from texopt.core import Optimizer, verify                             # noqa: E402
 from texopt.requirements import Requirement                           # noqa: E402
@@ -390,16 +391,35 @@ def unit_tests():
 
 # ---------------------------------------------------------------- 集成测试
 
+def _clean_dir(path):
+    """删除目录并确认删干净（Windows 端占用会让 rmtree 静默失败）。"""
+    shutil.rmtree(path, ignore_errors=True)
+    if os.path.isdir(path):                     # 再逐个试一遍
+        for n in os.listdir(path):
+            p = os.path.join(path, n)
+            try:
+                shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
+            except OSError:
+                pass
+    return not os.path.isdir(path)
+
+
 def integration_case(name, tex, expect_status, expect_l0=True, **kw):
     outdir = os.path.join(OUT, name)
-    shutil.rmtree(outdir, ignore_errors=True)
+    _clean_dir(outdir)
     opt = Optimizer(os.path.join(EX, tex), _req(**kw), outdir)
     res = opt.run()
+    # 2026-09-28：基线 FAILED（含工作区被占用）应报干净 FAIL，而不是
+    # 在 res["l"] 上抛 KeyError 把整个套件带崩。
+    if res.get("status") == "FAILED":
+        check(f"closure/{name}:run", False,
+              str(res.get("reason")) + " ｜ " + str(res.get("first_error")))
+        return
     expect = expect_status if isinstance(expect_status, tuple) else (expect_status,)
     check(f"closure/{name}:status in {expect}",
           res["status"] in expect, res["status"])
     if expect_l0:
-        check(f"closure/{name}:L=0", not res["l"], str(res["l"]))
+        check(f"closure/{name}:L=0", not res.get("l"), str(res.get("l")))
 
 
 def integration_mitl():
@@ -440,7 +460,7 @@ def integration_mitl():
     check("mitl/one-blocked", len(res.get("blocked", [])) == 1)
     fin = opt.finalize()
     check("mitl/final-L0", not fin["l"], str(fin["l"]))
-    v = verify(os.path.join(outdir, "paper.tex"), src_path,
+    v = verify(opt.work_tex, src_path,
                _req(visual_metrics=False))
     check("mitl/content-preserved",
           bool(v.get("content_preserved")) and
@@ -462,6 +482,154 @@ def integration_figure_violation():
           any("图形" in x for x in v["l"]), str(v["l"]))
 
 
+def stage0_tests():
+    """page_metrics.v1：结构、校验、聚合、旧输出适配（阶段 0 交付）。"""
+    print("\n== 阶段 0：page_metrics.v1 ==")
+    check("schema/id", PM.SCHEMA_ID == "page_metrics.v1")
+    check("schema/blank-valid", PM.validate(PM.blank_document()) == [],
+          str(PM.validate(PM.blank_document())))
+    # role 非法被拦
+    bad = PM.blank_document()
+    bad["pages"] = [PM.blank_page(1, "not-a-role")]
+    check("schema/bad-role-blocked", PM.validate(bad) == []
+          and bad["pages"][0]["role"] == "unknown")   # 构造期即归一为 unknown
+    bad2 = PM.blank_document()
+    p2 = PM.blank_page(1)
+    p2["role"] = "bogus"                                  # 绕过构造器
+    bad2["pages"] = [p2]
+    check("schema/bad-role-detected", any("role" in e for e in PM.validate(bad2)))
+    # 重复页码被拦
+    dup = PM.blank_document()
+    dup["pages"] = [PM.blank_page(1), PM.blank_page(1)]
+    check("schema/dup-page-detected", any("重复" in e for e in PM.validate(dup)))
+
+    # 旧视觉输出适配
+    vis = {"n": 3, "error": None, "defects": [], "pages": [
+        {"page": 1, "ink_ratio": 0.06, "top_blank": 0.1, "bottom_blank": 0.4,
+         "content_height": 0.5, "max_gap": 0.3, "max_gap_at": 0.5,
+         "band": 0.2, "band_at": 0.3, "left_blank": 0.12,
+         "right_blank": 0.12, "top_bottom_ratio": 0.9},
+        {"page": 2, "ink_ratio": 0.10, "top_blank": 0.08, "bottom_blank": 0.1,
+         "content_height": 0.8, "max_gap": 0.0, "max_gap_at": 0.0,
+         "band": 0.1, "band_at": 0.2, "left_blank": 0.1,
+         "right_blank": 0.1, "top_bottom_ratio": 1.0},
+        {"page": 3, "error": "x"},
+    ]}
+    doc = PM.from_legacy_visual(vis, roles={1: "title"})
+    check("adapt/page-count", len(doc["pages"]) == 2, str(len(doc["pages"])))
+    check("adapt/role-from-map", doc["pages"][0]["role"] == "title"
+          and doc["pages"][0]["role_source"] == "rule")
+    check("adapt/ink-ratio-carried",
+          doc["pages"][0]["density"]["ink_ratio_page"] == 0.06
+          and doc["pages"][0]["density"]["status"] == "partial")
+    check("adapt/legacy-kept",
+          doc["pages"][1]["legacy"]["top_blank"] == 0.08)
+    check("adapt/whitespace-region-only-when-gap",
+          len(doc["pages"][0]["whitespace"]["regions"]) == 1
+          and doc["pages"][1]["whitespace"]["regions"] == [])
+    check("adapt/validate-clean", PM.validate(doc) == [])
+
+    # 聚合：median/mean/max/p90 + by_role
+    doc = PM.finalize(PM.from_legacy_visual(vis, roles={1: "title", 2: "body"}))
+    ag = doc["paper"]["aggregates"]["density.ink_ratio_page"]
+    check("agg/fields", set(ag) == {"median", "mean", "max", "p90", "n"}
+          and ag["n"] == 2 and ag["max"] == 0.10)
+    check("agg/by-role-separated",
+          set(doc["paper"]["by_role"]) == {"title", "body"}
+          and doc["paper"]["roles_hist"] == {"title": 1, "body": 1})
+    check("agg/unknown-fields-listed",
+          any("ratio.fig_text" in u for u in doc["meta"]["unknown_fields"]))
+
+    # 序列化往返
+    path = os.path.join(OUT, "pm-roundtrip.json")
+    PM.dump(doc, path)
+    back = PM.load(path)
+    check("io/roundtrip", back["schema"] == doc["schema"]
+          and len(back["pages"]) == len(doc["pages"]) and PM.validate(back) == [])
+
+    # 缺口统计可用
+    cov = PM.coverage_report(doc)
+    check("cov/report-shape",
+          cov["density"]["status_counts"].get("partial") == 2
+          and cov["ratio"]["status_counts"].get("placeholder") == 2)
+
+    # 不可用输入不炸
+    check("robust/none-input", PM.from_legacy_visual(None) is None)
+    err = PM.from_legacy_visual({"error": "no pdftoppm"})
+    check("robust/error-degrades", err is not None
+          and err["pages"] == [] and PM.validate(err) == [])
+
+
+def stage0_fixes():
+    """阶段 0 发现问题的回归测试：工作副本命名 + 像素量去重。
+
+    背景（2026-09-28）：提交 e35f304 把工作副本从固定 outdir/paper.tex 改为
+    保留原文件名，但漏改了 optimize.py 的 resume 探测、core.py 的 docstring
+    与 tests 里的硬编码 —— 导致「模型在环续跑」永远探测不到已有副本，
+    且回归套件直接崩在 integration_mitl。
+    """
+    print("\n== 阶段 0 问题修复回归 ==")
+    from texopt.core import work_tex_path, Optimizer as _Opt
+    tmp = os.path.join(OUT, "s0fix")
+    os.makedirs(tmp, exist_ok=True)
+    orig = os.path.join(tmp, "my paper.tex")
+    outdir = os.path.join(tmp, "out")
+    check("fix/work-tex-path-keeps-name",
+          work_tex_path(orig, outdir) == os.path.join(outdir, "my paper.tex"),
+          work_tex_path(orig, outdir))
+    o = _Opt(orig, _req(), outdir)
+    check("fix/optimizer-work-tex-not-paper",
+          os.path.basename(o.work_tex) == "my paper.tex", o.work_tex)
+    os.makedirs(outdir, exist_ok=True)
+    open(os.path.join(outdir, "my paper.tex"), "w", encoding="utf-8").close()
+    check("fix/resume-detects-named-work-copy",
+          os.path.isfile(work_tex_path(orig, outdir))
+          and not os.path.isfile(os.path.join(outdir, "paper.tex")))
+
+    # 像素量去重：page_proxy 必须与 page_metrics 同源（薄适配层）
+    pgm = os.path.join(tmp, "probe.pgm")
+    h, w = 12, 8
+    rows = b"".join(bytes([0 if r < h // 2 else 255]) * w for r in range(h))
+    with open(pgm, "wb") as f:
+        f.write(b"P5\n%d %d\n255\n" % (w, h) + rows)
+    m = visual.page_metrics(pgm)
+    p = visual.page_proxy(pgm)
+    check("fix/proxy-delegates-to-metrics",
+          p == {"ink_ratio": m["ink_ratio"],
+                "top_bottom_ratio": m["top_bottom_ratio"],
+                "max_empty_band": m["max_gap"],
+                "max_empty_pos": m["max_gap_at"]}, str(p))
+
+    # 旧产物清理：删会被重生成的（含旧 PDF/state），保留源码侧文件
+    od = os.path.join(tmp, "clean")
+    os.makedirs(od, exist_ok=True)
+    o2 = _Opt(os.path.join(tmp, "clean_paper.tex"), _req(), od)
+    for n in ("clean_paper.pdf", "clean_paper.aux", "clean_paper.log",
+              "state.json", "report.md", "advisory.json"):
+        open(os.path.join(od, n), "w", encoding="utf-8").close()
+    for n in ("clean_paper.tex", "refs.bbl", "fig.png"):
+        open(os.path.join(od, n), "w", encoding="utf-8").close()
+    locked = o2._clean_stale_artifacts()
+    check("fix/stale-artifacts-cleaned",
+          locked == [] and not os.path.isfile(os.path.join(od, "clean_paper.pdf"))
+          and not os.path.isfile(os.path.join(od, "state.json")), str(locked))
+    check("fix/stale-clean-keeps-sources",
+          all(os.path.isfile(os.path.join(od, n))
+              for n in ("clean_paper.tex", "refs.bbl", "fig.png")))
+
+    # 删不掉时如实上报（在 WSL 原生 fs 上模拟占用：只读父目录 → EACCES）
+    import tempfile
+    with tempfile.TemporaryDirectory() as native:
+        o3 = _Opt(os.path.join(native, "locked.tex"), _req(), native)
+        open(os.path.join(native, "locked.pdf"), "w", encoding="utf-8").close()
+        os.chmod(native, 0o500)
+        try:
+            lk = o3._clean_stale_artifacts()
+        finally:
+            os.chmod(native, 0o700)
+        check("fix/stale-locked-reported", len(lk) == 1, str(lk))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -476,6 +644,8 @@ def main():
 
     os.makedirs(OUT, exist_ok=True)
     unit_tests()
+    stage0_tests()
+    stage0_fixes()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),
