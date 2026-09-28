@@ -53,7 +53,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from texopt.core import Optimizer, verify   # noqa: E402
+from texopt.core import Optimizer, verify, work_tex_path   # noqa: E402
 from texopt import proposal as _proposal     # noqa: E402
 from texopt import whitelist as _whitelist   # noqa: E402
 from texopt import conference as _conference  # noqa: E402
@@ -360,7 +360,7 @@ def main() -> int:
         original = args.original or args.tex
         odir = args.outdir or os.path.join(os.path.dirname(
             os.path.abspath(original)), "workbench")
-        resume = os.path.isfile(os.path.join(odir, "paper.tex"))
+        resume = os.path.isfile(work_tex_path(original, odir))
         opt = Optimizer(original, req, odir, resume=resume)
         if not resume:
             print("[模型在环] 未发现现有工作副本，先跑一次确定性闭环\n")

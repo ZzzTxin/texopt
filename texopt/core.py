@@ -38,19 +38,31 @@ from .requirements import Requirement
 RETRYABLE_KEYS = {"margin_spec", "font_spec", "fleqn"}
 
 
+def work_tex_path(original_tex: str, outdir: str) -> str:
+    """工作副本路径：outdir/<原文件名>。
+
+    2026-09-28 修复：早前固定为 outdir/paper.tex，后来改为保留原文件名，
+    但 optimize.py 的 resume 探测与 tests 仍在找 paper.tex —— 于是
+    「模型在环续跑」永远探测不到已有工作副本、每轮都重建，且测试直接崩。
+    统一由本函数给出路径，避免再次不同步。
+    """
+    return os.path.join(outdir, os.path.basename(os.path.abspath(original_tex)))
+
+
 class Optimizer:
     def __init__(self, original_tex: str, req: Requirement, outdir: str,
                  resume: bool = False):
         self.original = os.path.abspath(original_tex)
         self.req = req
         self.outdir = outdir
-        self.work_tex = os.path.join(outdir, os.path.basename(self.original))
+        self.work_tex = work_tex_path(self.original, outdir)
         self.resume = resume            # True：沿用已有工作副本（模型在环续跑）
         self.iter = 0
         self.records = []
         self.orig_body = None            # 内容完整性机器校验基准
         self.orig_per = None             # 原稿 Perception（干预代价基准）
         self._blocked: set[str] = set()  # 失败动作指纹（L 类带状态签名可重试），防重复试错
+        self._locked: list[str] = []     # 无法清理的旧产物（Windows 端占用）
         self._llm_failed: set[str] = set()  # 已失败的 LLM 提案指纹（跨轮阻止）
         self.attempts = 0                # 本轮实际编译验证过的候选动作数
         self.accepted = 0                # 本轮被接受的动作数
@@ -79,8 +91,43 @@ class Optimizer:
         with open(self.work_tex, "w", encoding="utf-8") as f:
             f.write(text)
 
+    # 上次运行留下、本次会被重新生成的产物（同名文件一律先清）
+    STALE_EXT = (".aux", ".log", ".out", ".pdf", ".toc", ".lof", ".lot",
+                 ".fls", ".fdb_latexmk", ".synctex.gz", ".xdv",
+                 ".nav", ".snm", ".vrb", ".bcf", ".run.xml", ".blg")
+    STALE_FILES = ("texput.log", "state.json", "report.md", "advisory.json",
+                   "llm_request.json")
+
+    def _clean_stale_artifacts(self) -> list[str]:
+        """清理工作区里上一次运行留下的、会被重新生成的产物。
+
+        为什么要先清（2026-09-28）：Windows 端可能占用上一轮的 PDF/
+        aux，导致调用方的 shutil.rmtree(outdir, ignore_errors=True) 静默
+        失败、旧文件残留；随后编译无法覆写旧 PDF，基线就被误判成
+        「无法编译」（正是阶段 0 回归中 closure/chaotic_layout 报 FAILED
+        而单独跑却正常的原因）。返回无法删除的路径清单，由调用方写进
+        FAILED 原因，不再静默。
+
+        只删<工作副本同名>的构建产物与固定报告文件，不碰 .tex/.bbl/
+        图片等源码侧文件；resume 路径不调用本函数。
+        """
+        locked: list[str] = []
+        stem = os.path.splitext(os.path.basename(self.work_tex))[0]
+        for n in [stem + e for e in self.STALE_EXT] + list(self.STALE_FILES):
+            p = os.path.join(self.outdir, n)
+            if os.path.isfile(p):
+                try:
+                    os.remove(p)
+                except OSError:
+                    locked.append(p)
+        return locked
+
     def _prepare_workdir(self):
-        """复制完整 LaTeX 工程到工作区，并建立 paper.tex 工作副本。"""
+        r"""复制完整 LaTeX 工程到工作区。
+
+        工作副本沿用**原文件名**（见 work_tex_path），不重命名为 paper.tex ——
+        多文件工程里 \input 的相对引用依赖文件名。
+        """
         src_dir = os.path.dirname(self.original)
 
         for name in os.listdir(src_dir):
@@ -408,12 +455,18 @@ class Optimizer:
                         "reason": f"没有可续跑的工作副本 {self.work_tex}；"
                                   "请先跑一次确定性闭环"}
         else:
+            self._locked = self._clean_stale_artifacts()
             self._prepare_workdir()
 
         per = P.perceive(self.work_tex, self.req)
         if not per.ok:
             self._save_state("FAILED")
-            return {"status": "FAILED", "reason": "基线文档无法编译",
+            reason = "基线文档无法编译"
+            if self._locked:
+                reason += ("；工作区仍有无法删除的旧文件（多为 Windows 端占用，"
+                           "旧 PDF 无法覆写会导致编译被误判失败）："
+                           + "、".join(os.path.basename(p) for p in self._locked))
+            return {"status": "FAILED", "reason": reason,
                     "first_error": per.compile.first_error}
         self.orig_per = _static_perception(self.original)  # I 基准（静态解析，不编译）
         cur = S.total_score(per, self.req, self.orig_per)
