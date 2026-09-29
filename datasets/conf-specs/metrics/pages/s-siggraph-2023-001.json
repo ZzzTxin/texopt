@@ -1,6 +1,6 @@
 {
   "schema": "page_metrics.v1",
-  "extractor_version": "0.1.0",
+  "extractor_version": "0.2.0",
   "profile_version": null,
   "doc": {
     "pdf": "arxiv.org_pdf_2305.03045.pdf",
@@ -13,7 +13,7 @@
       "tool": "pdfminer.six",
       "dpi_pixel": null
     },
-    "generated_at": "2026-09-28T23:21:19"
+    "generated_at": "2026-09-29T10:39:18"
   },
   "pages": [
     {
@@ -32,14 +32,14 @@
         "ink_ratio_page": null,
         "ink_ratio_text": null,
         "coverage_text": 0.6631,
-        "coverage_figure": 0.1412,
+        "coverage_figure": 0.249,
         "coverage_table": 0.0,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
-        "fig_text": 0.2129,
-        "figtab_text": 0.2129,
+        "fig_text": 0.3755,
+        "figtab_text": 0.3755,
         "status": "extracted"
       },
       "balance": {
@@ -67,14 +67,140 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1957,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1257,
+        "structural_ratio": 0.0147,
+        "boundary_ratio": 0.0869,
+        "float_ratio": 0.0241,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              406.66,
+              559.29,
+              446.66
+            ],
+            "area_ratio": 0.0246,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              423.29,
+              542.66,
+              559.29,
+              710.66
+            ],
+            "area_ratio": 0.0241,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float",
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              51.29,
+              170.66,
+              295.29,
+              198.66
+            ],
+            "area_ratio": 0.017,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              130.66,
+              295.29,
+              158.66
+            ],
+            "area_ratio": 0.0166,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              210.66,
+              295.29,
+              226.66
+            ],
+            "area_ratio": 0.0101,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              98.66,
+              295.29,
+              114.66
+            ],
+            "area_ratio": 0.0098,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              466.66,
+              559.29,
+              482.66
+            ],
+            "area_ratio": 0.0096,
+            "height_ratio": 0.007,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              238.66,
+              295.29,
+              254.66
+            ],
+            "area_ratio": 0.0088,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 8,
+        "n_fragments": 3,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 0.881,
@@ -165,14 +291,49 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.0446,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.0492,
+        "structural_ratio": 0.0156,
+        "boundary_ratio": 0.0336,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              426.66,
+              559.29,
+              602.66
+            ],
+            "area_ratio": 0.0336,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              103.29,
+              626.66,
+              295.29,
+              634.66
+            ],
+            "area_ratio": 0.0052,
+            "height_ratio": 0.0,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.5
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 2,
+        "n_fragments": 8,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.675,
@@ -228,14 +389,14 @@
         "ink_ratio_page": null,
         "ink_ratio_text": null,
         "coverage_text": 0.7571,
-        "coverage_figure": 0.0985,
+        "coverage_figure": 0.1792,
         "coverage_table": 0.0,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
-        "fig_text": 0.1301,
-        "figtab_text": 0.1301,
+        "fig_text": 0.2367,
+        "figtab_text": 0.2367,
         "status": "extracted"
       },
       "balance": {
@@ -263,14 +424,110 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1444,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.0782,
+        "structural_ratio": 0.0347,
+        "boundary_ratio": 0.0356,
+        "float_ratio": 0.0079,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              198.66,
+              559.29,
+              246.66
+            ],
+            "area_ratio": 0.0185,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              542.66,
+              559.29,
+              570.66
+            ],
+            "area_ratio": 0.018,
+            "height_ratio": 0.026,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              542.66,
+              295.29,
+              558.66
+            ],
+            "area_ratio": 0.0131,
+            "height_ratio": 0.026,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              470.66,
+              295.29,
+              498.66
+            ],
+            "area_ratio": 0.0102,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              602.66,
+              559.29,
+              710.66
+            ],
+            "area_ratio": 0.0079,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float",
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              51.29,
+              250.66,
+              295.29,
+              270.66
+            ],
+            "area_ratio": 0.0069,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 6,
+        "n_fragments": 3,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.246,
@@ -326,14 +583,14 @@
         "ink_ratio_page": null,
         "ink_ratio_text": null,
         "coverage_text": 0.776,
-        "coverage_figure": 0.0821,
+        "coverage_figure": 0.1533,
         "coverage_table": 0.0,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
-        "fig_text": 0.1058,
-        "figtab_text": 0.1058,
+        "fig_text": 0.1975,
+        "figtab_text": 0.1975,
         "status": "extracted"
       },
       "balance": {
@@ -361,14 +618,126 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1419,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.0951,
+        "structural_ratio": 0.0436,
+        "boundary_ratio": 0.0328,
+        "float_ratio": 0.0187,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              534.66,
+              559.29,
+              570.66
+            ],
+            "area_ratio": 0.02,
+            "height_ratio": 0.026,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              466.66,
+              295.29,
+              502.66
+            ],
+            "area_ratio": 0.0163,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              546.66,
+              295.29,
+              570.66
+            ],
+            "area_ratio": 0.0154,
+            "height_ratio": 0.026,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              350.66,
+              295.29,
+              386.66
+            ],
+            "area_ratio": 0.0119,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              622.66,
+              559.29,
+              710.66
+            ],
+            "area_ratio": 0.0109,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float",
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              315.29,
+              130.66,
+              559.29,
+              158.66
+            ],
+            "area_ratio": 0.0078,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float",
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              315.29,
+              354.66,
+              559.29,
+              382.66
+            ],
+            "area_ratio": 0.0046,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 7,
+        "n_fragments": 8,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 8.207,
@@ -380,8 +749,8 @@
         "status": "extracted"
       },
       "consistency": {
-        "figure_width_cv": null,
-        "caption_style_cv": null,
+        "figure_width_cv": 0.0001,
+        "caption_style_cv": 0.0588,
         "status": "extracted"
       },
       "readability": {
@@ -424,14 +793,14 @@
         "ink_ratio_page": null,
         "ink_ratio_text": null,
         "coverage_text": 0.8673,
-        "coverage_figure": 0.0,
+        "coverage_figure": 0.1832,
         "coverage_table": 0.0,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
-        "fig_text": 0.0,
-        "figtab_text": 0.0,
+        "fig_text": 0.2112,
+        "figtab_text": 0.2112,
         "status": "extracted"
       },
       "balance": {
@@ -459,14 +828,79 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1327,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.075,
+        "structural_ratio": 0.0115,
+        "boundary_ratio": 0.0468,
+        "float_ratio": 0.0167,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              51.29,
+              130.66,
+              295.29,
+              174.66
+            ],
+            "area_ratio": 0.0209,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              454.66,
+              559.29,
+              486.66
+            ],
+            "area_ratio": 0.0167,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              315.29,
+              266.66,
+              559.29,
+              290.66
+            ],
+            "area_ratio": 0.0157,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              342.66,
+              295.29,
+              370.66
+            ],
+            "area_ratio": 0.0102,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 4,
+        "n_fragments": 9,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.242,
@@ -557,14 +991,139 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1864,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1974,
+        "structural_ratio": 0.1302,
+        "boundary_ratio": 0.0672,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              402.66,
+              559.29,
+              662.66
+            ],
+            "area_ratio": 0.1256,
+            "height_ratio": 0.007,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              214.66,
+              295.29,
+              246.66
+            ],
+            "area_ratio": 0.0171,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              294.66,
+              295.29,
+              326.66
+            ],
+            "area_ratio": 0.0159,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              466.66,
+              295.29,
+              494.66
+            ],
+            "area_ratio": 0.0094,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              586.66,
+              295.29,
+              610.66
+            ],
+            "area_ratio": 0.009,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              162.66,
+              295.29,
+              190.66
+            ],
+            "area_ratio": 0.0084,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              330.66,
+              559.29,
+              358.66
+            ],
+            "area_ratio": 0.0074,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              418.66,
+              295.29,
+              442.66
+            ],
+            "area_ratio": 0.0045,
+            "height_ratio": 0.007,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 8,
+        "n_fragments": 1,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.184,
@@ -621,13 +1180,13 @@
         "ink_ratio_text": null,
         "coverage_text": 0.696,
         "coverage_figure": 0.2692,
-        "coverage_table": 0.0164,
+        "coverage_table": 0.0263,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
         "fig_text": 0.3868,
-        "figtab_text": 0.4104,
+        "figtab_text": 0.4245,
         "status": "extracted"
       },
       "balance": {
@@ -655,14 +1214,79 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.0184,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.0864,
+        "structural_ratio": 0.0039,
+        "boundary_ratio": 0.0276,
+        "float_ratio": 0.0549,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              51.29,
+              542.66,
+              295.29,
+              662.66
+            ],
+            "area_ratio": 0.0549,
+            "height_ratio": 0.0,
+            "class": "float",
+            "adjacent": [
+              "float"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              315.29,
+              358.66,
+              559.29,
+              374.66
+            ],
+            "area_ratio": 0.0131,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              278.66,
+              559.29,
+              310.66
+            ],
+            "area_ratio": 0.0074,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              242.66,
+              295.29,
+              266.66
+            ],
+            "area_ratio": 0.0071,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 4,
+        "n_fragments": 1,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 1.986,
@@ -675,7 +1299,7 @@
       },
       "consistency": {
         "figure_width_cv": 0.0014,
-        "caption_style_cv": 0.0525,
+        "caption_style_cv": 0.0583,
         "status": "extracted"
       },
       "readability": {
@@ -753,14 +1377,109 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.2056,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.2266,
+        "structural_ratio": 0.0892,
+        "boundary_ratio": 0.0428,
+        "float_ratio": 0.0946,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              522.66,
+              559.29,
+              702.66
+            ],
+            "area_ratio": 0.0946,
+            "height_ratio": 0.02,
+            "class": "float",
+            "adjacent": [
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              51.29,
+              526.66,
+              295.29,
+              694.66
+            ],
+            "area_ratio": 0.0859,
+            "height_ratio": 0.02,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              98.66,
+              295.29,
+              142.66
+            ],
+            "area_ratio": 0.0129,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              382.66,
+              559.29,
+              410.66
+            ],
+            "area_ratio": 0.0114,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              178.66,
+              295.29,
+              214.66
+            ],
+            "area_ratio": 0.011,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              230.66,
+              559.29,
+              258.66
+            ],
+            "area_ratio": 0.0075,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 6,
+        "n_fragments": 4,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.409,
@@ -817,13 +1536,13 @@
         "ink_ratio_text": null,
         "coverage_text": 0.8675,
         "coverage_figure": 0.0,
-        "coverage_table": 0.0066,
+        "coverage_table": 0.0164,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
         "fig_text": 0.0,
-        "figtab_text": 0.0076,
+        "figtab_text": 0.0189,
         "status": "extracted"
       },
       "balance": {
@@ -851,14 +1570,124 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1259,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1371,
+        "structural_ratio": 0.0002,
+        "boundary_ratio": 0.1369,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              490.66,
+              559.29,
+              654.66
+            ],
+            "area_ratio": 0.0817,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              302.66,
+              295.29,
+              338.66
+            ],
+            "area_ratio": 0.0186,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              142.66,
+              295.29,
+              170.66
+            ],
+            "area_ratio": 0.0095,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              526.66,
+              295.29,
+              558.66
+            ],
+            "area_ratio": 0.0079,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              250.66,
+              295.29,
+              270.66
+            ],
+            "area_ratio": 0.0069,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              286.66,
+              559.29,
+              302.66
+            ],
+            "area_ratio": 0.0068,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              430.66,
+              295.29,
+              458.66
+            ],
+            "area_ratio": 0.0055,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 7,
+        "n_fragments": 1,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 2.157,
@@ -870,8 +1699,8 @@
         "status": "extracted"
       },
       "consistency": {
-        "figure_width_cv": null,
-        "caption_style_cv": null,
+        "figure_width_cv": 0.0001,
+        "caption_style_cv": 0.0588,
         "status": "extracted"
       },
       "readability": {
@@ -949,14 +1778,109 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1104,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1148,
+        "structural_ratio": 0.0715,
+        "boundary_ratio": 0.0433,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              578.66,
+              559.29,
+              610.66
+            ],
+            "area_ratio": 0.0196,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              634.66,
+              295.29,
+              666.66
+            ],
+            "area_ratio": 0.0133,
+            "height_ratio": 0.013,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              315.29,
+              634.66,
+              559.29,
+              666.66
+            ],
+            "area_ratio": 0.0125,
+            "height_ratio": 0.013,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              418.66,
+              295.29,
+              454.66
+            ],
+            "area_ratio": 0.0091,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              162.66,
+              295.29,
+              190.66
+            ],
+            "area_ratio": 0.0089,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:left"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              347.29,
+              114.66,
+              559.29,
+              122.66
+            ],
+            "area_ratio": 0.0057,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 6,
+        "n_fragments": 51,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 3.401,
@@ -1050,14 +1974,184 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.1882,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1929,
+        "structural_ratio": 0.1632,
+        "boundary_ratio": 0.0297,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              315.29,
+              98.66,
+              559.29,
+              182.66
+            ],
+            "area_ratio": 0.0549,
+            "height_ratio": 0.007,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              51.29,
+              98.66,
+              295.29,
+              110.66
+            ],
+            "area_ratio": 0.0059,
+            "height_ratio": 0.007,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              347.29,
+              342.66,
+              559.29,
+              350.66
+            ],
+            "area_ratio": 0.0057,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              91.29,
+              286.66,
+              295.29,
+              294.66
+            ],
+            "area_ratio": 0.0055,
+            "height_ratio": 0.0,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.5
+          },
+          {
+            "bbox": [
+              355.29,
+              238.66,
+              559.29,
+              246.66
+            ],
+            "area_ratio": 0.0055,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              95.29,
+              342.66,
+              295.29,
+              350.66
+            ],
+            "area_ratio": 0.0054,
+            "height_ratio": 0.0,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.5
+          },
+          {
+            "bbox": [
+              371.29,
+              454.66,
+              559.29,
+              462.66
+            ],
+            "area_ratio": 0.0051,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              375.29,
+              286.66,
+              559.29,
+              294.66
+            ],
+            "area_ratio": 0.005,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              127.29,
+              390.66,
+              295.29,
+              398.66
+            ],
+            "area_ratio": 0.0045,
+            "height_ratio": 0.0,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.5
+          },
+          {
+            "bbox": [
+              403.29,
+              262.66,
+              559.29,
+              270.66
+            ],
+            "area_ratio": 0.0042,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              403.29,
+              382.66,
+              559.29,
+              390.66
+            ],
+            "area_ratio": 0.0042,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 11,
+        "n_fragments": 103,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 4.777,
@@ -1122,10 +2216,10 @@
         "n": 11
       },
       "density.coverage_figure": {
-        "median": 0.0,
-        "mean": 0.054618,
+        "median": 0.0098,
+        "mean": 0.094882,
         "max": 0.2692,
-        "p90": 0.1412,
+        "p90": 0.249,
         "n": 11
       },
       "balance.visual_centroid_y": {
@@ -1136,10 +2230,17 @@
         "n": 11
       },
       "whitespace.total_ratio": {
-        "median": 0.1419,
-        "mean": 0.135836,
-        "max": 0.2056,
-        "p90": 0.1957,
+        "median": 0.1148,
+        "mean": 0.125309,
+        "max": 0.2266,
+        "p90": 0.1974,
+        "n": 11
+      },
+      "whitespace.anomalous_ratio": {
+        "median": 0.0,
+        "mean": 0.0,
+        "max": 0.0,
+        "p90": 0.0,
         "n": 11
       },
       "alignment.left_var": {
@@ -1157,11 +2258,11 @@
         "n": 11
       },
       "consistency.figure_width_cv": {
-        "median": 0.00095,
-        "mean": 0.00095,
+        "median": 0.0003,
+        "mean": 0.000525,
         "max": 0.0014,
-        "p90": 0.00131,
-        "n": 2
+        "p90": 0.00113,
+        "n": 4
       },
       "readability.chars_per_line_mean": {
         "median": 54.3,
@@ -1188,10 +2289,10 @@
           "n": 1
         },
         "density.coverage_figure": {
-          "median": 0.1412,
-          "mean": 0.1412,
-          "max": 0.1412,
-          "p90": 0.1412,
+          "median": 0.249,
+          "mean": 0.249,
+          "max": 0.249,
+          "p90": 0.249,
           "n": 1
         },
         "balance.visual_centroid_y": {
@@ -1202,10 +2303,17 @@
           "n": 1
         },
         "whitespace.total_ratio": {
-          "median": 0.1957,
-          "mean": 0.1957,
-          "max": 0.1957,
-          "p90": 0.1957,
+          "median": 0.1257,
+          "mean": 0.1257,
+          "max": 0.1257,
+          "p90": 0.1257,
+          "n": 1
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 1
         },
         "alignment.left_var": {
@@ -1246,10 +2354,10 @@
           "n": 8
         },
         "density.coverage_figure": {
-          "median": 0.0049,
-          "mean": 0.05745,
+          "median": 0.08155,
+          "mean": 0.099337,
           "max": 0.2692,
-          "p90": 0.14971,
+          "p90": 0.209,
           "n": 8
         },
         "balance.visual_centroid_y": {
@@ -1260,10 +2368,17 @@
           "n": 8
         },
         "whitespace.total_ratio": {
-          "median": 0.1373,
-          "mean": 0.124988,
-          "max": 0.2056,
-          "p90": 0.19216,
+          "median": 0.09075,
+          "mean": 0.118125,
+          "max": 0.2266,
+          "p90": 0.20616,
+          "n": 8
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 8
         },
         "alignment.left_var": {
@@ -1281,11 +2396,11 @@
           "n": 8
         },
         "consistency.figure_width_cv": {
-          "median": 0.00095,
-          "mean": 0.00095,
+          "median": 0.0003,
+          "mean": 0.000525,
           "max": 0.0014,
-          "p90": 0.00131,
-          "n": 2
+          "p90": 0.00113,
+          "n": 4
         },
         "readability.chars_per_line_mean": {
           "median": 54.25,
@@ -1325,10 +2440,17 @@
           "n": 2
         },
         "whitespace.total_ratio": {
-          "median": 0.1493,
-          "mean": 0.1493,
-          "max": 0.1882,
-          "p90": 0.18042,
+          "median": 0.15385,
+          "mean": 0.15385,
+          "max": 0.1929,
+          "p90": 0.18509,
+          "n": 2
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 2
         },
         "alignment.left_var": {
@@ -1379,18 +2501,19 @@
       "body_pt": 9.0,
       "height_pt": 611.7
     },
-    "n_floats": 11,
+    "n_floats": 15,
     "n_images": 10,
     "consistency": {
-      "figure_width_cv": 0.0013,
-      "floats_per_page": 1.0
+      "figure_width_cv": 0.014,
+      "floats_per_page": 1.36
     }
   },
   "meta": {
     "notes": [
-      "阶段 1 提取：vector/text 层（pdfminer）为主；像素层可选",
+      "阶段 1+3 提取：vector/text 层（pdfminer）为主；像素层可选",
       "表格/图覆盖用题注锚定的浮动区近似，不解析表格结构",
-      "留白仅给总量（分类属阶段 3）；微观排版需编译日志",
+      "留白已结构化（阶段 3）：五类 + region 列表；只有 anomalous 进惩罚项",
+      "页眉/页脚行按版心上下沿识别（不在版心内的行）；微观排版需编译日志",
       "版心由正文页测得：columns=2，usable=297292pt²，body=9.0pt"
     ],
     "unknown_fields": [
@@ -1400,11 +2523,6 @@
       "$.pages[0].density.ink_ratio_page",
       "$.pages[0].density.ink_ratio_text",
       "$.pages[0].density.coverage_other",
-      "$.pages[0].whitespace.structural_ratio",
-      "$.pages[0].whitespace.boundary_ratio",
-      "$.pages[0].whitespace.float_ratio",
-      "$.pages[0].whitespace.trailing_ratio",
-      "$.pages[0].whitespace.anomalous_ratio",
       "$.pages[0].consistency.figure_width_cv",
       "$.pages[0].consistency.caption_style_cv",
       "$.pages[0].microtype.overfull",
@@ -1414,11 +2532,6 @@
       "$.pages[1].density.ink_ratio_page",
       "$.pages[1].density.ink_ratio_text",
       "$.pages[1].density.coverage_other",
-      "$.pages[1].whitespace.structural_ratio",
-      "$.pages[1].whitespace.boundary_ratio",
-      "$.pages[1].whitespace.float_ratio",
-      "$.pages[1].whitespace.trailing_ratio",
-      "$.pages[1].whitespace.anomalous_ratio",
       "$.pages[1].consistency.figure_width_cv",
       "$.pages[1].consistency.caption_style_cv",
       "$.pages[1].microtype.overfull",
@@ -1431,11 +2544,6 @@
       "$.pages[2].density.ink_ratio_page",
       "$.pages[2].density.ink_ratio_text",
       "$.pages[2].density.coverage_other",
-      "$.pages[2].whitespace.structural_ratio",
-      "$.pages[2].whitespace.boundary_ratio",
-      "$.pages[2].whitespace.float_ratio",
-      "$.pages[2].whitespace.trailing_ratio",
-      "$.pages[2].whitespace.anomalous_ratio",
       "$.pages[2].consistency.figure_width_cv",
       "$.pages[2].consistency.caption_style_cv",
       "$.pages[2].microtype.overfull",
@@ -1448,13 +2556,6 @@
       "$.pages[3].density.ink_ratio_page",
       "$.pages[3].density.ink_ratio_text",
       "$.pages[3].density.coverage_other",
-      "$.pages[3].whitespace.structural_ratio",
-      "$.pages[3].whitespace.boundary_ratio",
-      "$.pages[3].whitespace.float_ratio",
-      "$.pages[3].whitespace.trailing_ratio",
-      "$.pages[3].whitespace.anomalous_ratio",
-      "$.pages[3].consistency.figure_width_cv",
-      "$.pages[3].consistency.caption_style_cv",
       "$.pages[3].microtype.overfull",
       "$.pages[3].microtype.underfull",
       "$.pages[3].microtype.vbox_overfull",
@@ -1465,11 +2566,6 @@
       "$.pages[4].density.ink_ratio_page",
       "$.pages[4].density.ink_ratio_text",
       "$.pages[4].density.coverage_other",
-      "$.pages[4].whitespace.structural_ratio",
-      "$.pages[4].whitespace.boundary_ratio",
-      "$.pages[4].whitespace.float_ratio",
-      "$.pages[4].whitespace.trailing_ratio",
-      "$.pages[4].whitespace.anomalous_ratio",
       "$.pages[4].consistency.figure_width_cv",
       "$.pages[4].consistency.caption_style_cv",
       "$.pages[4].microtype.overfull",
@@ -1482,11 +2578,6 @@
       "$.pages[5].density.ink_ratio_page",
       "$.pages[5].density.ink_ratio_text",
       "$.pages[5].density.coverage_other",
-      "$.pages[5].whitespace.structural_ratio",
-      "$.pages[5].whitespace.boundary_ratio",
-      "$.pages[5].whitespace.float_ratio",
-      "$.pages[5].whitespace.trailing_ratio",
-      "$.pages[5].whitespace.anomalous_ratio",
       "$.pages[5].consistency.figure_width_cv",
       "$.pages[5].consistency.caption_style_cv",
       "$.pages[5].microtype.overfull",
@@ -1499,11 +2590,6 @@
       "$.pages[6].density.ink_ratio_page",
       "$.pages[6].density.ink_ratio_text",
       "$.pages[6].density.coverage_other",
-      "$.pages[6].whitespace.structural_ratio",
-      "$.pages[6].whitespace.boundary_ratio",
-      "$.pages[6].whitespace.float_ratio",
-      "$.pages[6].whitespace.trailing_ratio",
-      "$.pages[6].whitespace.anomalous_ratio",
       "$.pages[6].microtype.overfull",
       "$.pages[6].microtype.underfull",
       "$.pages[6].microtype.vbox_overfull",
@@ -1511,11 +2597,6 @@
       "$.pages[7].density.ink_ratio_page",
       "$.pages[7].density.ink_ratio_text",
       "$.pages[7].density.coverage_other",
-      "$.pages[7].whitespace.structural_ratio",
-      "$.pages[7].whitespace.boundary_ratio",
-      "$.pages[7].whitespace.float_ratio",
-      "$.pages[7].whitespace.trailing_ratio",
-      "$.pages[7].whitespace.anomalous_ratio",
       "$.pages[7].microtype.overfull",
       "$.pages[7].microtype.underfull",
       "$.pages[7].microtype.vbox_overfull",
@@ -1526,13 +2607,6 @@
       "$.pages[8].density.ink_ratio_page",
       "$.pages[8].density.ink_ratio_text",
       "$.pages[8].density.coverage_other",
-      "$.pages[8].whitespace.structural_ratio",
-      "$.pages[8].whitespace.boundary_ratio",
-      "$.pages[8].whitespace.float_ratio",
-      "$.pages[8].whitespace.trailing_ratio",
-      "$.pages[8].whitespace.anomalous_ratio",
-      "$.pages[8].consistency.figure_width_cv",
-      "$.pages[8].consistency.caption_style_cv",
       "$.pages[8].microtype.overfull",
       "$.pages[8].microtype.underfull",
       "$.pages[8].microtype.vbox_overfull",
@@ -1543,11 +2617,6 @@
       "$.pages[9].density.ink_ratio_page",
       "$.pages[9].density.ink_ratio_text",
       "$.pages[9].density.coverage_other",
-      "$.pages[9].whitespace.structural_ratio",
-      "$.pages[9].whitespace.boundary_ratio",
-      "$.pages[9].whitespace.float_ratio",
-      "$.pages[9].whitespace.trailing_ratio",
-      "$.pages[9].whitespace.anomalous_ratio",
       "$.pages[9].consistency.figure_width_cv",
       "$.pages[9].consistency.caption_style_cv",
       "$.pages[9].microtype.overfull",
@@ -1560,11 +2629,6 @@
       "$.pages[10].density.ink_ratio_page",
       "$.pages[10].density.ink_ratio_text",
       "$.pages[10].density.coverage_other",
-      "$.pages[10].whitespace.structural_ratio",
-      "$.pages[10].whitespace.boundary_ratio",
-      "$.pages[10].whitespace.float_ratio",
-      "$.pages[10].whitespace.trailing_ratio",
-      "$.pages[10].whitespace.anomalous_ratio",
       "$.pages[10].consistency.figure_width_cv",
       "$.pages[10].consistency.caption_style_cv",
       "$.pages[10].microtype.overfull",
@@ -1578,6 +2642,6 @@
       "$.paper.float_ref_distance.max",
       "$.paper.float_ref_distance.n"
     ],
-    "extract_seconds": 3.69
+    "extract_seconds": 4.07
   }
 }

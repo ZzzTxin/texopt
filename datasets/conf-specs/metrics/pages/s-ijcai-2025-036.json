@@ -1,6 +1,6 @@
 {
   "schema": "page_metrics.v1",
-  "extractor_version": "0.1.0",
+  "extractor_version": "0.2.0",
   "profile_version": null,
   "doc": {
     "pdf": "www.ijcai.org_proceedings_2025_1238.pdf",
@@ -13,7 +13,7 @@
       "tool": "pdfminer.six",
       "dpi_pixel": null
     },
-    "generated_at": "2026-09-28T23:09:30"
+    "generated_at": "2026-09-29T10:26:10"
   },
   "pages": [
     {
@@ -52,14 +52,34 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.2858,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.2871,
+        "structural_ratio": 0.2871,
+        "boundary_ratio": 0.0,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              54.0,
+              462.44,
+              298.0,
+              734.44
+            ],
+            "area_ratio": 0.2802,
+            "height_ratio": 0.056,
+            "class": "structural",
+            "adjacent": [
+              "title-page"
+            ],
+            "confidence": 0.7
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 1,
+        "n_fragments": 4,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 33.644,
@@ -117,14 +137,14 @@
         "ink_ratio_page": null,
         "ink_ratio_text": null,
         "coverage_text": 0.7653,
-        "coverage_figure": 0.0174,
+        "coverage_figure": 0.1474,
         "coverage_table": 0.0,
         "coverage_other": null,
         "status": "partial"
       },
       "ratio": {
-        "fig_text": 0.0228,
-        "figtab_text": 0.0228,
+        "fig_text": 0.1926,
+        "figtab_text": 0.1926,
         "status": "extracted"
       },
       "balance": {
@@ -137,14 +157,65 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.2172,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.1206,
+        "structural_ratio": 0.0084,
+        "boundary_ratio": 0.0098,
+        "float_ratio": 0.1024,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              54.0,
+              554.44,
+              298.0,
+              734.44
+            ],
+            "area_ratio": 0.1024,
+            "height_ratio": 0.019,
+            "class": "float",
+            "adjacent": [
+              "float",
+              "caption"
+            ],
+            "confidence": 0.85
+          },
+          {
+            "bbox": [
+              170.0,
+              294.44,
+              298.0,
+              306.44
+            ],
+            "area_ratio": 0.0098,
+            "height_ratio": 0.0,
+            "class": "boundary",
+            "adjacent": [
+              "boundary:right"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              54.0,
+              98.44,
+              298.0,
+              102.44
+            ],
+            "area_ratio": 0.0062,
+            "height_ratio": 0.006,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 3,
+        "n_fragments": 4,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 29.46,
@@ -209,10 +280,10 @@
         "n": 2
       },
       "density.coverage_figure": {
-        "median": 0.0087,
-        "mean": 0.0087,
-        "max": 0.0174,
-        "p90": 0.01566,
+        "median": 0.0737,
+        "mean": 0.0737,
+        "max": 0.1474,
+        "p90": 0.13266,
         "n": 2
       },
       "balance.visual_centroid_y": {
@@ -223,10 +294,17 @@
         "n": 2
       },
       "whitespace.total_ratio": {
-        "median": 0.2515,
-        "mean": 0.2515,
-        "max": 0.2858,
-        "p90": 0.27894,
+        "median": 0.20385,
+        "mean": 0.20385,
+        "max": 0.2871,
+        "p90": 0.27045,
+        "n": 2
+      },
+      "whitespace.anomalous_ratio": {
+        "median": 0.0,
+        "mean": 0.0,
+        "max": 0.0,
+        "p90": 0.0,
         "n": 2
       },
       "alignment.left_var": {
@@ -282,10 +360,17 @@
           "n": 1
         },
         "whitespace.total_ratio": {
-          "median": 0.2858,
-          "mean": 0.2858,
-          "max": 0.2858,
-          "p90": 0.2858,
+          "median": 0.2871,
+          "mean": 0.2871,
+          "max": 0.2871,
+          "p90": 0.2871,
+          "n": 1
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 1
         },
         "alignment.left_var": {
@@ -326,10 +411,10 @@
           "n": 1
         },
         "density.coverage_figure": {
-          "median": 0.0174,
-          "mean": 0.0174,
-          "max": 0.0174,
-          "p90": 0.0174,
+          "median": 0.1474,
+          "mean": 0.1474,
+          "max": 0.1474,
+          "p90": 0.1474,
           "n": 1
         },
         "balance.visual_centroid_y": {
@@ -340,10 +425,17 @@
           "n": 1
         },
         "whitespace.total_ratio": {
-          "median": 0.2172,
-          "mean": 0.2172,
-          "max": 0.2172,
-          "p90": 0.2172,
+          "median": 0.1206,
+          "mean": 0.1206,
+          "max": 0.1206,
+          "p90": 0.1206,
+          "n": 1
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 1
         },
         "alignment.left_var": {
@@ -403,9 +495,10 @@
   },
   "meta": {
     "notes": [
-      "阶段 1 提取：vector/text 层（pdfminer）为主；像素层可选",
+      "阶段 1+3 提取：vector/text 层（pdfminer）为主；像素层可选",
       "表格/图覆盖用题注锚定的浮动区近似，不解析表格结构",
-      "留白仅给总量（分类属阶段 3）；微观排版需编译日志",
+      "留白已结构化（阶段 3）：五类 + region 列表；只有 anomalous 进惩罚项",
+      "页眉/页脚行按版心上下沿识别（不在版心内的行）；微观排版需编译日志",
       "版心由正文页测得：columns=1，usable=156942pt²，body=10.0pt"
     ],
     "unknown_fields": [
@@ -415,11 +508,6 @@
       "$.pages[0].density.ink_ratio_page",
       "$.pages[0].density.ink_ratio_text",
       "$.pages[0].density.coverage_other",
-      "$.pages[0].whitespace.structural_ratio",
-      "$.pages[0].whitespace.boundary_ratio",
-      "$.pages[0].whitespace.float_ratio",
-      "$.pages[0].whitespace.trailing_ratio",
-      "$.pages[0].whitespace.anomalous_ratio",
       "$.pages[0].consistency.figure_width_cv",
       "$.pages[0].consistency.caption_style_cv",
       "$.pages[0].microtype.overfull",
@@ -432,11 +520,6 @@
       "$.pages[1].density.ink_ratio_page",
       "$.pages[1].density.ink_ratio_text",
       "$.pages[1].density.coverage_other",
-      "$.pages[1].whitespace.structural_ratio",
-      "$.pages[1].whitespace.boundary_ratio",
-      "$.pages[1].whitespace.float_ratio",
-      "$.pages[1].whitespace.trailing_ratio",
-      "$.pages[1].whitespace.anomalous_ratio",
       "$.pages[1].consistency.figure_width_cv",
       "$.pages[1].consistency.caption_style_cv",
       "$.pages[1].microtype.overfull",
@@ -454,6 +537,6 @@
       "$.paper.frame.col2_left",
       "$.paper.consistency.figure_width_cv"
     ],
-    "extract_seconds": 0.4
+    "extract_seconds": 0.38
   }
 }

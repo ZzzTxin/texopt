@@ -1,6 +1,6 @@
 {
  "threshold": 0.8,
- "n_metrics": 23,
+ "n_metrics": 32,
  "groups": [
   [
    "balance.d_bot",
@@ -11,697 +11,919 @@
    "density.coverage_figure",
    "ratio.fig_text",
    "ratio.figtab_text"
+  ],
+  [
+   "whitespace.anomalous_ratio",
+   "whitespace.max_anomalous_height_ratio",
+   "whitespace.n_anomalous"
   ]
  ],
  "strongest_pairs": [
   [
+   "whitespace.anomalous_ratio|whitespace.max_anomalous_height_ratio",
+   1.0
+  ],
+  [
+   "whitespace.anomalous_ratio|whitespace.n_anomalous",
+   0.9999
+  ],
+  [
+   "whitespace.max_anomalous_height_ratio|whitespace.n_anomalous",
+   0.9999
+  ],
+  [
    "density.coverage_figure|ratio.fig_text",
-   0.9971
+   0.9976
   ],
   [
    "ratio.fig_text|ratio.figtab_text",
-   0.9082
+   0.9283
   ],
   [
    "density.coverage_figure|ratio.figtab_text",
-   0.9055
+   0.9259
   ],
   [
    "balance.d_top|balance.visual_centroid_y",
-   0.8995
+   0.8999
   ],
   [
    "balance.d_bot|balance.visual_centroid_y",
-   -0.8568
+   -0.857
   ],
   [
-   "density.coverage_text|whitespace.total_ratio",
-   -0.7865
+   "ratio.figtab_text|whitespace.float_ratio",
+   0.7487
   ],
   [
    "balance.d_bot|balance.d_top",
-   -0.6758
+   -0.6765
+  ],
+  [
+   "density.coverage_text|whitespace.total_ratio",
+   -0.6764
+  ],
+  [
+   "density.coverage_table|whitespace.float_ratio",
+   0.571
+  ],
+  [
+   "ratio.fig_text|whitespace.float_ratio",
+   0.5579
   ],
   [
    "readability.font_pt|readability.font_pt_page",
    0.5555
   ],
   [
-   "alignment.right_var|readability.font_pt",
-   0.5241
-  ],
-  [
-   "readability.font_pt_page|readability.leading_ratio",
-   0.521
-  ],
-  [
-   "alignment.right_var|readability.font_pt_page",
-   0.5134
-  ],
-  [
-   "density.coverage_text|readability.para_lines_mean",
-   0.5023
-  ],
-  [
-   "balance.left_right|density.coverage_text",
-   -0.4781
-  ],
-  [
-   "readability.para_lines_mean|whitespace.total_ratio",
-   -0.4729
-  ],
-  [
-   "balance.left_right|whitespace.total_ratio",
-   0.4228
+   "density.coverage_figure|whitespace.float_ratio",
+   0.5477
   ]
  ],
  "pca": {
-  "n": 774,
-  "n_components": 23,
+  "n": 913,
+  "n_components": 32,
   "components": [
    {
     "pc": 1,
-    "explained": 0.1639,
-    "cumulative": 0.1639,
+    "explained": 0.1388,
+    "cumulative": 0.1388,
     "top_loadings": [
      [
+      "density.coverage_text",
+      -0.334
+     ],
+     [
       "ratio.figtab_text",
-      0.392
+      0.291
      ],
      [
       "ratio.fig_text",
-      0.39
+      0.289
      ],
      [
-      "density.coverage_figure",
-      0.37
+      "whitespace.anomalous_ratio",
+      0.288
+     ],
+     [
+      "whitespace.max_anomalous_height_ratio",
+      0.288
      ],
      [
       "balance.visual_centroid_y",
-      0.369
-     ],
-     [
-      "balance.d_top",
-      0.351
-     ],
-     [
-      "balance.d_bot",
-      -0.343
+      0.284
      ]
     ]
    },
    {
     "pc": 2,
-    "explained": 0.1168,
-    "cumulative": 0.2807,
+    "explained": 0.1097,
+    "cumulative": 0.2485,
     "top_loadings": [
      [
-      "density.coverage_text",
-      0.382
-     ],
-     [
-      "balance.visual_centroid_y",
-      0.353
+      "density.coverage_figure",
+      -0.317
      ],
      [
       "balance.d_bot",
-      -0.347
+      -0.29
      ],
      [
-      "balance.left_right",
-      -0.347
+      "ratio.figtab_text",
+      -0.282
      ],
      [
-      "whitespace.total_ratio",
-      -0.344
+      "whitespace.anomalous_ratio",
+      0.281
      ],
      [
-      "balance.d_top",
-      0.337
+      "density.coverage_text",
+      0.28
+     ],
+     [
+      "whitespace.max_anomalous_height_ratio",
+      0.28
      ]
     ]
    },
    {
     "pc": 3,
-    "explained": 0.0888,
-    "cumulative": 0.3695,
+    "explained": 0.0873,
+    "cumulative": 0.3358,
     "top_loadings": [
      [
       "whitespace.total_ratio",
-      -0.392
+      -0.471
      ],
      [
-      "alignment.center_var",
-      -0.391
+      "whitespace.float_ratio",
+      -0.377
      ],
      [
-      "alignment.left_var",
-      -0.331
-     ],
-     [
-      "density.coverage_figure",
-      0.24
+      "whitespace.n_regions",
+      -0.319
      ],
      [
       "readability.chars_per_line_mean",
-      0.239
+      0.252
      ],
      [
-      "ratio.figtab_text",
-      0.238
+      "alignment.center_var",
+      -0.243
+     ],
+     [
+      "balance.d_top",
+      0.233
      ]
     ]
    },
    {
     "pc": 4,
-    "explained": 0.0853,
-    "cumulative": 0.4549,
+    "explained": 0.0691,
+    "cumulative": 0.4048,
     "top_loadings": [
      [
-      "readability.font_pt_page",
-      -0.506
+      "balance.d_top",
+      -0.362
      ],
      [
-      "alignment.right_var",
-      -0.369
+      "whitespace.n_anomalous",
+      0.327
      ],
      [
-      "readability.para_lines_mean",
-      0.364
+      "whitespace.anomalous_ratio",
+      0.325
      ],
      [
-      "readability.font_pt",
-      -0.318
+      "whitespace.max_anomalous_height_ratio",
+      0.324
+     ],
+     [
+      "balance.visual_centroid_y",
+      -0.316
      ],
      [
       "alignment.center_var",
-      0.288
-     ],
-     [
-      "readability.leading_ratio",
-      -0.287
+      -0.296
      ]
     ]
    },
    {
     "pc": 5,
-    "explained": 0.0586,
-    "cumulative": 0.5135,
+    "explained": 0.0669,
+    "cumulative": 0.4717,
     "top_loadings": [
      [
+      "readability.font_pt_page",
+      -0.426
+     ],
+     [
+      "readability.para_lines_mean",
+      0.389
+     ],
+     [
+      "alignment.right_var",
+      -0.313
+     ],
+     [
       "readability.font_pt",
-      -0.639
+      -0.284
      ],
      [
       "readability.leading_ratio",
-      0.508
+      -0.232
      ],
      [
-      "density.coverage_table",
-      -0.342
-     ],
-     [
-      "whitespace.total_ratio",
-      0.241
-     ],
-     [
-      "readability.chars_per_line_mean",
-      0.226
-     ],
-     [
-      "readability.font_pt_page",
-      -0.147
+      "whitespace.n_fragments",
+      0.217
      ]
     ]
    },
    {
     "pc": 6,
-    "explained": 0.057,
-    "cumulative": 0.5705,
+    "explained": 0.0474,
+    "cumulative": 0.5191,
     "top_loadings": [
      [
-      "balance.d_mid",
-      -0.588
+      "whitespace.boundary_ratio",
+      0.551
+     ],
+     [
+      "whitespace.n_regions",
+      0.374
+     ],
+     [
+      "readability.chars_per_line_mean",
+      -0.334
+     ],
+     [
+      "whitespace.structural_ratio",
+      -0.278
+     ],
+     [
+      "readability.font_pt",
+      -0.266
      ],
      [
       "consistency.figure_width_cv",
-      -0.381
-     ],
-     [
-      "balance.left_right",
-      0.357
-     ],
-     [
-      "balance.d_top",
-      0.303
-     ],
-     [
-      "figure_quality.min_effective_dpi",
-      -0.253
-     ],
-     [
-      "alignment.left_var",
-      -0.243
+      -0.261
      ]
     ]
    },
    {
     "pc": 7,
-    "explained": 0.0513,
-    "cumulative": 0.6218,
+    "explained": 0.0453,
+    "cumulative": 0.5644,
     "top_loadings": [
      [
-      "consistency.caption_style_cv",
-      -0.518
-     ],
-     [
-      "consistency.figure_width_cv",
-      -0.518
-     ],
-     [
-      "balance.d_mid",
-      0.506
+      "readability.font_pt",
+      0.46
      ],
      [
       "readability.chars_per_line_mean",
-      -0.257
+      -0.415
      ],
      [
-      "balance.d_bot",
-      -0.196
+      "whitespace.structural_ratio",
+      -0.407
      ],
      [
-      "readability.font_pt",
-      -0.138
+      "readability.font_pt_page",
+      0.215
+     ],
+     [
+      "whitespace.n_fragments",
+      0.206
+     ],
+     [
+      "readability.para_lines_mean",
+      0.204
      ]
     ]
    },
    {
     "pc": 8,
-    "explained": 0.0469,
-    "cumulative": 0.6687,
+    "explained": 0.0395,
+    "cumulative": 0.6039,
     "top_loadings": [
      [
-      "figure_quality.min_effective_dpi",
-      -0.586
-     ],
-     [
-      "readability.chars_per_line_mean",
-      0.352
-     ],
-     [
-      "balance.d_mid",
-      0.304
-     ],
-     [
       "readability.leading_ratio",
-      -0.288
+      0.403
      ],
      [
-      "readability.para_lines_mean",
-      -0.275
+      "figure_quality.min_effective_dpi",
+      0.39
      ],
      [
-      "consistency.caption_style_cv",
-      0.255
+      "alignment.left_var",
+      0.363
+     ],
+     [
+      "readability.font_pt",
+      -0.332
+     ],
+     [
+      "consistency.figure_width_cv",
+      0.292
+     ],
+     [
+      "whitespace.n_fragments",
+      0.268
      ]
     ]
    },
    {
     "pc": 9,
-    "explained": 0.0468,
-    "cumulative": 0.7155,
+    "explained": 0.0389,
+    "cumulative": 0.6428,
     "top_loadings": [
      [
-      "density.coverage_table",
-      0.485
-     ],
-     [
-      "figure_quality.aspect_outliers",
-      0.482
-     ],
-     [
-      "readability.leading_ratio",
-      0.325
-     ],
-     [
-      "figure_quality.min_effective_dpi",
-      -0.291
-     ],
-     [
-      "consistency.caption_style_cv",
-      0.26
+      "balance.d_mid",
+      0.486
      ],
      [
       "alignment.left_var",
-      0.25
+      0.358
+     ],
+     [
+      "whitespace.float_ratio",
+      -0.327
+     ],
+     [
+      "alignment.center_var",
+      0.278
+     ],
+     [
+      "readability.leading_ratio",
+      -0.25
+     ],
+     [
+      "density.coverage_figure",
+      0.243
      ]
     ]
    },
    {
     "pc": 10,
-    "explained": 0.043,
-    "cumulative": 0.7585,
+    "explained": 0.0356,
+    "cumulative": 0.6784,
     "top_loadings": [
      [
-      "readability.chars_per_line_mean",
-      0.536
+      "whitespace.trailing_ratio",
+      -0.706
      ],
      [
-      "consistency.caption_style_cv",
-      -0.492
-     ],
-     [
-      "readability.para_lines_mean",
-      -0.381
+      "balance.d_mid",
+      -0.308
      ],
      [
       "alignment.left_var",
-      0.306
+      0.245
      ],
      [
-      "density.coverage_table",
-      0.219
+      "readability.para_lines_mean",
+      -0.217
      ],
      [
-      "figure_quality.min_effective_dpi",
-      0.187
+      "consistency.caption_style_cv",
+      0.215
+     ],
+     [
+      "alignment.right_var",
+      -0.16
      ]
     ]
    },
    {
     "pc": 11,
-    "explained": 0.0424,
-    "cumulative": 0.8009,
+    "explained": 0.0351,
+    "cumulative": 0.7135,
     "top_loadings": [
      [
-      "figure_quality.aspect_outliers",
-      -0.831
+      "balance.left_right",
+      0.574
      ],
      [
-      "density.coverage_table",
-      0.38
-     ],
-     [
-      "readability.para_lines_mean",
-      -0.183
-     ],
-     [
-      "consistency.figure_width_cv",
-      -0.162
-     ],
-     [
-      "readability.leading_ratio",
-      0.162
+      "balance.d_mid",
+      -0.412
      ],
      [
       "readability.chars_per_line_mean",
-      -0.135
+      -0.305
+     ],
+     [
+      "readability.leading_ratio",
+      0.243
+     ],
+     [
+      "whitespace.n_fragments",
+      0.21
+     ],
+     [
+      "figure_quality.aspect_outliers",
+      0.208
      ]
     ]
    },
    {
     "pc": 12,
-    "explained": 0.035,
-    "cumulative": 0.8359,
+    "explained": 0.0328,
+    "cumulative": 0.7464,
     "top_loadings": [
      [
-      "alignment.right_var",
-      -0.633
+      "consistency.caption_style_cv",
+      -0.515
      ],
      [
-      "readability.font_pt_page",
-      0.403
+      "figure_quality.aspect_outliers",
+      -0.38
      ],
      [
-      "alignment.left_var",
-      0.344
+      "density.coverage_table",
+      -0.361
      ],
      [
-      "readability.para_lines_mean",
-      0.306
+      "readability.leading_ratio",
+      -0.352
      ],
      [
-      "balance.left_right",
-      0.209
+      "figure_quality.min_effective_dpi",
+      0.293
      ],
      [
-      "alignment.center_var",
-      -0.183
+      "consistency.figure_width_cv",
+      -0.236
      ]
     ]
    },
    {
     "pc": 13,
-    "explained": 0.0341,
-    "cumulative": 0.8701,
+    "explained": 0.0312,
+    "cumulative": 0.7776,
     "top_loadings": [
      [
-      "density.coverage_table",
-      -0.513
+      "consistency.caption_style_cv",
+      0.563
      ],
      [
-      "alignment.left_var",
-      0.371
+      "figure_quality.aspect_outliers",
+      -0.407
+     ],
+     [
+      "density.coverage_table",
+      -0.328
      ],
      [
       "balance.left_right",
-      -0.369
-     ],
-     [
-      "alignment.center_var",
-      0.315
+      0.232
      ],
      [
       "figure_quality.min_effective_dpi",
-      -0.288
+      -0.226
      ],
      [
-      "consistency.figure_width_cv",
-      -0.267
+      "whitespace.structural_ratio",
+      0.224
      ]
     ]
    },
    {
     "pc": 14,
-    "explained": 0.0326,
-    "cumulative": 0.9026,
+    "explained": 0.03,
+    "cumulative": 0.8075,
     "top_loadings": [
      [
+      "figure_quality.aspect_outliers",
+      -0.739
+     ],
+     [
+      "density.coverage_table",
+      0.475
+     ],
+     [
+      "readability.leading_ratio",
+      0.278
+     ],
+     [
       "consistency.figure_width_cv",
-      -0.569
+      -0.166
      ],
      [
-      "consistency.caption_style_cv",
-      0.495
+      "whitespace.n_fragments",
+      -0.14
      ],
      [
-      "figure_quality.min_effective_dpi",
-      0.494
-     ],
-     [
-      "balance.left_right",
-      0.193
-     ],
-     [
-      "density.coverage_figure",
-      0.182
-     ],
-     [
-      "ratio.figtab_text",
-      -0.15
+      "readability.font_pt_page",
+      0.127
      ]
     ]
    },
    {
     "pc": 15,
-    "explained": 0.0289,
-    "cumulative": 0.9315,
+    "explained": 0.0264,
+    "cumulative": 0.8339,
     "top_loadings": [
      [
-      "alignment.left_var",
-      -0.532
+      "figure_quality.min_effective_dpi",
+      0.664
+     ],
+     [
+      "consistency.figure_width_cv",
+      -0.407
      ],
      [
       "alignment.right_var",
-      -0.478
+      -0.256
      ],
      [
-      "alignment.center_var",
-      0.396
+      "whitespace.structural_ratio",
+      0.254
      ],
      [
-      "readability.para_lines_mean",
-      -0.257
+      "figure_quality.aspect_outliers",
+      0.224
      ],
      [
-      "readability.font_pt_page",
-      0.225
-     ],
-     [
-      "readability.leading_ratio",
-      0.223
+      "consistency.caption_style_cv",
+      0.181
      ]
     ]
    },
    {
     "pc": 16,
-    "explained": 0.0279,
-    "cumulative": 0.9595,
+    "explained": 0.0258,
+    "cumulative": 0.8598,
     "top_loadings": [
      [
-      "density.coverage_figure",
-      0.483
+      "alignment.right_var",
+      -0.507
      ],
      [
-      "balance.left_right",
-      0.349
+      "density.coverage_table",
+      -0.349
      ],
      [
-      "readability.para_lines_mean",
-      0.344
+      "alignment.left_var",
+      0.31
      ],
      [
-      "alignment.center_var",
-      0.329
+      "whitespace.structural_ratio",
+      -0.304
      ],
      [
-      "whitespace.total_ratio",
-      -0.315
+      "whitespace.n_fragments",
+      -0.276
      ],
      [
-      "consistency.figure_width_cv",
-      0.215
+      "readability.font_pt_page",
+      0.259
      ]
     ]
    },
    {
     "pc": 17,
-    "explained": 0.0168,
-    "cumulative": 0.9762,
+    "explained": 0.0232,
+    "cumulative": 0.883,
     "top_loadings": [
      [
-      "alignment.center_var",
-      -0.524
+      "consistency.figure_width_cv",
+      -0.419
      ],
      [
-      "readability.chars_per_line_mean",
-      -0.449
+      "figure_quality.min_effective_dpi",
+      -0.341
      ],
      [
-      "density.coverage_figure",
-      0.32
+      "readability.font_pt_page",
+      0.328
+     ],
+     [
+      "alignment.left_var",
+      0.265
      ],
      [
       "alignment.right_var",
-      -0.291
+      -0.244
      ],
      [
-      "readability.para_lines_mean",
-      -0.286
-     ],
-     [
-      "ratio.figtab_text",
-      -0.237
+      "consistency.caption_style_cv",
+      -0.225
      ]
     ]
    },
    {
     "pc": 18,
-    "explained": 0.0141,
-    "cumulative": 0.9904,
+    "explained": 0.0227,
+    "cumulative": 0.9057,
     "top_loadings": [
      [
-      "balance.left_right",
-      -0.514
+      "whitespace.trailing_ratio",
+      0.441
      ],
      [
-      "density.coverage_text",
-      -0.466
-     ],
-     [
-      "whitespace.total_ratio",
+      "whitespace.n_fragments",
       0.423
      ],
      [
+      "density.coverage_table",
+      0.387
+     ],
+     [
+      "alignment.center_var",
+      -0.322
+     ],
+     [
+      "readability.chars_per_line_mean",
+      0.278
+     ],
+     [
       "readability.para_lines_mean",
-      0.395
-     ],
-     [
-      "density.coverage_figure",
-      0.178
-     ],
-     [
-      "ratio.fig_text",
-      -0.175
+      -0.252
      ]
     ]
    },
    {
     "pc": 19,
-    "explained": 0.0067,
-    "cumulative": 0.9971,
+    "explained": 0.0208,
+    "cumulative": 0.9265,
     "top_loadings": [
      [
-      "readability.font_pt",
-      -0.588
+      "consistency.figure_width_cv",
+      -0.47
      ],
      [
-      "readability.font_pt_page",
-      0.552
+      "consistency.caption_style_cv",
+      0.435
      ],
      [
-      "readability.leading_ratio",
-      -0.529
+      "alignment.left_var",
+      0.323
      ],
      [
-      "readability.chars_per_line_mean",
-      -0.165
+      "readability.para_lines_mean",
+      -0.264
      ],
      [
       "alignment.right_var",
-      0.122
+      0.242
      ],
      [
-      "balance.left_right",
-      0.093
+      "readability.chars_per_line_mean",
+      0.213
      ]
     ]
    },
    {
     "pc": 20,
-    "explained": 0.0023,
-    "cumulative": 0.9994,
+    "explained": 0.0176,
+    "cumulative": 0.9441,
     "top_loadings": [
      [
-      "density.coverage_text",
-      0.657
-     ],
-     [
-      "density.coverage_figure",
-      0.531
-     ],
-     [
-      "whitespace.total_ratio",
-      0.518
-     ],
-     [
-      "density.coverage_table",
-      0.094
-     ],
-     [
       "alignment.center_var",
-      0.053
+      0.545
      ],
      [
-      "ratio.fig_text",
-      0.042
+      "alignment.left_var",
+      -0.445
+     ],
+     [
+      "balance.left_right",
+      -0.347
+     ],
+     [
+      "whitespace.n_fragments",
+      0.307
+     ],
+     [
+      "readability.para_lines_mean",
+      -0.232
+     ],
+     [
+      "readability.leading_ratio",
+      0.174
      ]
     ]
    },
    {
     "pc": 21,
-    "explained": 0.0006,
+    "explained": 0.0148,
+    "cumulative": 0.9589,
+    "top_loadings": [
+     [
+      "whitespace.n_fragments",
+      0.417
+     ],
+     [
+      "whitespace.n_regions",
+      -0.368
+     ],
+     [
+      "whitespace.float_ratio",
+      0.282
+     ],
+     [
+      "balance.left_right",
+      0.271
+     ],
+     [
+      "whitespace.trailing_ratio",
+      -0.257
+     ],
+     [
+      "whitespace.structural_ratio",
+      -0.226
+     ]
+    ]
+   },
+   {
+    "pc": 22,
+    "explained": 0.0124,
+    "cumulative": 0.9713,
+    "top_loadings": [
+     [
+      "whitespace.n_regions",
+      0.564
+     ],
+     [
+      "whitespace.boundary_ratio",
+      -0.385
+     ],
+     [
+      "density.coverage_figure",
+      0.321
+     ],
+     [
+      "alignment.right_var",
+      -0.297
+     ],
+     [
+      "alignment.center_var",
+      -0.231
+     ],
+     [
+      "density.coverage_text",
+      -0.214
+     ]
+    ]
+   },
+   {
+    "pc": 23,
+    "explained": 0.0111,
+    "cumulative": 0.9824,
+    "top_loadings": [
+     [
+      "readability.chars_per_line_mean",
+      0.489
+     ],
+     [
+      "alignment.center_var",
+      0.444
+     ],
+     [
+      "whitespace.n_regions",
+      0.368
+     ],
+     [
+      "readability.para_lines_mean",
+      0.322
+     ],
+     [
+      "balance.left_right",
+      0.274
+     ],
+     [
+      "readability.font_pt_page",
+      0.244
+     ]
+    ]
+   },
+   {
+    "pc": 24,
+    "explained": 0.0092,
+    "cumulative": 0.9916,
+    "top_loadings": [
+     [
+      "readability.para_lines_mean",
+      -0.481
+     ],
+     [
+      "density.coverage_text",
+      0.42
+     ],
+     [
+      "whitespace.boundary_ratio",
+      -0.381
+     ],
+     [
+      "balance.left_right",
+      0.332
+     ],
+     [
+      "density.coverage_figure",
+      -0.309
+     ],
+     [
+      "whitespace.total_ratio",
+      -0.221
+     ]
+    ]
+   },
+   {
+    "pc": 25,
+    "explained": 0.0044,
+    "cumulative": 0.996,
+    "top_loadings": [
+     [
+      "readability.font_pt",
+      0.588
+     ],
+     [
+      "readability.font_pt_page",
+      -0.535
+     ],
+     [
+      "readability.leading_ratio",
+      0.495
+     ],
+     [
+      "readability.chars_per_line_mean",
+      0.229
+     ],
+     [
+      "alignment.right_var",
+      -0.134
+     ],
+     [
+      "whitespace.n_regions",
+      0.125
+     ]
+    ]
+   },
+   {
+    "pc": 26,
+    "explained": 0.002,
+    "cumulative": 0.9981,
+    "top_loadings": [
+     [
+      "whitespace.n_anomalous",
+      0.818
+     ],
+     [
+      "whitespace.max_anomalous_height_ratio",
+      -0.456
+     ],
+     [
+      "whitespace.anomalous_ratio",
+      -0.337
+     ],
+     [
+      "whitespace.float_ratio",
+      0.047
+     ],
+     [
+      "whitespace.total_ratio",
+      -0.041
+     ],
+     [
+      "readability.chars_per_line_mean",
+      0.036
+     ]
+    ]
+   },
+   {
+    "pc": 27,
+    "explained": 0.0015,
+    "cumulative": 0.9996,
+    "top_loadings": [
+     [
+      "density.coverage_text",
+      -0.696
+     ],
+     [
+      "density.coverage_figure",
+      -0.622
+     ],
+     [
+      "whitespace.total_ratio",
+      -0.247
+     ],
+     [
+      "whitespace.float_ratio",
+      -0.173
+     ],
+     [
+      "whitespace.structural_ratio",
+      -0.096
+     ],
+     [
+      "whitespace.boundary_ratio",
+      -0.094
+     ]
+    ]
+   },
+   {
+    "pc": 28,
+    "explained": 0.0004,
     "cumulative": 1.0,
     "top_loadings": [
      [
@@ -710,89 +932,151 @@
      ],
      [
       "balance.d_bot",
-      0.423
+      0.424
      ],
      [
       "balance.d_top",
-      -0.42
+      -0.417
      ],
      [
       "readability.font_pt",
-      0.022
+      0.024
      ],
      [
-      "density.coverage_text",
-      0.02
+      "alignment.right_var",
+      -0.019
      ],
      [
-      "whitespace.total_ratio",
-      -0.017
+      "readability.font_pt_page",
+      -0.018
      ]
     ]
    },
    {
-    "pc": 22,
+    "pc": 29,
+    "explained": 0.0,
+    "cumulative": 1.0,
+    "top_loadings": [
+     [
+      "whitespace.anomalous_ratio",
+      0.717
+     ],
+     [
+      "whitespace.max_anomalous_height_ratio",
+      -0.674
+     ],
+     [
+      "whitespace.total_ratio",
+      0.086
+     ],
+     [
+      "whitespace.float_ratio",
+      -0.076
+     ],
+     [
+      "whitespace.n_anomalous",
+      -0.07
+     ],
+     [
+      "ratio.fig_text",
+      0.069
+     ]
+    ]
+   },
+   {
+    "pc": 30,
     "explained": 0.0,
     "cumulative": 1.0,
     "top_loadings": [
      [
       "ratio.figtab_text",
-      0.709
+      0.706
      ],
      [
       "ratio.fig_text",
-      -0.701
+      -0.697
      ],
      [
       "density.coverage_table",
-      -0.077
+      -0.079
+     ],
+     [
+      "whitespace.anomalous_ratio",
+      0.071
+     ],
+     [
+      "whitespace.max_anomalous_height_ratio",
+      -0.067
      ],
      [
       "density.coverage_text",
-      0.023
-     ],
-     [
-      "density.coverage_figure",
-      0.012
-     ],
-     [
-      "whitespace.total_ratio",
-      0.012
+      0.014
      ]
     ]
    },
    {
-    "pc": 23,
+    "pc": 31,
     "explained": 0.0,
     "cumulative": 1.0,
     "top_loadings": [
      [
       "balance.d_top",
-      0.65
+      0.655
      ],
      [
       "balance.d_bot",
-      0.634
+      0.629
      ],
      [
       "balance.d_mid",
-      0.419
-     ],
-     [
-      "ratio.fig_text",
-      -0.001
+      0.418
      ],
      [
       "alignment.center_var",
-      -0.0
+      0.0
      ],
      [
       "alignment.left_var",
       -0.0
+     ],
+     [
+      "alignment.right_var",
+      0.0
+     ]
+    ]
+   },
+   {
+    "pc": 32,
+    "explained": -0.0,
+    "cumulative": 1.0,
+    "top_loadings": [
+     [
+      "whitespace.total_ratio",
+      0.662
+     ],
+     [
+      "whitespace.float_ratio",
+      -0.573
+     ],
+     [
+      "whitespace.structural_ratio",
+      -0.354
+     ],
+     [
+      "whitespace.boundary_ratio",
+      -0.269
+     ],
+     [
+      "whitespace.anomalous_ratio",
+      -0.177
+     ],
+     [
+      "whitespace.trailing_ratio",
+      -0.073
      ]
     ]
    }
   ],
-  "k_for_90pct": 14
+  "k_for_90pct": 18
  }
 }

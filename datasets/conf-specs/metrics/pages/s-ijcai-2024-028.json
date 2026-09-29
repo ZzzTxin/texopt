@@ -1,6 +1,6 @@
 {
   "schema": "page_metrics.v1",
-  "extractor_version": "0.1.0",
+  "extractor_version": "0.2.0",
   "profile_version": null,
   "doc": {
     "pdf": "www.ijcai.org_proceedings_2024_0944.pdf",
@@ -13,7 +13,7 @@
       "tool": "pdfminer.six",
       "dpi_pixel": null
     },
-    "generated_at": "2026-09-28T23:08:29"
+    "generated_at": "2026-09-29T10:24:58"
   },
   "pages": [
     {
@@ -52,14 +52,64 @@
         "status": "extracted"
       },
       "whitespace": {
-        "total_ratio": 0.2754,
-        "structural_ratio": null,
-        "boundary_ratio": null,
-        "float_ratio": null,
-        "trailing_ratio": null,
-        "anomalous_ratio": null,
-        "regions": [],
-        "status": "partial"
+        "total_ratio": 0.2808,
+        "structural_ratio": 0.2808,
+        "boundary_ratio": 0.0,
+        "float_ratio": 0.0,
+        "trailing_ratio": 0.0,
+        "anomalous_ratio": 0.0,
+        "regions": [
+          {
+            "bbox": [
+              54.0,
+              576.04,
+              298.0,
+              704.04
+            ],
+            "area_ratio": 0.157,
+            "height_ratio": 0.045,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              54.0,
+              524.04,
+              298.0,
+              560.04
+            ],
+            "area_ratio": 0.0664,
+            "height_ratio": 0.018,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          },
+          {
+            "bbox": [
+              54.0,
+              300.04,
+              298.0,
+              336.04
+            ],
+            "area_ratio": 0.0545,
+            "height_ratio": 0.018,
+            "class": "structural",
+            "adjacent": [
+              "spacing"
+            ],
+            "confidence": 0.8
+          }
+        ],
+        "status": "extracted",
+        "n_regions": 3,
+        "n_fragments": 2,
+        "n_anomalous": 0,
+        "max_anomalous_height_ratio": 0.0
       },
       "alignment": {
         "left_var": 3.411,
@@ -136,10 +186,17 @@
         "n": 1
       },
       "whitespace.total_ratio": {
-        "median": 0.2754,
-        "mean": 0.2754,
-        "max": 0.2754,
-        "p90": 0.2754,
+        "median": 0.2808,
+        "mean": 0.2808,
+        "max": 0.2808,
+        "p90": 0.2808,
+        "n": 1
+      },
+      "whitespace.anomalous_ratio": {
+        "median": 0.0,
+        "mean": 0.0,
+        "max": 0.0,
+        "p90": 0.0,
         "n": 1
       },
       "alignment.left_var": {
@@ -195,10 +252,17 @@
           "n": 1
         },
         "whitespace.total_ratio": {
-          "median": 0.2754,
-          "mean": 0.2754,
-          "max": 0.2754,
-          "p90": 0.2754,
+          "median": 0.2808,
+          "mean": 0.2808,
+          "max": 0.2808,
+          "p90": 0.2808,
+          "n": 1
+        },
+        "whitespace.anomalous_ratio": {
+          "median": 0.0,
+          "mean": 0.0,
+          "max": 0.0,
+          "p90": 0.0,
           "n": 1
         },
         "alignment.left_var": {
@@ -258,9 +322,10 @@
   },
   "meta": {
     "notes": [
-      "阶段 1 提取：vector/text 层（pdfminer）为主；像素层可选",
+      "阶段 1+3 提取：vector/text 层（pdfminer）为主；像素层可选",
       "表格/图覆盖用题注锚定的浮动区近似，不解析表格结构",
-      "留白仅给总量（分类属阶段 3）；微观排版需编译日志",
+      "留白已结构化（阶段 3）：五类 + region 列表；只有 anomalous 进惩罚项",
+      "页眉/页脚行按版心上下沿识别（不在版心内的行）；微观排版需编译日志",
       "版心由正文页测得：columns=1，usable=108723pt²，body=10.0pt"
     ],
     "unknown_fields": [
@@ -270,11 +335,6 @@
       "$.pages[0].density.ink_ratio_page",
       "$.pages[0].density.ink_ratio_text",
       "$.pages[0].density.coverage_other",
-      "$.pages[0].whitespace.structural_ratio",
-      "$.pages[0].whitespace.boundary_ratio",
-      "$.pages[0].whitespace.float_ratio",
-      "$.pages[0].whitespace.trailing_ratio",
-      "$.pages[0].whitespace.anomalous_ratio",
       "$.pages[0].consistency.figure_width_cv",
       "$.pages[0].consistency.caption_style_cv",
       "$.pages[0].microtype.overfull",
@@ -292,6 +352,6 @@
       "$.paper.frame.col2_left",
       "$.paper.consistency.figure_width_cv"
     ],
-    "extract_seconds": 0.14
+    "extract_seconds": 0.15
   }
 }
