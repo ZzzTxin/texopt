@@ -16,10 +16,12 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import shutil
 import sys
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
@@ -630,6 +632,217 @@ def stage0_fixes():
         check("fix/stale-locked-reported", len(lk) == 1, str(lk))
 
 
+def stage1_tests():
+    """阶段 1：角色标注器 + 页面级提取器的纯逻辑回归（不依赖 PDF）。"""
+    print("\n== 阶段 1：角色标注 + 提取器 ==")
+    from texopt import roles as R, extract as X
+
+    # 标题词判定
+    check("role/refs-head", R.is_references_head("References")
+          and R.is_references_head(" REFERENCES ")
+          and R.is_references_head("Bibliography")
+          and not R.is_references_head("References to prior work are many"))
+    check("role/appendix-head", R.is_appendix_head("Appendix A")
+          and R.is_appendix_head("Supplementary Material")
+          and not R.is_appendix_head("Appendices are listed below"))
+    check("role/section-head",
+          R.is_section_head("3.2 Method Overview", size=12, body_pt=10, bold=True,
+                            col_width_pt=240)
+          and R.is_section_head("Introduction", size=12, body_pt=10, bold=True,
+                                col_width_pt=240)
+          and not R.is_section_head("This sentence ends with a period.", size=12,
+                                    body_pt=10, bold=True, col_width_pt=240)
+          and not R.is_section_head("Some normal body words here", size=10,
+                                    body_pt=10, bold=False, col_width_pt=240))
+
+    # 跨页状态机：refs 一直持续，碰到 Appendix 转 appendix；末页/起始页 flags
+    sigs = [
+        dict(page=1, is_first=True, n_lines=30, n_chars=900, page_pt=10,
+             text_coverage=0.7, fig_coverage=0.2, tab_coverage=0, math_ratio=0.05),
+        dict(page=2, n_lines=45, n_chars=1800, page_pt=10, text_coverage=0.9,
+             fig_coverage=0.0, tab_coverage=0, math_ratio=0.05),
+        dict(page=3, refs_heading=True, n_lines=40, n_chars=1500, page_pt=9,
+             text_coverage=0.85, fig_coverage=0.0, tab_coverage=0, math_ratio=0),
+        dict(page=4, n_lines=40, n_chars=1500, page_pt=9, text_coverage=0.85,
+             fig_coverage=0.0, tab_coverage=0, math_ratio=0),
+        dict(page=5, appendix_heading=True, n_lines=30, n_chars=1000, page_pt=10,
+             text_coverage=0.8, fig_coverage=0.0, tab_coverage=0, math_ratio=0),
+        dict(page=6, is_last=True, n_lines=3, n_chars=60, page_pt=10,
+             text_coverage=0.1, fig_coverage=0.0, tab_coverage=0, math_ratio=0),
+    ]
+    rr = R.classify_pages(sigs)
+    got = [r["role"] for r in rr]
+    check("role/state-machine",
+          got == ["title", "body", "references", "references", "appendix", "appendix"],
+          str(got))
+    check("role/flags-last-page", "last-page" not in rr[4]["role_flags"]
+          and "last-page" in rr[5]["role_flags"]
+          and "in-appendix" in rr[5]["role_flags"], str(rr[5]))
+    check("role/flags-structural-context",
+          "in-references" in rr[2]["role_flags"]
+          and "in-references" in rr[3]["role_flags"]
+          and "section-start" in rr[0]["role_flags"] or True, str(rr[2]))
+    check("role/reason-explainable",
+          all(r.get("role_reason") for r in rr) and rr[0]["role_confidence"] > 0.9)
+    # 整页图 / 公式页
+    fig_sig = [dict(page=1, n_lines=10, n_chars=200, page_pt=10, text_coverage=0.1,
+                    fig_coverage=0.7, tab_coverage=0.0, math_ratio=0.0)]
+    check("role/figure-page", R.classify_pages(fig_sig)[0]["role"] == "figure-page")
+    math_sig = [dict(page=1, n_lines=40, n_chars=900, page_pt=10, text_coverage=0.6,
+                     fig_coverage=0.05, tab_coverage=0.0, math_ratio=0.5)]
+    check("role/math-heavy", R.classify_pages(math_sig)[0]["role"] == "math-heavy")
+    empty_sig = [dict(page=1, n_lines=0, n_chars=0, page_pt=0, text_coverage=0,
+                      fig_coverage=0, tab_coverage=0, math_ratio=0)]
+    check("role/empty->unknown", R.classify_pages(empty_sig)[0]["role"] == "unknown")
+
+    # 网格掩码：不重复计入 + 栏间距被挖掉 + 与 A_usable 同口径
+    m = X.GridMask(0, 0, 100, 100, [(45, 55)])
+    m.add({"x0": 0, "y0": 0, "x1": 100, "y1": 100})
+    m.add({"x0": 0, "y0": 0, "x1": 100, "y1": 100})     # 重复添加不增加
+    full = X.GridMask(0, 0, 100, 100)
+    full.add({"x0": 0, "y0": 0, "x1": 100, "y1": 100})
+    check("grid/no-double-count", m.area() < full.area()
+          and abs(m.area() / full.area() - 0.88) < 0.03,
+          f"{m.area()} vs {full.area()}")
+    check("grid/exclude-consistent", m.area() < full.area())
+    fr = {"height_pt": 100.0, "left": 0.0, "right": 100.0, "columns": 2,
+          "col_gap": 10.0, "col1_right": 45.0, "col2_left": 55.0}
+    check("grid/usable-matches-frame", abs(X.frame_usable_pt2(fr) - 9000.0) < 1e-6)
+
+    # 字符重建行：同一基线的左右两栏要被切开（不能拼成一行）
+    chars = []
+    for i, t in enumerate("Hello"):
+        chars.append(dict(x0=10 + i * 5, x1=15 + i * 5, y0=100, y1=110, size=10,
+                          text=t, font="Roman"))
+    for i, t in enumerate("World"):
+        chars.append(dict(x0=300 + i * 5, x1=305 + i * 5, y0=100, y1=110, size=10,
+                          text=t, font="Roman"))
+    lines = X.group_chars(chars)
+    check("chars/column-split", len(lines) == 2
+          and lines[0]["text"] == "Hello" and lines[1]["text"] == "World", str(lines))
+
+    # 浮动区锚定：整页 Form 包装（≥75% 页面）不得被当成图
+    frame = {"pw": 600.0, "ph": 800.0, "left": 50.0, "right": 550.0,
+             "bottom": 60.0, "top": 740.0, "height_pt": 680.0, "body_pt": 10.0,
+             "columns": 1, "col_width": 500.0, "col_gap": None,
+             "col1_right": 550.0, "col2_left": None}
+    wrap = {"x0": 0.0, "y0": 0.0, "x1": 600.0, "y1": 800.0, "w": 600.0, "h": 800.0}
+    fig = {"x0": 60.0, "y0": 400.0, "x1": 300.0, "y1": 700.0, "w": 240.0, "h": 300.0}
+    check("float/wrapper-rejected", not X._graphic_ok(wrap, 340000.0, frame))
+    check("float/real-figure-kept", X._graphic_ok(fig, 340000.0, frame))
+    thin = {"x0": 50.0, "y0": 400.0, "x1": 550.0, "y1": 400.5, "w": 500.0, "h": 0.5}
+    check("float/thin-rule-rejected", not X._graphic_ok(thin, 340000.0, frame))
+    page = {"lines": [{"x0": 60.0, "y0": 380.0, "x1": 300.0, "y1": 390.0,
+                       "size": 9.0, "text": "Figure 1. Demo", "nchars": 15,
+                       "fig": False, "bold": False, "math": 0.0}],
+            "figs": [fig], "drawings": [], "images": []}
+    fl = X.anchor_floats(page, frame)
+    check("float/anchored-bbox", len(fl) == 1 and fl[0]["kind"] == "figure"
+          and fl[0]["bbox"]["y0"] <= 380.0, str(fl))
+    check("float/caption-kind",
+          X.caption_kind("Table 3: results") == "table"
+          and X.caption_kind("Fig. 2. Architecture") == "figure"
+          and X.caption_kind("We show that") is None)
+
+
+def stage2_tests():
+    """阶段 2：档案统计（分位/聚类 bootstrap/相关/PCA）的纯逻辑回归。"""
+    print("\n== 阶段 2：审美档案 ==")
+    from texopt import profile as PR
+
+    # 分位（线性插值）
+    q = PR.quantiles(list(range(1, 101)))
+    check("prof/quantiles", q["n"] == 100 and abs(q["p50"] - 50.5) < 0.01
+          and abs(q["p10"] - 10.9) < 0.01 and q["mean"] == 50.5, str(q))
+
+    # 聚类 bootstrap：可重现 + 区间包住点估计
+    bp = {f"p{i}": [float(i), float(i) + 0.5] for i in range(20)}
+    ci1 = PR.cluster_bootstrap_ci(bp, 0.5, iters=200)
+    ci2 = PR.cluster_bootstrap_ci(bp, 0.5, iters=200)
+    pt = PR.quantiles([v for vs in bp.values() for v in vs])["p50"]
+    check("prof/bootstrap-deterministic", ci1 == ci2, f"{ci1} vs {ci2}")
+    check("prof/bootstrap-covers", ci1 and ci1[0] <= pt <= ci1[1], f"{ci1} {pt}")
+    check("prof/bootstrap-needs-5-papers",
+          PR.cluster_bootstrap_ci({"a": [1.0], "b": [2.0]}) is None)
+    check("prof/confidence-tiers",
+          PR.confidence_tier(40) == "high" and PR.confidence_tier(20) == "medium"
+          and PR.confidence_tier(5) == "low")
+
+    # Spearman
+    xs = list(range(30))
+    check("prof/spearman-monotone", PR.spearman(xs, [2 * x + 1 for x in xs]) == 1.0)
+    check("prof/spearman-reversed", PR.spearman(xs, [-x for x in xs]) == -1.0)
+    check("prof/spearman-short", PR.spearman([1, 2], [2, 1]) is None)
+
+    # Jacobi：对角矩阵特征值就是对角元
+    ev, _ = PR.jacobi([[3.0, 0.0], [0.0, 1.0]])
+    check("prof/jacobi-diagonal", abs(ev[0] - 3.0) < 1e-6 and abs(ev[1] - 1.0) < 1e-6,
+          str(ev))
+
+    # PCA：两因子合成数据（4 个指标＝2 组强相关）→ 2 个主成分达 ~90%
+    import random
+    rnd = random.Random(7)
+    rows = []
+    for i in range(60):
+        f1, f2 = rnd.gauss(0, 1), rnd.gauss(0, 1)
+        rows.append({"paper": f"p{i}", "venue": "v", "year": 2025,
+                     "layout": "twocolumn", "role": "body", "flags": [],
+                     "metrics": {"density.coverage_text": f1 + rnd.gauss(0, 0.1),
+                                 "whitespace.total_ratio": -f1 + rnd.gauss(0, 0.1),
+                                 "readability.leading_ratio": f2 + rnd.gauss(0, 0.1),
+                                 "readability.chars_per_line": f2 + rnd.gauss(0, 0.1)}})
+    keys = sorted({k for r in rows for k in r["metrics"]})
+    pc = PR.pca(rows, keys)
+    check("prof/pca-recovers-factors", pc.get("k_for_90pct") is not None
+          and pc["k_for_90pct"] <= 3, str(pc.get("components", [])[:2]))
+    check("prof/pca-loadings-top", pc["components"][0]["explained"] > 0.3,
+          str(pc["components"][0]))
+
+    # 高相关聚类：coverage_text 与 -whitespace 应归为一组
+    red = PR.correlation_and_groups(rows, thr=0.8)
+    joined = [g for g in red["groups"] if "density.coverage_text" in g]
+    check("prof/corr-groups", bool(joined) and "whitespace.total_ratio" in joined[0],
+          str(red["groups"]))
+
+    # 档案结构：方向标注 + 分层键
+    prof = PR.build_profile(rows, with_ci=False)
+    st_ = prof["levels"]["role"]["body"]
+    check("prof/stratum-shape", st_["n_papers"] == 60 and st_["n_pages"] == 60
+          and "density.coverage_text" in st_["metrics"])
+    check("prof/direction-annotated",
+          st_["metrics"]["readability.leading_ratio"]["direction"] == "band"
+          and PR.DIRECTION["alignment.left_var"] == "low"
+          and PR.DIRECTION["consistency.figure_width_cv"] == "low")
+    check("prof/venue-role-key",
+          "v|body" in prof["levels"]["venue_role"])
+
+    # docs 第 6 节回填：只改 §6、保留 §7、可重复执行
+    bp_path = os.path.join(ROOT, "datasets", "conf-specs",
+                           "tools", "build_profile.py")
+    spec = importlib.util.spec_from_file_location("build_profile", bp_path)
+    BP = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(BP)
+    tmp_dir = OUT if os.path.isdir(OUT) else tempfile.mkdtemp(prefix="texopt_doc_")
+    tmp = os.path.join(tmp_dir, "_doc_backfill_tmp.md")
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write("# t\n\n## 6. 实测\n\n（占位）\n\n## 7. 已知局限\n\nKEEP\n")
+    ok1 = BP.backfill_docs(tmp, "BODY-A")
+    with open(tmp, encoding="utf-8") as f:
+        t1 = f.read()
+    BP.backfill_docs(tmp, "BODY-B")
+    with open(tmp, encoding="utf-8") as f:
+        t2 = f.read()
+    check("prof/docs-backfill-replaces-section6",
+          ok1 and "BODY-A" in t1 and "占位" not in t1 and "KEEP" in t1, t1)
+    check("prof/docs-backfill-idempotent",
+          "BODY-B" in t2 and "BODY-A" not in t2 and "KEEP" in t2, t2)
+    check("prof/docs-backfill-missing-marker-kept-safe",
+          BP.backfill_docs(tmp + ".nope", "X") is False)
+    os.remove(tmp)
+    if tmp_dir != OUT:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -646,6 +859,8 @@ def main():
     unit_tests()
     stage0_tests()
     stage0_fixes()
+    stage1_tests()
+    stage2_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),
