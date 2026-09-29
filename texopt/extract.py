@@ -17,7 +17,8 @@
 
 不做的（诚实标注，见 `status` 字段）
   * 表格覆盖用「**题注锚定**的浮动区」近似：不解析表格结构，只量"这块区域多大"。
-  * 留白的**分类**（结构性/边界/浮动体/异常）属阶段 3，这里只给 `total_ratio`。
+  * 留白的**分类**由 `texopt/whitespace.py`（阶段 3）完成：空白掩码连通域 +
+    结构规则 → 五类留白 + region 列表；本模块只负责把元素与几何递过去。
   * 微观排版（断行 badness/连字）需要 TeX 侧信息，语料 PDF 上 unavailable。
 """
 from __future__ import annotations
@@ -37,7 +38,13 @@ if TOOLS not in sys.path:
 
 PT2MM = 25.4 / 72.0
 SNAP_PT = (7.0, 8.0, 9.0, 10.0, 11.0, 12.0)
-CAP_RE = re.compile(r"^\s*(Figure|Fig\.?|FIGURE|Table|TABLE|图|表)\s*(\d+)\s*[:.]")
+# 题注识别（阶段 3 实测修正）：原版漏掉三类常见写法——
+#   * 大写缩写带句点："FIG. 1." / "TABLE II."（APS/PRL 系）
+#   * 罗马数字编号："TABLE I."（\d+ 匹配不到）
+#   * 中文无分隔符："图 1 系统架构" / "表 2 对比"
+CAP_RE = re.compile(
+    r"^\s*(?:Figure|FIGURE|Fig|FIG|Table|TABLE|Tab|TAB|图|表)\.?\s*"
+    r"(?:\d+|[IVXLC]{1,6}\b)", re.ASCII)
 MATH_FONT_RE = re.compile(r"(CMMI|CMSY|CMEX|CMMIB|MSAM|MSBM|EUSM|EUFM|RSFS|"
                           r"Math|Symbol|MTMI|MTSY)", re.I)
 _REF_RE = None
@@ -486,10 +493,12 @@ def measure_frame(pages: list[dict], sizes: list[tuple]) -> dict:
 # ---------------------------------------------------------------- 浮动区（题注锚定）
 
 def caption_kind(text: str):
+    """题注 → "figure" / "table" / None。"""
     m = CAP_RE.match(text or "")
     if not m:
         return None
-    return "table" if m.group(1).lower().startswith(("tab", "表")) else "figure"
+    kw = m.group(0).strip().lower()
+    return "table" if kw.startswith(("tab", "表")) else "figure"
 
 
 def _clip_box(b, x_lo, x_hi, frame):
@@ -560,12 +569,21 @@ def anchor_floats(page: dict, frame: dict) -> list[dict]:
 # ---------------------------------------------------------------- 单页指标
 
 def page_metrics_from_items(page: dict, frame: dict, *,
-                            pixel: dict | None = None) -> dict:
-    """一页的 v1 指标（除 role 外）。"""
+                            pixel: dict | None = None,
+                            page_ctx: dict | None = None) -> dict:
+    """一页的 v1 指标（除 role 外）。page_ctx: {"is_last": bool, ...}"""
     A = frame_usable_pt2(frame)
     excl = frame_excl_x(frame)
     lines = [ln for ln in page["lines"] if not ln["fig"]]
     caps = [ln for ln in lines if caption_kind(ln["text"])]
+    # 页眉/页脚（页码、running head）按**版心上下沿**识别（阶段 3 补 L5）：
+    # 完全落在版心之上/之下的行。它们不属于 A_usable，因此不算正文覆盖、
+    # 不参与密度/平衡统计，也不作为留白的"结构解释"。
+    _furn = {id(ln) for ln in lines
+             if ln["y0"] >= frame["top"] - 0.5 or ln["y1"] <= frame["bottom"] + 0.5}
+    hdr = [ln for ln in lines if id(ln) in _furn and ln["y0"] >= frame["top"] - 0.5]
+    ftr = [ln for ln in lines if id(ln) in _furn and ln["y1"] <= frame["bottom"] + 0.5]
+    content_lines = [ln for ln in lines if id(ln) not in _furn]
     # 页内正文尺寸（字符数加权众数）：参考文献/附录页会用更小字号，
     # 若用**文档级**字号过滤，这些页就只剩标题行 → cpl/行距/方差全成假值。
     pw_mode: dict = {}
@@ -578,13 +596,31 @@ def page_metrics_from_items(page: dict, frame: dict, *,
 
     # 文本/浮动覆盖（网格掩码，已挖掉栏间距；同一格不重复计入）
     tm = GridMask(frame["left"], frame["bottom"], frame["right"], frame["top"], excl)
-    for ln in lines:
+    for ln in content_lines:
         tm.add(ln)
     floats = anchor_floats(page, frame)
     fmask = GridMask(frame["left"], frame["bottom"], frame["right"], frame["top"], excl)
     tmask = GridMask(frame["left"], frame["bottom"], frame["right"], frame["top"], excl)
     for f in floats:
         (tmask if f["kind"] == "table" else fmask).add(f["bbox"])
+    # 阶段 3 修正：**未被题注锚到的图形**（无题注的图、矢量插图）也是版面内容。
+    # 原版只看"题注锚出的浮动区"→ 无题注/题注写法不识别时，整幅图被当成空白，
+    # 既低估覆盖率，又会在留白分类里炸出一个"异常空洞"（实测 original.pdf 第 2 页）。
+    # 落在表格浮动区内的图形元素跳过（避免图/表重复计入）。
+    table_boxes = [f["bbox"] for f in floats if f["kind"] == "table"]
+    loose_graphics = []
+    for g in (page["drawings"] + page["images"] + page["figs"]):
+        if not _graphic_ok(g, A, frame):
+            continue
+        cx, cy = (g["x0"] + g["x1"]) / 2, (g["y0"] + g["y1"]) / 2
+        if any(b["x0"] <= cx <= b["x1"] and b["y0"] <= cy <= b["y1"]
+               for b in table_boxes):
+            continue
+        loose_graphics.append({"kind": "figure",
+                               "bbox": {"x0": g["x0"], "y0": g["y0"],
+                                        "x1": g["x1"], "y1": g["y1"]},
+                               "caption": None})
+        fmask.add(g)
     text_area = tm.area()
     fig_area = fmask.area()
     tab_area = tmask.area()
@@ -595,7 +631,7 @@ def page_metrics_from_items(page: dict, frame: dict, *,
               frame["bottom"] + 2 * frame["height_pt"] / 3),
              (frame["bottom"] + 2 * frame["height_pt"] / 3, frame["top"]))
     dm = GridMask(frame["left"], frame["bottom"], frame["right"], frame["top"], excl)
-    for ln in lines:
+    for ln in content_lines:
         dm.add(ln)
     for f in floats:
         dm.add(f["bbox"])
@@ -734,8 +770,16 @@ def page_metrics_from_items(page: dict, frame: dict, *,
                                    " ".join(ln["text"].split()))
                    for ln in main)
 
-    covered = text_area + fig_area + tab_area
-    ws_total = max(0.0, 1.0 - covered / A)
+    # 留白上界的**正确**算法：三个掩码的**并集**（各自去重会重复计重叠区，
+    # 直接把三个 ratio 相加会低估空白 —— 2026-09-29 实测踩到）。
+    umask = GridMask(frame["left"], frame["bottom"], frame["right"], frame["top"], excl)
+    for ln in content_lines:
+        umask.add(ln)
+    for f in floats:
+        umask.add(f["bbox"])
+    for g in loose_graphics:
+        umask.add(g["bbox"])
+    ws_total = max(0.0, 1.0 - umask.area() / A)
 
     pg = PM.blank_page(page.get("no") or 1)
     pg["units"] = {
@@ -766,9 +810,24 @@ def page_metrics_from_items(page: dict, frame: dict, *,
         "per_column": per_col,
         "status": "extracted",
     }
-    pg["whitespace"] = PM.blank_whitespace()
-    pg["whitespace"]["total_ratio"] = round(ws_total, 4)
-    pg["whitespace"]["status"] = "partial"           # 只有总量，未分类
+    # 留白结构化（阶段 3）：四类不惩罚，只有 anomalous 进惩罚项
+    from . import whitespace as WS
+    ws_lines = []
+    for ln in content_lines:
+        from . import roles as R
+        if caption_kind(ln["text"]):
+            kind = "caption"
+        elif R.is_section_head(ln["text"], size=ln["size"],
+                               body_pt=frame["body_pt"], bold=ln["bold"],
+                               col_width_pt=frame["col_width"]):
+            kind = "head"
+        else:
+            kind = "text"
+        ws_lines.append({"x0": ln["x0"], "y0": ln["y0"], "x1": ln["x1"],
+                         "y1": ln["y1"], "kind": kind})
+    pg["whitespace"] = WS.analyze(frame, excl, ws_lines,
+                                   list(floats) + loose_graphics, leading,
+                                   page_ctx=page_ctx)
     pg["alignment"] = {
         "left_var": left_var, "right_var": right_var, "center_var": center_var,
         "n_elements": nel, "n_full_lines": n_full, "n_short_lines": n_short,
@@ -794,6 +853,14 @@ def page_metrics_from_items(page: dict, frame: dict, *,
     }
     pg["_signals"] = {
         "n_lines": len(main), "n_chars": nchars,
+        # 与 whitespace.total_ratio 互校：用「内容并集」的补集作为留白率的**上界**
+        # （whitespace 会丢掉 <0.4% 版心的碎片区域，因此恒有 ws ≤ 本值）
+        "ws_blank_complement": round(ws_total, 4),
+        "header_lines": len(hdr), "footer_lines": len(ftr),
+        "header_text": hdr[0]["text"][:80] if hdr else None,
+        "footer_text": ftr[0]["text"][:80] if ftr else None,
+        "n_ws_regions": pg["whitespace"].get("n_regions"),
+        "n_ws_anomalous": pg["whitespace"].get("n_anomalous"),
         "body_pt": frame["body_pt"],
         "text_coverage": pg["density"]["coverage_text"],
         "fig_coverage": pg["density"]["coverage_figure"],
@@ -806,6 +873,7 @@ def page_metrics_from_items(page: dict, frame: dict, *,
         "refs_heading": bool(refs_head), "appendix_heading": bool(app_head),
         "n_floats": len(floats), "floats": floats,
         "n_images": n_img,
+        "n_loose_graphics": len(loose_graphics),
     }
     return pg
 
@@ -847,7 +915,9 @@ def extract_pdf(pdf_path: str, *, venue: str | None = None, year: int | None = N
     sigs = []
     for i, p in enumerate(pages, start=1):
         p["no"] = i
-        pg = page_metrics_from_items(p, frame, pixel=pix.get(i))
+        pg = page_metrics_from_items(p, frame, pixel=pix.get(i),
+                                     page_ctx={"page_no": i, "is_first": i == 1,
+                                               "is_last": i == len(pages)})
         sig = pg.pop("_signals")
         sig["page"] = i
         sig["is_first"] = (i == 1)
@@ -891,9 +961,10 @@ def extract_pdf(pdf_path: str, *, venue: str | None = None, year: int | None = N
         "floats_per_page": round(len(all_floats) / len(pages), 2),
     }
     doc["meta"]["notes"] = [
-        "阶段 1 提取：vector/text 层（pdfminer）为主；像素层可选",
+        "阶段 1+3 提取：vector/text 层（pdfminer）为主；像素层可选",
         "表格/图覆盖用题注锚定的浮动区近似，不解析表格结构",
-        "留白仅给总量（分类属阶段 3）；微观排版需编译日志",
+        "留白已结构化（阶段 3）：五类 + region 列表；只有 anomalous 进惩罚项",
+        "页眉/页脚行按版心上下沿识别（不在版心内的行）；微观排版需编译日志",
         f"版心由正文页测得：columns={frame['columns']}，"
         f"usable={frame['usable_pt2']:.0f}pt²，body={frame['body_pt']}pt",
     ]

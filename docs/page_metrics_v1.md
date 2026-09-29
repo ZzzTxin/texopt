@@ -58,7 +58,7 @@
 | `density` | pixel（阶段 2 起升级 text/vector） | `ink_ratio_page`、`ink_ratio_text`、`coverage_text/figure/table/other` |
 | `ratio` | vector | `fig_text`、`figtab_text` |
 | `balance` | pixel | `d_top/d_mid/d_bot`、`left_right`、`visual_centroid_y`、`per_column[]`（双栏按栏算，方案 6.4） |
-| `whitespace` | vector | `total/structural/boundary/float/trailing/anomalous_ratio` + `regions[]`（方案第七章） |
+| `whitespace` | vector | `total/structural/boundary/float/trailing/anomalous_ratio` + `regions[]` + `n_regions`/`n_fragments`/`n_anomalous`/`max_anomalous_height_ratio`（方案第七章，阶段 3 起 `status=extracted`） |
 | `alignment` | vector | `left_var`、`right_var`、`center_var`、`n_elements` |
 | `consistency` | vector | `figure_width_cv`、`caption_style_cv` |
 | `readability` | text | `chars_per_line_mean`、`leading_ratio`、`font_pt`、`para_lines_mean` |
@@ -71,12 +71,19 @@
 |---|---|---|
 | `bbox` | [x0,y0,x1,y1]\|null | PDF pt，原点左下 |
 | `area_ratio` | float\|null | 面积 / `A_usable` |
-| `height_ratio` | float\|null | 高度 / 版心高 |
+| `height_ratio` | float\|null | **区域内最长的一条「整行全空」连续带**高度 / 版心高（不是 bbox 高：L 形/环形区域的 bbox 高会虚高到 1.0） |
 | `class` | enum | `structural` / `boundary` / `float` / `trailing` / `anomalous` / `unknown` |
-| `adjacent` | [str] | 邻接元素类型：`heading` / `float` / `caption` / `paragraph` / `boundary` |
+| `adjacent` | [str] | 邻接/证据标签：`heading` / `float` / `caption` / `paragraph` / `spacing` / `boundary:left|right|top` / `column-end` / `doc-end` / `section-end` / `page-continue` / `text-continues` / `title-page` / `unexplained` |
 | `confidence` | float\|null | 分类置信度 |
 
-门控（方案 7.4）：只有 `class=anomalous`（面积/高度超阈 **且** 无结构解释）才进入惩罚项；其余四类只作画像特征。
+门控（方案 7.4）：只有 `class=anomalous`（**全宽连续空白带**超阈 **且** 无结构解释 **且** 上方有内容夹住）才进入惩罚项；其余四类只作画像特征。
+
+阶段 3 的口径补充：
+  * `regions` 只列 `area_ratio ≥ 0.004`（0.4% 版心）的区域；更小的碎片（行距/字距噪声）不单列，
+    但其面积**计入 `structural_ratio`**，因此恒有 `Σ 五类比率 == total_ratio`（可与覆盖率互补量逐页互校）。
+  * `total_ratio` = 版心内空白格的完整量（与提取层的「内容并集」互补，误差仅来自 4pt 网格量化）。
+  * 分类尺度用「整行全空带」（该行在两个栏范围内都没有内容格），因此居中标题旁、浮动体旁的
+    L 形/窄条空白不会产生虚高的「高度」。
 
 ### 2.4 `paper`
 
@@ -116,8 +123,10 @@
 
 以 `examples/demo.tex` 编译产物跑通后（见 `docs/stage0_visual_inventory.md` 第 4 节实测）：
 
-- `legacy`、`density.ink_ratio_page`、`whitespace.regions`（单一最大带）→ 可用（`extracted`/`partial`）
-- `ratio` / `balance` 三分密度 / `alignment` / `consistency` / `readability` / `figure_quality` / `float_ref_distance` / `role` → `placeholder`，待阶段 1-3 实现
+- `legacy`、`density.ink_ratio_page`、`whitespace`（五类 + regions）→ 可用（`extracted`/`partial`）
+- `ratio` / `balance` / `alignment` / `consistency` / `readability` / `figure_quality` / `role` → **阶段 1 起已 `extracted`**（本节为阶段 0 的历史记录）
+- `whitespace` 五类留白 + `regions` → **阶段 3 起 `extracted`**（见 `docs/stage3_whitespace.md`）
+- `float_ref_distance`（浮动体—首次引用距离）→ 仍 `placeholder`，需 cross-ref 解析（阶段 4+）
 - `microtype` → 数据已在 `score.py`/`perceive.py`（日志层）算过，但**未按页落盘**，需阶段 1 的页级归属（日志里的 `[n]` 页码 → 页级映射）
 
 ## 6. 版本演进约定

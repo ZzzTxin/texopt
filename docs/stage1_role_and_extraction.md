@@ -167,16 +167,17 @@ title > references > appendix > figure-page > table-page > math-heavy
 |---|---|---|
 | L1 | `figure-page`/`table-page` 阈值（0.5/0.4）实测几乎不触发（全库仅 3 / 16 页） | **已有证据**（见 5.2 分位表）：浮动覆盖 P99=0.544、表格覆盖 P99=0.164；阶段 2 改到 P95 附近 |
 | L2 | 题目/附录判定依赖文本标题；少数论文（无 Appendix 字样）会把附录并入 `references`（全库 appendix 27%+references 25% 偏高，含此成分） | 阶段 2 抽检 20 篇，必要时补"参考文献行占比"作为第二判据 |
-| L3 | 表格覆盖是"题注锚定区域面积"，不等于表格结构 | 在报告里标注为近似；阶段 3 再接表格结构识别 |
+| L3 | 表格覆盖是"题注锚定区域面积"，不等于表格结构 | 仍在（标注为近似）；**阶段 3 已修正题注识别**（`FIG. 1.`/`TABLE I.`/中文写法），并把未被题注锚到的图形计入覆盖 |
 | L4 | 纯图像/整页 Form PDF：**已解决** —— 原先失败的 siggraph 样本现在也能正常抽取（13 页） | 已由 Form 包装 + 字符重建行修复 |
 | L6 | `alignment.left_var` 把悬挂缩进/题注/公式行混在一起算 | 阶段 2 按行类型细分 |
-| L5 | 页眉/页脚行未单独识别（只按字号排除） | 阶段 3 与留白分类一起做 |
+| L5 | 页眉/页脚行未单独识别（只按字号排除） | **已完成（阶段 3）**：按版心上下沿识别，并从覆盖/密度/留白解释中排除 |
 
 ## 8. 复现命令
 
 ```bash
 cd datasets/conf-specs
 python3 tools/extract_metrics.py                 # 全库（可续跑，已存在则跳过）
+python3 tools/extract_metrics.py --force          # 全库重跑（提取器升级后需要，如 0.2.0 阶段 3）
 python3 tools/extract_metrics.py --limit 20       # 前 20 篇
 python3 tools/extract_metrics.py --venues cvpr,acl
 python3 tools/extract_metrics.py --force --limit 5

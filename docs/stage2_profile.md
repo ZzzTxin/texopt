@@ -55,7 +55,7 @@
 
 ## 4. 去冗余（`redundancy.json`）
 
-1. **Spearman 秩相关矩阵**（30 个指标两两），不假设线性、对离群稳健。
+1. **Spearman 秩相关矩阵**（全部指标两两；阶段 3 后为 29 项，见 §6.3），不假设线性、对离群稳健。
 2. **|ρ| ≥ 0.8 的指标用并查集聚类**：同一组的指标在描述同一现象，阶段 4 只保留一个
    代表（否则同一现象会被扣多次分）。
 3. **PCA**（对标准化后的指标；纯 Python Jacobi 特征分解，无 numpy 依赖）给出
@@ -106,16 +106,16 @@
 
 | 页面角色 | 页数 | 占比 | 阶段 1（校准前） | 变化 |
 |---|---|---|---|---|
-| body | 3350 | 31.8% | 3423 | -73 |
-| appendix | 2677 | 25.4% | 2875 | -198 |
-| references | 2569 | 24.4% | 2639 | -70 |
-| section-head | 970 | 9.2% | 976 | -6 |
+| body | 3342 | 31.7% | 3423 | -81 |
+| appendix | 2530 | 24.0% | 2875 | -345 |
+| references | 2494 | 23.7% | 2639 | -145 |
+| section-head | 969 | 9.2% | 976 | -7 |
 | title | 608 | 5.8% | 604 | +4 |
-| figure-page | 256 | 2.4% | 3 | +253 |
-| table-page | 106 | 1.0% | 16 | +90 |
+| figure-page | 484 | 4.6% | 3 | +481 |
+| table-page | 109 | 1.0% | 16 | +93 |
 | last-page | 2 | 0.0% | 2 | +0 |
 
-关键变化：整页图 `figure-page` **3 → 256** 页、整页表 `table-page` **16 → 106** 页。原因见 5.2：旧优先级把 references/appendix 压在最前，预印本附录里的整页浮动图/表被全部吞掉；新优先级把 figure-page/table-page 提到它们之前，结构信息改由 `role_flags` 携带。
+关键变化：整页图 `figure-page` **3 → 484** 页、整页表 `table-page` **16 → 109** 页。原因见 5.2：旧优先级把 references/appendix 压在最前，预印本附录里的整页浮动图/表被全部吞掉；新优先级把 figure-page/table-page 提到它们之前，结构信息改由 `role_flags` 携带。
 
 ### 6.2 各会议 × 页面角色：样本量与可信度
 
@@ -123,22 +123,23 @@
 
 | 档 | 篇 | 页 | 可信度 |
 |---|---|---|---|
-| emnlp|references | 45 | 449 | high |
+| emnlp|references | 45 | 425 | high |
 | eccv|body | 36 | 411 | high |
-| acl|references | 41 | 358 | high |
-| nsdi|body | 44 | 332 | high |
+| nsdi|body | 44 | 331 | high |
+| acl|references | 41 | 330 | high |
 | acl|body | 60 | 318 | high |
-| emnlp|body | 64 | 312 | high |
-| icml|body | 61 | 297 | high |
-| iccv|body | 66 | 287 | high |
-| cvpr|body | 66 | 286 | high |
+| emnlp|body | 64 | 311 | high |
+| icml|body | 61 | 296 | high |
+| cvpr|body | 66 | 284 | high |
+| iccv|body | 66 | 284 | high |
 | ijcai|body | 64 | 250 | high |
 | neurips|body | 37 | 243 | high |
 | aaai|body | 36 | 180 | high |
 | iccv|references | 57 | 165 | high |
+| icml|figure-page | 37 | 149 | high |
 | nsdi|section-head | 45 | 140 | high |
 | cvpr|references | 52 | 136 | high |
-| iccv|section-head | 64 | 134 | high |
+| iccv|section-head | 63 | 133 | high |
 | ijcai|references | 62 | 127 | high |
 | cvpr|section-head | 56 | 123 | high |
 | ijcai|section-head | 55 | 102 | high |
@@ -155,31 +156,29 @@
 | neurips|title | 37 | 37 | high |
 | aaai|title | 36 | 36 | high |
 | eccv|title | 36 | 36 | high |
-| icml|appendix | 35 | 681 | medium |
-| neurips|appendix | 22 | 537 | medium |
-| acl|appendix | 29 | 490 | medium |
-| neurips|references | 26 | 416 | medium |
-| icml|references | 35 | 393 | medium |
-| emnlp|appendix | 26 | 360 | medium |
+| icml|appendix | 35 | 608 | medium |
+| neurips|appendix | 22 | 536 | medium |
+| acl|appendix | 29 | 465 | medium |
+| neurips|references | 26 | 409 | medium |
+| icml|references | 35 | 378 | medium |
+| emnlp|appendix | 26 | 317 | medium |
 | osdi|body | 24 | 215 | medium |
-| nsdi|appendix | 21 | 205 | medium |
+| nsdi|appendix | 21 | 203 | medium |
 | nsdi|references | 34 | 155 | medium |
+| emnlp|figure-page | 30 | 121 | medium |
 | eccv|references | 32 | 119 | medium |
 | osdi|section-head | 24 | 106 | medium |
-| osdi|references | 22 | 105 | medium |
-| neurips|figure-page | 22 | 68 | medium |
+| osdi|references | 22 | 104 | medium |
+| acl|figure-page | 31 | 91 | medium |
+| neurips|figure-page | 24 | 76 | medium |
 | aaai|references | 33 | 61 | medium |
-| icml|figure-page | 20 | 60 | medium |
-| acl|figure-page | 20 | 39 | medium |
 | neurips|section-head | 22 | 33 | medium |
 | eccv|section-head | 22 | 28 | medium |
 | osdi|title | 24 | 24 | medium |
-| cvpr|table-page | 16 | 19 | medium |
 | cvpr|appendix | 15 | 86 | low |
 | sosp|body | 7 | 82 | low |
 | iclr|appendix | 5 | 79 | low |
-| iccv|appendix | 11 | 70 | low |
-| emnlp|figure-page | 14 | 53 | low |
+| iccv|appendix | 11 | 69 | low |
 | iclr|body | 6 | 44 | low |
 | siggraph|body | 7 | 35 | low |
 | eccv|appendix | 4 | 33 | low |
@@ -190,26 +189,29 @@
 | sosp|section-head | 7 | 25 | low |
 | aaai|section-head | 12 | 22 | low |
 | sosp|appendix | 1 | 21 | low |
+| cvpr|table-page | 15 | 19 | low |
 | kdd|appendix | 2 | 19 | low |
 | www|section-head | 7 | 19 | low |
+| iccv|table-page | 14 | 17 | low |
 | ijcai|appendix | 3 | 17 | low |
 | kdd|references | 4 | 17 | low |
-| siggraph|appendix | 3 | 17 | low |
-| iccv|table-page | 13 | 16 | low |
 | iclr|references | 3 | 16 | low |
 | www|references | 4 | 16 | low |
 | aaai|appendix | 3 | 15 | low |
 | osdi|appendix | 2 | 15 | low |
+| siggraph|appendix | 3 | 15 | low |
 | ijcai|table-page | 12 | 14 | low |
-| nsdi|table-page | 11 | 13 | low |
+| nsdi|table-page | 11 | 14 | low |
 | emnlp|table-page | 6 | 11 | low |
+| iccv|figure-page | 11 | 11 | low |
+| cvpr|figure-page | 10 | 10 | low |
 | kdd|section-head | 5 | 10 | low |
 | siggraph|section-head | 4 | 9 | low |
-| cvpr|figure-page | 8 | 8 | low |
+| acl|table-page | 7 | 8 | low |
+| siggraph|figure-page | 4 | 8 | low |
 | aaai|table-page | 7 | 7 | low |
-| acl|table-page | 6 | 7 | low |
 | eccv|table-page | 6 | 7 | low |
-| iccv|figure-page | 7 | 7 | low |
+| nsdi|figure-page | 6 | 7 | low |
 | siggraph|references | 4 | 7 | low |
 | siggraph|title | 7 | 7 | low |
 | sosp|title | 7 | 7 | low |
@@ -217,11 +219,9 @@
 | iclr|title | 6 | 6 | low |
 | kdd|title | 6 | 6 | low |
 | neurips|table-page | 5 | 6 | low |
-| siggraph|figure-page | 4 | 6 | low |
 | iclr|figure-page | 3 | 5 | low |
-| nsdi|figure-page | 5 | 5 | low |
+| osdi|figure-page | 3 | 3 | low |
 | icml|table-page | 2 | 2 | low |
-| osdi|figure-page | 2 | 2 | low |
 | osdi|table-page | 2 | 2 | low |
 | cvpr|last-page | 1 | 1 | low |
 | eccv|figure-page | 1 | 1 | low |
@@ -231,30 +231,31 @@
 | sosp|table-page | 1 | 1 | low |
 | www|figure-page | 1 | 1 | low |
 
-档的可信度分布：high 32 档，medium 20 档，low 55 档。
+档的可信度分布：high 33 档，medium 19 档，low 55 档。
 
 ### 6.3 去冗余（|ρ| ≥ 0.8）
 
-- 23 项指标中，有 **2** 组落在同一相关簇（并查集），阶段 4 每组只保留一个代表：
+- 32 项指标中，有 **3** 组落在同一相关簇（并查集），阶段 4 每组只保留一个代表：
   - balance.d_bot / balance.d_top / balance.visual_centroid_y
   - density.coverage_figure / ratio.fig_text / ratio.figtab_text
+  - whitespace.anomalous_ratio / whitespace.max_anomalous_height_ratio / whitespace.n_anomalous
 
 相关性最强的前几对（完整表见 `profiles/redundancy.json` 与 `profiles/summary.md`）：
 
 | 指标对 | Spearman ρ |
 |---|---|
-| density.coverage_figure|ratio.fig_text | 0.997 |
-| ratio.fig_text|ratio.figtab_text | 0.908 |
-| density.coverage_figure|ratio.figtab_text | 0.905 |
-| balance.d_top|balance.visual_centroid_y | 0.899 |
-| balance.d_bot|balance.visual_centroid_y | -0.857 |
-| density.coverage_text|whitespace.total_ratio | -0.786 |
+| whitespace.anomalous_ratio|whitespace.max_anomalous_height_ratio | 1.000 |
+| whitespace.anomalous_ratio|whitespace.n_anomalous | 1.000 |
+| whitespace.max_anomalous_height_ratio|whitespace.n_anomalous | 1.000 |
+| density.coverage_figure|ratio.fig_text | 0.998 |
+| ratio.fig_text|ratio.figtab_text | 0.928 |
+| density.coverage_figure|ratio.figtab_text | 0.926 |
 
-PCA（仅用 **774** 页（23 项指标全部非空的完整样本）；标准化后纯 Python Jacobi 特征分解）：**14 个主成分可达 90% 累积解释方差**。前 3 个主成分：
+PCA（仅用 **913** 页（32 项指标全部非空的完整样本）；标准化后纯 Python Jacobi 特征分解）：**18 个主成分可达 90% 累积解释方差**。前 3 个主成分：
 
-- PC1：解释 16.4%（累积 16.4%）｜主载荷：ratio.figtab_text(+0.392)，ratio.fig_text(+0.390)，density.coverage_figure(+0.370)，balance.visual_centroid_y(+0.369)
-- PC2：解释 11.7%（累积 28.1%）｜主载荷：density.coverage_text(+0.382)，balance.visual_centroid_y(+0.353)，balance.d_bot(-0.347)，balance.left_right(-0.347)
-- PC3：解释 8.9%（累积 37.0%）｜主载荷：whitespace.total_ratio(-0.392)，alignment.center_var(-0.391)，alignment.left_var(-0.331)，density.coverage_figure(+0.240)
+- PC1：解释 13.9%（累积 13.9%）｜主载荷：density.coverage_text(-0.334)，ratio.figtab_text(+0.291)，ratio.fig_text(+0.289)，whitespace.anomalous_ratio(+0.288)
+- PC2：解释 11.0%（累积 24.9%）｜主载荷：density.coverage_figure(-0.317)，balance.d_bot(-0.290)，ratio.figtab_text(-0.282)，whitespace.anomalous_ratio(+0.281)
+- PC3：解释 8.7%（累积 33.6%）｜主载荷：whitespace.total_ratio(-0.471)，whitespace.float_ratio(-0.377)，whitespace.n_regions(-0.319)，readability.chars_per_line_mean(+0.252)
 
 读法：PC1 几乎完全是「浮动体占比 ↔ 图/文比」这一个轴；PC2/PC3 主要是「版面重心上下偏移」与「文本密度/留白」。即 20 多项几何指标背后只有少数几个独立维度，这也是去冗余能大幅压缩判定输入的依据。
 
@@ -264,38 +265,38 @@ PCA（仅用 **774** 页（23 项指标全部非空的完整样本）；标准�
 
 | 档 | 指标 | 正常区间 | p50 | CI(p50) | direction |
 |---|---|---|---|---|---|
-| cvpr|body | density.coverage_text | [0.623, 0.842] | 0.753 | [0.72, 0.777] | band |
-| cvpr|body | whitespace.total_ratio | [0.074, 0.231] | 0.157 | [0.143, 0.179] | band |
-| cvpr|body | readability.chars_per_line_mean | [37, 46.4] | 43.25 | [41.7, 44.2] | band |
+| cvpr|body | density.coverage_text | [0.623, 0.842] | 0.754 | [0.72, 0.778] | band |
+| cvpr|body | whitespace.total_ratio | [0.081, 0.187] | 0.13 | [0.112, 0.142] | band |
+| cvpr|body | readability.chars_per_line_mean | [37, 46.4] | 43.3 | [41.7, 44.2] | band |
 | cvpr|body | readability.leading_ratio | [1.196, 1.196] | 1.196 | [1.196, 1.196] | band |
-| cvpr|body | alignment.left_var | [2.277, 19.945] | 10.229 | [5.645, 13.146] | low |
-| cvpr|body | balance.left_right | [0.493, 0.558] | 0.515 | [0.509, 0.52] | band |
+| cvpr|body | alignment.left_var | [2.247, 19.889] | 10.229 | [5.662, 13.109] | low |
+| cvpr|body | balance.left_right | [0.492, 0.558] | 0.515 | [0.508, 0.519] | band |
 | acl|body | density.coverage_text | [0.704, 0.883] | 0.814 | [0.796, 0.828] | band |
-| acl|body | whitespace.total_ratio | [0.076, 0.187] | 0.129 | [0.116, 0.138] | band |
+| acl|body | whitespace.total_ratio | [0.083, 0.174] | 0.118 | [0.107, 0.136] | band |
 | acl|body | readability.chars_per_line_mean | [35.6, 40.4] | 39.1 | [38.6, 39.55] | band |
 | acl|body | readability.leading_ratio | [1.232, 1.232] | 1.232 | [1.232, 1.232] | band |
 | acl|body | alignment.left_var | [1.115, 7.536] | 2.417 | [2.09, 2.899] | low |
 | acl|body | balance.left_right | [0.493, 0.533] | 0.509 | [0.504, 0.512] | band |
 | cvpr|references | density.coverage_text | [0.688, 0.854] | 0.837 | [0.83, 0.843] | band |
-| cvpr|references | whitespace.total_ratio | [0.146, 0.312] | 0.163 | [0.157, 0.17] | band |
+| cvpr|references | whitespace.total_ratio | [0.147, 0.311] | 0.164 | [0.157, 0.168] | band |
 | cvpr|references | readability.chars_per_line_mean | [40.2, 42.325] | 41.4 | [40.9, 41.8] | band |
 | cvpr|references | readability.leading_ratio | [1.096, 1.096] | 1.096 | [1.096, 1.096] | band |
 | cvpr|references | alignment.left_var | [18.751, 36.135] | 28.791 | [23.428, 31.94] | low |
 | cvpr|references | balance.left_right | [0.495, 0.618] | 0.502 | [0.5, 0.505] | band |
-| acl|appendix | density.coverage_text | [0.43, 0.819] | 0.687 | [0.636, 0.735] | band |
-| acl|appendix | whitespace.total_ratio | [0.148, 0.497] | 0.238 | [0.209, 0.269] | band |
-| acl|appendix | readability.chars_per_line_mean | [29.225, 40.2] | 38.4 | [37.6, 38.95] | band |
-| acl|appendix | readability.leading_ratio | [1.079, 1.232] | 1.232 | [1.231, 1.232] | band |
-| acl|appendix | alignment.left_var | [1.275, 6.053] | 3.128 | [2.478, 3.959] | low |
-| acl|appendix | balance.left_right | [0.494, 0.591] | 0.519 | [0.51, 0.529] | band |
-| cvpr|figure-page | density.coverage_text | [0.124, 0.265] | 0.164 | [0.091, 0.27] | band |
-| cvpr|figure-page | whitespace.total_ratio | [0.348, 0.433] | 0.381 | [0.315, 0.437] | band |
-| cvpr|figure-page | readability.chars_per_line_mean | [47.975, 85.4] | 72.85 | [44.9, 87.5] | band |
-| cvpr|figure-page | readability.leading_ratio | [1.096, 1.196] | 1.171 | [1.096, 1.196] | band |
-| cvpr|figure-page | alignment.left_var | [0, 0.751] | 0.032 | — | low |
-| cvpr|figure-page | balance.left_right | [0.786, 0.902] | 0.849 | [0.778, 0.916] | band |
+| acl|appendix | density.coverage_text | [0.472, 0.821] | 0.706 | [0.658, 0.745] | band |
+| acl|appendix | whitespace.total_ratio | [0.116, 0.422] | 0.195 | [0.179, 0.219] | band |
+| acl|appendix | readability.chars_per_line_mean | [31.6, 40.2] | 38.5 | [37.8, 39] | band |
+| acl|appendix | readability.leading_ratio | [1.026, 1.232] | 1.232 | [1.232, 1.232] | band |
+| acl|appendix | alignment.left_var | [1.319, 6.202] | 3.132 | [2.491, 3.96] | low |
+| acl|appendix | balance.left_right | [0.494, 0.586] | 0.519 | [0.509, 0.526] | band |
+| cvpr|figure-page | density.coverage_text | [0.133, 0.269] | 0.164 | [0.113, 0.274] | band |
+| cvpr|figure-page | whitespace.total_ratio | [0.046, 0.083] | 0.059 | [0.043, 0.144] | band |
+| cvpr|figure-page | readability.chars_per_line_mean | [44.6, 82.2] | 60 | [28.45, 86.1] | band |
+| cvpr|figure-page | readability.leading_ratio | [1.095, 1.196] | 1.121 | [0.936, 1.196] | band |
+| cvpr|figure-page | alignment.left_var | [0, 2.817] | 0.063 | [0, 2.987] | low |
+| cvpr|figure-page | balance.left_right | [0.781, 0.89] | 0.848 | [0.755, 0.907] | band |
 | eccv|body | density.coverage_text | [0.665, 0.848] | 0.775 | [0.746, 0.802] | band |
-| eccv|body | whitespace.total_ratio | [0.101, 0.221] | 0.155 | [0.14, 0.169] | band |
+| eccv|body | whitespace.total_ratio | [0.115, 0.224] | 0.164 | [0.152, 0.172] | band |
 | eccv|body | readability.chars_per_line_mean | [52.15, 62.9] | 60.1 | [58.8, 61.1] | band |
 | eccv|body | readability.leading_ratio | [1.196, 1.196] | 1.196 | [1.196, 1.196] | band |
 | eccv|body | alignment.left_var | [0.005, 6.91] | 3.85 | [3.378, 4.295] | low |

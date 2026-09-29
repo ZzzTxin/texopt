@@ -442,6 +442,19 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | **Phase 5** 视觉审美量化 | whitespace/content density/visual balance 等并入 A | ✅ 已实现（2026-09-11 起 `page_metrics`/`find_defects` 并入 A；阈值化、可审计，仍非人类审美评分） |
 | **Phase 6** 高级语义优化 | 物理排版↔语义压缩/重构 + 更强语义保持验证 | ⬜ 尚未实现（需用户在场审批） |
 
+**审美量化流水线（2026-09-28 起，独立于上面的 Phase 1-6）**：
+
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| 阶段 0 | 指标盘点 + `page_metrics.v1` schema + 修 4 个真 bug | ✅ |
+| 阶段 1 | 页面角色标注 + 页级提取 + 全库 608 篇 / 10538 页 | ✅ |
+| 阶段 2 | 审美档案（venue×role 正常范围 + CI + 可信度）+ 去冗余 | ✅ |
+| 阶段 3 | **留白结构化识别（五类 + region 列表）+ 页眉页脚识别 + 未锚图形计入** | ✅（`texopt/whitespace.py`） |
+| 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ⬜ |
+| 阶段 5-8 | 评测协议 / 影子接入 / 权重校准 / 外部验证 | ⬜ |
+
+文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`。
+
 **接口/placeholder（已预留但未落地）**：`Requirement.microtype`（None=不干预）；
 视觉代理指标 (`texopt/visual.py`) 已计算但默认不影响评分；
 历史版本存档（advanced，代码侧未接）。
@@ -464,6 +477,11 @@ texopt/
 │   ├── score.py           # L + A + I 全局量化（含结构规范与图形保真）
 │   ├── requirements.py    # 要求规格模型（模板/自定义合并）
 │   ├── advise.py          # 残余问题→结构化建议（模型在环消费）
+│   ├── page_metrics.py    # page_metrics.v1 结构/校验/聚合/旧输出适配（纯 stdlib）
+│   ├── roles.py           # 页面角色规则器（title/body/references/appendix/figure-page…）
+│   ├── extract.py         # 阶段 1：PDF→page_metrics.v1（矢量/文本层为主）
+│   ├── whitespace.py      # 阶段 3：留白结构化（五类 + region 列表）
+│   ├── profile.py         # 阶段 2：审美档案（分位/聚类 bootstrap/Spearman/PCA，纯 Python）
 │   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
 ├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
 ├── examples/              # 靶子稿（demo/issues/chaos/nightmare/aidtest/…）

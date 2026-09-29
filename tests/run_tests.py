@@ -843,6 +843,89 @@ def stage2_tests():
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
+
+def stage3_tests():
+    """阶段 3：留白结构化识别（纯逻辑回归，不依赖 PDF）。"""
+    print("\n== 阶段 3：留白结构化 ==")
+    from texopt import whitespace as WS, extract as X
+
+    FRAME = {"left": 0.0, "right": 200.0, "bottom": 0.0, "top": 400.0,
+             "height_pt": 400.0, "columns": 1, "col_width": 200.0, "body_pt": 10.0}
+
+    def block(y0, y1, step=12, h=10, x0=0, x1=200, kind="text"):
+        """一摞密排文本行（行距 step）——真实页面里的正文块。"""
+        out, y = [], y0
+        while y + h <= y1:
+            out.append({"x0": x0, "y0": y, "x1": x1, "y1": y + h, "kind": kind})
+            y += step
+        return out
+
+    def run(lines, floats=None, ctx=None, leading=12.0):
+        return WS.analyze(FRAME, [], lines, floats or [], leading, page_ctx=ctx)
+
+    # 网格口径与提取层一致（否则覆盖率/留白率分母会漂）
+    g = WS._geom(FRAME, [])
+    gm = X.GridMask(FRAME["left"], FRAME["bottom"], FRAME["right"], FRAME["top"])
+    gm.add({"x0": -10, "y0": -10, "x1": 400, "y1": 400})
+    check("ws/grid-parity", len(WS._all_cells(g)) == len(gm.cells),
+          f"{len(WS._all_cells(g))} vs {len(gm.cells)}")
+
+    # 正常段间距 → 结构性留白（不惩罚）
+    w = run(block(380, 400) + block(200, 360), None, {"is_last": True})
+    sp = [r for r in w["regions"] if r["class"] == "structural" and "spacing" in r["adjacent"]]
+    check("ws/spacing-is-structural", bool(sp) and w["anomalous_ratio"] == 0.0,
+          str([(r["class"], r["adjacent"]) for r in w["regions"]]))
+
+    # 中间被上下内容夹住的巨大空洞 → 异常连续留白（唯一惩罚项）
+    w = run(block(320, 400) + block(40, 160), None, {"is_last": False})
+    an = [r for r in w["regions"] if r["class"] == "anomalous"]
+    check("ws/interior-hole-anomalous",
+          bool(an) and an[0]["height_ratio"] >= WS.ANOM_HEIGHT
+          and an[0]["adjacent"] == ["unexplained"], str(an))
+    check("ws/anomalous-counted", w["n_anomalous"] == len(an)
+          and w["max_anomalous_height_ratio"] >= WS.ANOM_HEIGHT)
+
+    # 整列本来就没有内容（无上方内容夹住）→ 不是异常，是边界/页末
+    w = run(block(60, 400, x0=0, x1=140), None, {"is_last": True})
+    check("ws/empty-column-not-anomalous",
+          w["anomalous_ratio"] == 0.0 and w["boundary_ratio"] > 0.0,
+          str([(r["class"], r["adjacent"]) for r in w["regions"]]))
+
+    # 栏底空白 → 页末留白（不惩罚）；末页标 doc-end
+    w = run(block(160, 400), None, {"is_last": True})
+    tr = [r for r in w["regions"] if r["class"] == "trailing"]
+    check("ws/bottom-trailing", bool(tr) and "doc-end" in tr[0]["adjacent"]
+          and w["anomalous_ratio"] == 0.0, str(tr))
+
+    # 浮动体留白：包围浮动体的 L 形空白 / 侧边空白都算 float
+    fl = [{"kind": "figure", "bbox": {"x0": 20, "y0": 140, "x1": 160, "y1": 250}}]
+    w = run(block(260, 400) + block(60, 120), fl)
+    check("ws/float-adjacent", w["float_ratio"] > 0.0 and w["anomalous_ratio"] == 0.0,
+          str([(r["class"], r["adjacent"]) for r in w["regions"]]))
+
+    # Σ 五类 == total（碎片计入结构性留白，可逐页互校）
+    w = run(block(300, 400) + block(160, 260) + block(20, 120))
+    tot = sum(w[k] for k in ("structural_ratio", "boundary_ratio", "float_ratio",
+                             "trailing_ratio", "anomalous_ratio"))
+    check("ws/ratios-sum-identity", abs(tot - w["total_ratio"]) < 1e-3,
+          f"{tot} vs {w['total_ratio']}")
+    check("ws/fields-present", w["status"] == "extracted"
+          and isinstance(w["regions"], list) and w["n_fragments"] is not None)
+
+    # 确定性
+    a, b = run(block(60, 400)), run(block(60, 400))
+    check("ws/deterministic", a == b)
+
+    # 题注识别（阶段 3 实测修正：大写缩写+句点、罗马数字、中文）
+    check("cap/upper-abbrev", X.caption_kind("FIG. 1. Scaling Rubidium") == "figure"
+          and X.caption_kind("TABLE I. Comparison") == "table")
+    check("cap/cn-and-neg",
+          X.caption_kind("图 3 系统架构") == "figure"
+          and X.caption_kind("表 2 对比") == "table"
+          and X.caption_kind("Table of contents") is None
+          and X.caption_kind("Figures show the trend") is None)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -850,7 +933,7 @@ def main():
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
     if args.list:
-        print("unit_tests, closure:{demo,issues,aidtest,propose_target,"
+        print("unit_tests, stage0..3, closure:{demo,issues,aidtest,propose_target,"
               "test0911/chaotic_layout_test}, mitl, figure_violation"
               + (", closure:{chaos,nightmare}" if args.full else ""))
         return 0
@@ -861,6 +944,7 @@ def main():
     stage0_fixes()
     stage1_tests()
     stage2_tests()
+    stage3_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),

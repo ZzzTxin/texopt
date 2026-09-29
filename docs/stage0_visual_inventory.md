@@ -52,10 +52,10 @@
 
 | 方案指标 | 现状 | 位置 | v1 状态 | 缺口 / 下一步 |
 |---|---|---|---|---|
-| 最大连续空白带 / 位置 | 有 | `visual.page_metrics.max_gap` / `max_gap_at` | extracted | 只有"最大一条"，无分类 |
-| 五类留白（结构/边界/浮动体/异常/页末） | 无 | — | placeholder | 元素邻接规则（方案 7.2），阶段 3 核心 |
-| 空白区域列表 regions | 无 | — | placeholder | 空白掩码连通域分解 |
-| 空白门控（仅 anomalous 惩罚） | 无 | — | placeholder | 同上 |
+| 最大连续空白带 / 位置 | 有 | `visual.page_metrics.max_gap` / `max_gap_at` | extracted | 只有"最大一条"，无分类（阶段 3 在文本层给出等价量 `whitespace.regions[].height_ratio`） |
+| 五类留白（结构/边界/浮动体/异常/页末） | **有** | `texopt/whitespace.py`（`pages[].whitespace`） | extracted | **阶段 3 已完成**，见 `docs/stage3_whitespace.md` |
+| 空白区域列表 regions | **有** | `pages[].whitespace.regions[]` | extracted | **阶段 3 已完成**（4pt 网格连通域 + 规则分类） |
+| 空白门控（仅 anomalous 惩罚） | **有** | `whitespace.anomalous_ratio` / `n_anomalous` | extracted | **阶段 3 已完成**（方案 7.4 的三重门控） |
 
 ### 2.5 Alignment 对齐
 

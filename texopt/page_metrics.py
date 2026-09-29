@@ -29,7 +29,7 @@ import json
 import os
 
 SCHEMA_ID = "page_metrics.v1"
-EXTRACTOR_VERSION = "0.1.0"
+EXTRACTOR_VERSION = "0.2.0"   # 0.2.0：阶段 3 留白结构化 + 页眉页脚排除 + 未锚图形计入覆盖
 
 ROLES = ("title", "section-head", "body", "math-heavy", "figure-page",
          "table-page", "references", "appendix", "last-page", "unknown")
@@ -63,6 +63,11 @@ def blank_whitespace() -> dict:
         "anomalous_ratio": None,    # 异常连续留白（唯一进入惩罚项的类别）
         "regions": [],              # 见 blank_region()
         "status": "placeholder",
+        # 阶段 3 派生量（便于聚合与 LLM 直接消费）
+        "n_regions": None,          # 列出的空白区域数（已过滤 <0.4% 版心的噪声）
+        "n_fragments": None,        # 未单列的小碎片数（其面积已计入 structural_ratio）
+        "n_anomalous": None,        # 其中异常连续留白的个数
+        "max_anomalous_height_ratio": None,   # 最大异常空白的高度占版心高
     }
 
 
@@ -71,8 +76,11 @@ def blank_region(bbox=None, area_ratio=None, height_ratio=None,
     """单个空白区域。
 
     bbox: [x0, y0, x1, y1]（PDF pt，原点左下）或 None
+    area_ratio: 区域面积 ÷ A_usable（空白掩码连通域的实际格数）
+    height_ratio: **区域内最长的一条连续空白带**高度 ÷ 版心高（不是 bbox 高：
+        L 形/环形空白——如首页大标题周围——的 bbox 高会虚高到 1.0）
     klass: structural | boundary | float | trailing | anomalous
-    adjacent: 邻接元素类型列表（heading/float/caption/paragraph/boundary）
+    adjacent: 邻接元素类型列表（heading/float/caption/paragraph/spacing/boundary:*）
     """
     return {
         "bbox": bbox,
