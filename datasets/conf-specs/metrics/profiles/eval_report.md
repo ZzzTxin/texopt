@@ -1,6 +1,6 @@
 # 阶段 5 评测与验收协议报告（方案 12.1-12.6）
 
-- 生成：2026-09-30T13:22:37；语料：608 篇 / 10538 页（缓存指标，离线可复跑）
+- 生成：2026-09-30T18:57:57；语料：608 篇 / 10538 页（缓存指标，离线可复跑）
 - 档案：v2；判定维度 8 个：density.coverage_text、whitespace.total_ratio、balance.visual_centroid_y、ratio.fig_text、readability.leading_ratio、alignment.center_var、balance.d_mid、density.coverage_table
 - 诚实边界：本协议检验**实现与口径的自洽性**，不等于「与人类审美一致」；12.5 需人类成对比较数据，本阶段未采集（如实记 None，阶段 7 做）。
 
@@ -36,18 +36,6 @@
 | density.coverage_text | 1.0 |
 | ratio.fig_text | 1.0 |
 | whitespace.total_ratio | 1.0 |
-
-### 12.1 第二级：渲染层注入（真实编译，验证「感知→评分」链路）
-
-- base A_profile = 2.107813；退化版升幅：inject_hole +2.171209，split_paragraph +2.238248，break_alignment -0.107812
-- 全部退化版 A_profile 均上升：否（2/3）
-
-| 版本 | 页数 | A_profile | 异常页 | 最异常页/维度 |
-|---|---|---|---|---|
-| base | 2 | 2.107813 | 2 | p1 readability.leading_ratio |
-| inject_hole | 3 | 4.279022 | 3 | p1 readability.leading_ratio |
-| split_paragraph | 3 | 4.346061 | 3 | p3 balance.d_mid |
-| break_alignment | 2 | 2.000001 | 2 | p1 readability.leading_ratio |
 
 ## 12.2 假阳率（特异性，目标 ≤ 0.05）
 

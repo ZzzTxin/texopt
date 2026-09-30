@@ -516,6 +516,10 @@ def evaluate_fold(rows: list[dict], fold: dict, *, dims=None,
 
     return {"profile": prof, "n_train_pages": train_n,
             "train_p95_d2": thr, "role_thresholds": role_thr,
+            # 三种口径（2026-09-30 修正）：
+            #   param      = 参数化阈值（卡方 p<0.05）—— 阶段 5 实测假设不成立（重尾）
+            #   calibrated = 经验校准（训练集 per-role D² 的 P95）—— 发布口径
+            #   test       = 与 param 同源的兼容别名（早期版本叫 default，已废除）
             "test": {"n_pages": tot, "fp": fp,
                      "rate": round(fp / tot, 4) if tot else None,
                      "by_role": _fin(per_role), "by_dim": _by_dim(dim_fp_param)},

@@ -205,6 +205,9 @@ def main() -> int:
                          "datasets/conf-specs/metrics/profiles/aesthetic_profile.json）")
     ap.add_argument("--shadow-only", action="store_true",
                     help="只跑影子评估并输出 aesthetic_shadow.md/.json（不优化）")
+    ap.add_argument("--aesthetic-lambda", type=float, default=None,
+                    help="A = A_defect + λ·A_profile 的 λ（默认 0 影子模式；"
+                         "λ>0 仅用于报告口径，需阶段 7 人类标定后才建议启用）")
     ap.add_argument("--list-actions", action="store_true",
                     help="列出模型在环可用白名单动作后退出")
     ap.add_argument("--json", action="store_true",
@@ -325,6 +328,13 @@ def main() -> int:
         req.aesthetic_shadow = args.aesthetic_shadow
     if args.shadow_profile:
         req.shadow_profile = args.shadow_profile
+    if args.aesthetic_lambda is not None:
+        req.aesthetic_lambda = float(args.aesthetic_lambda)
+    if getattr(req, "aesthetic_lambda", 0.0):
+        # 安全阀（AGENTS：改变验收口径需用户在场审批）：λ>0 目前只影响报告里的
+        # a_effective，**不进入** score/core 的接受/回滚判定。
+        print(f"[审美] λ={req.aesthetic_lambda}（仅用于影子报告的 a_effective；"
+              "不参与接受/回滚判定）")
     outdir = args.outdir or os.path.join(os.path.dirname(
         os.path.abspath(args.tex)), "workbench")
     req.verbose = not args.quiet

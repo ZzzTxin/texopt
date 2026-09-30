@@ -340,13 +340,22 @@ class Detector:
     只在报告里保留（不物理删数据，只在这里过滤，可逆、可审计）。
     """
 
-    def __init__(self, block: dict, label: str = "", drop=None):
+    def __init__(self, block: dict, label: str = "", drop=None, weights=None):
         self.label = label
         all_dims = list(block.get("dims") or [])
         drop_set = {d for d in (drop or ()) if d in all_dims}
         keep = [i for i, d in enumerate(all_dims) if d not in drop_set]
         self.dropped_dims = sorted(drop_set)
         self.dims = [all_dims[i] for i in keep]
+        # 阶段 7：审美权重（方案 10.3）—— 未标定/未启用时全为 1.0（与等权完全等价）
+        wb = (weights or {})
+        self.weights_version = wb.get("version")
+        self.weights_applied = bool(wb.get("applied"))
+        by_dim = wb.get("by_dim") or {}
+        self.weights = {d: (float(by_dim[d]["w"]) if self.weights_applied
+                            and isinstance(by_dim.get(d), dict)
+                            and by_dim[d].get("w") is not None else 1.0)
+                        for d in self.dims}
         self.center = [list(block.get("center") or [])[i] for i in keep]
         self.scale = [list(block.get("scale") or [])[i] for i in keep]
         self.bands = {k: v for k, v in (block.get("bands") or {}).items()
@@ -613,7 +622,8 @@ def pick_detector(profile: dict, venue, role: str, layout: str | None = None,
     for level, key in order:
         blk = (mh.get(level) or {}).get(key)
         if blk and _tier_ok(blk.get("confidence")):
-            det = Detector(blk, label=f"{level}:{key}", drop=drop)
+            det = Detector(blk, label=f"{level}:{key}", drop=drop,
+                           weights=profile.get("weights"))
             if not det.dims:                 # 全被剔除 → 等价于无档
                 continue
             return det, level, key
@@ -651,9 +661,20 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
         per_page.append(s)
 
     ok_pages = [s for s in per_page if s.get("status") == "ok"]
+    # 阶段 7：审美权重（方案 10.3）——用**全局权重表**（不是某个档的 dims 子集），
+    # 否则同一维在不同角色下会拿到不同权重（同一份报告里两套口径，实测踩到）。
+    wb = profile.get("weights") or {}
+    w_applied = bool(wb.get("applied"))
+    w_version = wb.get("version")
+    w_map = {}
+    if w_applied:
+        for _d, _x in (wb.get("by_dim") or {}).items():
+            if isinstance(_x, dict) and _x.get("w") is not None:
+                w_map[_d] = float(_x["w"])
     report = {
         "schema": SCHEMA, "profile_version": profile.get("profile_version"),
         "profile_schema": profile.get("schema"), "venue": venue,
+        "weights_version": w_version, "weights_applied": bool(w_applied),
         "lambda": lambda_, "mode": "shadow" if not lambda_ else "active",
         "dropped_dims": drop,
         "levels_used": used, "n_pages": len(pages), "n_pages_scored": len(ok_pages),
@@ -683,10 +704,21 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
     d2s = [s["d2"] for s in ok_pages if s.get("d2") is not None]
     d2_p90, d2_max = percentile(d2s, 0.90), (max(d2s) if d2s else None)
     norm_d2 = pooled_agg(d2_norm_pool, k_top)
-    parts = [v for v in dims_norm.values() if v is not None]
+    # 阶段 7：若档案挂了**已验收**的权重（方案 10.3 步骤二/三），按 Σw·v / Σw 合成；
+    # 等权（未标定/未启用）时与旧口径逐位相同（分子分母同为 1.0 权重）。
+    num, den = 0.0, 0.0
+    w_used = {}
+    for d, v in dims_norm.items():
+        if v is None:
+            continue
+        wd = float(w_map.get(d, 1.0))
+        w_used[d] = wd
+        num += wd * v
+        den += wd
     if norm_d2 is not None:
-        parts.append(W_D2 * norm_d2)
-    a_profile = round(sum(parts) / len(parts), 6) if parts else None
+        num += W_D2 * norm_d2
+        den += W_D2
+    a_profile = round(num / den, 6) if den > 0 else None
 
     anomalies = sorted([s for s in ok_pages if s.get("d2") is not None],
                        key=lambda s: -s["d2"])[:top_n]
@@ -701,14 +733,18 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
         "dim_norm_p90": {d: round(v, 6) for d, v in sorted(dims_norm.items())},
         "dim_loss_top": {d: round(v, 6) for d, v in sorted(dim_loss_top.items())},
         "dim_loss_p90": {d: round(v, 6) for d, v in sorted(dim_loss_top.items())},
+        "weights_used": (w_used if w_applied else None),
+        # a_profile 的可重算分量（阶段 7 的口径自检与权重校准都用它，不四舍五入）
+        "parts": {"dims": dict(dims_norm), "d2": norm_d2},
         "n_anomalous_pages": sum(1 for s in ok_pages
                               if (s.get("p_value") if s.get("p_value") is not None else 1.0) < ANOM_P),
         "top_anomalous": [{"page": s.get("page"), "role": s.get("role"),
                            "d2": s.get("d2"), "p_value": s.get("p_value"),
                            "worst_dim": s.get("worst_dim"),
                            "stratum": s.get("stratum")} for s in anomalies],
-        "note": "A_profile 为等权排序量（方案 10.3 步骤一）；影子模式下不参与验收；"
-                "页→文档聚合为「0.5·前k大均值 + 0.5·均值」(k=max(1,5%页数))，见阶段 5 文档 F1",
+        "note": "A_profile 为排序量（方案 10.3）；影子模式下不参与验收；"
+                "页→文档聚合为「0.5·前k大均值 + 0.5·均值」(k=max(1,5%页数))，"
+                "维度合成按 Σw·v/Σw（未标定时 w≡1，与等权等价），见阶段 5 文档 F1 与阶段 7 文档",
     }
     return report
 

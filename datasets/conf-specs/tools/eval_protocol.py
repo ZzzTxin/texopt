@@ -60,8 +60,8 @@ def do_fp(rows, folds, min_pages):
     res = EP.run_fp_protocol(rows, k=folds, min_pages=min_pages)
     res["seconds"] = round(time.time() - t0, 1)
     a = res["aggregate"]
-    _p(f"  12.2 假阳率（{folds} 折，逐篇留出）：参数化 {a['default']['rate']} / "
-       f"经验校准 {a['calibrated']['rate']} / 归档阈值 {a['param']['rate']}"
+    _p(f"  12.2 假阳率（{folds} 折，逐篇留出）：参数化 {a['param']['rate']} / "
+       f"经验校准 {a['calibrated']['rate']}"
        f"（目标 ≤0.05，{res['seconds']}s）")
     return res
 

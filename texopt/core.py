@@ -71,6 +71,8 @@ class Optimizer:
         self._shadow_enabled = bool(getattr(req, "aesthetic_shadow", True)) \
             and shadow.enabled()
         self._shadow_profile = getattr(req, "shadow_profile", None)
+        # λ：默认 0（方案 13.1/13.3）；>0 只影响影子报告的 a_effective，不参与判定
+        self._lambda = float(getattr(req, "aesthetic_lambda", 0.0) or 0.0)
         self._shadow_trace: list = []    # 阶段 6：逐轮观测（baseline / 每次接受 / 终态）
         self._defects: list = []         # 当前视觉缺陷（出口状态判定用）
         self._state = None               # 上一次接受后的 (Perception, 评分)
@@ -638,11 +640,12 @@ class Optimizer:
             rep = shadow.evaluate_pdf(
                 per.compile.pdf_path, prof,
                 venue=getattr(self.req, "conference", None),
+                lambda_=self._lambda,
                 profile_path=(self._shadow_profile or shadow.default_profile_path()))
             rep["a_defect"] = cur["a"]
             a = (rep.get("paper") or {}).get("a_profile")
             rep["a_profile"] = a
-            rep["a_effective"] = round(cur["a"] + shadow.LAMBDA * (a or 0.0), 6)
+            rep["a_effective"] = round(cur["a"] + self._lambda * (a or 0.0), 6)
             rep["label"] = label
             if record and rep.get("status") is None:
                 paper = rep.get("paper") or {}
@@ -689,7 +692,7 @@ class Optimizer:
             b = ((self.baseline or {}).get("aesthetic") or {})
             bundle = {
                 "schema": "aesthetic_shadow.v1",
-                "mode": "shadow", "lambda": shadow.LAMBDA,
+                "mode": "shadow", "lambda": self._lambda,
                 "profile_version": (rep or {}).get("profile_version"),
                 "venue": (rep or {}).get("venue") or \
                     getattr(self.req, "conference", None),

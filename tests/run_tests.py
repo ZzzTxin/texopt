@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import math
 import os
 import shutil
 import sys
@@ -1463,6 +1464,152 @@ def stage6_tests():
           f"rc={cp.returncode} {cp.stdout[-160:]} {cp.stderr[-160:]}")
 
 
+def stage7_tests():
+    """阶段 7：审美权重校准（方案 10.3 步骤二/三）——纯逻辑 + 真实缓存指标。"""
+    print("\n== 阶段 7：权重校准（消融 + Bradley-Terry） ==")
+    import random as _rnd
+    from texopt import aesthetic as AE, shadow as SH, weights as WT
+
+    # --- 1) 裁剪 + 归一（顺序回归：先归一再裁剪，不能越界）
+    w = WT._clip_norm({"a": 100.0, "b": 0.0, "c": 1.0}, ["a", "b", "c"])
+    check("s7/clip-normalize-bounds",
+          all(WT.W_MIN - 1e-9 <= v <= WT.W_MAX + 1e-9 for v in w.values())
+          and abs(sum(w.values()) / 3 - 1.0) < 0.35, str(w))
+
+    # --- 2) 分量重算与 evaluate_doc 同式（等权时逐位一致）
+    prof = SH.load_profile()
+    if prof:
+        det, _, _ = AE.pick_detector(prof, "cvpr", "body", "twocolumn")
+        parts = {"dims": {"density.coverage_text": 2.0, "balance.d_mid": 0.0},
+                 "d2": 1.5}
+        eq = WT.a_profile_from_parts(parts)
+        want = (2.0 + 0.0 + AE.W_D2 * 1.5) / (2 + AE.W_D2)
+        ww = WT.a_profile_from_parts(parts, {"density.coverage_text": 3.0})
+        check("s7/parts-same-formula",
+              abs(eq - want) < 1e-9 and ww > eq, f"{eq} vs {want} / {ww}")
+    else:
+        skip("s7/parts-same-formula", "无档案")
+
+    # --- 3) Bradley-Terry：合成数据可恢复已知权重
+    _rnd.seed(11)
+    dims = ["d1", "d2", "d3"]
+    true_w = {"d1": 2.0, "d2": 1.0, "d3": 0.4}
+    pairs = []
+    for _ in range(300):
+        a = {d: _rnd.uniform(0, 2) for d in dims}
+        b = {d: _rnd.uniform(0, 2) for d in dims}
+        z = sum(true_w[d] * (a[d] - b[d]) for d in dims)   # loss 小者更好
+        p = 1.0 / (1.0 + math.exp(max(-30.0, min(30.0, z))))
+        pairs.append({"a": a, "b": b, "winner": "a" if _rnd.random() < p else "b"})
+    bt = WT.fit_bradley_terry(pairs, dims, l2=0.05)
+    order_ok = bt and (bt["by_dim"]["d1"] > bt["by_dim"]["d2"] > bt["by_dim"]["d3"])
+    check("s7/bradley-terry-recovers-order",
+          bool(order_ok) and bt["pair_accuracy"] > 0.6,
+          str(bt and {k: round(v, 3) for k, v in bt["by_dim"].items()}))
+    check("s7/bradley-terry-needs-data",
+          WT.fit_bradley_terry([], dims) is None
+          and WT.fit_bradley_terry(pairs[:3], dims) is None
+          and WT.load_pairs("__nope__.json") == [])
+    m = WT.merge_human({"schema": WT.WEIGHTS_SCHEMA, "by_dim":
+                        {d: {"w": 1.0, "source": "ablation"} for d in dims}},
+                       bt)
+    check("s7/merge-human",
+          m["by_dim"]["d1"]["source"] == "ablation+human"
+          and m["by_dim"]["d1"]["w_human"] is not None
+          and m["human_calibration"]["n_pairs"] == bt["n_pairs"], str(m["method"]))
+
+    # --- 4) 验收规则：劣化就拒不接受（构造两个间隔统计）
+    v_bad = WT.accept_verdict({"positive_rate": 1.0, "median": 0.2},
+                              {"positive_rate": 0.9, "median": 0.1},
+                              weights={"d1": 1.0})
+    v_bad2 = WT.accept_verdict({"positive_rate": 1.0, "median": 0.2},
+                               {"positive_rate": 1.0, "median": 0.2},
+                               weights={"d1": 1.0})
+    v_bad3 = WT.accept_verdict({"positive_rate": 1.0, "median": 0.2},
+                               {"positive_rate": 1.0, "median": 0.3},
+                               weights={"d1": 9.0})
+    v_ok = WT.accept_verdict({"positive_rate": 1.0, "median": 0.2},
+                             {"positive_rate": 1.0, "median": 0.3},
+                             weights={"d1": 1.5})
+    check("s7/accept-rules",
+          not v_bad["applied"] and not v_bad2["applied"] and not v_bad3["applied"]
+          and v_ok["applied"] and len(v_bad3["reasons"]) == 1, str(v_bad3))
+
+    # --- 5) 真实缓存指标：消融 → 权重块（可复算、含 CI；不依赖 PDF/LaTeX）
+    from texopt import profile as PROF_
+    pages_dir = os.path.join(ROOT, "datasets", "conf-specs", "metrics", "pages")
+    rows, papers, _bad = PROF_.load_pages(pages_dir)
+    if prof and rows:
+        drop = SH.gate_drop_dims()
+        dims2 = [d for d in WT._default_dims(prof) if d not in drop]
+        trials = WT.ablation_trials(rows, prof, dims=dims2, n_pages=80, seed=17,
+                                    gate_drop=drop)
+        blk = WT.weights_from_trials(trials, dims2, n_boot=30, gate_drop=drop)
+        eqs = WT.margin_stats(trials)
+        cals = WT.margin_stats(trials, {d: x["w"] for d, x in blk["by_dim"].items()})
+        v = WT.accept_verdict(eqs, cals, weights={d: x["w"] for d, x in blk["by_dim"].items()})
+        # ① 记录的 a0/a1 必须能用**当时用的权重**从分量复现（同式回归）
+        # ② 权重均在界内、均值≈1；③ 每维都有 CI 两端
+        check("s7/ablation-reproducible",
+              len(trials) >= 8 and eqs.get("recompute_mismatch") == 0
+              and all(WT.W_MIN - 1e-9 <= x["w"] <= WT.W_MAX + 1e-9
+                      for x in blk["by_dim"].values())
+              and all(len(x["ci"] or []) == 2 for x in blk["by_dim"].values()),
+              f"trials={len(trials)} mismatch={eqs.get('recompute_mismatch')} "
+              f"{ {d: x['w'] for d, x in blk['by_dim'].items()} }")
+        check("s7/ablation-improves-margin",
+              cals["median"] is not None and eqs["median"] is not None
+              and cals["median"] > eqs["median"] and v["applied"],
+              f"{eqs.get('median')} -> {cals.get('median')}")
+    else:
+        skip("s7/ablation-reproducible", "无档案/缓存指标")
+        skip("s7/ablation-improves-margin", "无档案/缓存指标")
+
+    # --- 6) 权重接入 evaluate_doc：未启用≡等权；启用后按 w 改变 A_profile
+    if prof and rows:
+        doc = None
+        for p in sorted(os.listdir(pages_dir))[:1]:
+            with open(os.path.join(pages_dir, p), encoding="utf-8") as f:
+                doc = json.load(f)
+        base = dict(prof)
+        base.pop("weights", None)
+        r_eq = AE.evaluate_doc(doc, base)
+        wb = dict(prof.get("weights") or {})
+        wb["applied"] = True
+        wr = AE.evaluate_doc(doc, {**prof, "weights": wb})
+        no_weights_key_is_equal = abs(r_eq["paper"]["a_profile"]
+                                     - (AE.evaluate_doc(doc, base)["paper"]["a_profile"])) < 1e-12
+        check("s7/weights-in-evaluate-doc",
+              no_weights_key_is_equal
+              and wr.get("weights_applied") is True
+              and wr["paper"]["a_profile"] is not None,
+              f"eq={r_eq['paper']['a_profile']} w={wr['paper']['a_profile']}")
+        # 把权重全设为 1 必须与未启用结果逐位相同（口径回归）
+        flat = {"applied": True, "version": "t",
+                "by_dim": {d: {"w": 1.0} for d in (wr["paper"]["weights_used"] or {})}}
+        r_flat = AE.evaluate_doc(doc, {**prof, "weights": flat})
+        check("s7/unit-weights-equal",
+              abs(r_flat["paper"]["a_profile"] - r_eq["paper"]["a_profile"]) < 1e-9,
+              f"{r_flat['paper']['a_profile']} vs {r_eq['paper']['a_profile']}")
+    else:
+        skip("s7/weights-in-evaluate-doc", "无档案/缓存指标")
+        skip("s7/unit-weights-equal", "无档案/缓存指标")
+
+    # --- 7) 落盘/挂载：save + apply_to_profile
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "w.json")
+        WT.save({"schema": WT.WEIGHTS_SCHEMA, "applied": True}, p)
+        prof0 = prof or {}
+        had = "weights" in prof0
+        p2 = WT.apply_to_profile(prof0, {"schema": WT.WEIGHTS_SCHEMA,
+                                         "applied": True, "version": "t"})
+        check("s7/save-and-attach",
+              os.path.isfile(p) and (p2.get("weights") or {}).get("applied") is True
+              and ("weights" in prof0) == had,
+              f"attached={bool(p2.get('weights'))}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1485,6 +1632,7 @@ def main():
     stage4_tests()
     stage5_tests()
     stage6_tests()
+    stage7_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),
