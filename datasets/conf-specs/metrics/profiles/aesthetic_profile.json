@@ -88531,5 +88531,117 @@
    "min_conf": "medium",
    "anom_p": 0.05
   }
+ },
+ "weights": {
+  "schema": "aesthetic_weights.v1",
+  "version": "w1",
+  "method": "ablation",
+  "by_dim": {
+   "density.coverage_text": {
+    "w": 0.6066,
+    "ci": [
+     0.3795,
+     1.6021
+    ],
+    "signal": 0.494618,
+    "noise": 1.434728,
+    "sn": 0.3331,
+    "n_signal": 13,
+    "n_noise": 67,
+    "source": "ablation"
+   },
+   "whitespace.total_ratio": {
+    "w": 0.6749,
+    "ci": [
+     0.3627,
+     1.6627
+    ],
+    "signal": 0.606795,
+    "noise": 1.587052,
+    "sn": 0.3707,
+    "n_signal": 15,
+    "n_noise": 65,
+    "source": "ablation"
+   },
+   "balance.visual_centroid_y": {
+    "w": 1.156,
+    "ci": [
+     0.5701,
+     2.3542
+    ],
+    "signal": 1.0578995,
+    "noise": 1.616357,
+    "sn": 0.6349,
+    "n_signal": 20,
+    "n_noise": 60,
+    "source": "ablation"
+   },
+   "ratio.fig_text": {
+    "w": 0.4552,
+    "ci": [
+     0.3043,
+     0.7215
+    ],
+    "signal": 0.062433,
+    "noise": 1.654912,
+    "sn": 0.0366,
+    "n_signal": 4,
+    "n_noise": 76,
+    "source": "ablation"
+   },
+   "alignment.center_var": {
+    "w": 0.4552,
+    "ci": [
+     0.2769,
+     0.6726
+    ],
+    "signal": 0.023878,
+    "noise": 1.632969,
+    "sn": 0.0142,
+    "n_signal": 12,
+    "n_noise": 68,
+    "source": "ablation"
+   },
+   "balance.d_mid": {
+    "w": 2.6521,
+    "ci": [
+     0.844,
+     3.1559
+    ],
+    "signal": 3.439965,
+    "noise": 2.311743,
+    "sn": 1.4565,
+    "n_signal": 16,
+    "n_noise": 64,
+    "source": "ablation"
+   }
+  },
+  "excluded_dims": [
+   "readability.leading_ratio",
+   "density.coverage_table"
+  ],
+  "n_trials": 80,
+  "n_boot": 200,
+  "applied": true,
+  "note": "相对权重（均值 1），只改变 A_profile 的排序口径；λ 仍为 0",
+  "verdict": {
+   "applied": true,
+   "reasons": [],
+   "equal": {
+    "n": 80,
+    "median": 0.115695,
+    "positive_rate": 0.9875,
+    "recompute_mismatch": 0
+   },
+   "calibrated": {
+    "n": 80,
+    "median": 0.150557,
+    "positive_rate": 0.9875,
+    "recompute_mismatch": 0
+   }
+  },
+  "human_calibration": null,
+  "built_at": "2026-09-30T18:57:44",
+  "profile_version": "v2"
  }
 }

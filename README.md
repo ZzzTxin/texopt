@@ -453,8 +453,8 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
 | 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
 | 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
-| 阶段 7 | 权重校准（负样本消融 + 人类成对比较 Bradley-Terry） | ⬜ |
-| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测） | ⬜ |
+| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二已完成并启用（`texopt/weights.py`，`aesthetic_weights.json`）；步骤三（人类成对比较）**数据未采集 → null** |
+| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ⬜ |
 
 阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
 
@@ -464,7 +464,14 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 - 12.4 稳定性：重复测量完全一致、DPI 50→200 漂移 0
 - 12.6 门槛：6/8 维通过；未过者 `readability.leading_ratio`、`density.coverage_table`（12.1 未覆盖 → 只能作报告项）
 
-文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`。
+阶段 7 结果要点（方案 10.3）：信号 = 该维被退化时的损失增量，噪声 = 对照试验里它在未退化页上的自发损失（P90）；
+`w = SN` 归一到均值 1、裁剪 [0.25, 4]（先归一再裁剪），CI 用按论文聚类的 bootstrap。
+80 组试验下：`balance.d_mid` **2.65**、`balance.visual_centroid_y` 1.16、`whitespace.total_ratio` 0.67、
+`density.coverage_text` 0.61、`ratio.fig_text` 0.46、`alignment.center_var` 0.46；
+验收：退化后 A 上升正向率 0.9875 不变、中位判别间隔 0.1157 → **0.1506**（严格改善）→ `applied=true`。
+**λ 仍为 0**：权重只改 `A_profile` 合成口径（`Σw·v/Σw`），不参与验收；λ>0 需人类标定 + 用户审批。
+
+文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`。
 
 阶段 6 接入要点（详见 `docs/stage6_shadow_integration.md`）：影子只在「判定完成之后」被调用（基线 / 接受分支 / 终态），λ 恒为 0；每次运行产
 `workbench/<run>/aesthetic_shadow.md`（人读，含逐轮 trace 与人工核对清单）与
@@ -501,6 +508,7 @@ texopt/
 │   ├── aesthetic.py       # 阶段 4：马氏距离 D² + 非单调带外损失 A_profile
 │   ├── shadow.py          # 阶段 4/5：影子评估（λ=0）+ 加载 eval_gate.json 剔除未过门槛的维
 │   ├── evalproto.py       # 阶段 5：评测与验收协议 12.1-12.6
+│   ├── weights.py         # 阶段 7：权重校准（消融 + Bradley-Terry + 验收）
 │   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
 ├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
 ├── examples/              # 靶子稿（demo/issues/chaos/nightmare/aidtest/…）
@@ -531,6 +539,14 @@ python3 tools/eval_protocol.py --only gate                 # 只重算门槛（�
 ```bash
 python3 optimize.py paper.tex --shadow-only        # 只出 aesthetic_shadow.md/.json
 python3 tests/run_tests.py                         # 含 s6/no-decision-change（开关影子判定一致）
+```
+
+阶段 7 权重校准（离线跑缓存指标，秒级；`--apply` 才挂回档案）：
+
+```bash
+cd datasets/conf-specs
+python3 tools/calibrate_weights.py --trials 80 --bootstrap 200 --apply
+python3 tools/calibrate_weights.py --pairs ../human/pairs.json --apply   # 步骤三（需人类数据）
 ```
 
 测试只写 `_regress/`（Windows 盘符下），跑完自动清理；examples/ 里的靶子只读。
