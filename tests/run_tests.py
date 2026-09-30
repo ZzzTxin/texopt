@@ -926,6 +926,179 @@ def stage3_tests():
           and X.caption_kind("Figures show the trend") is None)
 
 
+def stage4_tests():
+    """阶段 4：马氏距离异常检测 + 非单调带外损失 A_profile（纯逻辑，不依赖 PDF）。"""
+    print("\n== 阶段 4：多维异常检测 + A_profile（影子） ==")
+    import random as _rnd
+    from texopt import aesthetic as AE, shadow as SH
+
+    DIMS = list(AE.DEFAULT_DIMS[:6])       # 合成数据用前 6 个真实指标名
+
+    def gen(n, seed=11):
+        r = _rnd.Random(seed)
+        rows = []
+        for _ in range(n):
+            f1, f2 = r.gauss(0, 1), r.gauss(0, 1)
+            z = [0.8 * f1 + 0.6 * r.gauss(0, 1) if i % 2 == 0
+                 else 0.7 * f2 + 0.714 * r.gauss(0, 1) for i in range(len(DIMS))]
+            rows.append({"metrics": {d: round(50 + 10 * z[i], 4)
+                                     for i, d in enumerate(DIMS)}})
+        return rows
+
+    def mkpage(i, flat, role="body"):
+        pg = {"page": i, "role": role}
+        pg.update(AE._metrics_as_page(flat))
+        return pg
+
+    rows = gen(300)
+    small, big = gen(40, seed=3), gen(400, seed=4)
+
+    # --- 线性代数 / 统计内核
+    A = [[4.0, 1.0, 0.5], [1.0, 3.0, 0.2], [0.5, 0.2, 2.0]]
+    inv = AE.inv_spd(A)
+    prod = [[sum(inv[i][k] * A[k][j] for k in range(3)) for j in range(3)]
+            for i in range(3)]
+    err = max(abs(prod[i][j] - (1.0 if i == j else 0.0))
+              for i in range(3) for j in range(3))
+    check("a4/chol-inverse", err < 1e-9, f"err={err}")
+    sing = [[1.0, 1.0], [1.0, 1.0]]        # 奇异：必须走 jitter / Gauss-Jordan
+    invs, how = AE.invert(sing)
+    check("a4/inverse-fallback", invs is not None and how != "cholesky", how)
+    check("a4/chi2-sf", abs(AE.chi2_sf(3.841, 1) - 0.05) < 2e-3
+          and abs(AE.chi2_sf(9.488, 4) - 0.05) < 2e-3)
+    check("a4/chi2-quantile", abs(AE.chi2_isf(0.10, 8) - 13.362) < 0.05)
+
+    # --- 判定块构建
+    cb_s = AE.build_block(small, DIMS, min_pages=20, confidence="medium")
+    cb_b = AE.build_block(big, DIMS, min_pages=20, confidence="high")
+    check("a4/build-block", bool(cb_s) and bool(cb_b)
+          and cb_s["solver"] == "cholesky" and len(cb_b["dims"]) == len(DIMS))
+    check("a4/lw-shrinkage", 0.0 <= cb_b["delta"] <= 1.0
+          and cb_s["delta"] > cb_b["delta"],
+          f"small={cb_s['delta']} big={cb_b['delta']}")
+    check("a4/d2-ref", 0.0 < cb_b["d2_ref"] < 60.0, str(cb_b["d2_ref"]))
+    check("a4/loss-ref", all(v > 0 for v in cb_b["loss_ref"].values()),
+          str(cb_b["loss_ref"]))
+
+    det = AE.Detector(cb_b)
+
+    # --- D^2
+    d2s = [det.mahalanobis(det.vector(AE._metrics_as_page(r["metrics"])))[0]
+           for r in rows]
+    m = dict(rows[0]["metrics"])
+    for d in DIMS[:3]:
+        m[d] = m[d] + 8 * cb_b["scale"][DIMS.index(d)]
+    d2o, ko, po, howo = det.mahalanobis(det.vector(AE._metrics_as_page(m)))
+    import statistics as _st
+    med = _st.median(d2s)
+    check("a4/mahalanobis-detects-outlier",
+          d2o > max(d2s) and d2o > 3 * med and po < 1e-6,
+          f"outlier D2={d2o:.1f} vs max normal {max(d2s):.1f} / median {med:.1f}")
+    m2 = dict(rows[0]["metrics"])
+    for d in DIMS[2:]:
+        m2[d] = None
+    d2s2, k2, p2, _ = det.mahalanobis(det.vector(AE._metrics_as_page(m2)))
+    check("a4/mahalanobis-subset", k2 == 2 and d2s2 is not None,
+          f"k_used={k2}")
+
+    # --- 带外损失：非单调 + 不对称 + low 方向
+    d0 = DIMS[0]
+    i0 = DIMS.index(d0)
+    lo, hi = cb_b["bands"][d0]
+    s0 = cb_b["scale"][i0]
+
+    def loss_at(val, dim=d0, base=None):
+        mm = dict(base or rows[0]["metrics"])
+        mm[dim] = val
+        return det.band_loss(det.vector(AE._metrics_as_page(mm))).get(dim)
+
+    inside = loss_at((lo + hi) / 2)
+    up1, up2 = loss_at(hi + s0), loss_at(hi + 2 * s0)
+    dn1 = loss_at(lo - s0)
+    check("a4/band-loss-nonmonotone", inside == 0.0 and 0.0 < up1 < up2,
+          f"{inside} {up1} {up2}")
+    check("a4/band-loss-asymmetric", dn1 > up1,
+          f"below={dn1} above={up1} (W_LOW={AE.W_LOW}>W_HIGH={AE.W_HIGH})")
+    dlow = "alignment.center_var"
+    if dlow in cb_b["dims"]:
+        hlow = cb_b["bands"][dlow][1]
+        slow = cb_b["scale"][cb_b["dims"].index(dlow)]
+        check("a4/low-direction-upper-only",
+              loss_at(hlow - 3 * slow, dlow) == 0.0
+              and loss_at(hlow + 3 * slow, dlow) > 0.0)
+    else:
+        skip("a4/low-direction-upper-only", "该档未含 low 方向指标")
+
+    # --- 零膨胀维剔除 / 重尾 log1p / 损失上限
+    zin = gen(200, seed=9)
+    for r in zin:
+        r["metrics"]["density.coverage_table"] = 0.0        # 常数（零膨胀）
+    cbz = AE.build_block(zin, DIMS + ["density.coverage_table"],
+                         min_pages=20, confidence="high")
+    check("a4/zero-inflated-dropped",
+          cbz is not None and "density.coverage_table" not in cbz["dims"]
+          and any("零膨胀" in n or "常数" in n for n in cbz["notes"]),
+          str(cbz["notes"]) if cbz else "block=None")
+    import math as _m
+    check("a4/log1p-domain", "ratio.fig_text" in AE.LOG1P_DIMS
+          and abs(AE._tf("ratio.fig_text", 99.0) - _m.log1p(99.0)) < 1e-12
+          and abs(AE._tf("density.coverage_text", 0.5) - 0.5) < 1e-12)
+    check("a4/loss-cap", det.norm_loss("ratio.fig_text", 1e9) <= AE.LOSS_CAP)
+
+    # --- evaluate_doc 结构与单调性（方案 12.1 最简版）
+    prof = {"schema": "aesthetic_profile.v1", "profile_version": "v2",
+            "mahalanobis": {"level": {"venue_role": {"xx|body": cb_b},
+                                      "role": {"body": cb_b}}, "dims": DIMS}}
+    doc = {"doc": {"venue": "xx", "pages": 3},
+           "pages": [mkpage(i + 1, rows[i]["metrics"]) for i in range(3)]}
+    rep = AE.evaluate_doc(doc, prof)
+    paper = rep["paper"]
+    check("a4/eval-doc-fields",
+          rep["schema"] == AE.SCHEMA and paper["a_profile"] is not None
+          and rep["n_pages_scored"] == 3
+          and isinstance(paper["top_anomalous"], list)
+          and set(paper["dim_norm_p90"]) <= set(cb_b["dims"]),
+          str(paper.get("status")))
+    check("a4/eval-deterministic", AE.evaluate_doc(doc, prof) == rep)
+
+    aps = []
+    for f in (0.0, 1.0, 2.0, 3.0):
+        mm = dict(rows[0]["metrics"])
+        for d in DIMS:
+            mm[d] = mm[d] + f * cb_b["scale"][DIMS.index(d)]
+        d2 = {"doc": {"venue": "xx", "pages": 1},
+              "pages": [mkpage(1, mm)]}
+        aps.append(AE.evaluate_doc(d2, prof)["paper"]["a_profile"])
+    check("a4/monotone-degradation",
+          all(aps[i] < aps[i + 1] for i in range(len(aps) - 1)), str(aps))
+
+    # --- 影子模式与门控（13.1 / 13.2 / 13.3）
+    check("a4/shadow-lambda-zero", SH.LAMBDA == 0.0)
+    g_ok = SH.gate({"a_defect": 1.0, "a_profile": 2.0, "hard": 0},
+                   {"a_defect": 1.0, "a_profile": 1.5, "hard": 0})
+    g_a = SH.gate({"a_defect": 1.0, "a_profile": 2.0, "hard": 0},
+                  {"a_defect": 1.4, "a_profile": 1.0, "hard": 0})
+    g_no = SH.gate({"a_defect": 1.0, "a_profile": 2.0, "hard": 0},
+                   {"a_defect": 1.0, "a_profile": 2.2, "hard": 0})
+    g_hard = SH.gate({"a_defect": 1.0, "a_profile": 2.0, "hard": 0},
+                     {"a_defect": 1.0, "a_profile": 1.0, "hard": 1})
+    check("a4/gate", g_ok["allow"] and not g_a["allow"]
+          and not g_no["allow"] and not g_hard["allow"],
+          f"{g_ok['reason']} | {g_a['reason']} | {g_no['reason']} | {g_hard['reason']}")
+
+    # --- 真实档案（存在才查，避免把数据缺失当成代码错）
+    p2 = SH.load_profile()
+    if p2:
+        mh = p2.get("mahalanobis") or {}
+        check("a4/profile-v2",
+              p2.get("profile_version") == "v2"
+              and bool((mh.get("level") or {}).get("venue_role"))
+              and bool((mh.get("level") or {}).get("role")),
+              f"venue_role={len((mh.get('level') or {}).get('venue_role') or {})}")
+    else:
+        skip("a4/profile-v2", "未找到含 mahalanobis 块的档案")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -945,6 +1118,7 @@ def main():
     stage1_tests()
     stage2_tests()
     stage3_tests()
+    stage4_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),
