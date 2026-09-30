@@ -1,0 +1,187 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=25.4mm]{geometry}
+\usepackage{graphicx,booktabs,amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+\title{A Demonstrator Paper for Whole-Document Layout Optimization}
+\author{Sh Lab \\ Zhejiang University}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+This document is a demonstrator. It is deliberately clean: no manual spacing,
+no manual page breaks and no unstable float specifications. It exists so that
+the deterministic closed loop can be run end to end on a realistic multi-page
+article, and so that page-limit requests can be exercised without touching the
+content.
+\end{abstract}
+
+\section{Introduction}
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+Float placement is the hardest part of the problem. A figure that is referenced in one paragraph may be typeset several pages later, and the quality of the page depends on whether the top, bottom and text fraction constraints of the float mechanism are balanced. Sanitising the float specification to the top, bottom and page forms is a cheap first step.
+
+Quality macros are injected before any structural edit. Penalties for widows and orphans, limits on consecutive hyphenated lines and a small emergency stretch are enough to remove a large fraction of the visual defects that a raw manuscript shows, and they do not change a single character of the body text.
+
+Reporting matters as much as repair. Every run writes a machine readable trace and a human readable report. The report lists the residual problems that the system deliberately left alone, together with the reason, so that a human author can decide whether to rewrite a sentence, move a figure or accept the page as it is.
+
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+
+\section{Related Work}
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+Float placement is the hardest part of the problem. A figure that is referenced in one paragraph may be typeset several pages later, and the quality of the page depends on whether the top, bottom and text fraction constraints of the float mechanism are balanced. Sanitising the float specification to the top, bottom and page forms is a cheap first step.
+
+Quality macros are injected before any structural edit. Penalties for widows and orphans, limits on consecutive hyphenated lines and a small emergency stretch are enough to remove a large fraction of the visual defects that a raw manuscript shows, and they do not change a single character of the body text.
+
+Reporting matters as much as repair. Every run writes a machine readable trace and a human readable report. The report lists the residual problems that the system deliberately left alone, together with the reason, so that a human author can decide whether to rewrite a sentence, move a figure or accept the page as it is.
+
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+
+\section{Method}
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+Float placement is the hardest part of the problem. A figure that is referenced in one paragraph may be typeset several pages later, and the quality of the page depends on whether the top, bottom and text fraction constraints of the float mechanism are balanced. Sanitising the float specification to the top, bottom and page forms is a cheap first step.
+
+Quality macros are injected before any structural edit. Penalties for widows and orphans, limits on consecutive hyphenated lines and a small emergency stretch are enough to remove a large fraction of the visual defects that a raw manuscript shows, and they do not change a single character of the body text.
+
+Reporting matters as much as repair. Every run writes a machine readable trace and a human readable report. The report lists the residual problems that the system deliberately left alone, together with the reason, so that a human author can decide whether to rewrite a sentence, move a figure or accept the page as it is.
+
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+
+\begin{table}[tbp]\centering
+\caption{Reported layout observations per requirement class.}
+\begin{tabular}{lll}\toprule
+Class & Signal & Typical action \\\midrule
+Hard spec & font size, margin & align to requirement \\
+Compile & missing file & report and stop \\
+Page limit & page count & pure-layout reduction \\
+Quality & overfull, underfull & reflow or renormalize \\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Experiments}
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+Float placement is the hardest part of the problem. A figure that is referenced in one paragraph may be typeset several pages later, and the quality of the page depends on whether the top, bottom and text fraction constraints of the float mechanism are balanced. Sanitising the float specification to the top, bottom and page forms is a cheap first step.
+
+Quality macros are injected before any structural edit. Penalties for widows and orphans, limits on consecutive hyphenated lines and a small emergency stretch are enough to remove a large fraction of the visual defects that a raw manuscript shows, and they do not change a single character of the body text.
+
+Reporting matters as much as repair. Every run writes a machine readable trace and a human readable report. The report lists the residual problems that the system deliberately left alone, together with the reason, so that a human author can decide whether to rewrite a sentence, move a figure or accept the page as it is.
+
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+
+\begin{figure}[tbp]\centering
+\includegraphics[width=0.78\linewidth]{example-image}
+\caption{A schematic of the perceive--score--act loop. The optimizer never edits
+the source without recompiling the whole document afterwards.}
+\end{figure}
+
+\section{Discussion}
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+Float placement is the hardest part of the problem. A figure that is referenced in one paragraph may be typeset several pages later, and the quality of the page depends on whether the top, bottom and text fraction constraints of the float mechanism are balanced. Sanitising the float specification to the top, bottom and page forms is a cheap first step.
+
+Quality macros are injected before any structural edit. Penalties for widows and orphans, limits on consecutive hyphenated lines and a small emergency stretch are enough to remove a large fraction of the visual defects that a raw manuscript shows, and they do not change a single character of the body text.
+
+Reporting matters as much as repair. Every run writes a machine readable trace and a human readable report. The report lists the residual problems that the system deliberately left alone, together with the reason, so that a human author can decide whether to rewrite a sentence, move a figure or accept the page as it is.
+
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+
+\section{Conclusion}
+The demonstrator restates the design rule of the system: measure the whole
+document, act locally, recompile, and keep an edit only when the global
+objective improves.
+
+\begin{thebibliography}{9}
+\bibitem{knuth} D.~E. Knuth and M.~F. Plass, \emph{Breaking Paragraphs into
+Lines}, Software: Practice and Experience, 1981.
+\bibitem{luo} Y.~Luo, \emph{Global versus local optimisation in document
+layout}, Journal of Typesetting Systems, 2024.
+\bibitem{openclaw} The OpenClaw Project, \emph{Agent architecture notes}, 2026.
+\end{thebibliography}
+\end{document}

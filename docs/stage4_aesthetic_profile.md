@@ -139,6 +139,8 @@ venue|role  →  role|layout  →  role
 
 完整套件：**173 通过 / 0 失败 / 5 跳过**（5 项跳过均为 `examples/` 靶稿缺失，非代码问题）。
 
+> 注（2026-09-30）：靶稿已重建并进 git（`examples/gen_fixtures.py`），这 5 项跳过清零。
+
 ## 10. 复现命令
 
 ```bash

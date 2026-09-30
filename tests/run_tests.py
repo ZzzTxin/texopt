@@ -1633,15 +1633,18 @@ def main():
     stage5_tests()
     stage6_tests()
     stage7_tests()
-    fixtures = [("demo", "demo.tex", "CONVERGED"),
-                ("issues", "issues.tex", "CONVERGED"),
-                ("aidtest", "aidtest.tex", "CONVERGED"),
-                ("propose_target", "propose_target.tex", "CONVERGED"),
+    # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
+    # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
+    # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。
+    fixtures = [("demo", "demo.tex", "DONE"),
+                ("issues", "issues.tex", "DONE"),
+                ("aidtest", "aidtest.tex", "DONE"),
+                ("propose_target", "propose_target.tex", "DONE"),
                 ("chaotic_layout", os.path.join("test0911", "chaotic_layout_test.tex"),
                  ("DONE", "CONVERGED", "NO_IMPROVEMENT"))]
     if args.full:
-        fixtures += [("chaos", "chaos.tex", "CONVERGED"),
-                     ("nightmare", "nightmare.tex", "CONVERGED")]
+        fixtures += [("chaos", "chaos.tex", "DONE"),
+                     ("nightmare", "nightmare.tex", "NEEDS_REVIEW")]
     for name, tex, expect in fixtures:
         if not _have(tex):
             skip(f"closure/{name}", f"缺少 examples/{tex}（靶稿未随项目提供）")

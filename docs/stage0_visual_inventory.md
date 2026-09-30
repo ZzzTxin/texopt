@@ -209,11 +209,14 @@ Windows 端会占用上一轮的 PDF/aux，导致调用方的 `shutil.rmtree(out
 （5 项跳过：examples/ 靶稿缺失，非代码问题）
 ```
 
+> 注（2026-09-30）：那 5 项跳过已随靶稿重建而清零，见 5.6 第 1 条。
+
 新增 7 条针对性回归：`fix/work-tex-path-keeps-name`、`fix/optimizer-work-tex-not-paper`、`fix/resume-detects-named-work-copy`、`fix/proxy-delegates-to-metrics`、`fix/stale-artifacts-cleaned`、`fix/stale-clean-keeps-sources`、`fix/stale-locked-reported`。
 
 ### 5.6 两个待你决定的问题（未动）
 
 1. **`examples/` 靶稿丢失**：`demo.tex` / `issues.tex` / `aidtest.tex` / `propose_target.tex` / `fig_violation.tex` / `chaos.tex` / `nightmare.tex` 在当前工作区与 git 历史里都找不到（全盘搜索无果，且不在任何归档 zip 里），所以套件里 5 项只能 SKIP。建议：要么重建后**纳入 git**，要么把这几条改成内联靶稿（与单元测试同风格）。
+   **→ 已解决（2026-09-30）**：用 `examples/gen_fixtures.py` 重建（可复现脚本 + 生成结果一起进 git），套件里 5 项 SKIP 清零；靶稿说明与预期状态见 `examples/README.md`。
 2. **`_regress/` 既被 git 跟踪、又被测试跑完清空**：跑一次完整套件就会删掉仓库里的跟踪文件（本次已 `git checkout -- _regress` 还原）。建议加进 `.gitignore` 并 `git rm -r --cached _regress`，让 scratch 目录真的只是 scratch。
 
 ## 6. 阶段 0 结论与阶段 1 建议顺序
