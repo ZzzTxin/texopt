@@ -83,11 +83,38 @@ def _q(v_sorted, q: float) -> float:
 
 
 def percentile(values, q: float):
-    """未排序序列的线性插值分位（与 profile 同口径）。空→None。"""
-    vals = sorted(v for v in values if v is not None and not _isnan(v))
-    if not vals:
+    """分位数（线性插值）。"""
+    v = sorted(float(x) for x in values if x is not None)
+    if not v:
         return None
-    return round(_q(vals, q), 6)
+    return _q(v, q)
+
+
+def topk_mean(values, k: int = 1):
+    """前 k 大均值（CVaR 式聚合）：对「局部单页异常」敏感，又不被单个离群页完全主导。"""
+    v = sorted((float(x) for x in values if x is not None), reverse=True)
+    if not v:
+        return None
+    k = max(1, min(int(k), len(v)))
+    return round(sum(v[:k]) / k, 6)
+
+
+W_TOPK = 0.5          # 页→文档聚合：严重性项（前 k 大均值）权重
+
+
+def pooled_agg(values, k: int = 1):
+    """页级值 -> 文档级值：`W_TOPK·前k大均值 + (1-W_TOPK)·均值`。
+
+    为什么不能只用 max / 前-k 均值（阶段 5 实测）：只要**别的页**在当前维上值更大，
+    被注入页的退化就不会改变聚合值，12.1 单调性直接失败（实测 6/81 例）。
+    均值项保证「任何一页变差都会抬高文档级值」，前-k 项保留「严重性」的敏感度。
+    """
+    v = [float(x) for x in values if x is not None]
+    if not v:
+        return None
+    tk = topk_mean(v, k)
+    mean = sum(v) / len(v)
+    return round(W_TOPK * tk + (1.0 - W_TOPK) * mean, 6)
 
 
 def _tf(dim: str, v) -> float:
@@ -307,16 +334,27 @@ def chi2_isf(p: float, k: int) -> float:
 # ---------------------------------------------------------------- 档（判定模型）
 
 class Detector:
-    """一个分层（venue|role 或 role）上的判定模型：D^2 + 带外损失。"""
+    """一个分层（venue|role 或 role）上的判定模型：D^2 + 带外损失。
 
-    def __init__(self, block: dict, label: str = ""):
+    `drop`：阶段 5（方案 12.6）未通过门槛的指标清单 —— 被剔除的维**不参与判定**，
+    只在报告里保留（不物理删数据，只在这里过滤，可逆、可审计）。
+    """
+
+    def __init__(self, block: dict, label: str = "", drop=None):
         self.label = label
-        self.dims = list(block.get("dims") or [])
-        self.center = list(block.get("center") or [])
-        self.scale = list(block.get("scale") or [])
-        self.bands = dict(block.get("bands") or {})
-        self.directions = dict(block.get("directions") or {})
-        self.corr = block.get("corr") or []
+        all_dims = list(block.get("dims") or [])
+        drop_set = {d for d in (drop or ()) if d in all_dims}
+        keep = [i for i, d in enumerate(all_dims) if d not in drop_set]
+        self.dropped_dims = sorted(drop_set)
+        self.dims = [all_dims[i] for i in keep]
+        self.center = [list(block.get("center") or [])[i] for i in keep]
+        self.scale = [list(block.get("scale") or [])[i] for i in keep]
+        self.bands = {k: v for k, v in (block.get("bands") or {}).items()
+                      if k in self.dims}
+        self.directions = {k: v for k, v in (block.get("directions") or {}).items()
+                           if k in self.dims}
+        C = block.get("corr") or []
+        self.corr = [[C[i][j] for j in keep] for i in keep] if C else []
         self.delta = float(block.get("delta") or 0.0)
         self.d2_ref = block.get("d2_ref")
         self.loss_ref = dict(block.get("loss_ref") or {})
@@ -555,8 +593,11 @@ def _tier_ok(conf) -> bool:
     return CONF_ORDER.get(conf or "low", 0) >= CONF_ORDER.get(MIN_CONF_TIER, 1)
 
 
-def pick_detector(profile: dict, venue, role: str, layout: str | None = None):
+def pick_detector(profile: dict, venue, role: str, layout: str | None = None,
+                  drop=None):
     """按 venue|role → role|layout → role 顺序挑档；低可信度档跳过（方案 5.3）。
+
+    `drop`（方案 12.6）：未通过阶段 5 门槛的指标，不参与判定。
 
     `role|layout` 层存在的理由（实测）：小样本会议（n<16）的 venue 档可信度低
     只能回退到 role 层，而 role 层是**跨栏数混合**的 —— 单栏论文在混合档里必然
@@ -572,13 +613,20 @@ def pick_detector(profile: dict, venue, role: str, layout: str | None = None):
     for level, key in order:
         blk = (mh.get(level) or {}).get(key)
         if blk and _tier_ok(blk.get("confidence")):
-            return Detector(blk, label=f"{level}:{key}"), level, key
+            det = Detector(blk, label=f"{level}:{key}", drop=drop)
+            if not det.dims:                 # 全被剔除 → 等价于无档
+                continue
+            return det, level, key
     return None, None, None
 
 
 def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
-                 lambda_: float = 0.0, top_n: int = 10) -> dict:
-    """一篇文档的页级指标 + 档案 -> 影子评估报告（不改任何分数）。"""
+                 lambda_: float = 0.0, top_n: int = 10, drop_dims=None) -> dict:
+    """一篇文档的页级指标 + 档案 -> 影子评估报告（不改任何分数）。
+
+    `drop_dims`：未通过阶段 5 门槛的维度（方案 12.6，只报告不参与判定）。
+    """
+    drop = list(drop_dims or ())
     meta = doc.get("doc") or doc.get("meta") or {}
     venue = venue or meta.get("venue")
     layout = meta.get("layout")
@@ -589,7 +637,7 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
         role = p.get("role") or "unknown"
         det = dicts.get(role)
         if role not in dicts:
-            det, level, key = pick_detector(profile, venue, role, layout)
+            det, level, key = pick_detector(profile, venue, role, layout, drop=drop)
             dicts[role] = det
             if det:
                 used[role] = f"{level}:{key}"
@@ -607,38 +655,34 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
         "schema": SCHEMA, "profile_version": profile.get("profile_version"),
         "profile_schema": profile.get("schema"), "venue": venue,
         "lambda": lambda_, "mode": "shadow" if not lambda_ else "active",
+        "dropped_dims": drop,
         "levels_used": used, "n_pages": len(pages), "n_pages_scored": len(ok_pages),
         "per_page": per_page,
     }
-    # 论文级聚合：整体画像用 median，异常判定用 P90 / max（方案第六章）
-    dims_norm, dim_loss_p90 = {}, {}
-    for role, det in dicts.items():
+    # 论文级聚合（阶段 5 修订，见 docs/stage5_eval_protocol.md F1）：
+    #   * 旧口径「按 role 取 P90 再跨 role 取 max」有两个真问题：
+    #     ① 某个 role 的单页大损失会**遮住**其它页/其它 role 的变化；
+    #     ② 长文里单页退化在 P90 分位上几乎不可见 —— 12.1 单调性直接失败。
+    #   * 新口径：逐页先按**本页所属档**归一化（loss/ref、D²/d2_ref），再把该维所有页的
+    #     归一化值做「前 k 大均值」（k = max(1, round(5%·页数))）——CVaR 式聚合，
+    #     既对局部单页异常敏感，又不被单个离群页完全主导。
+    k_top = max(1, int(round(0.05 * len(ok_pages)))) if ok_pages else 1
+    dims_norm, dim_loss_pool = {}, {}
+    d2_norm_pool = []
+    for s in ok_pages:
+        det = dicts.get(s["role"])
         if not det:
             continue
-        rpages = [s for s in ok_pages if s["role"] == role]
-        if not rpages:
-            continue
-        for d in det.dims:
-            losses = [s["losses"].get(d) for s in rpages if d in s.get("losses", {})]
-            p90 = percentile(losses, 0.90)
-            if p90 is None:
-                continue
-            prev = dim_loss_p90.get(d)
-            dim_loss_p90[d] = p90 if prev is None else max(prev, p90)
-            dims_norm[d] = det.norm_loss(d, dim_loss_p90[d])
+        if s.get("d2") is not None:
+            d2_norm_pool.append(det.norm_d2(s["d2"], s.get("k_used") or 1))
+        for d, l in (s.get("losses") or {}).items():
+            dim_loss_pool.setdefault(d, []).append(l)
+            dims_norm.setdefault(d, []).append(det.norm_loss(d, l))
+    dims_norm = {d: pooled_agg(v, k_top) for d, v in dims_norm.items()}
+    dim_loss_top = {d: topk_mean(v, k_top) for d, v in dim_loss_pool.items()}
     d2s = [s["d2"] for s in ok_pages if s.get("d2") is not None]
     d2_p90, d2_max = percentile(d2s, 0.90), (max(d2s) if d2s else None)
-    norm_d2 = None
-    for role, det in dicts.items():
-        if not det:
-            continue
-        rd = [s["d2"] for s in ok_pages
-              if s["role"] == role and s.get("d2") is not None]
-        rp90 = percentile(rd, 0.90)
-        if rp90 is None:
-            continue
-        v = det.norm_d2(rp90, 1)
-        norm_d2 = v if norm_d2 is None else max(norm_d2, v)
+    norm_d2 = pooled_agg(d2_norm_pool, k_top)
     parts = [v for v in dims_norm.values() if v is not None]
     if norm_d2 is not None:
         parts.append(W_D2 * norm_d2)
@@ -650,16 +694,21 @@ def evaluate_doc(doc: dict, profile: dict, *, venue: str | None = None,
         "status": "ok" if a_profile is not None else "insufficient",
         "a_profile": a_profile,
         "median_d2": percentile(d2s, 0.50), "d2_p90": d2_p90, "d2_max": d2_max,
+        "norm_d2_top": None if norm_d2 is None else round(norm_d2, 6),
         "norm_d2_p90": None if norm_d2 is None else round(norm_d2, 6),
+        "topk": k_top,
+        "dim_norm_top": {d: round(v, 6) for d, v in sorted(dims_norm.items())},
         "dim_norm_p90": {d: round(v, 6) for d, v in sorted(dims_norm.items())},
-        "dim_loss_p90": {d: round(v, 6) for d, v in sorted(dim_loss_p90.items())},
+        "dim_loss_top": {d: round(v, 6) for d, v in sorted(dim_loss_top.items())},
+        "dim_loss_p90": {d: round(v, 6) for d, v in sorted(dim_loss_top.items())},
         "n_anomalous_pages": sum(1 for s in ok_pages
                               if (s.get("p_value") if s.get("p_value") is not None else 1.0) < ANOM_P),
         "top_anomalous": [{"page": s.get("page"), "role": s.get("role"),
                            "d2": s.get("d2"), "p_value": s.get("p_value"),
                            "worst_dim": s.get("worst_dim"),
                            "stratum": s.get("stratum")} for s in anomalies],
-        "note": "A_profile 为等权排序量（方案 10.3 步骤一）；影子模式下不参与验收",
+        "note": "A_profile 为等权排序量（方案 10.3 步骤一）；影子模式下不参与验收；"
+                "页→文档聚合为「0.5·前k大均值 + 0.5·均值」(k=max(1,5%页数))，见阶段 5 文档 F1",
     }
     return report
 

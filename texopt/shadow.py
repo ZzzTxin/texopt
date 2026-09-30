@@ -25,6 +25,10 @@ PROFILE_CANDIDATES = (
                  "aesthetic_profile.json"),
 )
 LAMBDA = 0.0          # 影子模式：不参与验收
+GATE_CANDIDATES = (
+    os.path.join(ROOT, "datasets", "conf-specs", "metrics", "profiles",
+                 "eval_gate.json"),
+)
 
 
 def enabled() -> bool:
@@ -53,11 +57,43 @@ def load_profile(path: str | None = None):
     return prof
 
 
+def load_gate(path: str | None = None) -> dict | None:
+    """读阶段 5 门槛（方案 12.6）；缺文件 → None（不剔除任何维）。"""
+    path = path or default_gate_path()
+    if not path or not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            g = json.load(f)
+    except Exception:
+        return None
+    return g if g.get("schema") == "eval_gate.v1" else None
+
+
+def default_gate_path():
+    for p in GATE_CANDIDATES:
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def gate_drop_dims(path: str | None = None) -> list:
+    """阶段 5 门槛里未通过的维度（方案 12.6：只能作报告项，不得参与 A）。"""
+    g = load_gate(path)
+    return list((g or {}).get("dropped") or [])
+
+
 def evaluate_pdf(pdf_path: str, profile: dict, *, venue: str | None = None,
-                 lambda_: float = LAMBDA, pages=None) -> dict:
-    """PDF -> 提取页级指标 -> 档案判定（D^2 + 带外损失 + A_profile）。"""
+                 lambda_: float = LAMBDA, pages=None, drop_dims=None) -> dict:
+    """PDF -> 提取页级指标 -> 档案判定（D^2 + 带外损失 + A_profile）。
+
+    `drop_dims=None` 时**自动**载入阶段 5 门槛（eval_gate.json），未通过的维不参与判定。
+    """
+    if drop_dims is None:
+        drop_dims = gate_drop_dims()
     doc = EX.extract_pdf(pdf_path, venue=venue)
-    rep = AE.evaluate_doc(doc, profile, venue=venue, lambda_=lambda_)
+    rep = AE.evaluate_doc(doc, profile, venue=venue, lambda_=lambda_,
+                          drop_dims=drop_dims)
     rep["pdf"] = os.path.basename(pdf_path)
     return rep
 
@@ -112,4 +148,7 @@ def summarize(rep: dict | None) -> list[str]:
                  + "，".join(f"{k}={v}" for k, v in worst))
     L.append("> A_profile 只报告不参与验收（λ=0）；权重为方案 10.3「步骤一」等权，"
              "只保证排序可复现，不主张绝对分数可比。")
+    if rep.get("dropped_dims"):
+        L.append(f"> 阶段 5 门槛（12.6）剔除的维度（只报告不参与判定）："
+                 f"{'、'.join(rep['dropped_dims'])}")
     return L
