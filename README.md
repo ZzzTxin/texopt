@@ -452,7 +452,7 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | 阶段 3 | **留白结构化识别（五类 + region 列表）+ 页眉页脚识别 + 未锚图形计入** | ✅（`texopt/whitespace.py`） |
 | 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
 | 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
-| 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ⬜ |
+| 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
 | 阶段 7 | 权重校准（负样本消融 + 人类成对比较 Bradley-Terry） | ⬜ |
 | 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测） | ⬜ |
 
@@ -464,7 +464,12 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 - 12.4 稳定性：重复测量完全一致、DPI 50→200 漂移 0
 - 12.6 门槛：6/8 维通过；未过者 `readability.leading_ratio`、`density.coverage_table`（12.1 未覆盖 → 只能作报告项）
 
-文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`。
+文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`。
+
+阶段 6 接入要点（详见 `docs/stage6_shadow_integration.md`）：影子只在「判定完成之后」被调用（基线 / 接受分支 / 终态），λ 恒为 0；每次运行产
+`workbench/<run>/aesthetic_shadow.md`（人读，含逐轮 trace 与人工核对清单）与
+`aesthetic_shadow.json`（机器），并在 `state.json` 写**版本化快照**（13.4）。
+端到端证据：同文档开/关影子，`status`/`accepted`/`total`/`a`/`L`/页数逐项相同。
 
 **接口/placeholder（已预留但未落地）**：`Requirement.microtype`（None=不干预）；
 视觉代理指标 (`texopt/visual.py`) 已计算但默认不影响评分；
@@ -519,6 +524,13 @@ python3 tests/run_tests.py --full   # 含 chaos/nightmare 大靶子
 cd datasets/conf-specs
 python3 tools/eval_protocol.py --pages-n 80 --perms 100     # 12.1/12.2/12.3/12.4 → eval_gate.json
 python3 tools/eval_protocol.py --only gate                 # 只重算门槛（基于既有结果，秒级）
+```
+
+阶段 6 影子评估（λ=0，仅报告；不改文档）：
+
+```bash
+python3 optimize.py paper.tex --shadow-only        # 只出 aesthetic_shadow.md/.json
+python3 tests/run_tests.py                         # 含 s6/no-decision-change（开关影子判定一致）
 ```
 
 测试只写 `_regress/`（Windows 盘符下），跑完自动清理；examples/ 里的靶子只读。
