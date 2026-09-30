@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-"""阶段 4 在线影子评估：把 A_profile 接到 texopt 的报告里（lambda = 0 影子模式）。
+"""阶段 4/6 在线影子评估：把 A_profile 接到 texopt 的报告里（lambda = 0 影子模式）。
+
+阶段 6（影子模式接入 texopt，λ=0，仅报告）在本模块上的增量：
+  * `evaluate_pdf(..., profile_path=...)`：档案路径可指定（默认随附档案）；
+  * `snapshot(rep)`：写 state.json 的**版本化**快照（13.4：profile_version /
+    venue / 判定档 / 页数 / 可信度口径都在，跨时间可比）；
+  * `report_md(...)`：人读影子报告（`aesthetic_shadow.md`），带逐轮 trace、
+    最偏离维度、异常页与**人工核对清单**；
+  * λ 永远为 0，本模块**不提供**改变判定口径的入口——接入点是 `core.py` 里
+    「已经判定完接受/回滚之后」的观测钩子，因此影子不可能影响优化走向。
 
 原则（设计方案 13.1 - 13.4）：
   * A = A_defect + lambda * A_profile；lambda 默认 **0**（影子模式：
@@ -84,7 +93,8 @@ def gate_drop_dims(path: str | None = None) -> list:
 
 
 def evaluate_pdf(pdf_path: str, profile: dict, *, venue: str | None = None,
-                 lambda_: float = LAMBDA, pages=None, drop_dims=None) -> dict:
+                 lambda_: float = LAMBDA, pages=None, drop_dims=None,
+                 profile_path: str | None = None) -> dict:
     """PDF -> 提取页级指标 -> 档案判定（D^2 + 带外损失 + A_profile）。
 
     `drop_dims=None` 时**自动**载入阶段 5 门槛（eval_gate.json），未通过的维不参与判定。
@@ -95,7 +105,117 @@ def evaluate_pdf(pdf_path: str, profile: dict, *, venue: str | None = None,
     rep = AE.evaluate_doc(doc, profile, venue=venue, lambda_=lambda_,
                           drop_dims=drop_dims)
     rep["pdf"] = os.path.basename(pdf_path)
+    rep["mode"] = "shadow"
+    if profile_path:
+        rep["profile_file"] = os.path.basename(profile_path)
     return rep
+
+
+def snapshot(rep: dict | None) -> dict | None:
+    """影子结果 -> state.json 用的**版本化**快照（方案 13.4）。
+
+    只留可跨时间比较的字段：档案版本 / 会议 / 判定档 / 页数 / 分数 / 门槛剔除。
+    """
+    if not rep:
+        return None
+    if rep.get("status"):                       # error / no-profile
+        return {"status": rep.get("status"),
+                "error": rep.get("error"), "lambda": LAMBDA, "mode": "shadow"}
+    paper = rep.get("paper") or {}
+    return {
+        "schema": "aesthetic_shadow.v1",
+        "mode": "shadow", "lambda": rep.get("lambda", LAMBDA),
+        "profile_version": rep.get("profile_version"),
+        "profile_file": rep.get("profile_file"),
+        "venue": rep.get("venue"),
+        "a_defect": rep.get("a_defect"),          # 现行口径（参与验收的那个 A）
+        "a_profile": paper.get("a_profile"),      # 档案偏离度（只报告）
+        "a_effective": rep.get("a_effective"),
+        "n_pages": rep.get("n_pages"),
+        "n_pages_scored": rep.get("n_pages_scored"),
+        "d2_p90": paper.get("d2_p90"), "median_d2": paper.get("median_d2"),
+        "n_anomalous_pages": paper.get("n_anomalous_pages"),
+        "levels_used": rep.get("levels_used"),
+        "dropped_dims": rep.get("dropped_dims"),
+    }
+
+
+def _worst_dims(rep: dict, k: int = 3):
+    paper = rep.get("paper") or {}
+    dims = paper.get("dim_norm_p90") or paper.get("dim_norm_top") or {}
+    return sorted(dims.items(), key=lambda kv: -kv[1])[:k]
+
+
+def report_md(rep: dict | None, *, baseline: dict | None = None,
+              trace: list | None = None, gate_res: dict | None = None,
+              title: str = "审美档案影子评估（阶段 6，λ=0，仅报告）") -> list[str]:
+    """影子结果 -> 人读 markdown 行（`workbench/<run>/aesthetic_shadow.md`）。
+
+    人工核对要看的东西按顺序摆好：版本/档 → 分数 → 页级统计 → 最偏离维度 →
+    异常页 → 门槛剔除 → 逐轮 trace → 门控 → 核对清单。无数据时如实说明，不包装。
+    """
+    L = [f"## {title}", ""]
+    if not rep:
+        return L + ["- 未运行（无 PDF，或该轮已被 `TEXOPT_NO_SHADOW=1` / "
+                    "`--no-aesthetic-shadow` 关闭）", ""]
+    if rep.get("status") == "error":
+        return L + [f"- 运行失败（已隔离，不影响验收）：{rep.get('error')}", ""]
+    if rep.get("status") == "no-profile":
+        return L + ["- 未运行：档案缺 `mahalanobis` 块（需先跑 "
+                    "`tools/build_profile.py` 重建阶段 2/4 档案）", ""]
+    paper = rep.get("paper") or {}
+    L += [f"- 档案版本：**{rep.get('profile_version')}**"
+          + (f"（{rep.get('profile_file')}）" if rep.get("profile_file") else "")
+          + f"；会议档：{rep.get('venue') or '（无）'}；模式：`{rep.get('mode')}`，"
+          f"λ=**{rep.get('lambda')}**（只报告，不参与验收）",
+          f"- 分数：A_defect（现行口径，参与验收）=**{rep.get('a_defect')}**；"
+          f"A_profile（档案偏离度）=**{paper.get('a_profile')}**；"
+          f"a_effective = {rep.get('a_effective')}（= A_defect + λ·A_profile）",
+          f"- 页级：{rep.get('n_pages_scored')}/{rep.get('n_pages')} 页参与判定；"
+          f"D² 中位 {paper.get('median_d2')}、P90 {paper.get('d2_p90')}、"
+          f"最大 {paper.get('d2_max')}；异常页（p<0.05）"
+          f"**{paper.get('n_anomalous_pages')}** 页"]
+    lv = rep.get("levels_used") or {}
+    L.append("- 判定档（venue|role 优先，低可信度自动回退）："
+             + ("，".join(f"{k}→`{v}`" for k, v in lv.items()) or "—"))
+    worst = _worst_dims(rep)
+    if worst:
+        L.append("- 最偏离维度（相对档案 P90 的带外损失倍率）："
+                 + "，".join(f"{k}={v}" for k, v in worst))
+    tops = (paper.get("top_anomalous") or [])[:3]
+    if tops:
+        L.append("- 最异常页（供人工核对）：" + "；".join(
+            f"p{t.get('page')} {t.get('role')} D²={t.get('d2')} "
+            f"p={t.get('p_value')} 主因 {t.get('worst_dim')}" for t in tops))
+    if rep.get("dropped_dims"):
+        L.append(f"- 阶段 5 门槛（12.6）剔除、**不参与判定**的维度："
+                 f"{'、'.join(rep['dropped_dims'])}")
+    if trace:
+        L += ["", "### 逐轮 trace（每次整篇重编译后的观测值；不影响判定）", "",
+              "| 轮次 | 事件 | A_defect | A_profile | D² P90 | 异常页 | 页数 |",
+              "|---|---|---|---|---|---|---|"]
+        for r in trace:
+            L.append(f"| {r.get('round')} | {r.get('label')} | {r.get('a_defect')} | "
+                     f"{r.get('a_profile')} | {r.get('d2_p90')} | "
+                     f"{r.get('n_anomalous_pages')} | {r.get('n_pages')} |")
+        L.append("")
+    if gate_res is not None:
+        L.append(f"- 目标冲突门控（13.2，仅报告）："
+                 f"{'允许' if gate_res.get('allow') else '不允许'} —— "
+                 f"{gate_res.get('reason')}（影子模式下该门控**不参与**主循环判定）")
+    b = baseline or {}
+    b_ap = ((b.get("paper") or {}).get("a_profile"))
+    L += ["", "### 人工核对清单（阶段 6 产出，逐条看）", "",
+          f"1. λ 是否为 0、A_defect 是否与 `state.json` 的 `scores.a` 一致"
+          f"（现行口径未被改动）",
+          f"2. 基线 A_profile={b_ap} → 终态 A_profile={paper.get('a_profile')}，"
+          f"若终态**变差**而 A_defect 未变差，说明动作把版面推离了会议常态，需人工判断",
+          "3. 逐条看「最偏离维度」是否对应人眼可见的问题（若无可见问题 → 疑似误报，"
+          "记入台账，阶段 7 用作假阳率复核）",
+          "4. 逐条看「最异常页」：是否真的是排版异常页（而非数据/合订本问题）",
+          "5. 门槛剔除维度是否合理（12.1 未覆盖 / 稳定性或假阳率未过 → 只报告）",
+          "6. 档案版本与会议档是否与本次运行的论文匹配", ""]
+    return L
 
 
 def gate(base: dict | None, cur: dict | None, *, tol: float = 1e-9) -> dict:

@@ -78,6 +78,9 @@ def main():
                           "n_anomalous_pages": paper["n_anomalous_pages"],
                           "pages": rep["n_pages"],
                           "status": paper["status"],
+                          "worst_dims": sorted(
+                              (paper.get("dim_norm_p90") or {}).items(),
+                              key=lambda kv: -kv[1])[:3],
                           "top_dim": (min(paper["top_anomalous"], key=lambda d: d["page"])
                                       if paper["top_anomalous"] else None)})
         key = venue or "?"
@@ -155,6 +158,22 @@ def main():
               "| 论文 | 会议 | 页 | A_profile |", "|---|---|---|---|"]
         for p in sorted(sus, key=lambda x: -(x["a_profile"] or 0))[:10]:
             L.append(f"| {p['paper']} | {p['venue']} | {p['pages']} | {p['a_profile']} |")
+    # 阶段 6：人工核对队列（档内相对化排序 + 最偏离维度/最异常页，便于逐条核对）
+    queue = sorted([p for p in ok if p.get("a_profile_rel")],
+                   key=lambda p: -(p["a_profile_rel"] or 0))[:10]
+    if queue:
+        L += ["", "## 人工核对队列（阶段 6；档内相对 A_profile 前 10）", "",
+              "逐条核对：①最偏离维度是否有可见问题（无可见问题 → 疑假阳，记台账）"
+              "②最异常页是否真实异常（而非数据/合订本问题）", "",
+              "| 论文 | 会议 | 档内相对 | A_profile | 最偏离维度（倍率） | 最异常页（角色/主因） |",
+              "|---|---|---|---|---|---|"]
+        for p in queue:
+            wd = "；".join(f"{k}={v}" for k, v in (p.get("worst_dims") or [])) or "—"
+            t = p.get("top_dim") or {}
+            L.append(f"| {p['paper']} | {p['venue']} | {p['a_profile_rel']} | "
+                     f"{p['a_profile']} | {wd} | "
+                     + (f"p{t.get('page')} {t.get('role')}/{t.get('worst_dim')}"
+                        if t else "—") + " |")
     with open(os.path.join(OUT, "shadow_summary.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
     print(f"输出：{OUT}/shadow_report.json, shadow_summary.md；用时 {time.time() - t0:.0f}s")

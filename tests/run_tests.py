@@ -59,6 +59,29 @@ def _have(*names):
     return all(os.path.isfile(os.path.join(EX, n)) for n in names)
 
 
+# 阶段 6 用靶稿（内联生成，不依赖 examples/；ASCII，避免 CJK 依赖）
+_SHADOW_FIXTURE = r"""\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{graphicx,float}
+\setlength{\parskip}{16pt}
+\title{Shadow Mode Regression Fixture}
+\author{texopt}
+\begin{document}
+\maketitle
+\section{Introduction}
+This document is used to check that the aesthetic shadow evaluation reports
+layout statistics without changing any optimization decision.
+\newpage
+\section{Method}
+The second section gives the document more than one page.
+\begin{itemize}\itemsep=18pt
+\item first item
+\item second item
+\end{itemize}
+\end{document}
+"""
+
+
 # ---------------------------------------------------------------- 内联单元靶稿
 # 故意埋入各类排版问题（手动分页/过大 vspace/行内字号/标题字号/列表间距/
 # 超宽相对图宽/长词），用于验证「检测 -> 动作」链路，不依赖 examples/。
@@ -1319,6 +1342,127 @@ def stage5_tests():
           str(bool(gp)))
 
 
+def stage6_tests():
+    """阶段 6：影子模式接入 texopt（λ=0，仅报告）——真实 PDF/编译证据 + 纯逻辑。
+
+    核心断言：影子**不改变任何判定**（同文档开/关影子，status/accepted/total/steps 全同）。
+    """
+    print("\n== 阶段 6：影子模式接入 texopt（λ=0，仅报告） ==")
+    import glob
+    import subprocess
+    from texopt import engine as _eng, shadow as SH, aesthetic as AE
+
+    # --- 1) 真实语料 PDF：evaluate_pdf 的字段与版本化口径
+    pdfs = sorted(glob.glob(os.path.join(
+        ROOT, "datasets", "conf-specs", "sources", "raw", "pdfs", "*.pdf")))
+    prof = SH.load_profile()
+    if pdfs and prof:
+        pdf = next((p for p in pdfs if os.path.getsize(p) > 200_000), pdfs[0])
+        rep = SH.evaluate_pdf(pdf, prof, profile_path=SH.default_profile_path())
+        paper = rep.get("paper") or {}
+        check("s6/evaluate-pdf-shadow",
+              rep.get("mode") == "shadow" and rep.get("lambda") == 0.0
+              and rep.get("profile_version") == prof.get("profile_version")
+              and paper.get("a_profile") is not None
+              and rep.get("dropped_dims") == SH.gate_drop_dims(),
+              f"{rep.get('mode')} {rep.get('lambda')} {paper.get('a_profile')}")
+        snap = SH.snapshot(rep)
+        need = {"schema", "profile_version", "venue", "a_defect", "a_profile",
+                "n_pages_scored", "n_anomalous_pages", "levels_used",
+                "dropped_dims", "lambda"}
+        check("s6/snapshot-versioned",
+              snap.get("schema") == "aesthetic_shadow.v1" and need <= set(snap),
+              str(sorted(set(snap)))[:120])
+        md = "\n".join(SH.report_md(
+            {**rep, "a_defect": 1.0, "a_effective": 1.0},
+            baseline=rep, trace=[{"round": 0, "label": "baseline",
+                                  "a_defect": 1.0, "a_profile": 1.0,
+                                  "d2_p90": 1.0, "n_anomalous_pages": 0,
+                                  "n_pages": 2}],
+            gate_res={"allow": False, "reason": "A_profile 无改善"}))
+        check("s6/report-md-content",
+              "λ=**0.0**" in md and "人工核对清单" in md and "逐轮 trace" in md
+              and "档案版本" in md and "门控" in md and "只报告" in md,
+              md[:120].replace("\n", " "))
+    else:
+        skip("s6/evaluate-pdf-shadow", "无语料 PDF 或档案")
+        skip("s6/snapshot-versioned", "无语料 PDF 或档案")
+        skip("s6/report-md-content", "无语料 PDF 或档案")
+
+    # --- 2) 开关：Requirement 字段 / 环境变量 都可关，λ 恒为 0
+    os.environ["TEXOPT_NO_SHADOW"] = "1"
+    off_env = SH.enabled()
+    os.environ.pop("TEXOPT_NO_SHADOW", None)
+    o_off = Optimizer(os.path.join(EX, "__nope__.tex"),
+                      _req(aesthetic_shadow=False), os.path.join(OUT, "s6_off"))
+    check("s6/toggles",
+          SH.enabled() and not off_env and not o_off._shadow_enabled
+          and SH.LAMBDA == 0.0 and o_off._shadow_eval(None, {"a": 0}) is None,
+          f"env_off={off_env} req_off={o_off._shadow_enabled}")
+
+    # --- 3) 端到端：同一文档，影子开/关 → 判定完全一致（阶段 6 的关键保证）
+    env = _eng.check_environment()
+    if env:
+        skip("s6/no-decision-change", f"环境缺依赖：{'；'.join(env)}")
+        skip("s6/shadow-artifacts", "环境缺依赖")
+        skip("s6/cli-shadow-only", "环境缺依赖")
+        return
+    fx = os.path.join(OUT, "s6_fixture")
+    os.makedirs(fx, exist_ok=True)
+    tex = os.path.join(fx, "shadow_t.tex")
+    with open(tex, "w", encoding="utf-8") as f:
+        f.write(_SHADOW_FIXTURE)
+    res = {}
+    for tag, kw in (("on", {}), ("off", {"aesthetic_shadow": False})):
+        od = os.path.join(OUT, f"s6_run_{tag}")
+        _clean_dir(od)
+        opt = Optimizer(tex, _req(**kw), od)
+        res[tag] = opt.run()
+    a, b = res["on"], res["off"]
+    key = lambda r: (r.get("status"), r.get("accepted"), r.get("total"),
+                     r.get("pages"), r.get("a"), tuple(r.get("l") or []))
+    check("s6/no-decision-change",
+          a.get("status") != "FAILED" and key(a) == key(b),
+          f"{key(a)} vs {key(b)}")
+    od_on = os.path.join(OUT, "s6_run_on")
+    bundle_p = os.path.join(od_on, "aesthetic_shadow.json")
+    md_p = os.path.join(od_on, "aesthetic_shadow.md")
+    bundle = {}
+    if os.path.isfile(bundle_p):
+        with open(bundle_p, encoding="utf-8") as f:
+            bundle = json.load(f)
+    st_p = os.path.join(od_on, "state.json")
+    st = {}
+    if os.path.isfile(st_p):
+        with open(st_p, encoding="utf-8") as f:
+            st = json.load(f)
+    trace = bundle.get("trace") or []
+    check("s6/shadow-artifacts",
+          os.path.isfile(md_p)
+          and bundle.get("schema") == "aesthetic_shadow.v1"
+          and bundle.get("lambda") == 0.0
+          and len(trace) >= 2 and trace[0].get("label") == "baseline"
+          and (bundle.get("final") or {}).get("a_defect") == a.get("a")
+          and not os.path.isfile(os.path.join(OUT, "s6_run_off",
+                                              "aesthetic_shadow.json"))
+          and (st.get("aesthetic_shadow") or {}).get("schema") == "aesthetic_shadow.v1",
+          f"trace={len(trace)} files={sorted(os.listdir(od_on))[:6]}")
+
+    # --- 4) CLI：--shadow-only 只报告不改文档
+    od_cli = os.path.join(OUT, "s6_cli")
+    _clean_dir(od_cli)
+    before = open(tex, encoding="utf-8").read()
+    cp = subprocess.run(
+        [sys.executable, os.path.join(ROOT, "optimize.py"), tex,
+         "--shadow-only", "--outdir", od_cli, "-q"],
+        capture_output=True, text=True, cwd=ROOT, timeout=600)
+    after = open(tex, encoding="utf-8").read()
+    check("s6/cli-shadow-only",
+          cp.returncode == 0 and before == after
+          and os.path.isfile(os.path.join(od_cli, "aesthetic_shadow.md")),
+          f"rc={cp.returncode} {cp.stdout[-160:]} {cp.stderr[-160:]}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1340,6 +1484,7 @@ def main():
     stage3_tests()
     stage4_tests()
     stage5_tests()
+    stage6_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),

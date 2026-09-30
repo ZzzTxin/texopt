@@ -197,6 +197,14 @@ def main() -> int:
     ap.add_argument("--visual-metrics", dest="visual_metrics",
                     action=argparse.BooleanOptionalAction, default=None,
                     help="从编译后的 PDF 量取页面级视觉指标并并入 A（默认开）")
+    ap.add_argument("--aesthetic-shadow", dest="aesthetic_shadow",
+                    action=argparse.BooleanOptionalAction, default=None,
+                    help="审美档案影子评估（阶段 6：λ=0，只报告不改判定；默认开）")
+    ap.add_argument("--shadow-profile", default=None,
+                    help="影子评估用的审美档案路径（默认用随附的 "
+                         "datasets/conf-specs/metrics/profiles/aesthetic_profile.json）")
+    ap.add_argument("--shadow-only", action="store_true",
+                    help="只跑影子评估并输出 aesthetic_shadow.md/.json（不优化）")
     ap.add_argument("--list-actions", action="store_true",
                     help="列出模型在环可用白名单动作后退出")
     ap.add_argument("--json", action="store_true",
@@ -312,9 +320,41 @@ def main() -> int:
                       ("visual_metrics", args.visual_metrics)):
         if val is not None:
             setattr(req, attr, val)
+    # 阶段 6：审美档案影子接入（λ=0，只报告）—— CLI 显式给定则覆盖 settings/模板
+    if args.aesthetic_shadow is not None:
+        req.aesthetic_shadow = args.aesthetic_shadow
+    if args.shadow_profile:
+        req.shadow_profile = args.shadow_profile
     outdir = args.outdir or os.path.join(os.path.dirname(
         os.path.abspath(args.tex)), "workbench")
     req.verbose = not args.quiet
+
+    # ---------------- 阶段 6：只跑影子评估（λ=0，仅报告，不改文档） ----------------
+    if args.shadow_only:
+        if args.aesthetic_shadow is False:
+            print("[影子] --shadow-only 与 --no-aesthetic-shadow 冲突")
+            return 2
+        req.aesthetic_shadow = True
+        req.max_iterations = 0            # 不做任何改动：只编译基线 + 影子观测
+        opt = Optimizer(args.tex, req, outdir)
+        res = opt.run()
+        if res.get("status") == "FAILED":
+            print(f"[影子] 失败：{res.get('reason')}")
+            return 1
+        snap = res.get("aesthetic_shadow") or {}
+        if not snap or snap.get("status"):
+            print("[影子] 未产出（档案缺失或已关闭）："
+                  f"{(snap or {}).get('status') or '无'}")
+            return 1
+        print(f"[影子] λ={snap.get('lambda')}（只报告不改判定）档案={snap.get('profile_version')} "
+              f"会议={snap.get('venue') or '（无）'}")
+        print(f"[影子] A_defect={snap.get('a_defect')}（现行口径，参与验收）｜"
+              f"A_profile={snap.get('a_profile')}｜异常页={snap.get('n_anomalous_pages')}/"
+              f"{snap.get('n_pages_scored')}")
+        print(f"[影子] 门槛剔除维度：{snap.get('dropped_dims') or '无'}")
+        for pth in res.get("aesthetic_shadow_files") or []:
+            print(f"[影子] 产出：{pth}")
+        return 0
 
     # ---------------- 模型在环：只读验证模式 ----------------
     if args.verify:

@@ -91,6 +91,9 @@ class Requirement:
     # ---- 运行参数 ----
     max_iterations: int = 40
     verbose: bool = True
+    # ---- 阶段 6：审美档案影子接入（λ=0，仅报告；不影响任何接受/回滚判定） ----
+    aesthetic_shadow: bool = True          # 关：不跑影子评估（省时/离线回归用）
+    shadow_profile: str | None = None      # 档案路径覆盖（None=随附档案）
     # ---- 确定性排版修复策略（2026-09-11 新增；默认开，均可单独关闭） ----
     # 这些是「检测 -> 动作」补齐后新增的白名单动作开关；关闭即不生成候选。
     tidy_manual_pagebreaks: bool = True    # 删正文 \newpage/\clearpage

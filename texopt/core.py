@@ -67,7 +67,11 @@ class Optimizer:
         self.attempts = 0                # 本轮实际编译验证过的候选动作数
         self.accepted = 0                # 本轮被接受的动作数
         self.baseline = None             # 基线评分快照（报告「A: old -> new」用）
-        self._shadow = None              # 阶段 4 影子评估（λ=0：只报告，不参与验收）
+        self._shadow = None              # 阶段 4/6 影子评估（λ=0：只报告，不参与验收）
+        self._shadow_enabled = bool(getattr(req, "aesthetic_shadow", True)) \
+            and shadow.enabled()
+        self._shadow_profile = getattr(req, "shadow_profile", None)
+        self._shadow_trace: list = []    # 阶段 6：逐轮观测（baseline / 每次接受 / 终态）
         self._defects: list = []         # 当前视觉缺陷（出口状态判定用）
         self._state = None               # 上一次接受后的 (Perception, 评分)
 
@@ -412,6 +416,8 @@ class Optimizer:
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(note_ok, nper, ncur, True, True, "rule")
                 self._state = (nper, ncur)
+                # 阶段 6：**判定完成后**才观测（顺序保证影子不可能影响接受/回滚）
+                self._shadow_eval(nper, ncur, f"round{self.iter}:{key}:accepted")
                 return True
             # 回滚
             self._write(src)
@@ -473,7 +479,7 @@ class Optimizer:
         cur = S.total_score(per, self.req, self.orig_per)
         self.baseline = {"a": cur["a"], "i": cur["i"], "pages": per.pages,
                          "total": cur["total"], "l": len(cur["l"])}
-        self.baseline["aesthetic"] = self._shadow_eval(per, cur)   # 阶段 4 影子基线
+        self.baseline["aesthetic"] = self._shadow_eval(per, cur, "baseline")   # 阶段 4/6 影子基线
 
         self._log(f"基线：{os.path.basename(self.original)} "
                   f"{per.pages} 页 | 字号 {per.source['font_pt']}pt | "
@@ -615,28 +621,104 @@ class Optimizer:
         return req
 
     # ------------------------------------------------------------- 收尾
-    def _shadow_eval(self, per, cur):
-        """阶段 4 影子评估：对当前 PDF 提取页级指标 -> 档案判定（λ=0）。
+    def _shadow_eval(self, per, cur, label: str = "", record: bool = True):
+        """阶段 4/6 影子评估：对当前 PDF 提取页级指标 -> 档案判定（λ=0）。
 
-        绝不参与接受/回滚判定；任何异常都隔离成报告项。
+        绝不参与接受/回滚判定；任何异常都隔离成报告项。调用点都在
+        「已决定接受/回滚之后」，因此影子读取不到也更不可能改写判定。
         """
-        if not shadow.enabled():
+        if not self._shadow_enabled:
             return None
         if not (per and per.ok and getattr(per.compile, "pdf_path", None)):
             return None
         try:
-            prof = shadow.load_profile()
+            prof = shadow.load_profile(self._shadow_profile)
             if not prof:
                 return {"status": "no-profile"}
-            rep = shadow.evaluate_pdf(per.compile.pdf_path, prof,
-                                      venue=getattr(self.req, "conference", None))
+            rep = shadow.evaluate_pdf(
+                per.compile.pdf_path, prof,
+                venue=getattr(self.req, "conference", None),
+                profile_path=(self._shadow_profile or shadow.default_profile_path()))
             rep["a_defect"] = cur["a"]
             a = (rep.get("paper") or {}).get("a_profile")
             rep["a_profile"] = a
             rep["a_effective"] = round(cur["a"] + shadow.LAMBDA * (a or 0.0), 6)
+            rep["label"] = label
+            if record and rep.get("status") is None:
+                paper = rep.get("paper") or {}
+                self._shadow_trace.append({
+                    "round": self.iter, "label": label or "observe",
+                    "a_defect": rep.get("a_defect"), "a_profile": a,
+                    "d2_p90": paper.get("d2_p90"),
+                    "n_anomalous_pages": paper.get("n_anomalous_pages"),
+                    "n_pages": rep.get("n_pages"),
+                })
             return rep
         except Exception as e:                        # 影子失败绝不影响主流程
             return {"status": "error", "error": f"{type(e).__name__}: {e}"}
+
+    def _shadow_gate(self, rep, cur=None) -> dict | None:
+        """基线 vs 终态的目标冲突门控（13.2），仅用于报告。"""
+        if not rep or rep.get("status"):
+            return None
+        b = ((self.baseline or {}).get("aesthetic") or {})
+        if b.get("status") or not b:
+            return None
+        return shadow.gate(
+            {"a_defect": (self.baseline or {}).get("a"),
+             "a_profile": (b.get("paper") or {}).get("a_profile"),
+             "hard": (self.baseline or {}).get("l")},
+            {"a_defect": self._shadow_defect(rep),
+             "a_profile": (rep.get("paper") or {}).get("a_profile"),
+             "hard": len((cur or {}).get("l") or []) if cur else None})
+
+    @staticmethod
+    def _shadow_defect(rep) -> float | None:
+        """影子报告里的 A_defect（现行口径；与 state.json 的 scores.a 同源）。"""
+        return rep.get("a_defect") if rep else None
+
+    def _write_shadow(self, rep, status=None, cur=None):
+        """阶段 6 落盘：`aesthetic_shadow.json`（机器）+ `aesthetic_shadow.md`（人读）。
+
+        两份产物都带 profile_version / 会议档 / λ=0 声明；内容严格只读观测，
+        即使写文件失败也不影响主流程（隔离成报告项）。
+        """
+        if not self._shadow_enabled:
+            return
+        try:
+            b = ((self.baseline or {}).get("aesthetic") or {})
+            bundle = {
+                "schema": "aesthetic_shadow.v1",
+                "mode": "shadow", "lambda": shadow.LAMBDA,
+                "profile_version": (rep or {}).get("profile_version"),
+                "venue": (rep or {}).get("venue") or \
+                    getattr(self.req, "conference", None),
+                "dropped_dims": (rep or {}).get("dropped_dims"),
+                "baseline": shadow.snapshot(b) or b or None,
+                "final": shadow.snapshot(rep) or rep,
+                "trace": self._shadow_trace,
+                "gate": self._shadow_gate(rep, cur),
+                "note": "λ=0 影子模式：只报告，不参与任何接受/回滚判定；"
+                        "a_defect 为现行口径，与 state.json 的 scores.a 一致。",
+            }
+            with open(os.path.join(self.outdir, "aesthetic_shadow.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump(bundle, f, ensure_ascii=False, indent=2)
+            lines = ["# 审美档案影子报告（阶段 6，λ=0，仅报告）", "",
+                     f"- 论文工作副本：`{os.path.basename(self.work_tex)}`；"
+                     f"轮次：{self.iter}；接受动作：{self.accepted}；"
+                     f"状态：{status or '—'}"]
+            lines += shadow.report_md(rep, baseline=b, trace=self._shadow_trace,
+                                      gate_res=self._shadow_gate(rep, cur),
+                                      title="影子评估结果（终态）")
+            if self._shadow_trace:
+                lines.append(f"> 逐轮 trace 共 {len(self._shadow_trace)} 条"
+                             "（每一行都是整篇重编译后的真实观测）。")
+            with open(os.path.join(self.outdir, "aesthetic_shadow.md"), "w",
+                      encoding="utf-8") as f:
+                f.write("\n".join(lines) + "\n")
+        except Exception as e:                    # 写盘失败不影响主流程
+            self._log(f"[影子] 报告落盘失败（已隔离）：{type(e).__name__}: {e}")
 
     def finalize(self, status: str | None = None, per=None, cur=None) -> dict:
         """写 state.json / report.md / advisory.json，返回结果 dict。
@@ -657,15 +739,14 @@ class Optimizer:
         if cur is None:
             cur = S.total_score(per, self.req, self.orig_per)
         self._defects = S.visual_defects(per)          # 供 exit_status 复用
-        cur["a_profile_shadow"] = self._shadow_eval(per, cur)   # 阶段 4 影子（λ=0）
+        sh = self._shadow_eval(per, cur, "final")       # 阶段 4/6 影子终态（λ=0）
+        cur["a_profile_shadow"] = sh
+        cur["aesthetic_shadow"] = shadow.snapshot(sh)
         if status is None:
             status = self.exit_status(cur, self._defects)
         self._save_state(status, per, cur)
         self._write_report(status, per, cur)
-        if cur.get("a_profile_shadow") is not None:
-            with open(os.path.join(self.outdir, "aesthetic_shadow.json"), "w",
-                      encoding="utf-8") as f:
-                json.dump(cur["a_profile_shadow"], f, ensure_ascii=False, indent=2)
+        self._write_shadow(sh, status, cur)
         with open(self.original, encoding="utf-8", errors="replace") as f:
             orig_src = f.read()
         adv = advise.build_advisory(orig_src, per, self.req)
@@ -712,6 +793,11 @@ class Optimizer:
                 "a_before": base["a"], "pages_before": base["pages"],
                 "total": cur["total"], "total_before": base.get("total"),
                 "conference": conf,
+                "aesthetic_shadow": cur.get("aesthetic_shadow"),
+                "aesthetic_shadow_files": (
+                    [os.path.join(self.outdir, "aesthetic_shadow.json"),
+                     os.path.join(self.outdir, "aesthetic_shadow.md")]
+                    if self._shadow_enabled else []),
                 "blocked": sorted({k.split("@")[0] for k in self._blocked})}
 
     def exit_status(self, cur: dict, defects: list | None = None) -> str:
@@ -850,6 +936,7 @@ class Optimizer:
                 "total": cur["total"] if cur else None,
             },
             "aesthetic_profile": (cur or {}).get("a_profile_shadow"),
+            "aesthetic_shadow": (cur or {}).get("aesthetic_shadow"),
             "blocked_actions": sorted({k.split("@")[0] for k in self._blocked}),
             "llm_failed_proposals": sorted(self._llm_failed),
             "visual": (per.visual if per and per.visual else None),
@@ -1098,18 +1185,10 @@ class Optimizer:
                   "- 无（视觉缺陷 + 源码卫生 + 编译日志均无残余项）", ""]
 
         sh = (cur or {}).get("a_profile_shadow")
-        L += ["## 审美档案影子评估（阶段 4，λ=0）\n"]
-        L += shadow.summarize(sh)
-        if sh and sh.get("status") is None:
-            b = ((self.baseline or {}).get("aesthetic") or {})
-            g = shadow.gate({"a_defect": (self.baseline or {}).get("a"),
-                             "a_profile": ((b.get("paper") or {}).get("a_profile")),
-                             "hard": (self.baseline or {}).get("l")},
-                            {"a_defect": cur.get("a"),
-                             "a_profile": ((sh.get("paper") or {}).get("a_profile")),
-                             "hard": len(cur.get("l") or [])})
-            L.append(f"- 门控（13.2）：{'允许' if g['allow'] else '不允许'} —— {g['reason']}"
-                     "（影子模式下该门控不影响主循环判定）")
+        L += shadow.report_md(sh, baseline=((self.baseline or {}).get("aesthetic")),
+                              trace=self._shadow_trace,
+                              gate_res=self._shadow_gate(sh, cur),
+                              title="审美档案影子评估（阶段 6，λ=0，仅报告）")
         L.append("")
 
         L.append("> 内容完整性：正文内容（文字/公式/引用/图表内容）全程零改动（机器"
