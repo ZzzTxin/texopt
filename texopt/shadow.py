@@ -127,6 +127,8 @@ def snapshot(rep: dict | None) -> dict | None:
         "mode": "shadow", "lambda": rep.get("lambda", LAMBDA),
         "profile_version": rep.get("profile_version"),
         "profile_file": rep.get("profile_file"),
+        "weights_version": rep.get("weights_version"),
+        "weights_applied": bool(rep.get("weights_applied")),
         "venue": rep.get("venue"),
         "a_defect": rep.get("a_defect"),          # 现行口径（参与验收的那个 A）
         "a_profile": paper.get("a_profile"),      # 档案偏离度（只报告）
@@ -166,6 +168,8 @@ def report_md(rep: dict | None, *, baseline: dict | None = None,
     paper = rep.get("paper") or {}
     L += [f"- 档案版本：**{rep.get('profile_version')}**"
           + (f"（{rep.get('profile_file')}）" if rep.get("profile_file") else "")
+          + f"；权重：{rep.get('weights_version') or '未标定（等权）'}"
+          + ("（已启用）" if rep.get("weights_applied") else "（未启用，等权）")
           + f"；会议档：{rep.get('venue') or '（无）'}；模式：`{rep.get('mode')}`，"
           f"λ=**{rep.get('lambda')}**（只报告，不参与验收）",
           f"- 分数：A_defect（现行口径，参与验收）=**{rep.get('a_defect')}**；"
