@@ -1099,6 +1099,226 @@ def stage4_tests():
         skip("a4/profile-v2", "未找到含 mahalanobis 块的档案")
 
 
+def stage5_tests():
+    """阶段 5：评测与验收协议（12.1-12.6）—— 纯逻辑，不依赖 PDF/LaTeX。"""
+    print("\n== 阶段 5：评测与验收协议 ==")
+    import random as _rnd
+    from texopt import evalproto as EP, aesthetic as AE
+
+    DIMS = list(AE.DEFAULT_DIMS[:5])
+
+    def gen(n, seed=21):
+        rnd = _rnd.Random(seed)
+        rows = []
+        for i in range(n):
+            m = {}
+            for j, d in enumerate(DIMS):
+                m[d] = 0.5 + 0.05 * j + rnd.gauss(0, 0.02)
+            rows.append({"paper": f"p{i // 5:03d}", "venue": "v%d" % ((i // 5) % 3),
+                         "year": 2025, "layout": "twocolumn",
+                         "role": "body" if i % 2 else "references",
+                         "metrics": m})
+        return rows
+
+    rows = gen(240)
+    prof = EP.build_fold_profile(rows, {r["paper"] for r in rows}, dims=DIMS,
+                                 min_pages=5)
+    mh = (prof.get("mahalanobis") or {}).get("level") or {}
+    check("eval5/fold-profile", bool(mh.get("role")) and bool(mh.get("venue_role")),
+          str({k: len(v) for k, v in mh.items()}))
+
+    # --- 12.1 阶梯：域内、严格外推
+    lad = EP.build_ladder("density.coverage_text", 0.8, 0.05, +1)
+    check("eval5/ladder-unit-in-domain",
+          bool(lad) and all(0.0 <= v <= 1.0 for _, v in lad)
+          and all(b[1] > a[1] for a, b in zip(lad, lad[1:])), str(lad))
+    lad2 = EP.build_ladder("ratio.fig_text", 0.0, 0.05, +1)
+    check("eval5/ladder-unbounded", len(lad2) >= 2
+          and all(v > 0 for _, v in lad2), str(lad2))
+    check("eval5/ladder-no-headroom", EP.build_ladder("density.coverage_text", 1.0,
+                                                       0.05, +1) == [])
+    check("eval5/inject-clip",
+          EP.inject_value(0.99, "density.coverage_text", 10.0, 0.05, +1) == 1.0
+          and EP.inject_value(0.01, "density.coverage_text", 10.0, 0.05, -1) == 0.0)
+
+    # --- 单调性判据：容忍极小回落（协方差非对角导致的 D² 合法回落），大回落仍判失败
+    ms_ok = EP.monotone_series([1.0, 1.0, 0.99999, 1.5])
+    ms_dip = EP.monotone_series([1.0, 0.9, 1.5])
+    ms_flat = EP.monotone_series([1.0, 1.0, 1.0])
+    check("eval5/monotone-tolerance",
+          ms_ok["ok"] and not ms_ok["strict_ok"] and not ms_dip["ok"]
+          and not ms_flat["ok"], f"{ms_ok} {ms_dip} {ms_flat}")
+
+    # --- 方向选择：选「损失单调上升且增幅最大」的一侧（方案 12.1 的可复现口径）
+    blk = (mh.get("role") or {}).get("body") or {}
+    det = AE.Detector(blk, "t")
+    d0 = DIMS[0]
+    lo, hi = det.bands.get(d0, [None, None])
+    sc0 = det.scale[det.dims.index(d0)]
+    in_band = 0.5 * (lo + hi)
+    cands = {}
+    for sg in (+1, -1):
+        lad = EP.build_ladder(d0, in_band, sc0, sg)
+        cands[sg] = EP._loss_series(det, d0, {d0: in_band}, "body", lad, sg)
+    sign_in, _, ser_in = EP.pick_degradation(det, d0, {d0: in_band}, "body")
+    best = max(cands, key=lambda sg: cands[sg][-1] - cands[sg][0])
+    # 远离区间（远低于下界）时只能往下推：向上推的阶梯会穿过区间内部，损失非单调
+    far_below = max(0.0, lo - 6 * sc0)
+    sign_far, _, ser_far = EP.pick_degradation(det, d0, {d0: far_below}, "body")
+    check("eval5/direction-picks-monotone-max-delta",
+          sign_in == best and ser_in[-1] > ser_in[0]
+          and EP.monotone_series(ser_in)["ok"]
+          and (lo - 6 * sc0 < 0 or (sign_far == -1
+                                    and EP.monotone_series(ser_far)["ok"])),
+          f"in={sign_in}/{best} far={sign_far} lo={lo:.4f} sc={sc0:.4f}")
+
+    # --- 12.1 文档级：注入后 A_profile 单调上升 + 定位
+    fl = [dict(r["metrics"]) for r in rows[:6]]
+    roles = ["body"] * 6
+    sc = det.scale[det.dims.index(d0)] if d0 in det.dims else 0.05
+    ser, mono, rank_ok = [], True, False
+    for a in (0.0, 0.5, 1.0, 2.0):
+        doc = EP.inject_doc(fl, 2, d0, a, sc, +1, roles, venue="v0")
+        rep = AE.evaluate_doc(doc, prof, venue="v0")
+        ser.append(rep["paper"]["a_profile"])
+    mono = EP.monotone_series(ser)["ok"]
+    doc = EP.inject_doc(fl, 2, d0, 2.0, sc, +1, roles, venue="v0")
+    rep = AE.evaluate_doc(doc, prof, venue="v0")
+    rank_ok = EP.localize(rep, 3) or any(t.get("page") == 3
+                                        for t in rep["paper"]["top_anomalous"])
+    check("eval5/injection-monotone-and-localize", mono and rank_ok,
+          f"A={ser} rank={[t.get('page') for t in rep['paper']['top_anomalous']]}")
+
+    # --- F1 聚合：任何一页变差都必须抬高文档级值
+    vals = [0.0, 0.0, 0.0, 0.0, 0.0]
+    up = EP.__dict__ and AE.pooled_agg(vals + [1.0], 1)
+    check("eval5/pooled-agg-sensitive-to-single-page",
+          up > AE.pooled_agg(vals, 1) and AE.pooled_agg([1.0], 1) == 1.0, str(up))
+    check("eval5/topk-mean", AE.topk_mean([0, 1, 5], 1) == 5.0
+          and AE.topk_mean([0, 1, 5], 2) == 3.0)
+
+    # --- 12.2 折切分：确定性 + 分层 + 每篇只作一次测试
+    f1 = EP.fold_split(rows, k=5, seed=13)
+    f2 = EP.fold_split(rows, k=5, seed=13)
+    same = all(a["test"] == b["test"] for a, b in zip(f1, f2))
+    allp = set()
+    for f in f1:
+        allp |= f["test"]
+    spread_ok = True
+    for v in ("v0", "v1", "v2"):
+        vp = {r["paper"] for r in rows if r["venue"] == v}
+        cnt = [len(f["test"] & vp) for f in f1]
+        spread_ok = spread_ok and (max(cnt) - min(cnt) <= 1)
+    check("eval5/split-deterministic-stratified",
+          same and len(allp) == len({r["paper"] for r in rows}) and spread_ok,
+          f"same={same} papers={len(allp)} spread={spread_ok}")
+
+    # --- 12.2 阈值口径：经验 P95 阈值在留出集上应接近目标（大样本统计）
+    rnd = _rnd.Random(3)
+    train = [rnd.gauss(0, 1) ** 2 for _ in range(4000)]
+    thr = AE.percentile(train, 0.95)
+    hold = [rnd.gauss(0, 1) ** 2 for _ in range(4000)]
+    rate = sum(1 for v in hold if v > thr) / len(hold)
+    check("eval5/fp-calibration-hits-target", abs(rate - 0.05) < 0.012, f"rate={rate:.4f}")
+
+    # --- 12.2 多分位标定表：仓位数越高假阳率越低（单调）
+    fp_res = EP.run_fp_protocol(rows, k=2, min_pages=5)
+    tab = fp_res.get("calibration_table") or {}
+    r95 = (tab.get("0.95") or {}).get("rate")
+    r97 = (tab.get("0.97") or {}).get("rate")
+    check("eval5/calibration-table-monotone",
+          set(tab) == {"0.95", "0.96", "0.97"} and r95 is not None and r97 is not None
+          and r97 <= r95 + 1e-9,
+          f"{ {k: v['rate'] for k, v in tab.items()} }")
+    check("eval5/fp-protocol-schema",
+          fp_res.get("schema") == "eval_fp.v1" and len(fp_res.get("folds") or []) == 2
+          and "by_dim" in (fp_res["aggregate"]["calibrated"] or {}))
+
+    # --- 12.3 可分性：可分数据高准确率、置换检验 p 小；打乱后接近随机
+    items = []
+    for lab, base in (("a", 0.0), ("b", 5.0)):
+        for _ in range(30):
+            items.append((lab, [base + rnd.gauss(0, 0.4) for _ in range(3)]))
+    acc = EP.knn_accuracy(items, ["x", "y", "z"], k=1)
+    null = []
+    labels = [l for l, _ in items]
+    for _ in range(20):
+        sh = labels[:]
+        _rnd.Random(len(null)).shuffle(sh)
+        null.append(EP.knn_accuracy([(sh[i], items[i][1]) for i in range(len(items))],
+                                    ["x", "y", "z"], k=1))
+    p = EP.permutation_pvalue(acc, null)
+    check("eval5/separability-knn", acc is not None and acc >= 0.9 and p <= 0.15,
+          f"acc={acc} p={p}")
+    check("eval5/permutation-pvalue-bounds",
+          EP.permutation_pvalue(5.0, [1.0, 2.0]) == round(1 / 3, 4)
+          and EP.permutation_pvalue(0.0, [1.0, 2.0]) == 1.0)
+
+    # --- 12.4 稳定性：完全相同 → 漂移 0；改 10% → 超过 5% 阈值
+    base = [{d: 1.0 for d in DIMS} for _ in range(4)]
+    same_m = EP.stability_metrics_spread(base, [dict(b) for b in base], DIMS)
+    drift = [{d: (1.1 if d == DIMS[0] else 1.0) for d in DIMS} for _ in range(4)]
+    drifted = EP.stability_metrics_spread(base, drift, DIMS)
+    check("eval5/stability-spread",
+          same_m["max_rel_drift"] == 0.0 and same_m["ok"]
+          and abs(drifted["max_rel_drift"] - 0.1) < 1e-6 and not drifted["ok"],
+          f"{same_m['max_rel_drift']} {drifted['max_rel_drift']}")
+    check("eval5/determinism-repeat",
+          EP.stability_determinism(rows, prof, n_docs=2)["ok"])
+    check("eval5/human-correlation-none",
+          EP.spearman_rank(list(range(9)), [1, 3, 2, 4, 6, 5, 7, 9, 8]) is not None
+          and EP.spearman_rank([1, 2, 3], [1, 2, 3]) is None)
+
+    # --- 12.6 门槛：三项全过才 pass，缺项/超阈 → report-only
+    d = DIMS[0]
+    g = EP.gate_verdicts([d], {"by_dim": {d: 1.0}}, {"by_dim": {d: 0.03}},
+                         {"ok": True, "by_dim": {d: 0.0}})
+    g_fp = EP.gate_verdicts([d], {"by_dim": {d: 1.0}}, {"by_dim": {d: 0.09}},
+                            {"ok": True, "by_dim": {d: 0.0}})
+    g_missing = EP.gate_verdicts([d], None, None, None)
+    g_multi = EP.gate_verdicts(DIMS[:3], {"by_dim": {DIMS[0]: 1.0}},
+                               {"by_dim": {DIMS[0]: 0.01}}, {"ok": False,
+                               "by_dim": {DIMS[0]: 0.2}})
+    check("eval5/gate-verdicts",
+          g["verdicts"][d]["verdict"] == "pass"
+          and g_fp["verdicts"][d]["verdict"] == "report-only"
+          and len(g_missing["verdicts"][d]["reasons"]) == 3
+          and g_multi["dropped"] == DIMS[:3],
+          f"{g['verdicts'][d]} {g_multi['dropped']}")
+
+    # --- 12.6 门槛：也要吃 `do_stability` 的**报告形状**（dpi 是嵌套的）
+    #     曾经只认扁平 by_dim → 门槛永远读到「12.4 未测」（回归点）
+    g_nested = EP.gate_verdicts(
+        [d], {"by_dim": {d: 1.0}}, {"by_dim": {d: 0.03}},
+        {"determinism": {"ok": True}, "dpi": {"ok": True, "by_dim": {d: 0.0}}})
+    g_nested_err = EP.gate_verdicts(
+        [d], {"by_dim": {d: 1.0}}, {"by_dim": {d: 0.03}},
+        {"determinism": {"ok": True}, "dpi": {"status": "error", "why": "x"}})
+    st_bd, st_ok = EP.stability_by_dim({"determinism": {"ok": True},
+                                        "dpi": {"ok": True, "by_dim": {d: 0.0}}})
+    check("eval5/gate-accepts-stability-report",
+          g_nested["verdicts"][d]["verdict"] == "pass"
+          and g_nested_err["verdicts"][d]["verdict"] == "report-only"
+          and "12.4 稳定性：未测" in g_nested_err["verdicts"][d]["reasons"]
+          and st_bd == {d: 0.0} and st_ok is True,
+          f"{g_nested['verdicts'][d]} {g_nested_err['verdicts'][d]['reasons']}")
+
+    # --- 12.6 集成：drop_dims 真的把维度从判定里剔除（且不改变其它维）
+    doc = EP.inject_doc(fl, 2, d0, 1.0, sc, +1, roles, venue="v0")
+    r_all = AE.evaluate_doc(doc, prof, venue="v0")
+    r_drop = AE.evaluate_doc(doc, prof, venue="v0", drop_dims=[d0])
+    check("eval5/drop-dims-excludes-dim",
+          r_drop["dropped_dims"] == [d0]
+          and d0 not in r_drop["paper"]["dim_norm_top"]
+          and d0 in r_all["paper"]["dim_norm_top"],
+          f"{sorted(r_drop['paper']['dim_norm_top'])} vs {sorted(r_all['paper']['dim_norm_top'])}")
+    from texopt import shadow as SH
+    gp = SH.load_gate(os.path.join(ROOT, "datasets", "conf-specs", "metrics",
+                                   "profiles", "eval_gate.json"))
+    check("eval5/gate-file-schema", gp is None or gp.get("schema") == "eval_gate.v1",
+          str(bool(gp)))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1106,7 +1326,7 @@ def main():
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
     if args.list:
-        print("unit_tests, stage0..3, closure:{demo,issues,aidtest,propose_target,"
+        print("unit_tests, stage0..5, closure:{demo,issues,aidtest,propose_target,"
               "test0911/chaotic_layout_test}, mitl, figure_violation"
               + (", closure:{chaos,nightmare}" if args.full else ""))
         return 0
@@ -1119,6 +1339,7 @@ def main():
     stage2_tests()
     stage3_tests()
     stage4_tests()
+    stage5_tests()
     fixtures = [("demo", "demo.tex", "CONVERGED"),
                 ("issues", "issues.tex", "CONVERGED"),
                 ("aidtest", "aidtest.tex", "CONVERGED"),

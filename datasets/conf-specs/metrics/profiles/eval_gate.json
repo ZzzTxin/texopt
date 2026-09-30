@@ -1,0 +1,65 @@
+{
+ "schema": "eval_gate.v1",
+ "dims": [
+  "density.coverage_text",
+  "whitespace.total_ratio",
+  "balance.visual_centroid_y",
+  "ratio.fig_text",
+  "readability.leading_ratio",
+  "alignment.center_var",
+  "balance.d_mid",
+  "density.coverage_table"
+ ],
+ "verdicts": {
+  "density.coverage_text": {
+   "dim": "density.coverage_text",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "whitespace.total_ratio": {
+   "dim": "whitespace.total_ratio",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "balance.visual_centroid_y": {
+   "dim": "balance.visual_centroid_y",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "ratio.fig_text": {
+   "dim": "ratio.fig_text",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "readability.leading_ratio": {
+   "dim": "readability.leading_ratio",
+   "verdict": "report-only",
+   "reasons": [
+    "12.1 单调性：未测"
+   ]
+  },
+  "alignment.center_var": {
+   "dim": "alignment.center_var",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "balance.d_mid": {
+   "dim": "balance.d_mid",
+   "verdict": "pass",
+   "reasons": []
+  },
+  "density.coverage_table": {
+   "dim": "density.coverage_table",
+   "verdict": "report-only",
+   "reasons": [
+    "12.1 单调性：未测"
+   ]
+  }
+ },
+ "dropped": [
+  "readability.leading_ratio",
+  "density.coverage_table"
+ ],
+ "n_pass": 6,
+ "note": "verdict != pass 的指标按方案 12.6 只能作报告项，不得参与 A"
+}

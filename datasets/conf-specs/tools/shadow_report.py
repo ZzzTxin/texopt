@@ -52,6 +52,9 @@ def main():
     files = sorted(f for f in os.listdir(args.pages) if f.endswith(".json"))
     if args.limit:
         files = files[:args.limit]
+    drop = SH.gate_drop_dims()          # 阶段 5 门槛（12.6）：未通过的维不参与判定
+    if drop:
+        print(f"  已加载阶段 5 门槛：剔除维度 {drop}")
     per_paper, agg = [], {}
     for i, fn in enumerate(files, 1):
         try:
@@ -59,7 +62,7 @@ def main():
                 doc = json.load(f)
         except Exception:
             continue
-        rep = AE.evaluate_doc(doc, prof)
+        rep = AE.evaluate_doc(doc, prof, drop_dims=drop)
         paper = rep["paper"]
         sid = fn[:-5]
         venue = (doc.get("doc") or {}).get("venue")
@@ -105,6 +108,8 @@ def main():
     report = {
         "schema": "shadow_report.v1",
         "profile_version": prof.get("profile_version"),
+        "gate": {"file": os.path.basename(SH.default_gate_path() or ""),
+                 "dropped_dims": drop},
         "built_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "in_sample": True,
         "note": "语料页即档案构建数据（in-sample）：D^2 偏小、异常率偏低；"
@@ -129,6 +134,7 @@ def main():
     L = ["# 阶段 4 影子评估摘要（全库，in-sample）", "",
          f"- 论文：{report['n_scored']}/{report['n_papers']} 篇可判定；档案 "
          f"{report['profile_version']}；用时 {time.time() - t0:.0f}s",
+         f"- 阶段 5 门槛（12.6）：剔除维度 {'、'.join(drop) if drop else '无（全部通过）'}",
          f"- ⚠ in-sample：语料页即档案构建数据，D² 偏小、异常率偏低，"
          "**不能**当假阳率结论（阶段 5 做正式协议）", "",
          "| 会议 | 篇 | 页 | A_profile 中位 | A_profile P90 | 异常页率 | 疑似合订本 |",
