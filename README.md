@@ -450,10 +450,21 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | 阶段 1 | 页面角色标注 + 页级提取 + 全库 608 篇 / 10538 页 | ✅ |
 | 阶段 2 | 审美档案（venue×role 正常范围 + CI + 可信度）+ 去冗余 | ✅ |
 | 阶段 3 | **留白结构化识别（五类 + region 列表）+ 页眉页脚识别 + 未锚图形计入** | ✅（`texopt/whitespace.py`） |
-| 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ⬜ |
-| 阶段 5-8 | 评测协议 / 影子接入 / 权重校准 / 外部验证 | ⬜ |
+| 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
+| 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
+| 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ⬜ |
+| 阶段 7 | 权重校准（负样本消融 + 人类成对比较 Bradley-Terry） | ⬜ |
+| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测） | ⬜ |
 
-文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`。
+阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
+
+- 12.1 负样本注入：A 单调上升 100%（严格零回落 96.3%）、退化页定位 96.3%
+- 12.2 假阳率：卡方阈值 **15.9%**（假设不成立，重尾）→ 发布口径改用**经验校准**，仍为 **5.71%**（略高于 5% 目标，报告给了 P95/96/97 权衡表）
+- 12.3 会议可分性：1-NN 留一 0.529（随机 0.091），置换 p=0.0099
+- 12.4 稳定性：重复测量完全一致、DPI 50→200 漂移 0
+- 12.6 门槛：6/8 维通过；未过者 `readability.leading_ratio`、`density.coverage_table`（12.1 未覆盖 → 只能作报告项）
+
+文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`。
 
 **接口/placeholder（已预留但未落地）**：`Requirement.microtype`（None=不干预）；
 视觉代理指标 (`texopt/visual.py`) 已计算但默认不影响评分；
@@ -482,6 +493,9 @@ texopt/
 │   ├── extract.py         # 阶段 1：PDF→page_metrics.v1（矢量/文本层为主）
 │   ├── whitespace.py      # 阶段 3：留白结构化（五类 + region 列表）
 │   ├── profile.py         # 阶段 2：审美档案（分位/聚类 bootstrap/Spearman/PCA，纯 Python）
+│   ├── aesthetic.py       # 阶段 4：马氏距离 D² + 非单调带外损失 A_profile
+│   ├── shadow.py          # 阶段 4/5：影子评估（λ=0）+ 加载 eval_gate.json 剔除未过门槛的维
+│   ├── evalproto.py       # 阶段 5：评测与验收协议 12.1-12.6
 │   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
 ├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
 ├── examples/              # 靶子稿（demo/issues/chaos/nightmare/aidtest/…）
@@ -497,6 +511,14 @@ texopt/
 ```bash
 python3 tests/run_tests.py          # 单元 + 常用靶子闭环 + 模型在环往返
 python3 tests/run_tests.py --full   # 含 chaos/nightmare 大靶子
+```
+
+阶段 5 评测协议（离线跑缓存指标，约 2-3 分钟；加 `--render` 额外做渲染层注入 + 重编译稳定性）：
+
+```bash
+cd datasets/conf-specs
+python3 tools/eval_protocol.py --pages-n 80 --perms 100     # 12.1/12.2/12.3/12.4 → eval_gate.json
+python3 tools/eval_protocol.py --only gate                 # 只重算门槛（基于既有结果，秒级）
 ```
 
 测试只写 `_regress/`（Windows 盘符下），跑完自动清理；examples/ 里的靶子只读。
