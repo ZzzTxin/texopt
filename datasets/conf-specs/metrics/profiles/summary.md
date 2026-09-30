@@ -148,3 +148,9 @@
 - PC3：解释 8.7%（累积 33.6%）｜主载荷：whitespace.total_ratio(-0.471)，whitespace.float_ratio(-0.377)，whitespace.n_regions(-0.319)，readability.chars_per_line_mean(+0.252)
 - PC4：解释 6.9%（累积 40.5%）｜主载荷：balance.d_top(-0.362)，whitespace.n_anomalous(+0.327)，whitespace.anomalous_ratio(+0.325)，whitespace.max_anomalous_height_ratio(+0.324)
 - PC5：解释 6.7%（累积 47.2%）｜主载荷：readability.font_pt_page(-0.426)，readability.para_lines_mean(+0.389)，alignment.right_var(-0.313)，readability.font_pt(-0.284)
+
+## 马氏判定块（阶段 4）
+
+- 判定维度（去冗余后 8 个）：density.coverage_text、whitespace.total_ratio、balance.visual_centroid_y、ratio.fig_text、readability.leading_ratio、alignment.center_var、balance.d_mid、density.coverage_table
+- venue_role 档：67；role 档：7；role×栏数 档：14
+- 收缩强度 delta：中位 0.1197（n 越小自动越大）

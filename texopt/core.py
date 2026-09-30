@@ -29,7 +29,7 @@ import os
 import shutil
 
 from . import (actions, advise, conference as confmod, engine, perceive as P,
-               proposal, score as S, visual, whitelist)
+               proposal, score as S, shadow, visual, whitelist)
 from .requirements import Requirement
 
 # L 类硬约束修复动作：文档状态（L 数/页数）变化后允许重试。
@@ -67,6 +67,7 @@ class Optimizer:
         self.attempts = 0                # 本轮实际编译验证过的候选动作数
         self.accepted = 0                # 本轮被接受的动作数
         self.baseline = None             # 基线评分快照（报告「A: old -> new」用）
+        self._shadow = None              # 阶段 4 影子评估（λ=0：只报告，不参与验收）
         self._defects: list = []         # 当前视觉缺陷（出口状态判定用）
         self._state = None               # 上一次接受后的 (Perception, 评分)
 
@@ -472,6 +473,7 @@ class Optimizer:
         cur = S.total_score(per, self.req, self.orig_per)
         self.baseline = {"a": cur["a"], "i": cur["i"], "pages": per.pages,
                          "total": cur["total"], "l": len(cur["l"])}
+        self.baseline["aesthetic"] = self._shadow_eval(per, cur)   # 阶段 4 影子基线
 
         self._log(f"基线：{os.path.basename(self.original)} "
                   f"{per.pages} 页 | 字号 {per.source['font_pt']}pt | "
@@ -613,6 +615,29 @@ class Optimizer:
         return req
 
     # ------------------------------------------------------------- 收尾
+    def _shadow_eval(self, per, cur):
+        """阶段 4 影子评估：对当前 PDF 提取页级指标 -> 档案判定（λ=0）。
+
+        绝不参与接受/回滚判定；任何异常都隔离成报告项。
+        """
+        if not shadow.enabled():
+            return None
+        if not (per and per.ok and getattr(per.compile, "pdf_path", None)):
+            return None
+        try:
+            prof = shadow.load_profile()
+            if not prof:
+                return {"status": "no-profile"}
+            rep = shadow.evaluate_pdf(per.compile.pdf_path, prof,
+                                      venue=getattr(self.req, "conference", None))
+            rep["a_defect"] = cur["a"]
+            a = (rep.get("paper") or {}).get("a_profile")
+            rep["a_profile"] = a
+            rep["a_effective"] = round(cur["a"] + shadow.LAMBDA * (a or 0.0), 6)
+            return rep
+        except Exception as e:                        # 影子失败绝不影响主流程
+            return {"status": "error", "error": f"{type(e).__name__}: {e}"}
+
     def finalize(self, status: str | None = None, per=None, cur=None) -> dict:
         """写 state.json / report.md / advisory.json，返回结果 dict。
 
@@ -632,10 +657,15 @@ class Optimizer:
         if cur is None:
             cur = S.total_score(per, self.req, self.orig_per)
         self._defects = S.visual_defects(per)          # 供 exit_status 复用
+        cur["a_profile_shadow"] = self._shadow_eval(per, cur)   # 阶段 4 影子（λ=0）
         if status is None:
             status = self.exit_status(cur, self._defects)
         self._save_state(status, per, cur)
         self._write_report(status, per, cur)
+        if cur.get("a_profile_shadow") is not None:
+            with open(os.path.join(self.outdir, "aesthetic_shadow.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump(cur["a_profile_shadow"], f, ensure_ascii=False, indent=2)
         with open(self.original, encoding="utf-8", errors="replace") as f:
             orig_src = f.read()
         adv = advise.build_advisory(orig_src, per, self.req)
@@ -819,6 +849,7 @@ class Optimizer:
                 "i": cur["i"] if cur else None,
                 "total": cur["total"] if cur else None,
             },
+            "aesthetic_profile": (cur or {}).get("a_profile_shadow"),
             "blocked_actions": sorted({k.split("@")[0] for k in self._blocked}),
             "llm_failed_proposals": sorted(self._llm_failed),
             "visual": (per.visual if per and per.visual else None),
@@ -1065,6 +1096,21 @@ class Optimizer:
         else:
             L += ["## 仍需人工/后续处理的问题\n",
                   "- 无（视觉缺陷 + 源码卫生 + 编译日志均无残余项）", ""]
+
+        sh = (cur or {}).get("a_profile_shadow")
+        L += ["## 审美档案影子评估（阶段 4，λ=0）\n"]
+        L += shadow.summarize(sh)
+        if sh and sh.get("status") is None:
+            b = ((self.baseline or {}).get("aesthetic") or {})
+            g = shadow.gate({"a_defect": (self.baseline or {}).get("a"),
+                             "a_profile": ((b.get("paper") or {}).get("a_profile")),
+                             "hard": (self.baseline or {}).get("l")},
+                            {"a_defect": cur.get("a"),
+                             "a_profile": ((sh.get("paper") or {}).get("a_profile")),
+                             "hard": len(cur.get("l") or [])})
+            L.append(f"- 门控（13.2）：{'允许' if g['allow'] else '不允许'} —— {g['reason']}"
+                     "（影子模式下该门控不影响主循环判定）")
+        L.append("")
 
         L.append("> 内容完整性：正文内容（文字/公式/引用/图表内容）全程零改动（机器"
                  "diff 校验，白名单排版参数除外）；原文件只读，结果在工作副本 "

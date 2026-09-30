@@ -202,6 +202,47 @@ def main():
     pc = PR.pca(rows, keys, max_comp=len(keys))
     red["pca"] = pc
 
+    # ---- 阶段 4：马氏判定块（D^2 需要的稳健中心 + 收缩协方差，构建期算好，在线只查表）
+    from texopt import aesthetic as AE
+
+    dims = AE.select_dims(rows, red)
+    mh = {"level": {"venue_role": {}, "role": {}, "role_layout": {}}, "dims": dims,
+          "params": {"band_q": list(AE.BAND_Q), "wide_q": list(AE.WIDE_Q),
+                     "wide_min_ratio": AE.WIDE_MIN_RATIO, "z_clip": AE.Z_CLIP,
+                     "w_low": AE.W_LOW, "w_high": AE.W_HIGH, "w_d2": AE.W_D2,
+                     "min_conf": AE.MIN_CONF_TIER, "anom_p": AE.ANOM_P}}
+    vr_rows, role_rows = {}, {}
+    for r in rows:
+        role_rows.setdefault(r["role"], []).append(r)
+        if r["venue"]:
+            vr_rows.setdefault(f"{r['venue']}|{r['role']}", []).append(r)
+    for k, rs in sorted(vr_rows.items()):
+        conf = (prof["levels"]["venue_role"].get(k) or {}).get("confidence")
+        blk = AE.build_block(rs, dims, min_pages=30, confidence=conf)
+        if blk:
+            mh["level"]["venue_role"][k] = blk
+    def _conf(rs):
+        return PR.confidence_tier(len({r["paper"] for r in rs}))
+
+    for k, rs in sorted(role_rows.items()):
+        blk = AE.build_block(rs, dims, min_pages=30, confidence=_conf(rs))
+        if blk:
+            mh["level"]["role"][k] = blk
+    # 栏数条件化（方案 5.2）：role|layout —— 跨栏混合的 role 档会让单栏论文离群
+    rl_rows = {}
+    for r in rows:
+        if r.get("layout"):
+            rl_rows.setdefault(f"{r['role']}|{r['layout']}", []).append(r)
+    for k, rs in sorted(rl_rows.items()):
+        blk = AE.build_block(rs, dims, min_pages=30, confidence=_conf(rs))
+        if blk:
+            mh["level"]["role_layout"][k] = blk
+    prof["profile_version"] = "v2"
+    prof["mahalanobis"] = mh
+    print(f"马氏判定块：venue_role {len(mh['level']['venue_role'])} 档 / "
+          f"role {len(mh['level']['role'])} 档 / role×栏数 "
+          f"{len(mh['level']['role_layout'])} 档；维度 {len(dims)} 个 -> {dims}")
+
     os.makedirs(args.out, exist_ok=True)
     PR.dump(prof, os.path.join(args.out, "aesthetic_profile.json"))
     with open(os.path.join(args.out, "redundancy.json"), "w", encoding="utf-8") as f:
@@ -232,6 +273,12 @@ def main():
             top = "，".join(f"{n}({w:+.3f})" for n, w in c["top_loadings"][:4])
             L.append(f"- PC{c['pc']}：解释 {c['explained']*100:.1f}%（累积 "
                      f"{c['cumulative']*100:.1f}%）｜主载荷：{top}")
+    L += ["", "## 马氏判定块（阶段 4）", "",
+          f"- 判定维度（去冗余后 {len(dims)} 个）：" + "、".join(dims),
+          f"- venue_role 档：{len(mh['level']['venue_role'])}；role 档：{len(mh['level']['role'])}；"
+          f"role×栏数 档：{len(mh['level']['role_layout'])}",
+          f"- 收缩强度 delta：中位 {_fmt(sorted(b['delta'] for b in mh['level']['venue_role'].values())[len(mh['level']['venue_role'])//2] if mh['level']['venue_role'] else None, 4)}"
+          "（n 越小自动越大）"]
     with open(os.path.join(args.out, "summary.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
 
