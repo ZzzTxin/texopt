@@ -511,9 +511,13 @@ texopt/
 │   ├── weights.py         # 阶段 7：权重校准（消融 + Bradley-Terry + 验收）
 │   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
 ├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
-├── examples/              # 靶子稿（demo/issues/chaos/nightmare/aidtest/…）
-│   ├── propose_target.tex    # Level-3 模型在环演示靶子
-│   └── proposals_sample.json # 示例提案（含 接受/回滚/BLOCKED 三态）
+├── examples/              # 靶子稿（重建脚本 + 结果一起进 git，见 examples/README.md）
+│   ├── gen_fixtures.py       # 一键重建全部靶稿（demo/issues/chaos/nightmare/aidtest/…）
+│   ├── demo.tex              # 干净稿（自然 6 页，页数限制演示用）
+│   ├── issues.tex            # 4 类可修问题（README 快速开始 0）
+│   ├── aidtest.tex           # 阅读辅助 + 告示块 + 超宽图
+│   ├── fig_violation.tex     # 图形保真反例（重绘的图 → L 违规）
+│   └── propose_target.tex    # Level-3 模型在环靶子
 ├── skills/latex-opt/      # OpenClaw 技能说明（模型在环用法）
 ├── AGENTS.md / SOUL.md    # Agent 身份与工作流（OpenClaw 集成）
 └── workbench/             # 运行产物（工作副本/PDF/报告/状态/请求包/页面图）

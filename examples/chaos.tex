@@ -1,0 +1,92 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=25.4mm]{geometry}
+\usepackage{graphicx,float,amsmath,amssymb,booktabs,enumitem}
+\setlength{\parskip}{14pt}
+\title{Twelve Classes of Layout Chaos}
+\author{Sh Lab}
+\date{}
+\begin{document}
+\maketitle
+\section{Introduction}
+Layout optimization for academic manuscripts is a constrained problem: the visual result of a document is a global property of the whole file, while most editing actions are local. A change that removes one bad line can push a float to the next page and create a much larger gap, so an optimizer must always recompile and re-evaluate the entire document before accepting an edit.
+
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+A sentence ends with a hard line break here.\\
+And the next line continues the same paragraph after a manual break.\\
+The author kept doing this instead of letting TeX break the paragraph.\\
+
+\noindent This paragraph was manually de-indented.
+
+\vspace{4cm}
+
+Some emphasised words live in an \underline{underline} and another
+\underline{underlined phrase}, which is not the house style.
+
+The display below uses bare dollar math:
+$$f(x) = \sum_{i=1}^{n} a_i x_i$$
+and a second one follows immediately:
+$$g(x) = \int_0^T e^{-t^2}\,dt$$
+
+\newpage
+
+\section{Method}
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+An oversized media object is placed here:
+\begin{figure}[H]\centering
+\includegraphics[width=1.20\linewidth]{example-image}
+\caption{A figure that is wider than the text block.}
+\end{figure}
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+{\Large This sentence switches to a much larger font size inside a
+paragraph, which breaks the rhythm of the page.} And then {\small it drops to a
+smaller size again}, so the reader sees three sizes in one paragraph.
+
+\begin{table}[h!]\centering
+\caption{A table mixing rule styles.}
+\begin{tabular}{ll}\hline
+Key & Value \\\hline
+alpha & 1 \\\toprule
+beta & 2 \\\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}[itemsep=16pt,topsep=14pt]
+\item A list with deliberately excessive vertical spacing.
+\item Another item that makes the following page look loose.
+\end{itemize}
+
+A pathological token appears here: pseudopseudohypoparathyroidismcounterrevolutionarieselectroencephalographically.
+
+\begin{center}
+This entire paragraph of body text was wrapped in a center environment, which
+makes the lines look ragged in a way that no journal accepts.
+\end{center}
+
+\clearpage
+
+
+\section{Results}
+The scoring model used here separates logic from aesthetics. Logic asks whether the file compiles, whether the rendered PDF keeps the body text byte-identical, and whether the requested hard constraints such as font size, margins and page limits are satisfied. Aesthetics collects measurable layout defects such as overfull lines, underfull lines, badly placed floats and inconsistent vertical spacing.
+
+Intervention cost makes the optimizer conservative. Every edit that is applied to the source increases the intervention score, so a repair is only kept when the total objective improves after a full recompilation. This is what prevents the system from grooming its own score with edits that no human would ever make.
+
+Page limits deserve special care. Compressing a document by shrinking its margins changes the relationship between floats and the text that refers to them, and the resulting layout often looks wrong even though every number in the report is legal. For that reason the default policy refuses to touch the global text block and reports an honest failure instead.
+
+The pipeline is deterministic. Given the same source file, the same requirement specification and the same toolchain, it produces the same trace of candidate actions, the same accept and rollback decisions, and the same final document. Determinism matters for reproducibility, for regression testing and for the audit trail that is written next to every run.
+
+Perception is layered. The source layer parses the LaTeX file and looks for patterns that are known to be unstable, such as manual page breaks, manual vertical spacing, bare dollar math and float specifications that pin a float to its declaration point. The log layer reads the compiler log and counts overfull boxes, underfull boxes and badness warnings.
+
+The rendered layer measures the PDF itself. Page images give coverage statistics, the vertical position of ink, and the size of the largest empty band on each page. Those numbers are coarse on purpose: they are used as evidence that something looks wrong, not as a model of human taste.
+
+
+\section{Conclusion}
+Twelve classes of damage, all detectable from source, log and page image.
+\end{document}
