@@ -797,6 +797,9 @@ class Optimizer:
                 "total": cur["total"], "total_before": base.get("total"),
                 "conference": conf,
                 "aesthetic_shadow": cur.get("aesthetic_shadow"),
+                # 阶段 8：退化态（**修复前**）的影子快照 —— E1 要看退化本身对 A_profile 的影响，
+                # 只看终态会因闭环把退化修回去而看不出单调性。
+                "aesthetic_shadow_baseline": (self.baseline or {}).get("aesthetic"),
                 "aesthetic_shadow_files": (
                     [os.path.join(self.outdir, "aesthetic_shadow.json"),
                      os.path.join(self.outdir, "aesthetic_shadow.md")]
