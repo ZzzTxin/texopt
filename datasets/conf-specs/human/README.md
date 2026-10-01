@@ -27,6 +27,26 @@
 * `winner`：`"a"` 或 `"b"`（人选的更顺眼的一侧）。
 * 未给出的维度按 0 处理；**同一批数据必须用同一套维度**。
 
+## 采集工具（阶段 8 新增，2026-10-01）
+
+人工填指标既慢又易错，所以有了 `tools/make_pairs.py`：它从缓存页指标里挑页、算好
+逐维归一化损失、配对（同一篇论文内的两页，保证“主导维明显、其余维接近”）、
+把两页渲染成 PNG，生成一个**离线打分表**。人只需要选“左边/右边更顺眼”。
+
+```bash
+cd datasets/conf-specs
+python3 tools/make_pairs.py --sheet --pairs 30          # 生成打分表（约 1 分钟）
+# 浏览器打开 workbench-eval/pairs_sheet/sheet.html，逐对选择，
+# 把页面底部文本框里的 JSON 复制存成 answers.json
+python3 tools/make_pairs.py --import answers.json        # -> human/pairs.json
+python3 tools/make_pairs.py --stats                      # 看覆盖度（对数/论文数）
+python3 tools/calibrate_weights.py --pairs human/pairs.json --apply
+```
+
+细节：左右**随机**摆放（`display` 记在 `sheet.json` 里，导入时再映射回 a/b），避免位置偏差；
+打分表**不显示指标值**（防止人向指标看齐）；三类对（都不错 / 都差 / 混合）各占 1/3，
+主导维分散在 5 个维上。图与打分表放在 `workbench-eval/pairs_sheet/`（运行产物，不入库）。
+
 ## 采集建议（避免权重只学到极端对比）
 
 * ≥ 30 对，覆盖 ≥ 6 篇论文；同一篇论文最多 6 对（防止单篇主导）。
