@@ -488,6 +488,13 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
   是该指标自身的**可辨识性问题**，已在代码里显式标 `degenerate`。
 - **E3**（60 篇论文级聚合）：论文级 A_profile 中位 0.7664 / P90 1.3885；
   并量化原始量覆盖率：`trailing_ratio` 6.0%、`ratio.fig_text` 41.0%、其余 ≥99%。
+- **E1 归因（`tools/profile_attr.py`）**：`neurips-real` deg1/deg2 在**渲染层完全无效**
+  （注入的 `\vspace`/`\newpage` 在分栏断页处被 TeX 丢弃 → A_profile 逐位相同），
+  而 A_defect 看**源码**所以会动；`demo` 上 `\vspace` 甚至让 A_profile **下降**。
+  → **A_defect 看源码+渲染，A_profile 只看渲染且只测“常态偏离”**；
+  要让 A_profile 参与决策（λ>0），必须先把「缺陷敏感」与「常态偏离」拆开。
+  `paper-real` 修复不完全的直接原因：`deg3` 里「[H]→[tbp]」让 A 降了（17.5→16.0）
+  但 I 升到 2.8，按 `total=L·1e6+A+I` 被回滚；`vspace_rm`/`local_font` 一直被 blocked。
 - 以上均不改变文档、不改变判定；**λ 恒为 0**。
 
 文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`、`stage8_eval_external.md`。
@@ -580,6 +587,7 @@ cd datasets/conf-specs
 python3 tools/eval_external.py --only e1 --e1-levels 4          # 真实文档端到端退化（真编译，约 30-60 分钟）
 python3 tools/eval_external.py --only e2 --e2-papers 12 --e2-max-pages 8 --e2-dpi 50
 python3 tools/eval_external.py --only e3 --e3-papers 60
+python3 tools/profile_attr.py demo neurips issues    # E1 归因：A_profile 逐维分解（每档只编译一次）
 python3 tools/eval_external.py --list-docs                     # 看可用文档
 ```
 

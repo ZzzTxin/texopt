@@ -95,13 +95,66 @@
 - `repaired_back_to_clean`：闭环修复后 A ≤ 干净稿 A；
 - `repaired_below_before`：闭环修复后 A ≤ 自身退化态 A。
 
-### 1.5 诚实边界
+### 1.5 归因（2026-10-01 补做，两个负面结果都说清楚了）
+
+#### A. 为什么 `paper-real` 不单调且修复不完全
+
+证据：`workbench-eval/e1/paper-real/deg3/run/report.md` 的迭代轨迹：
+
+- 步 2「7 处浮动体 `[H]` → `[tbp]`」：**A 17.5 → 16.0（A 确实改善了）**，但 I 0 → 2.8，
+  总分 17.5 → 18.8 → 按 lexicographic 验收（L 同 → 总分必须严格改善）被**回滚**；
+- 步 4「删正文行内 `\small`」：A 9.5 → 10.3 无改善 → 回滚；
+- 被阻塞动作：`float_spec`、`local_font`、`pagebreak_rm`、`vspace_rm`。
+
+→ 三条原因：①验收用 `total = L·1e6 + A + I`，**“降 A 但增干预”的修复会被拒**；
+②动作白名单对该文档的 `\vspace`/行内字号切换打不通（一直 blocked）；
+③退化与文档自带问题纠缠，闭环收敛到**不同的分页局部最优**（10 页 vs 干净稿 11 页），
+A 差异里混着整篇版面差异。
+
+#### B. 为什么 A_profile 对退化不敏感
+
+方法：**只编译一次、不跑闭环**（新工具 `datasets/conf-specs/tools/profile_attr.py`），
+用与影子**完全相同**的口径（`extract_pdf` + `evaluate_doc` + 门槛剔除 + 已启用权重）
+把 A_profile 拆到每一维。
+
+**`neurips-real`（决定性证据）**：clean / deg1 / deg2 的**渲染结果完全相同**——
+页数 27/27/27，`whitespace.total_ratio` 中位三档都是 0.3304，六个维的归一化损失**逐位相同**，
+A_profile 三档都是 1.245107。原因：注入的 `\vspace{3cm}`/`\newpage` 正好落在
+`\section{Background}` 之前，**在分栏断页处被 TeX 丢弃**——A_profile 的唯一输入是渲染结果，
+自然看不到它。而 A_defect 会动（58.14 → 58.74 → 59.74）：`score.py` 的 A 同时看**源码**
+（`manual_vspace`、手动分页、质量宏缺失…都是 A 的项）。
+
+**`demo`（非单调的机制）**：A_profile clean 0.688 → deg1 **0.677（不升反降）** → deg2 4.079
+→ deg3 4.091 → deg4 3.849。逐维看：`\vspace` 把 `whitespace.total_ratio` 从 0.032 抬到 0.084，
+却把 `balance.d_mid` 0.836→0.817、`visual_centroid_y` 0.790→0.658、`density.coverage_text`
+0.917→0.892 三个维**压低了**；`+pagebreak` 让某页接近空白，CVaR 式 top-k 聚合立刻把所有维抬爆
+（d_mid 4.41、centroid 5.60、whitespace 2.96）；`+overwide` 才让 `ratio.fig_text` 起振（0→0.854）。
+
+**交叉校验**：同一探针在 `issues` 上得到 A_profile = 5.615216 / 5.615216 / 5.615216 / 5.737138，
+与 E1 闭环里记录的退化态影子值**逐位一致**——说明 E1 的基线影子取值是可靠的（不是取错了 PDF）。
+
+→ 结论：A_profile 是「**离会议常态的距离**」（带内损失 = 0，论文级用 CVaR top-k），
+它测**异常**不测**缺陷**：①渲染上无效果的退化当然不动；②一段 3cm 空白在真实语料里本来就常见，
+落在带内；③一页变空会非线性地把 A_profile 拉爆（不单调）。
+→ 对 λ 的含义：**要让 A_profile 参与决策（λ>0），必须先把“缺陷敏感”与“常态偏离”拆开**
+（例如把 12.1 式页级注入检验扩展成逐维门槛、或引入缺陷项子分数），否则闭环会被
+「看起来正常但更糟」的版面骗过。这正是本阶段最重要的结论。
+
+复现：
+
+```bash
+cd datasets/conf-specs
+python3 tools/profile_attr.py demo neurips issues     # 每档只编译一次（不分档跑闭环）
+# 产出 workbench-eval/profile_attr/attr_profile.json
+```
+
+### 1.6 诚实边界
 
 - 退化是**源码级注入**（4 类），不是「任意排版灾难」；能覆盖的是规则可修的常见问题。
 - `demo/issues` 是随仓库靶稿（非真实论文），单独列出；真实论文工程为 `neurips-real`
   / `paper-real`。
-- 影子仍为影子（λ=0）：E1 只说明「退化在 A_profile 上可见」，
-  不说明「λ>0 会让闭环决策更好」——后者需要人类标定（阶段 7 步骤三）后单独审批。
+- 影子仍为影子（λ=0）：E1 只说明「A_defect 对退化敏感、A_profile 对这批退化不敏感」，
+  **不**说明「λ>0 会让闭环决策更好」——而且 1.5-B 恰恰说明现在还不能开（见该节结论）。
 
 ---
 
@@ -196,8 +249,13 @@ E3 因此**按论文**聚合档案判定（每篇一个 A_profile / D² / 异常
 
 - **E1**（4 篇真编译闭环）：A_defect 对源码级退化**敏感**（单调 3/4、可见 3/4），
   闭环能把退化稿的 A 拉回 ≤ 干净稿（3/4）、且都 ≤ 自身退化态（4/4）；
-  但 **`paper-real` 上不单调、修复不完全**，且 **影子 A_profile 只 1/4 同向**
-  （敏感性问题，见 1.4-②/③）。
+  但 **`paper-real` 上不单调、修复不完全**，且 **影子 A_profile 只 1/4 同向**。
+- **归因（1.5）**：`neurips-real` 的 deg1/deg2 在**渲染层完全无效**（注入的 `\vspace`/`\newpage`
+  在分栏断页处被 TeX 丢弃），而 A_defect 看源码所以会动——**A_defect 看源码+渲染，
+  A_profile 只看渲染且只测「常态偏离」**；`demo` 上 `\vspace` 甚至让 A_profile **下降**。
+  → 结论：**λ>0 之前必须先拆开“缺陷敏感”与“常态偏离”**。
+- **`paper-real` 修复不完全的原因**：`deg3` 轨迹里「[H]→[tbp]」让 **A 降了**（17.5→16.0）
+  但 I 升到 2.8，按 `total=L·1e6+A+I` 被回滚；且 `vspace_rm`/`local_font` 一直被 blocked。
 - **E2**：两条测量路径在**排序**上方向一致（整页留白 ρ≈0.58、纵向重心 ρ≈0.19），
   但**绝对量不可比**；顺带量到一个指标可辨识性问题（`trailing_ratio` 在全库 93.4% 的页上无取值）。
 - **E3**：论文级口径可用（A_profile 中位 0.7664 / P90 1.3885），
@@ -222,6 +280,9 @@ python3 tools/eval_external.py --only e2 --e2-papers 12 --e2-max-pages 8 --e2-dp
 
 # E3 论文级报告（离线，秒级）
 python3 tools/eval_external.py --only e3 --e3-papers 60
+
+# E1 归因：A_profile 逐维分解（每个退化档只编译一次，不分档跑闭环；约 5-8 分钟）
+python3 tools/profile_attr.py demo neurips issues
 
 # 三段结果合并写入 metrics/profiles/eval_external.{json,md}
 cd /mnt/d/桌面/texopt && python3 tests/run_tests.py --full   # 含 stage8_tests（纯计算，不真编译）
