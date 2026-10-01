@@ -1733,6 +1733,71 @@ def stage8_tests():
           str([EE.sequential_monotone(x) for x in
                ([1, 2, 2.0, 3], [1, 2, 1], [1, None, 3], [])]))
 
+    # 9) 阶段 8 E4：λ 前置门（代码强制，不只是文档约定）
+    from texopt import shadow as SH2
+    with tempfile.TemporaryDirectory() as td:
+        bad = os.path.join(td, "bad.json")
+        with open(bad, "w", encoding="utf-8") as f:
+            json.dump({"schema": SH2.SENSITIVITY_SCHEMA, "lambda_eligible": False,
+                       "blind_dims": ["whitespace.trailing_ratio"],
+                       "reason": "演示：有盲维"}, f)
+        good = os.path.join(td, "good.json")
+        with open(good, "w", encoding="utf-8") as f:
+            json.dump({"schema": SH2.SENSITIVITY_SCHEMA, "lambda_eligible": True,
+                       "blind_dims": [], "reason": "ok"}, f)
+        ok_bad, _ = SH2.lambda_eligible(bad)
+        ok_good, _ = SH2.lambda_eligible(good)
+        blocked = False
+        try:
+            SH2.assert_lambda_allowed(0.5, bad)
+        except RuntimeError:
+            blocked = True
+        SH2.assert_lambda_allowed(0.0, bad)          # λ=0 永远允许
+        SH2.assert_lambda_allowed(0.5, good)         # 过门后允许
+        check("s8/lambda-gate-blocks",
+              ok_bad is False and ok_good is True and blocked is True,
+              f"bad={ok_bad} good={ok_good} blocked={blocked}")
+    empty = EE.sensitivity_sweep([], outdir=os.path.join(OUT, "s8_e4"))
+    check("s8/sensitivity-empty-not-eligible",
+          empty["n_docs"] == 0 and empty["lambda_eligible"] is False
+          and empty["schema"] == SH2.SENSITIVITY_SCHEMA,
+          str(empty.get("reason")))
+
+
+def acceptance_tests():
+    """验收口径（阶段 8 修正 (a)）：A 质量优先，I 只做 tie-break。
+
+    背景：旧口径用 `total = A + I` 一刀切，会把「降 A 但增干预」的真修复拒掉
+    （E1 实测 paper-real deg3：「[H]→[tbp]」A 17.5→16.0 但 I 0→2.8 → 回滚）。
+    """
+    print("\n== 验收口径（lexicographic：L > 页数 > A > I） ==")
+    from texopt.core import Optimizer
+
+    class _Fake:                     # _accept 不依赖实例状态
+        pass
+
+    def acc(nlv, na, ni, clv, ca, ci, np_=None, cp_=None):
+        ncur = {"l": nlv, "a": na, "i": ni, "total": na + ni}
+        cur = {"l": clv, "a": ca, "i": ci, "total": ca + ci}
+        return Optimizer._accept(_Fake(), ncur, cur, np_, cp_, clv)
+
+    ok, why = acc([], 16.0, 2.8, [], 17.5, 0.0)          # ← E1 的真例：A↓ I↑
+    check("accept/q-first-a-up-i-down", ok is True and "A 改善" in why, why)
+    ok, why = acc([], 17.5, 0.0, [], 16.0, 1.0)          # A 变差且总分也更差 → 拒
+    check("accept/a-worse-total-worse-rejected", ok is False and "无改善" in why, why)
+    ok, why = acc([], 17.5, 0.0, [], 16.0, 5.0)          # A 变差但总分改善（松弛回拉）→ 接受
+    check("accept/a-worse-total-better-kept", ok is True and "总分改善" in why, why)
+    ok, why = acc([], 10.0, 5.0, [], 10.0, 9.0)          # A 不变、I 降（松弛回拉）
+    check("accept/tie-break-by-i", ok is True and "总分改善" in why, why)
+    ok, why = acc([], 5.0, 0.0, ["x"], 9.0, 0.0)         # L 违规减少
+    check("accept/l-fewer", ok is True and "L 违规减少" in why, why)
+    ok, why = acc(["a", "b"], 5.0, 0.0, ["x"], 5.0, 0.0)
+    check("accept/l-more-rejected", ok is False and "L 违规增加" in why, why)
+    ok, why = acc(["页数超 1"], 5.0, 0.0, ["页数超 1"], 9.0, 0.0, 10, 10)
+    check("accept/compress-same-pages", ok is True and "压页" in why, why)
+    ok, why = acc(["页数超 1"], 5.0, 0.0, ["页数超 1"], 9.0, 0.0, 11, 10)
+    check("accept/compress-page-up-rejected", ok is False and "页数增加" in why, why)
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -1748,6 +1813,7 @@ def main():
 
     os.makedirs(OUT, exist_ok=True)
     unit_tests()
+    acceptance_tests()
     stage0_tests()
     stage0_fixes()
     stage1_tests()

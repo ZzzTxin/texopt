@@ -92,6 +92,62 @@ def gate_drop_dims(path: str | None = None) -> list:
     return list((g or {}).get("dropped") or [])
 
 
+# ---------------------------------------------------------------- 阶段 8 E4：λ 前置门
+#
+# 阶段 8 E1 发现：A_profile 测的是「离会议常态的距离」，对**渲染上无效果的退化**
+# （源码级 \vspace/\newpage 被分栏断页丢弃）和**常态区间内的缺陷**都不敏感。
+# 所以在 A_profile 的敏感性被修好之前，λ>0（让 A_profile 参与验收）是不安全的。
+# 这里把它做成**代码强制**的门：缺敏感性报告 / 有「无响应维」→ 拒绝 λ>0。
+SENSITIVITY_SCHEMA = "profile.sensitivity.v1"
+SENSITIVITY_CANDIDATES = (
+    os.path.join(ROOT, "datasets", "conf-specs", "metrics", "profiles",
+                 "profile_sensitivity.json"),
+)
+
+
+def default_sensitivity_path():
+    for p in SENSITIVITY_CANDIDATES:
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def load_sensitivity(path: str | None = None) -> dict | None:
+    path = path or default_sensitivity_path()
+    if not path or not os.path.isfile(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            s = json.load(f)
+    except Exception:
+        return None
+    return s if s.get("schema") == SENSITIVITY_SCHEMA else None
+
+
+def lambda_eligible(path: str | None = None) -> tuple[bool, str]:
+    """λ>0 的前置门（阶段 8 E4）：每一维都要对真编译退化有响应。"""
+    s = load_sensitivity(path)
+    if not s:
+        return False, ("缺 profile_sensitivity.json"
+                       "（先跑 python3 tools/eval_external.py --only e4）")
+    if s.get("lambda_eligible") is True:
+        return True, s.get("reason") or "通过缺陷敏感性检验"
+    blind = s.get("blind_dims") or []
+    return False, ((s.get("reason") or "未通过缺陷敏感性检验")
+                   + (f"；无响应的维：{', '.join(blind)}" if blind else ""))
+
+
+def assert_lambda_allowed(lambda_: float, path: str | None = None):
+    """λ=0（影子）永远允许；λ>0 必须先过缺陷敏感性门。"""
+    if not lambda_ or float(lambda_) <= 0:
+        return
+    ok, why = lambda_eligible(path)
+    if not ok:
+        raise RuntimeError(
+            f"拒绝 λ={lambda_}：A_profile 尚未通过缺陷敏感性门（阶段 8 E4）。{why}。"
+            "在此之前 A_profile 只能用 λ=0 的影子模式报告")
+
+
 def evaluate_pdf(pdf_path: str, profile: dict, *, venue: str | None = None,
                  lambda_: float = LAMBDA, pages=None, drop_dims=None,
                  profile_path: str | None = None) -> dict:

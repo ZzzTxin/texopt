@@ -73,6 +73,9 @@ class Optimizer:
         self._shadow_profile = getattr(req, "shadow_profile", None)
         # λ：默认 0（方案 13.1/13.3）；>0 只影响影子报告的 a_effective，不参与判定
         self._lambda = float(getattr(req, "aesthetic_lambda", 0.0) or 0.0)
+        # 阶段 8 E4：λ>0 必须先过「缺陷敏感性门」（否则 A_profile 的盲区会直接
+        # 变成优化目标）——在构造时 fail fast，而不是默默跑出一个不可信的结论。
+        shadow.assert_lambda_allowed(self._lambda)
         self._shadow_trace: list = []    # 阶段 6：逐轮观测（baseline / 每次接受 / 终态）
         self._defects: list = []         # 当前视觉缺陷（出口状态判定用）
         self._state = None               # 上一次接受后的 (Perception, 评分)
@@ -408,15 +411,18 @@ class Optimizer:
             self._write(new_src)
             nper = P.perceive(self.work_tex, self.req)
             ncur = S.total_score(nper, self.req, self.orig_per)
-            accepted = nper.ok and self._accept(ncur, cur, nper.pages,
-                                                cur_pages, cur_lv)
+            if nper.ok:
+                accepted, why = self._accept(ncur, cur, nper.pages,
+                                             cur_pages, cur_lv)
+            else:
+                accepted, why = False, f"编译失败：{nper.compile.first_error}"
             if accepted:
                 self.accepted += 1
-                self._log(f"  [接受] {note_ok}")
+                self._log(f"  [接受] {note_ok}（{why}）")
                 self._log(f"         L={len(ncur['l'])} A={ncur['a']} "
                           f"I={ncur['i']} 总分 {cur['total']} -> {ncur['total']}"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
-                self._record(note_ok, nper, ncur, True, True, "rule")
+                self._record(note_ok, nper, ncur, True, True, "rule", why)
                 self._state = (nper, ncur)
                 # 阶段 6：**判定完成后**才观测（顺序保证影子不可能影响接受/回滚）
                 self._shadow_eval(nper, ncur, f"round{self.iter}:{key}:accepted")
@@ -424,27 +430,43 @@ class Optimizer:
             # 回滚
             self._write(src)
             self._blocked.add(stamp)
-            why = "" if nper.ok else \
-                f"编译失败：{nper.compile.first_error}"
-            self._log(f"  [回滚] {note_ok}（{why or '全局评分无改善'}）")
-            self._record(note_ok, nper, ncur, False, nper.ok, "rule",
-                         why or "全局评分无改善")
+            self._log(f"  [回滚] {note_ok}（{why}）")
+            self._record(note_ok, nper, ncur, False, nper.ok, "rule", why)
         return False
 
-    def _accept(self, ncur: dict, cur: dict, n_pages, c_pages, cur_lv) -> bool:
-        """验收：全局目标是否改善（lexicographic：L 优先，页数压缩组合放宽）。"""
+    def _accept(self, ncur: dict, cur: dict, n_pages, c_pages, cur_lv):
+        """验收：全局目标是否改善。返回 (是否接受, 理由)。
+
+        优先级（lexicographic）：
+          1. L 硬约束（违规数少的更好）；
+          2. 压页阶段：双方都有页数违规时，页数不增即保留（组合收益）；
+          3. **质量优先：A 严格改善就接受**，即使 I（干预代价）上升
+             —— 旧版用 `total = A + I` 一刀切，会把「降 A 但增干预」的真修复拒掉
+             （阶段 8 E1 实测：paper-real deg3 的「[H]→[tbp]」把 A 从 17.5 降到 16.0，
+             但 I 升到 2.8 → total 18.8 > 17.5 被回滚）。
+          4. 否则退回总分口径（A 不变时用 I 做 tie-break，保留「松弛回拉」的收益）。
+        """
         n_lv, c_lv = ncur["l"], cur["l"]
         if len(n_lv) < len(c_lv):
-            return True
+            return True, "L 违规减少"
         if len(n_lv) > len(c_lv):
-            return False
+            return False, "L 违规增加"
         # L 违规数相同：若仍在压页（双方都有页数违规），页数不增即保留
         # （省页可能需连续多档才兑现，避免丢失组合收益 —— 旧版『组合性』保证）
         if n_lv and any("页数" in x for x in n_lv) \
                 and any("页数" in x for x in c_lv):
-            return n_pages is not None and n_pages <= (c_pages or 1 << 30)
-        # L 全清：严格模式 —— 全局评分必须改善（含松弛回拉的 I 收益）
-        return ncur["total"] < cur["total"] - 1e-9
+            if n_pages is not None and n_pages <= (c_pages or 1 << 30):
+                return True, "压页阶段：页数不增"
+            return False, "压页阶段：页数增加"
+        na, ca = ncur.get("a"), cur.get("a")
+        # 3. 质量优先：A 严格改善即接受（I 只做 tie-break）
+        if na is not None and ca is not None and na < ca - 1e-9:
+            di = (ncur.get("i") or 0.0) - (cur.get("i") or 0.0)
+            return True, ("A 改善 %.4g -> %.4g（I %+.4g，质量优先）" % (ca, na, di))
+        # 4. 总分口径（A 不变/变差时用 I tie-break，保留松弛回拉）
+        if ncur["total"] < cur["total"] - 1e-9:
+            return True, ("总分改善 %.4g -> %.4g" % (cur["total"], ncur["total"]))
+        return False, "A 与总分均无改善"
 
     # ------------------------------------------------------------- 主入口
     def run(self) -> dict:
@@ -565,8 +587,11 @@ class Optimizer:
             self._write(res["new_src"])
             nper = P.perceive(self.work_tex, self.req)
             ncur = S.total_score(nper, self.req, self.orig_per)
-            accepted = nper.ok and self._accept(ncur, cur, nper.pages,
-                                                per.pages, cur["l"])
+            if nper.ok:
+                accepted, why = self._accept(ncur, cur, nper.pages,
+                                             per.pages, cur["l"])
+            else:
+                accepted, why = False, f"编译失败：{nper.compile.first_error}"
             tag = f"{item.get('issue','?')}/{item.get('location','')}".strip("/")
             if accepted:
                 self.accepted += 1
@@ -585,8 +610,6 @@ class Optimizer:
             else:
                 self._write(src)
                 self._llm_failed.add(key)
-                why = "" if nper.ok else f"编译失败：{nper.compile.first_error}"
-                why = why or "全局评分无改善（L 优先 / 严格改善才保留）"
                 self._log(f"  [回滚·LLM] {label}（{why}）")
                 self._record(f"{label} | {tag}", nper, ncur, False, nper.ok,
                              "llm", why)

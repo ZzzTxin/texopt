@@ -265,7 +265,82 @@ E3 因此**按论文**聚合档案判定（每篇一个 A_profile / D² / 异常
 
 ---
 
-## 5. 复现命令
+---
+
+## 5. 依据归因做的两处修复（2026-10-01）
+
+### 5.1 （a）验收口径：A 优先，I 只做 tie-break
+
+位置：`texopt/core.py::Optimizer._accept`（现返回 `(是否接受, 理由)`，理由进 `state.json` 与报告）。
+
+新优先级：**L 违规数 → 压页阶段页数 → A 严格改善即接受 → 总分（含 I）tie-break**。
+关键变化：旧口径用 `total = A + I` 一刀切，把“降 A 但增干预”的真修复也拒了
+（1.5-A 里的 `paper-real` deg3）。现在每接受一步 **A 严格下降或 L 改善**，
+“A 单调”成了闭环的不变量，比旧口径更好审计。松弛回拉（A 不变、I 下降）仍然保留。
+
+回归锁：`tests/run_tests.py::acceptance_tests()`（8 项，含 E1 的真例）。
+
+<!-- E1_RERUN_START -->
+（E1 重跑结果待回填：新口径下 `paper-real` 的 A/I/页数变化）
+<!-- E1_RERUN_END -->
+
+### 5.2 （b）λ 前置门：把“缺陷敏感”与“常态偏离”拆开
+
+问题本质（1.5-B）：A_profile 的每一维都是“离会议常态的**带外**损失”，带内恒为 0。
+于是它对两类东西天然无梯度：①渲染上无效果的退化（源码里有、页面上一模一样）；
+②“常见但难看”的版面（带内）。既然它测的是**常态偏离**，就不能直接拿它当
+“排版质量”的奖励信号。
+
+修复分两层：
+
+1. **E4 缺陷敏感性检验**（`texopt/evalexternal.py::sensitivity_sweep`，
+   入口 `tools/eval_external.py --only e4`）：用 E1 的 4 个**源码级**退化档 + **真编译**
+   （每档只编一次，不跑闭环），逐维检查 A_profile 到底动不动；
+   产出 `metrics/profiles/profile_sensitivity.json`（`lambda_eligible` / `blind_dims`）。
+2. **代码强制的前置门**（`texopt/shadow.py::assert_lambda_allowed`，在
+   `Optimizer.__init__` 调用）：**λ>0 且未过门 → 直接报错拒绝**（λ=0 不受影响）。
+   门槛是“每维都得有响应”，不是打分：没证据就不允许把它变成优化目标。
+
+<!-- E4_RESULT_START -->
+结果（2026-10-01，4 篇 × 5 档，整段 619.6s）：
+
+| 维 | 响应篇数 | 单调篇数 | 中位 Δ | 判定 |
+|---|---|---|---|---|
+| `balance.d_mid` | 4/4 | 2 | 1.4686 | responds |
+| `balance.visual_centroid_y` | 4/4 | 1 | 2.8365 | responds |
+| `density.coverage_text` | 4/4 | 1 | 0.9037 | responds |
+| `whitespace.total_ratio` | 4/4 | 1 | 1.7125 | responds |
+| `alignment.center_var` | 1/4 | 2 | 0.0 | **blind** |
+| `ratio.fig_text` | 0/2 | 1 | 0.0 | **blind** |
+
+**门禁结论：`lambda_eligible = false`**（2 个维对源码级退化无响应：
+`alignment.center_var`、`ratio.fig_text`）。
+另一点同样重要：即使「响应」的那 4 个维，**档间单调性也只有 1-2/4 篇**——
+说明 A_profile 对退化的响应不只是“有些维看不见”，而是**整体不够稳定**。
+
+→ 所以现在即使有人把 `aesthetic_lambda` 设成 >0，也会在 `Optimizer.__init__`
+直接被代码拦下（`shadow.assert_lambda_allowed`），直到这两件事被真正修好：
+补上能照亮盲维的注入项（或给它们补缺陷项子分数），并让响应在档间单调。
+<!-- E4_RESULT_END -->
+
+### 5.3 两个修复的联带效果
+
+- 验收口径变了 → 所有闭环结果都要重跑一遍才能引用（E1 已重跑，见 6.1）。
+- λ 仍然恒为 0（影子）；现在即使有人把 `aesthetic_lambda` 设成 >0，也会被代码拦下，
+  直到 E4 的敏感性被真正修好（比如给每维补上缺陷敏感的注入项，或引入缺陷项子分数）。
+
+复现：
+
+```bash
+cd /mnt/d/桌面/texopt
+python3 tests/run_tests.py --full                       # 含 acceptance_tests + s8
+cd datasets/conf-specs
+python3 tools/eval_external.py --only e4                 # E4（真编译，约 10-15 分钟）
+cat metrics/profiles/profile_sensitivity.json           # lambda_eligible / blind_dims
+```
+
+## 6. 复现命令
+
 
 ```bash
 cd /mnt/d/桌面/texopt/datasets/conf-specs
