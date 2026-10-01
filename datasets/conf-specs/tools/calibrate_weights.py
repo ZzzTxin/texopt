@@ -136,6 +136,10 @@ def _write_report(path, block, prof, eq, cal, trials):
                  f"{x.get('noise')} | {x.get('sn')} | {x.get('n_signal')}/"
                  f"{x.get('n_noise')} | {x.get('source')} |")
     L.append("")
+    if any((x.get("w_human") is not None) for x in (block.get("by_dim") or {}).values()):
+        L += ["> 注：`w` 在启用人类标定（步骤三）后是**人类权重**（w_human，已归一到均值 1），"
+              "而 `CI / 信号 / 噪声 / SN` 来自**步骤二消融**——两者口径不同，"
+              "`w` 不必落在该 CI 区间内。", ""]
     if block.get("excluded_dims"):
         L += [f"> 未参与校准（阶段 5 门槛剔除，只报告不参与判定）："
               f"{'、'.join(block['excluded_dims'])}", ""]

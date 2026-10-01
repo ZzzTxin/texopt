@@ -327,6 +327,11 @@ def measure_pipeline(tex_path: str, outdir: str, req, *, src_override: str | Non
     if src_override is not None:
         os.makedirs(outdir, exist_ok=True)
         work_dir = os.path.join(outdir, "_src")
+        # **先清空再拷**：上一轮的 main.aux/.log 留在这里会被一并带进编译目录，
+        # 而 perceive 只跑**一遍** LaTeX（engine.compile_tex passes=1），
+        # 有 .aux 与无 .aux 的编译结果不同（分段/浮动体定位）→ 同一个退化源的 A
+        # 会随残留而变（2026-10-01 实测：同样输入 58.74 vs 35.92）。测量必须先保证干净。
+        shutil.rmtree(work_dir, ignore_errors=True)
         os.makedirs(work_dir, exist_ok=True)
         for name in os.listdir(os.path.dirname(tex_path)):
             src = os.path.join(os.path.dirname(tex_path), name)
@@ -441,9 +446,11 @@ def measure_once(tex_path: str, outdir: str, *, src_override: str | None = None,
     from . import engine
 
     os.makedirs(outdir, exist_ok=True)
-    # **始终拷贝**到工作区再编译（哪怕没有退化）：examples/ 里的靶子只读，
-    # 直接编原件会把 main.pdf 写回靶稿目录（实测踩到，已酿成误入库）。
+    # **先清空再拷**（理由同 measure_pipeline：残留 .aux 会改变单遍编译结果，
+    # 让 A 不可复现）。始终拷贝也保证 examples/ 靶稿**只读**——
+    # 直接编原件会把 main.pdf 写回靶稿目录（2026-10-01 实测踩到，已酿成误入库）。
     work = os.path.join(outdir, "_src")
+    shutil.rmtree(work, ignore_errors=True)
     os.makedirs(work, exist_ok=True)
     srcdir = os.path.dirname(tex_path)
     for name in os.listdir(srcdir):

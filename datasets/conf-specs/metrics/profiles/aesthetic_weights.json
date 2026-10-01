@@ -1,10 +1,10 @@
 {
  "schema": "aesthetic_weights.v1",
  "version": "w1",
- "method": "ablation",
+ "method": "ablation+human",
  "by_dim": {
   "density.coverage_text": {
-   "w": 0.6066,
+   "w": 0.9042,
    "ci": [
     0.3795,
     1.6021
@@ -14,10 +14,11 @@
    "sn": 0.3331,
    "n_signal": 13,
    "n_noise": 67,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 0.9042
   },
   "whitespace.total_ratio": {
-   "w": 0.6749,
+   "w": 0.9239,
    "ci": [
     0.3627,
     1.6627
@@ -27,10 +28,11 @@
    "sn": 0.3707,
    "n_signal": 15,
    "n_noise": 65,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 0.9239
   },
   "balance.visual_centroid_y": {
-   "w": 1.156,
+   "w": 0.9861,
    "ci": [
     0.5701,
     2.3542
@@ -40,10 +42,11 @@
    "sn": 0.6349,
    "n_signal": 20,
    "n_noise": 60,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 0.9861
   },
   "ratio.fig_text": {
-   "w": 0.4552,
+   "w": 0.957,
    "ci": [
     0.3043,
     0.7215
@@ -53,10 +56,11 @@
    "sn": 0.0366,
    "n_signal": 4,
    "n_noise": 76,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 0.957
   },
   "alignment.center_var": {
-   "w": 0.4552,
+   "w": 1.5274,
    "ci": [
     0.2769,
     0.6726
@@ -66,10 +70,11 @@
    "sn": 0.0142,
    "n_signal": 12,
    "n_noise": 68,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 1.5274
   },
   "balance.d_mid": {
-   "w": 2.6521,
+   "w": 0.7015,
    "ci": [
     0.844,
     3.1559
@@ -79,7 +84,8 @@
    "sn": 1.4565,
    "n_signal": 16,
    "n_noise": 64,
-   "source": "ablation"
+   "source": "ablation+human",
+   "w_human": 0.7015
   }
  },
  "excluded_dims": [
@@ -106,7 +112,11 @@
    "recompute_mismatch": 0
   }
  },
- "human_calibration": null,
- "built_at": "2026-09-30T18:57:44",
+ "human_calibration": {
+  "n_pairs": 8,
+  "pair_accuracy": 0.875,
+  "method": "bradley-terry"
+ },
+ "built_at": "2026-10-01T11:34:01",
  "profile_version": "v2"
 }

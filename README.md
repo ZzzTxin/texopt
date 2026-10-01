@@ -459,7 +459,7 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
 | 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
 | 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
-| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二已完成并启用（`texopt/weights.py`，`aesthetic_weights.json`）；步骤三（人类成对比较）**数据未采集 → null** |
+| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二 + **步骤三（2026-10-01 采集 8 对，成对准确率 0.875，`method=ablation+human`）**；8 对是口径下限，建议攒到 ≥30 对（`tools/make_pairs.py`） |
 | 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ✅（`texopt/evalexternal.py` + `datasets/conf-specs/tools/eval_external.py`；E1 真编译闭环 / E2 双测量路径 / E3 论文级聚合，详见 `docs/stage8_eval_external.md`） |
 
 阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
@@ -477,14 +477,21 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 验收：退化后 A 上升正向率 0.9875 不变、中位判别间隔 0.1157 → **0.1506**（严格改善）→ `applied=true`。
 **λ 仍为 0**：权重只改 `A_profile` 合成口径（`Σw·v/Σw`），不参与验收；λ>0 需人类标定 + 用户审批。
 
+阶段 7 步骤三（2026-10-01）：**已采集 8 对人类成对比较**（`human/pairs.json`，工具
+`tools/make_pairs.py`），成对准确率 0.875 → `method=ablation+human`；因样本是口径下限
+（≥8 才给结论）且 L2 朝等权收缩，人类数据主要把上表的强权重**拉回接近 1**
+（`balance.d_mid` 2.65 → **0.70**、`alignment.center_var` 0.46 → **1.53**）。
+要稳定主张“与人类偏好一致”，建议攒到 ≥30 对再 `--apply`。
+
 阶段 8 结果要点（详见 `docs/stage8_eval_external.md`）：
 
-- **E1**（真实文档 + 真编译闭环，4 篇：`neurips-real`/`paper-real`/`demo`/`issues`）：
+- **E1**（真实文档 + 真编译闭环，4 篇：`neurips-real`/`paper-real`/`demo`/`issues`；终态=干净工作区 + 修正 (a) + 人类权重）：
   A_defect 对退化敏感（单调 3/4、可见 3/4），闭环把退化稿 A 拉回 ≤ 干净稿（3/4），
   且都 ≤ 自身退化态（4/4）。**两条负面结果如实记录**：
-  ① `paper-real` 退化态 A 不单调（25.88→25.4→21.9→22.9），闭环也只部分修复（3.7→6.5→11.3→12.3）；
-  ② **影子 A_profile 只 1/4 同向**（A_defect 敏感、A_profile 不敏感），
-  是 λ=0（影子不参与验收）的直接证据。
+  ① `paper-real` 退化态 A 不单调（25.88→25.4→21.9→22.9），闭环也只部分修复
+  （修正 (a) 前 3.7→6.5→**11.3→12.3**，修正后 **3.7→6.5→6.5→7.5**，仍 > 干净稿 3.1）；
+  ② **影子 A_profile 0/4 同向**（A_defect 敏感、A_profile 不敏感），
+  是 λ=0（影子不参与验收）的直接证据；人类权重把权重拉向等权后，它的分辨力**更弱**。
   关键修正：初版只记**修复后**的 A，而源码级退化会被完全修回去 → 单调性无法被检验；
   现改为同时记录退化态（闭环基线）的 A 与影子 A_profile（`core.run()` 新增只读字段
   `aesthetic_shadow_baseline`）。
@@ -501,7 +508,10 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
   要让 A_profile 参与决策（λ>0），必须先把「缺陷敏感」与「常态偏离」拆开。
   `paper-real` 修复不完全的直接原因：`deg3` 里「[H]→[tbp]」让 A 降了（17.5→16.0）
   但 I 升到 2.8，按 `total=L·1e6+A+I` 被回滚；`vspace_rm`/`local_font` 一直被 blocked。
-- 以上均不改变文档、不改变判定；**λ 恒为 0**。
+- 以上均不改变文档、不改变判定；**λ 恒为 0**，且阶段 8 的 E4 现在会**代码强制**拦下 λ>0
+  （实测 2 个维对退化无响应 → `lambda_eligible=false`）。
+- **修正 (a)**（验收口径 A 优先、I 只做 tie-break）与 **(b)**（E4 缺陷敏感门）见
+  `docs/stage8_eval_external.md` §5；修正后全量回归 258 通过 / 0 失败 / 0 跳过。
 
 文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`、`stage8_eval_external.md`。
 
@@ -583,6 +593,8 @@ python3 tests/run_tests.py                         # 含 s6/no-decision-change�
 ```bash
 cd datasets/conf-specs
 python3 tools/calibrate_weights.py --trials 80 --bootstrap 200 --apply
+python3 tools/make_pairs.py --sheet          # 新打分表（左右随机、不显示指标）
+python3 tools/make_pairs.py --import answers.json        # 人的答案 -> human/pairs.json
 python3 tools/calibrate_weights.py --pairs ../human/pairs.json --apply   # 步骤三（需人类数据）
 ```
 
