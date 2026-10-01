@@ -35,56 +35,26 @@ WORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                     "workbench-eval", "profile_attr")
 
 
-def build_and_compile(tag, tex_path, src_override):
-    """把文档目录拷进工作区（带图/.sty/.bbl），写入（可能退化过的）源码，编译一次。"""
-    out = os.path.join(WORK, tag)
-    if os.path.isdir(out):
-        shutil.rmtree(out, ignore_errors=True)
-    os.makedirs(out, exist_ok=True)
-    srcdir = os.path.dirname(tex_path)
-    for name in os.listdir(srcdir):
-        if name in ("workbench", "__pycache__"):
-            continue
-        s, d = os.path.join(srcdir, name), os.path.join(out, name)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, dirs_exist_ok=True)
-        else:
-            shutil.copy2(s, d)
-    main = os.path.join(out, os.path.basename(tex_path))
-    if src_override is not None:
-        with open(main, "w", encoding="utf-8") as f:
-            f.write(src_override)
-    res = engine.compile_tex(main, passes=2, timeout=180)
-    return out, res
-
-
 def probe(doc_key):
+    """一个文档：clean + 逐档退化，每档只编译一次（用 texopt.evalexternal.measure_once）。"""
+    from texopt import evalexternal as EE
+
     tex = DOCS[doc_key]
-    prof = SH.load_profile()
     drop = SH.gate_drop_dims()
     src = open(tex, encoding="utf-8", errors="replace").read()
     rows = []
     cases = [("clean", None)] + [(f"deg{i+1}", kinds) for i, kinds in enumerate(EE.LADDER)]
     for tag, kinds in cases:
         ov = None if kinds is None else EE.degrade_source(src, kinds)
-        out, res = build_and_compile(f"{doc_key}-{tag}", tex, ov)
-        pdf = getattr(res, "pdf_path", None)
-        if not pdf or not os.path.isfile(pdf):
-            rows.append({"tag": tag, "error": f"编译失败: {getattr(res, 'first_error', res)}"})
+        m = EE.measure_once(tex, os.path.join(WORK, f"{doc_key}-{tag}"), src_override=ov)
+        if not m.get("compile_ok"):
+            rows.append({"tag": tag, "error": m.get("error")})
             continue
-        doc = EX.extract_pdf(pdf)
-        rep = AE.evaluate_doc(doc, prof, lambda_=0.0, drop_dims=drop)
-        paper = rep.get("paper") or {}
-        ws = [p.get("whitespace", {}).get("total_ratio") for p in doc.get("pages", [])]
         rows.append({
             "tag": tag, "kinds": list(kinds or []),
-            "n_pages": rep.get("n_pages"),
-            "a_profile": paper.get("a_profile"),
-            "dim_norm": paper.get("dim_norm_top") or {},
-            "dim_loss": paper.get("dim_loss_top") or {},
-            "d2_norm": paper.get("norm_d2_top"),
-            "n_anom": paper.get("n_anomalous_pages"),
-            "ws_total_median": sorted(x for x in ws if x is not None)[len(ws) // 2] if ws else None,
+            "n_pages": m.get("n_pages"), "a_profile": m.get("a_profile"),
+            "dim_norm": m.get("dim_norm") or {}, "dim_loss": m.get("dim_loss") or {},
+            "d2_norm": m.get("d2_norm"), "raw_median": m.get("raw_median") or {},
         })
     return {"doc": doc_key, "tex": tex, "dropped_dims": drop, "rows": rows}
 
@@ -100,7 +70,7 @@ def main():
         for r in blk["rows"]:
             print(f"  {r.get('tag'):6s} pages={r.get('n_pages')} "
                   f"A_profile={r.get('a_profile')} d2_norm={r.get('d2_norm')} "
-                  f"ws={r.get('ws_total_median')}")
+                  f"ws={((r.get('raw_median') or {}).get('whitespace.total_ratio'))}")
             if r.get("dim_norm"):
                 for d in dims:
                     v = (r["dim_norm"] or {}).get(d, 0.0)

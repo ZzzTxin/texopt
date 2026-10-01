@@ -36,6 +36,7 @@ from . import aesthetic as AE
 from . import evalproto as EP
 from . import extract as EX
 from . import profile as PF
+from . import shadow as SH
 from . import visual
 
 # ---------------------------------------------------------------- E2 口径
@@ -424,6 +425,128 @@ def end_to_end_doc(doc: dict, *, req=None, outdir: str, levels=None) -> dict:
                        "shadow_monotone_before": prof_mono,
                        "repaired_back_to_clean": bool(repaired_ok),
                        "repaired_below_before": bool(below_before)}}
+
+
+# ---------------------------------------------------------------- E4 缺陷敏感性
+#
+# 与阶段 5 的 12.1 不同：12.1 在**缓存页指标**上注入；这里用 E1 的 4 个**源码级**
+# 退化档做注入、走**真编译**，逐维检查 A_profile 到底动不动。
+# 目的：把「缺陷敏感」与「常态偏离」拆开——测不出来的维，不允许拿去当奖励（λ>0）。
+
+
+def measure_once(tex_path: str, outdir: str, *, src_override: str | None = None,
+                 passes: int = 2, timeout: int = 180) -> dict:
+    """只编译一次（**不跑闭环**）→ 提取矢量层指标 → 影子口径逐维损失（λ=0）。"""
+    import shutil
+    from . import engine
+
+    os.makedirs(outdir, exist_ok=True)
+    # **始终拷贝**到工作区再编译（哪怕没有退化）：examples/ 里的靶子只读，
+    # 直接编原件会把 main.pdf 写回靶稿目录（实测踩到，已酿成误入库）。
+    work = os.path.join(outdir, "_src")
+    os.makedirs(work, exist_ok=True)
+    srcdir = os.path.dirname(tex_path)
+    for name in os.listdir(srcdir):
+        if name in ("workbench", "__pycache__", "_src"):
+            continue
+        s, d = os.path.join(srcdir, name), os.path.join(work, name)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        else:
+            shutil.copy2(s, d)
+    tex_path = os.path.join(work, os.path.basename(tex_path))
+    if src_override is not None:
+        with open(tex_path, "w", encoding="utf-8") as f:
+            f.write(src_override)
+    res = engine.compile_tex(tex_path, passes=passes, timeout=timeout)
+    pdf = getattr(res, "pdf_path", None)
+    if not pdf or not os.path.isfile(pdf):
+        return {"compile_ok": False,
+                "error": str(getattr(res, "first_error", None))}
+    prof = SH.load_profile()
+    if not prof:
+        return {"compile_ok": False, "error": "无审美档案"}
+    doc = EX.extract_pdf(pdf)
+    rep = AE.evaluate_doc(doc, prof, lambda_=0.0, drop_dims=SH.gate_drop_dims())
+    paper = rep.get("paper") or {}
+    # 原始量中位（证据用：判断“渲染到底有没有变”——归一化损失会因带内归零而看不出来）
+    raw = {}
+    for d in COVERAGE_DIMS:
+        vals = []
+        for p in doc.get("pages") or []:
+            v = dict(PF.page_metric_items(p)).get(d)
+            if isinstance(v, (int, float)):
+                vals.append(float(v))
+        raw[d] = round(_median(vals), 4) if vals else None
+    return {"compile_ok": True, "pdf": os.path.basename(pdf),
+            "n_pages": rep.get("n_pages"),
+            "a_profile": paper.get("a_profile"),
+            "d2_norm": paper.get("norm_d2_top"),
+            "dim_norm": paper.get("dim_norm_top") or {},
+            "dim_loss": paper.get("dim_loss_top") or {},
+            "raw_median": raw}
+
+
+def sensitivity_sweep(docs: list[dict], *, outdir: str, levels=None) -> dict:
+    """E4：逐档真编译注入 → 逐维响应矩阵 + λ 前置门判定。
+
+    verdict：某维在多篇文档上「至少被一个退化档抬起来」就算 responds；
+    一篇都不动 → blind（不允许参与 λ>0 的验收）。
+    """
+    levels = list(levels if levels is not None else LADDER)
+    per_doc = []
+    for d in docs:
+        tex = d["tex"]
+        if not os.path.isfile(tex):
+            continue
+        src = open(tex, encoding="utf-8", errors="replace").read()
+        clean = measure_once(tex, os.path.join(outdir, d["name"], "clean"))
+        row = {"name": d["name"], "clean": clean, "levels": []}
+        for i, kinds in enumerate(levels):
+            m = measure_once(tex, os.path.join(outdir, d["name"], f"deg{i + 1}"),
+                             src_override=degrade_source(src, kinds))
+            m["kinds"] = list(kinds)
+            row["levels"].append(m)
+        per_doc.append(row)
+
+    dims = sorted({d for r in per_doc
+                   for m in ([r["clean"]] + r["levels"])
+                   for d in (m.get("dim_norm") or {})})
+    table = {}
+    for dim in dims:
+        deltas, resp, mono = [], 0, 0
+        for r in per_doc:
+            base = (r["clean"].get("dim_norm") or {}).get(dim)
+            vals = [(m.get("dim_norm") or {}).get(dim) for m in r["levels"]]
+            if base is None or any(v is None for v in vals):
+                continue
+            delta = max(vals) - base
+            deltas.append(round(delta, 6))
+            if delta > 1e-6:
+                resp += 1
+            if sequential_monotone([base] + vals) is True:
+                mono += 1
+        n = len(deltas)
+        table[dim] = {"n_docs": n, "respond_docs": resp, "monotone_docs": mono,
+                      "median_delta": round(_median(deltas), 6) if deltas else None,
+                      "verdict": ("responds" if n and resp >= max(1, (n + 1) // 2)
+                                  else "blind")}
+    blind = sorted(d for d, v in table.items() if v["verdict"] == "blind")
+    n_docs = len(per_doc)
+    eligible = n_docs >= 2 and not blind and bool(dims)
+    if n_docs < 2:
+        reason = f"证据不足：只有 {n_docs} 篇文档跑通"
+    elif not dims:
+        reason = "没有任何维产出可比较的损失"
+    elif blind:
+        reason = f"{len(blind)} 个维对源码级退化无响应（{', '.join(blind)}）"
+    else:
+        reason = f"{len(dims)} 个维全部对退化有响应（{n_docs} 篇文档）"
+    return {"schema": SH.SENSITIVITY_SCHEMA,
+            "levels": [[k for k in lv] for lv in levels],
+            "n_docs": n_docs, "dims": table,
+            "blind_dims": blind, "lambda_eligible": bool(eligible),
+            "reason": reason, "docs": per_doc}
 
 
 # ---------------------------------------------------------------- E3 论文级

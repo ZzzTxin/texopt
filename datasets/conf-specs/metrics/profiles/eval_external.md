@@ -1,6 +1,6 @@
 # 阶段 8：外部验证（方案 13）
 
-生成时间：2026-10-01T08:05:12 ｜ 用时 2206.5s
+生成时间：2026-10-01T09:51:08 ｜ 用时 619.6s
 
 > 诚实边界：E1 走真编译，检验的是「实现-口径自洽 + 修复能力」；
 > E2 的两条路径读同一批 PDF（渲染/解析路径不同），不是两套完全独立的链路；
@@ -8,7 +8,7 @@
 
 ## E1 端到端退化（真实文档 + 真实优化器，真编译）
 
-- 文档 4 篇；退化档 `[('vspace',), ('vspace', 'pagebreak'), ('vspace', 'pagebreak', 'float_H'), ('vspace', 'pagebreak', 'float_H', 'overwide')]`（逐档累加）
+- 文档 4 篇；退化档 `[['vspace'], ['vspace', 'pagebreak'], ['vspace', 'pagebreak', 'float_H'], ['vspace', 'pagebreak', 'float_H', 'overwide']]`（逐档累加）
 - **退化态 A（修复前）对退化档单调不降：3/4**（最重档 ≥ 最轻档：3/4）
 - **退化态影子 A_profile 同向：1/4**
 - 闭环修复后 A 回到 ≤ 干净稿：**3/4**（且 ≤ 自身退化态：4/4）
@@ -83,4 +83,20 @@
 | `ratio.fig_text` | 759 | 311 | 0.4097 |
 | `whitespace.total_ratio` | 765 | 764 | 0.9987 |
 | `whitespace.trailing_ratio` | 765 | 46 | 0.0601 |
+
+## E4 缺陷敏感性（A_profile 的 λ 前置门）
+
+- 文档 4 篇；退化档 `[['vspace'], ['vspace', 'pagebreak'], ['vspace', 'pagebreak', 'float_H'], ['vspace', 'pagebreak', 'float_H', 'overwide']]`（源码级注入 + 真编译，每档只编一次）
+- **λ 可用 = False**（2 个维对源码级退化无响应（alignment.center_var, ratio.fig_text））
+
+| 维 | 响应篇数 | 单调篇数 | 中位 Δ | 判定 |
+|---|---|---|---|---|
+| `alignment.center_var` | 1/4 | 2 | 0.0 | blind |
+| `balance.d_mid` | 4/4 | 2 | 1.468609 | responds |
+| `balance.visual_centroid_y` | 4/4 | 1 | 2.836499 | responds |
+| `density.coverage_text` | 4/4 | 1 | 0.903651 | responds |
+| `ratio.fig_text` | 0/2 | 1 | 0.0 | blind |
+| `whitespace.total_ratio` | 4/4 | 1 | 1.712468 | responds |
+
+（λ>0 会被代码拦下：`shadow.assert_lambda_allowed()` 读 `metrics/profiles/profile_sensitivity.json`；λ=0 不受影响。）
 

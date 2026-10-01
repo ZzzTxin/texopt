@@ -11,14 +11,19 @@
                      两条测量路径逐量比较（排序一致性 + 绝对偏差 + 分歧页）。
     E3 论文级报告    缓存页指标 -> 按**论文**聚合档案判定，并与页级池化口径对照
                      （回应阶段 7 的局限 L4：长文被池化稀释）。
+    E4 缺陷敏感性    源码级退化注入 + 真编译，逐维检查 A_profile 动不动 →
+                     **λ 前置门**（测不出来的维不允许拿去当奖励）；
+                     写出 metrics/profiles/profile_sensitivity.json。
 
 产出：
     metrics/profiles/eval_external.json   完整结果
     metrics/profiles/eval_external.md     人读报告
+    metrics/profiles/profile_sensitivity.json   λ 前置门（仅 E4）
 
 用法：
     python3 tools/eval_external.py                      # 全跑（E1 默认 2 篇、E2 12 篇、E3 60 篇）
     python3 tools/eval_external.py --only e2,e3         # 只跑测量层（跳过真编译，快）
+    python3 tools/eval_external.py --only e4            # E4：A_profile 缺陷敏感性（λ 前置门）
     python3 tools/eval_external.py --only e3 --e3-papers 200
     python3 tools/eval_external.py --e2-papers 24 --e2-max-pages 8 --e2-dpi 60
 """
@@ -144,6 +149,34 @@ def do_e3(pages_dir, profile_path, n_papers, venue):
     return res
 
 
+# ---------------------------------------------------------------- E4
+
+def do_e4(names, levels_n, outdir):
+    """E4：源码级退化注入 → A_profile 逐维敏感性 + λ 前置门。"""
+    from texopt import evalexternal as EE
+
+    docs = [d for d in DOC_CANDIDATES if not names or d["name"] in names]
+    missing = [d["name"] for d in docs if not os.path.isfile(d["tex"])]
+    docs = [d for d in docs if os.path.isfile(d["tex"])]
+    ladder = EE.LADDER[:levels_n] if levels_n else EE.LADDER
+    t0 = time.time()
+    _p(f"  E4 缺陷敏感性：{len(docs)} 篇 × （干净 + {len(ladder)} 档），每档只编译一次…")
+    res = EE.sensitivity_sweep(docs, outdir=outdir, levels=ladder)
+    for d, v in sorted((res.get("dims") or {}).items()):
+        _p(f"    {d:32s} 响应 {v['respond_docs']}/{v['n_docs']} 篇 "
+           f"单调 {v['monotone_docs']} 中位Δ {v['median_delta']} → {v['verdict']}")
+    _p(f"  E4 结论：λ 可用 = {res['lambda_eligible']}（{res['reason']}）"
+       + (f"；缺文档 {missing}" if missing else ""))
+    res["seconds"] = round(time.time() - t0, 1)
+    # 前置门文件：给 shadow.lambda_eligible() 读
+    gate = {k: v for k, v in res.items() if k != "docs"}
+    gp = os.path.join(OUTDIR, "profile_sensitivity.json")
+    with open(gp, "w", encoding="utf-8") as f:
+        json.dump(gate, f, ensure_ascii=False, indent=1)
+    _p(f"    写出前置门：{gp}")
+    return res
+
+
 # ---------------------------------------------------------------- 报告
 
 def write_report(path, res):
@@ -218,6 +251,17 @@ def write_report(path, res):
             for d, r in sorted(mc.items()):
                 L.append(f"| `{d}` | {r['n']} | {r['n_nonzero']} | {r['share_nonzero']} |")
             L.append("")
+    e4 = res.get("e4_sensitivity")
+    if e4:
+        L += ["## E4 缺陷敏感性（A_profile 的 λ 前置门）", "",
+              f"- 文档 {e4['n_docs']} 篇；退化档 `{e4['levels']}`（源码级注入 + 真编译，每档只编一次）",
+              f"- **λ 可用 = {e4['lambda_eligible']}**（{e4['reason']}）", "",
+              "| 维 | 响应篇数 | 单调篇数 | 中位 Δ | 判定 |", "|---|---|---|---|---|"]
+        for d, v in sorted((e4.get("dims") or {}).items()):
+            L.append(f"| `{d}` | {v['respond_docs']}/{v['n_docs']} | "
+                     f"{v['monotone_docs']} | {v['median_delta']} | {v['verdict']} |")
+        L += ["", "（λ>0 会被代码拦下：`shadow.assert_lambda_allowed()` 读 "
+              "`metrics/profiles/profile_sensitivity.json`；λ=0 不受影响。）", ""]
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
 
@@ -264,6 +308,10 @@ def main():
     if "e3" in want:
         res["e3_paper_level"] = do_e3(args.pages, args.profile, args.e3_papers,
                                       args.e3_venue)
+    if "e4" in want:
+        e4names = [s.strip() for s in args.e1_docs.split(",") if s.strip()]
+        res["e4_sensitivity"] = do_e4(e4names, args.e1_levels,
+                                      os.path.join(args.work, "e4"))
 
     res["seconds"] = round(time.time() - t0, 1)
     pj = os.path.join(args.out, "eval_external.json")
