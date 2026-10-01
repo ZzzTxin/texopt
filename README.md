@@ -454,7 +454,7 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 | 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
 | 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
 | 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二已完成并启用（`texopt/weights.py`，`aesthetic_weights.json`）；步骤三（人类成对比较）**数据未采集 → null** |
-| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ⬜ |
+| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ✅（`texopt/evalexternal.py` + `datasets/conf-specs/tools/eval_external.py`；E1 真编译闭环 / E2 双测量路径 / E3 论文级聚合，详见 `docs/stage8_eval_external.md`） |
 
 阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
 
@@ -471,7 +471,26 @@ python3 optimize.py --list-actions        # 查看可用白名单动作
 验收：退化后 A 上升正向率 0.9875 不变、中位判别间隔 0.1157 → **0.1506**（严格改善）→ `applied=true`。
 **λ 仍为 0**：权重只改 `A_profile` 合成口径（`Σw·v/Σw`），不参与验收；λ>0 需人类标定 + 用户审批。
 
-文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`。
+阶段 8 结果要点（详见 `docs/stage8_eval_external.md`）：
+
+- **E1**（真实文档 + 真编译闭环，4 篇：`neurips-real`/`paper-real`/`demo`/`issues`）：
+  A_defect 对退化敏感（单调 3/4、可见 3/4），闭环把退化稿 A 拉回 ≤ 干净稿（3/4），
+  且都 ≤ 自身退化态（4/4）。**两条负面结果如实记录**：
+  ① `paper-real` 退化态 A 不单调（25.88→25.4→21.9→22.9），闭环也只部分修复（3.7→6.5→11.3→12.3）；
+  ② **影子 A_profile 只 1/4 同向**（A_defect 敏感、A_profile 不敏感），
+  是 λ=0（影子不参与验收）的直接证据。
+  关键修正：初版只记**修复后**的 A，而源码级退化会被完全修回去 → 单调性无法被检验；
+  现改为同时记录退化态（闭环基线）的 A 与影子 A_profile（`core.run()` 新增只读字段
+  `aesthetic_shadow_baseline`）。
+- **E2**（12 篇真实论文 × 前 8 页，dpi 50）：排序一致性 —— 整页留白 ρ 中位 0.58、
+  纵向重心 0.19（最低 -0.67）；绝对值不可比（口径不同）。发现 **`whitespace.trailing_ratio`
+  在排满的正文页上无取值**（12/12 篇秩相关退化；全库 10415 页仅 6.58% 非零）——
+  是该指标自身的**可辨识性问题**，已在代码里显式标 `degenerate`。
+- **E3**（60 篇论文级聚合）：论文级 A_profile 中位 0.7664 / P90 1.3885；
+  并量化原始量覆盖率：`trailing_ratio` 6.0%、`ratio.fig_text` 41.0%、其余 ≥99%。
+- 以上均不改变文档、不改变判定；**λ 恒为 0**。
+
+文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`、`stage8_eval_external.md`。
 
 阶段 6 接入要点（详见 `docs/stage6_shadow_integration.md`）：影子只在「判定完成之后」被调用（基线 / 接受分支 / 终态），λ 恒为 0；每次运行产
 `workbench/<run>/aesthetic_shadow.md`（人读，含逐轮 trace 与人工核对清单）与
@@ -509,6 +528,7 @@ texopt/
 │   ├── shadow.py          # 阶段 4/5：影子评估（λ=0）+ 加载 eval_gate.json 剔除未过门槛的维
 │   ├── evalproto.py       # 阶段 5：评测与验收协议 12.1-12.6
 │   ├── weights.py         # 阶段 7：权重校准（消融 + Bradley-Terry + 验收）
+│   ├── evalexternal.py    # 阶段 8：外部验证（E1 端到端退化 / E2 双测量路径 / E3 论文级）
 │   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
 ├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
 ├── examples/              # 靶子稿（重建脚本 + 结果一起进 git，见 examples/README.md）
@@ -551,6 +571,16 @@ python3 tests/run_tests.py                         # 含 s6/no-decision-change�
 cd datasets/conf-specs
 python3 tools/calibrate_weights.py --trials 80 --bootstrap 200 --apply
 python3 tools/calibrate_weights.py --pairs ../human/pairs.json --apply   # 步骤三（需人类数据）
+```
+
+阶段 8 外部验证（E1 真编译最慢，E2 分钟级，E3 秒级；结果合并写入 `eval_external.{json,md}`）：
+
+```bash
+cd datasets/conf-specs
+python3 tools/eval_external.py --only e1 --e1-levels 4          # 真实文档端到端退化（真编译，约 30-60 分钟）
+python3 tools/eval_external.py --only e2 --e2-papers 12 --e2-max-pages 8 --e2-dpi 50
+python3 tools/eval_external.py --only e3 --e3-papers 60
+python3 tools/eval_external.py --list-docs                     # 看可用文档
 ```
 
 测试只写 `_regress/`（Windows 盘符下），跑完自动清理；examples/ 里的靶子只读。

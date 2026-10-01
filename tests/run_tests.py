@@ -1610,6 +1610,130 @@ def stage7_tests():
               f"attached={bool(p2.get('weights'))}")
 
 
+# ---------------------------------------------------------------- 阶段 8
+def stage8_tests():
+    """阶段 8：外部验证（不跑真编译；真编译由 tools/eval_external.py 覆盖）。"""
+    print("\n== 阶段 8：外部验证（E1 退化 / E2 双路径口径 / E3 论文级） ==")
+    from texopt import evalexternal as EE
+
+    # 1) 双路径口径声明：必须含 3 个同义量，且明确哪些同量纲
+    keys = {(c[0], c[1]) for c in EE.COMPARABLE}
+    check("s8/comparable-declared",
+          ("whitespace.trailing_ratio", "bottom_blank") in keys
+          and ("balance.visual_centroid_y", "centroid_y") in keys
+          and sum(1 for c in EE.COMPARABLE if c[2]) >= 2,
+          str(sorted(keys)))
+
+    # 2) 像素层重心换算（上下半页墨迹比 -> 纵向重心；0=页底,1=页顶）
+    check("s8/pixel-centroid",
+          abs(EE.pixel_centroid({"top_bottom_ratio": 1.0}) - 0.5) < 1e-9
+          and abs(EE.pixel_centroid({"top_bottom_ratio": 3.0}) - 0.625) < 1e-9
+          and EE.pixel_centroid({}) is None,
+          str(EE.pixel_centroid({"top_bottom_ratio": 3.0})))
+
+    # 3) compare_pair：完全同序 / 完全反序
+    vec = [{"page": i, "x": float(i)} for i in range(1, 8)]
+    pix_same = [{"page": i, "y": float(i)} for i in range(1, 8)]
+    pix_inv = [{"page": i, "y": float(8 - i)} for i in range(1, 8)]
+    c1 = EE.compare_pair(vec, pix_same, "x", "y", True)
+    c2 = EE.compare_pair(vec, pix_inv, "x", "y", True)
+    check("s8/compare-pair-monotone",
+          c1["spearman"] is not None and abs(c1["spearman"] - 1.0) < 1e-9
+          and c1["median_abs_delta"] == 0.0, str({k: c1[k] for k in
+                                                   ("spearman", "median_abs_delta")}))
+    check("s8/compare-pair-inverted",
+          c2["spearman"] is not None and c2["spearman"] <= -0.9,
+          str(c2["spearman"]))
+    check("s8/compare-pair-aligns-pages",
+          EE.compare_pair(vec, [{"page": 1, "y": 1.0}], "x", "y", True)["n_pages"] == 1)
+
+    # 4) 退化器：逐条可辨识、可累加、未知名字报错、空文档安全
+    src = ("\\documentclass{article}\n\\begin{document}\n"
+           "\\section{A}\ntext\n\\section{B}\ntext\n"
+           "\\begin{figure}[tbp]\\includegraphics[width=0.8\\linewidth]"
+           "{example-image}\\end{figure}\n\\end{document}\n")
+    d1 = EE.degrade_source(src, ["vspace"])
+    d2 = EE.degrade_source(src, ["pagebreak"])
+    d3 = EE.degrade_source(src, ["float_H"])
+    d4 = EE.degrade_source(src, ["overwide"])
+    check("s8/degrader-vspace", "\\vspace{3cm}" in d1 and d1 != src)
+    check("s8/degrader-pagebreak", "\\newpage" in d2 and d2 != src)
+    check("s8/degrader-float-H", "[H]" in d3 and "\\usepackage{float}" in d3)
+    check("s8/degrader-overwide", "1.25\\linewidth" in d4)
+    check("s8/degrader-ladder-cumulative",
+          EE.degrade_source(src, ["vspace", "pagebreak", "float_H", "overwide"])
+          != EE.degrade_source(src, ["vspace"])
+          and EE.degrade_source(src, list(EE.LADDER[0]))
+          == EE.degrade_source(src, ["vspace"]))
+    try:
+        EE.degrade_source(src, ["nope"])
+        unknown_ok = False
+    except ValueError:
+        unknown_ok = True
+    check("s8/degrader-unknown-raises", unknown_ok)
+    bare = "\\documentclass{article}\\begin{document}x\\end{document}"
+    check("s8/degrader-safe-without-sections",
+          EE.degrade_source(bare, ["vspace", "pagebreak"]) == bare)
+
+    # 5) E3 论文级报告（用缓存指标 + 随附档案）
+    from texopt import shadow as SH
+    pages_dir = os.path.join(ROOT, "datasets", "conf-specs", "metrics", "pages")
+    prof = SH.load_profile()
+    if prof and os.path.isdir(pages_dir):
+        r = EE.paper_level_report(pages_dir, prof, limit=4,
+                                  drop_dims=SH.gate_drop_dims())
+        check("s8/paper-level-schema",
+              r["schema"] == "stage8.paper_level.v1" and r["n_papers"] >= 1,
+              str(r.get("n_papers")))
+        check("s8/paper-level-has-a",
+              isinstance(r["paper_a_profile_median"], (int, float)),
+              str(r["paper_a_profile_median"]))
+        check("s8/paper-level-pooled-present",
+              bool(r["page_pooled_by_dim"])
+              and all("page_pooled_median" in x for x in r["page_pooled_by_dim"]))
+        check("s8/paper-level-per-paper",
+              all(p.get("sid") for p in r["papers"]) and len(r["papers"]) >= 1)
+        mc = r.get("metric_coverage") or {}
+        check("s8/paper-level-metric-coverage",
+              bool(mc) and all("share_nonzero" in x for x in mc.values())
+              and mc.get("whitespace.trailing_ratio", {}).get("n", 0) > 0,
+              str({k: v.get("share_nonzero") for k, v in mc.items()}))
+    else:
+        for n in ("s8/paper-level-schema", "s8/paper-level-has-a",
+                  "s8/paper-level-pooled-present", "s8/paper-level-per-paper",
+                  "s8/paper-level-metric-coverage"):
+            skip(n, "无档案/缓存指标")
+
+    # 6) E2 空输入不炸（真实 PDF 比较由 tools/eval_external.py 覆盖）
+    with_out = EE.compare_toolchains([], tmpdir=os.path.join(OUT, "s8_empty"))
+    check("s8/toolchains-empty-ok",
+          with_out["schema"] == "stage8.toolchains.v1" and not with_out["papers"],
+          str(with_out.get("papers")))
+
+    # 7) 退化标记：某一侧常数 -> 秩相关无定义，要如实标出（而非只给 None）
+    vec_const = [{"page": i, "x": 0.0} for i in range(1, 8)]
+    pix_var = [{"page": i, "y": float(i) / 10} for i in range(1, 8)]
+    cd = EE.compare_pair(vec_const, pix_var, "x", "y", True)
+    check("s8/compare-pair-degenerate-flag",
+          cd["spearman"] is None and cd["degenerate"] is True
+          and cd["constant_side"] == "vector", str({k: cd[k] for k in
+                                                    ("spearman", "degenerate", "constant_side")}))
+    check("s8/last-page-summary-present",
+          "last_page_trailing" in with_out
+          and with_out["last_page_trailing"].get("n_papers") == 0,
+          str(with_out.get("last_page_trailing")))
+
+    # 8) E1 判定基元：退化态单调性必须是三态（True/False/None=未知），
+    #    None 不得被当成通过（“缺数据”与“已验证”必须分开）。
+    check("s8/sequential-monotone",
+          EE.sequential_monotone([1, 2, 2.0, 3]) is True
+          and EE.sequential_monotone([1, 2, 1]) is False
+          and EE.sequential_monotone([1, None, 3]) is None
+          and EE.sequential_monotone([]) is None,
+          str([EE.sequential_monotone(x) for x in
+               ([1, 2, 2.0, 3], [1, 2, 1], [1, None, 3], [])]))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1633,6 +1757,7 @@ def main():
     stage5_tests()
     stage6_tests()
     stage7_tests()
+    stage8_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。
