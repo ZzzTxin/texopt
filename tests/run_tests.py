@@ -195,10 +195,10 @@ def unit_tests():
     edited = _PerStub.src.replace("lazy dog", "cat")
     per2 = _PerStub()
     per2.src = edited
-    lv_soft = S.l_violations(per2, _req(), _PerStub.src)
+    lv_soft = S.gate_violations(per2, _req(), _PerStub.src)
     check("content/L-no-longer-hard-by-default",
           any("内容" in v for v in lv_soft) is False, str(lv_soft))
-    lv_hard = S.l_violations(per2, _req(content_hard=True), _PerStub.src)
+    lv_hard = S.gate_violations(per2, _req(content_hard=True), _PerStub.src)
     check("content/L-hard-opt-in-still-works",
           any("内容" in v for v in lv_hard), str(lv_hard))
     dv = S.content_deviation(per2, _req(), _PerStub.src)
@@ -296,7 +296,7 @@ def unit_tests():
           tnote)
     check("action/table-no-resizebox", "resizebox" not in tnew)
 
-    # 9) 评分：相对超宽图 / 编译 warning / [H] 都要计入 A
+    # 9) 评分：相对超宽图 / 编译 warning / [H] 都要计入 model1 的页面缺陷 P
     class _FakePer:
         src = "\\begin{document}x\\end{document}"
         issues = {"overfull": [], "underfull": [], "vbox": [], "floats": [],
@@ -308,12 +308,37 @@ def unit_tests():
     a_src = "texopt: 排版质量宏"
     class _FakePer2(_FakePer):
         src = "texopt: 排版质量宏"
-    A1 = S.aesthetic_score(_FakePer(), _req())
+    A1 = S.page_defect_score(_FakePer(), _req())
     check("score/relative-overwide+warning+H-counted",
-          A1 > 0.3 + 1.0 + 0.5, f"A={A1}")
+          A1 > 0.3 + 1.0 + 0.5, f"P={A1}")
     check("score/overwide-figs-rule",
           S._overwide_figs(_FakePer(), _req()) == ["1.18\\linewidth"],
           str(S._overwide_figs(_FakePer(), _req())))
+
+    # 9a2) model2 · A_soft：软指标带外损失（合成页指标，不依赖 PDF）
+    class _PerSoft:
+        visual = {"pages": [
+            {"page": 1, "ink_ratio": 0.06, "bottom_blank": 0.10,
+             "top_blank": 0.05, "max_gap": 0.05, "band": 0.20,
+             "left_blank": 0.10, "right_blank": 0.10,
+             "top_bottom_ratio": 1.05},
+            {"page": 2, "ink_ratio": 0.05, "bottom_blank": 0.40,
+             "top_blank": 0.05, "max_gap": 0.30, "band": 0.25,
+             "left_blank": 0.10, "right_blank": 0.10,
+             "top_bottom_ratio": 2.50},
+        ]}
+    class _PerSoftClean:
+        visual = {"pages": [dict(p, bottom_blank=0.10, max_gap=0.05,
+                                 top_bottom_ratio=1.05) for p in
+                             _PerSoft.visual["pages"]]}
+    a_bad = S.aesthetic_score(_PerSoft(), _req())
+    a_ok = S.aesthetic_score(_PerSoftClean(), _req())
+    check("model2/soft-bands-penalize-bad-page", a_bad > a_ok and a_ok >= 0.0,
+          f"bad={a_bad} ok={a_ok}")
+    check("model2/no-visual-means-zero",
+          S.aesthetic_score(_FakePer(), _req()) == 0.0)
+    check("model2/defect-not-in-soft",
+          S.aesthetic_score(_PerSoftClean(), _req()) == 0.0, f"{a_ok}")
 
     # 9b) Phase 2：页面级视觉量化（纯像素量，合成 PGM 校验）
     def _mk_pgm(path, w, h, rows_ink):
@@ -1793,34 +1818,50 @@ def stage8_tests():
 
 
 def acceptance_tests():
-    """验收口径（阶段 8 修正 (a)）：A 质量优先，I 只做 tie-break。
+    """验收口径（2026-10-14 v3）：字典序 (gate → model1 → model2)。
 
-    背景：旧口径用 `total = A + I` 一刀切，会把「降 A 但增干预」的真修复拒掉
-    （E1 实测 paper-real deg3：「[H]→[tbp]」A 17.5→16.0 但 I 0→2.8 → 回滚）。
+    M1 = ρ·P + I 已经把「缺陷」与「干预代价」按秤定汇率合在同一个式子里，
+    所以不再需要旧版「A 优先（即使 I 上升）」的特例 —— 该场景现在由 M1 自然处理。
     """
-    print("\n== 验收口径（lexicographic：L > 页数 > A > I） ==")
+    print("\n== 验收口径（lexicographic：gate > model1 > model2） ==")
     from texopt.core import Optimizer
 
     class _Fake:                     # _accept 不依赖实例状态
         pass
 
-    def acc(nlv, na, ni, clv, ca, ci, np_=None, cp_=None):
-        ncur = {"l": nlv, "a": na, "i": ni, "total": na + ni}
-        cur = {"l": clv, "a": ca, "i": ci, "total": ca + ci}
-        return Optimizer._accept(_Fake(), ncur, cur, np_, cp_, clv)
+    def acc(glv, m1, m2, clv=(), cm1=None, cm2=None, np_=None, cp_=None):
+        """构造评分字典：只给 m1/m2（若未给则从旧式 A/I 推）。"""
+        ncur = {"l": list(glv), "m1": m1, "m2": m2,
+                "total": m1 + m2}
+        cur = {"l": list(clv), "m1": cm1, "m2": cm2,
+               "total": (cm1 or 0.0) + (cm2 or 0.0)}
+        return Optimizer._accept(_Fake(), ncur, cur, np_, cp_, list(clv))
 
-    ok, why = acc([], 16.0, 2.8, [], 17.5, 0.0)          # ← E1 的真例：A↓ I↑
-    check("accept/q-first-a-up-i-down", ok is True and "A 改善" in why, why)
-    ok, why = acc([], 17.5, 0.0, [], 16.0, 1.0)          # A 变差且总分也更差 → 拒
-    check("accept/a-worse-total-worse-rejected", ok is False and "无改善" in why, why)
-    ok, why = acc([], 17.5, 0.0, [], 16.0, 5.0)          # A 变差但总分改善（松弛回拉）→ 接受
-    check("accept/a-worse-total-better-kept", ok is True and "总分改善" in why, why)
-    ok, why = acc([], 10.0, 5.0, [], 10.0, 9.0)          # A 不变、I 降（松弛回拉）
-    check("accept/tie-break-by-i", ok is True and "总分改善" in why, why)
-    ok, why = acc([], 5.0, 0.0, ["x"], 9.0, 0.0)         # L 违规减少
-    check("accept/l-fewer", ok is True and "L 违规减少" in why, why)
+    # ← E1 的真例：「[H]→[tbp]」缺陷降 1.5 个、代价升 2.8 → M1 = 2·(-1.5)+2.8 = -0.2
+    ok, why = acc([], 16.8, 3.0, [], 17.0, 3.0)
+    check("accept/m1-improve-accepted", ok is True and "model1 改善" in why, why)
+    # 缺陷降但代价涨得过多 → M1 与总目标均变差 → 拒（这正是「秤定汇率」要拦的）
+    ok, why = acc([], 20.2, 3.0, [], 17.0, 3.0)
+    check("accept/m1-worse-rejected", ok is False and "model1 变差" in why, why)
+    # M1 持平 → model2（审美）改善才接受
+    ok, why = acc([], 10.0, 8.5, [], 10.0, 9.0)
+    check("accept/m1-tie-m2-improve", ok is True and "model2" in why, why)
+    ok, why = acc([], 10.0, 9.2, [], 10.0, 9.0)
+    check("accept/m1-tie-m2-worse-rejected",
+          ok is False and "均无改善" in why, why)
+    # M1 小幅变差但 model2 大幅改善 → 总目标改善 → 接受（两模型综合衡量）
+    ok, why = acc([], 11.0, 5.0, [], 10.0, 9.0)
+    check("accept/m1-up-m2-down-total-better",
+          ok is True and "总目标改善" in why, why)
+    ok, why = acc([], 12.0, 8.8, [], 10.0, 9.0)
+    check("accept/m1-up-m2-total-worse-rejected",
+          ok is False and "总目标未改善" in why, why)
+    ok, why = acc([], 10.0, 9.0, [], 10.0, 9.0)
+    check("accept/no-change-rejected", ok is False, why)
+    ok, why = acc([], 5.0, 0.0, ["x"], 9.0, 0.0)
+    check("accept/gate-fewer", ok is True and "gate" in why, why)
     ok, why = acc(["a", "b"], 5.0, 0.0, ["x"], 5.0, 0.0)
-    check("accept/l-more-rejected", ok is False and "L 违规增加" in why, why)
+    check("accept/gate-more-rejected", ok is False and "gate" in why, why)
     ok, why = acc(["页数超 1"], 5.0, 0.0, ["页数超 1"], 9.0, 0.0, 10, 10)
     check("accept/compress-same-pages", ok is True and "压页" in why, why)
     ok, why = acc(["页数超 1"], 5.0, 0.0, ["页数超 1"], 9.0, 0.0, 11, 10)
@@ -1855,12 +1896,20 @@ def main():
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。
+    # 2026-10-14（v3 结构：gate / model1=ρ·P+I / model2=A_soft+λ·A_profile）重测：
+    # chaotic_layout 的「缩小满宽图」现在被新权重判为净负收益（M1 +1.8 代价 > M2 -1.4），
+    # 因此仍留下 1 项 high 的 giant_content（图表占比类，已按新口径归 model2）→ 如实报
+    # NEEDS_REVIEW（不再为了凑 DONE 而接受得不偿失的修改）。若后续重新标定 ρ / band 权重
+    # 使该修复重新划算，此期望值应当随之改回。
     fixtures = [("demo", "demo.tex", "DONE"),
                 ("issues", "issues.tex", "DONE"),
                 ("aidtest", "aidtest.tex", "DONE"),
                 ("propose_target", "propose_target.tex", "DONE"),
                 ("chaotic_layout", os.path.join("test0911", "chaotic_layout_test.tex"),
-                 ("DONE", "CONVERGED", "NO_IMPROVEMENT"))]
+                 (
+                     "NEEDS_REVIEW",      # 2026-10-14 v3 实测
+                     "DONE", "CONVERGED", "NO_IMPROVEMENT",
+                 ))]
     if args.full:
         fixtures += [("chaos", "chaos.tex", "DONE"),
                      ("nightmare", "nightmare.tex", "NEEDS_REVIEW")]

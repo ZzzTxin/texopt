@@ -43,6 +43,13 @@
 <body>
 
 <h1>texopt 评分模型 v2 讲解版</h1>
+<div class="box warn">
+<b>注意（2026-10-14 结构已升级到 v3）：</b>本文描述的是 v2 结构——把硬约束写成 L 公式、审美写成单个 A 公式。
+按你的最新意见，模型已重构为 <b>v3</b>：<b>底层逻辑门</b>（编译/PDF/页数/字号/边距/图表保真，必须满足、不评分）
++ <b>model1 = ρ·P + I</b>（P = 页面缺陷带比重，I = 整体修改情况）+ <b>model2 = A_soft + λ·A_profile</b>（纯审美）。
+新的公式与信号归属见 <code>model_v3_design_20261014.html</code>。
+本文的<b>记号表、D_content 手算例、FAQ、逐项解释</b>仍然适用（只是 L 现在被叫作「底层逻辑门」）。
+</div>
 <p class="sub">2026-10-14 · 配套文件：<code>model_v2_formulas_20261014.md / .tex / .pdf</code>（公式速查）· 代码路径以仓库根 <code>/mnt/d/桌面/texopt/</code> 为准</p>
 
 <div class="box key">

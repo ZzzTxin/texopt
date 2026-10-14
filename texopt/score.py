@@ -1,28 +1,21 @@
 # -*- coding: utf-8 -*-
-"""全局量化层：L（基础逻辑）与 A（审美）两个数学量化的落地实现。
+"""全局量化层（2026-10-14 v3 结构）：**底层逻辑门** + **model1** + **model2**。
 
-主线定义（2026-09-09 用户重对齐）：
-  总目标函数是整篇文档级别、重编译后的全局量 —— 任何候选修复的验收
-  都基于『整篇重编译后的评分』，而非『这一处问题修好没有』，
-  从而拒绝贪心的局部最优（修了第 3 页孤行却把第 7 页浮动体弄漂了
-  的改动会被评分函数判负并回滚）。
+  ┌── 底层逻辑 gate（不是公式，是「必须满足」的前置条件）
+  │     编译成功 / 产出 PDF、页数≤上限（有要求时）、图表保真、
+  │     字号、页边距、fleqn·目录·页眉（要求点名时）
+  │     —— 任一项不满足 = 不可行（+∞），不参与打分
+  ├── model1（主）：M1 = ρ·P + I
+  │     P（页面缺陷，半硬性，带详细比重）：行级 over/underfull、vbox、
+  │       浮动体警告与强排、超宽表/图、源码卫生、内容孤立/空白页
+  │     I（整体修改情况，越小越好）：I_struct + β·D_content
+  ├── model2（审美）：M2 = A_soft + λ·A_profile
+  │     A_soft（绝对软指标）：灰度/墨迹密度、留白、图表占比、上下均衡
+  │     A_profile（相对偏离）：与同会议·同角色·同栏数语料档案比，λ 默认 0
+  └── 排序：字典序 (|gate|, M1, M2)
 
-评分结构（lexicographic，先保底后求美）：
-  total = L_fail * 1e6 + A + I
-
-  L（基础逻辑量化，硬约束，不满足 = 不可接受）：
-    - 能否编译通过、能否渲染出 PDF
-    - 内容是否完整保留（document body 相对原稿零改动 —— 机器校验）
-    - 是否符合页数限制（req.page_limit，若设定）
-    - 硬性规范：要求明确指定的字号 / 页边距 / 公式居中（fleqn）
-  A（审美量化，越小越好）：可测量代理指标加权 —— 正文 overfull/underfull、
-    页面垂直问题 vbox（孤行寡行等断页质量的 TeX 侧代理信号）、浮动体警告、
-    超宽图/表。
-    *注*：孤行寡行的像素级精确检测与留白审美属于页面图像视觉层
-    （advanced 阶段），本版用 vbox 信号 + 断行质量宏缓解作为代理。
-  I（干预代价，最小干预原则）：改动离原稿越远分越高 —— 页边距偏离 mm、
-    字号降档、浮动体参数/图片宽度被改的处数。松弛动作（往回改）天然降低
-    I，因此达标后评分会自动把参数拉回『最宽松且最优』的临界点。
+设计原则（不变）：一切量都建在 R(x′) 上 —— **先整篇重编译，再全局重评**，
+拒绝贪心局部修复。
 """
 from __future__ import annotations
 
@@ -33,11 +26,58 @@ from . import perceive as P
 from . import actions, visual
 from .requirements import Requirement
 
-L_PENALTY = 1e6          # L 每项违规的权重（远大于 A/I，保证先满足硬约束）
-# 正文偏差软惩罚权重（2026-10-14 用户指定：内容保留不再是不可协商的硬约束，
-# 但仍是强偏好项；语义抛光阶段另设内容保留率下限 κ 兜底）。
+# ============ 模型权重与比重表（2026-10-14 用户重新定义，均可标定） ============
+GATE_PENALTY = 1e6       # 底层逻辑违规的权重（远大于 M1/M2，保证 gate 优先）
+L_PENALTY = GATE_PENALTY  # 旧名兼容
+# ρ：缺陷 → 代价单位 的换算率。默认 2.0，含义是**一个量表约定**：
+#   「消除 1 个加权缺陷（如 1 处行溢出）≈ 值得付出 2 个代价单位
+#     = 4mm 页边距改动 = 5 处浮动体参数改动」。
+W_PAGE_DEFECT = 2.0
+# β：正文改动幅度的权重（内容保留不再是硬约束，但仍是强偏好；
+#   语义抛光阶段另设内容保留率下限 κ 兜底）。
 CONTENT_PENALTY = 50.0
-# 源码卫生问题在 A 分里的权重（按「能否被确定性动作修复 × 影响程度」定）：
+
+# ---- P：页面缺陷比重（半硬性约束）----
+PAGE_DEFECT_WEIGHT = {
+    "overfull": 1.0,        # 正文行溢出（右侧超出）
+    "underfull": 0.6,       # 正文行欠满
+    "vbox_over": 1.0,       # 页面垂直盒子溢出
+    "vbox_under": 1.4,      # 页面垂直盒子欠满（孤行寡行的 TeX 侧代理）
+    "floatwarn": 1.6,       # 浮动体警告（位置/尺寸被 TeX 强改）
+    "tab_overwide": 1.2,    # 表格超宽
+    "fig_overwide": 1.0,    # 图片超宽
+    "warn": 0.3,            # 其余编译 Warning
+    "macros_missing": 2.0,  # 要求开启的断行质量宏缺失
+    "unstable_spec": 0.8,   # 浮动体位置参数不稳定（TeX 会自行改写）
+    "spec_H": 0.5,          # [H] 强排（页面失衡/大块留白常见来源）
+}
+# 页面图像层的缺陷归属：结构/放置类进 model1，软性审美类进 model2。
+VISUAL_DEFECT_M1 = {
+    "stranded_block": 1.2,  # 内容孤零零 + 大面积留白（放置错误类）
+    "near_empty": 0.6,      # 几乎空白页（孤立浮动体/手动分页等结构问题）
+}
+
+# ---- model2：A_soft 软指标理想带 (lo, hi, w) ----
+# 量来自渲染页图（visual.page_metrics）。带外损失双向非单调，
+# 尺度 N = hi - lo，权重不对称（偏空比偏满更刺眼）：W_low=1.2 > W_high=1.0。
+SOFT_BANDS = {
+    "ink_ratio": (0.020, 0.150, 1.0),         # 灰度 / 墨迹密度
+    "bottom_blank": (0.000, 0.220, 1.5),      # 页底留白
+    "top_blank": (0.000, 0.120, 0.6),         # 页首留白
+    "max_gap": (0.000, 0.150, 1.2),           # 页内连续空洞
+    "band": (0.050, 0.350, 3.0),              # 图表/公式块占页高（图表占比代理）
+    "left_blank": (0.000, 0.180, 0.6),        # 左侧留白
+    "right_blank": (0.000, 0.180, 0.6),       # 右侧留白
+    "top_bottom_ratio": (0.700, 1.400, 0.8),  # 上下半页墨迹均衡
+}
+W_SOFT_LOW, W_SOFT_HIGH = 1.2, 1.0
+# 鲁棒性：单页单指标的损失封顶 + 指标取值 clip。
+# 目的：比例类量在极端情况下会爆掉（例如下半页几乎空白时 top_bottom_ratio 可达几百），
+# 一次封顶就能让「一个极端页」不再吃掉全部权重（同 A_profile 的 min(loss/ref, 20)）。
+SOFT_LOSS_CAP = 3.0
+SOFT_METRIC_CLIP = {"top_bottom_ratio": (0.0, 5.0)}
+
+# 源码卫生问题在 P 里的比重（按「能否被确定性动作修复 × 影响程度」定）：
 # 有对应动作、且直接关联页面质量的高；纯风格、无动作的低。
 HYGIENE_WEIGHT = {
     "manual_pagebreak": 1.0,      # remove_manual_pagebreak
@@ -306,9 +346,17 @@ def page_advisory(per: P.Perception, req: Requirement) -> str | None:
     return None
 
 
-def l_violations(per: P.Perception, req: Requirement,
-                 orig_body: str, orig_source: dict | None = None) -> list[str]:
-    """L 硬约束违规清单。空列表 = 基础逻辑量化达标。"""
+def gate_violations(per: P.Perception, req: Requirement,
+                    orig_body: str, orig_source: dict | None = None) -> list[str]:
+    """底层逻辑（可行性门）违规清单。空列表 = 这些「必须满足」的条件全部满足。
+
+    2026-10-14 用户重新定义：这里不再是「一个可打分的模型」，而是**底层逻辑**——
+    编译/产出 PDF、页数上限（有要求时）、图表保真、字号/边距/fleqn/目录/页眉
+    （要求点名时）这些是「硬性必须满足」，任一项不满足即不可行，不参与打分。
+
+    实现上仍返回清单（而不是布尔），因为违反多项时的具体原因需要写进报告/
+    接受-回滚依据；调用方只需判断是否为空。
+    """
     out: list[str] = []
     if not per.ok:
         out.append(f"编译失败/无法渲染 PDF（{per.compile.first_error}）")
@@ -366,44 +414,83 @@ def l_violations(per: P.Perception, req: Requirement,
 
 
 def aesthetic_score(per: P.Perception, req: Requirement) -> float:
-    """A 分：全局审美/质量量化（越低越好），全部为整篇文档统计量。"""
+    """model2 · A_soft：**绝对软指标**的审美量化（越低越好）。
+
+    2026-10-14 用户重新定义：审美层面只看软性约束——页面灰度/墨迹密度、
+    留白情况、图表占比、上下半页密度均衡等；而「浮动体错位/孤行寡行」这类
+    页面缺陷已归入 model1 的 P（见 PAGE_DEFECT_WEIGHT / VISUAL_DEFECT_M1）。
+
+    量来自渲染页图（`per.visual` 的页级 page_metrics）。每个软指标有一个
+    **理想带** [lo, hi]，带外损失双向计罚（偏空比偏满更刺眼）：
+        loss = W_low·max(0, lo-x)/N + W_high·max(0, x-hi)/N,  N = hi - lo
+    再按 CVaR 式做「页 → 文档」聚合：0.5·前k大均值 + 0.5·全体均值，
+    k = max(1, round(5%·页数))（对局部异常页敏感，又不被单页主导）。
+
+    注：这里的理想带是**先验带**（可标定），只读渲染层原始量；
+    与同档语料的相对偏离由 A_profile 负责（shadow 模式，λ 默认 0）。
+    无渲染信息时返回 0（与旧行为一致，报告里会标出视觉缺失）。
+    """
+    pages = ((getattr(per, "visual", None) or {}).get("pages")) or []
+    pages = [p for p in pages
+             if isinstance(p, dict) and "error" not in p
+             and p.get("ink_ratio") is not None]
+    if not pages:
+        return 0.0
+    k = max(1, int(round(0.05 * len(pages))))
+    total = 0.0
+    for metric, (lo, hi, w) in SOFT_BANDS.items():
+        n = max(1e-6, hi - lo)
+        clip = SOFT_METRIC_CLIP.get(metric, (0.0, 1.0))
+        losses = []
+        for p in pages:
+            x = p.get(metric)
+            if x is None:
+                continue
+            x = min(max(float(x), clip[0]), clip[1])
+            losses.append(min(SOFT_LOSS_CAP,
+                              W_SOFT_LOW * max(0.0, lo - x) / n
+                              + W_SOFT_HIGH * max(0.0, x - hi) / n))
+        if not losses:
+            continue
+        losses.sort(reverse=True)
+        top = sum(losses[:k]) / k
+        mean = sum(losses) / len(losses)
+        total += w * (0.5 * top + 0.5 * mean)
+    return round(total, 3)
+
+
+def page_defect_score(per: P.Perception, req: Requirement) -> float:
+    """model1 · P：**页面缺陷分**（半硬性约束，越低越好）。
+
+    组成：TeX/日志侧的行页缺陷、浮动体放置缺陷、源码卫生问题、
+    以及渲染层里属于「结构/放置错误」的页面缺陷（内容孤立、空白页）。
+    权重见 PAGE_DEFECT_WEIGHT / HYGIENE_WEIGHT / VISUAL_DEFECT_M1。
+    """
     iss = per.issues
-    a = (1.0 * len(iss["overfull"])          # 正文行溢出
-         + 0.6 * len(iss["underfull"])       # 正文行欠满（微）
-         + 1.0 * sum(1 for v in iss["vbox"] if v["kind"] == "Overfull")
-         + 1.4 * sum(1 for v in iss["vbox"] if v["kind"] == "Underfull")
-         # Underfull vbox 常与孤行寡行同源（页面垂直断点质量）
-         + 1.6 * len(iss["floats"])           # 浮动体警告（尺寸/位置被 TeX 强改）
-         + 1.2 * len(iss["tables_overwide"])  # 表格超宽（有 tabularx 修复动作）
-         + 0.3 * len(iss.get("warnings", []))  # 其余编译 Warning
-         )
-    a += 1.0 * len(_overwide_figs(per, req))  # 超宽图（有自动修复动作）
-    # 预防性配置缺失惩罚：要求开启却未注入的断行质量宏（防孤行寡行等）
+    w = PAGE_DEFECT_WEIGHT
+    p = (w["overfull"] * len(iss["overfull"])
+         + w["underfull"] * len(iss["underfull"])
+         + w["vbox_over"] * sum(1 for v in iss["vbox"] if v["kind"] == "Overfull")
+         + w["vbox_under"] * sum(1 for v in iss["vbox"] if v["kind"] == "Underfull")
+         + w["floatwarn"] * len(iss["floats"])
+         + w["tab_overwide"] * len(iss["tables_overwide"])
+         + w["warn"] * len(iss.get("warnings", [])))
+    p += w["fig_overwide"] * len(_overwide_figs(per, req))
     if req.enable_quality_macros and "texopt: 排版质量宏" not in per.src:
-        a += 2.0
-    # 不稳定的浮动体位置参数（TeX 会自行改写 [h]->[ht]，属放置质量缺陷）；
-    # [H]（float 宏包强排）会把图钉死在本行，是页面失衡/大块留白常见来源
+        p += w["macros_missing"]
     for fe in per.source.get("float_envs", []):
         spec = (fe.get("spec") or "").strip()
         if spec and actions._unstable_spec(spec):
-            a += 0.8
+            p += w["unstable_spec"]
         elif spec == "H":
-            a += 0.5
-    # 源码层排版卫生问题（各自可被确定性动作修复，权重按可修性与影响度）
-    a += sum(HYGIENE_WEIGHT.get(h["kind"], DEFAULT_HYGIENE_WEIGHT)
+            p += w["spec_H"]
+    p += sum(HYGIENE_WEIGHT.get(h["kind"], DEFAULT_HYGIENE_WEIGHT)
              for h in per.issues.get("hygiene", []))
-    # Phase 2：页面级视觉缺陷（量自实际 PDF：巨大图/大面积空白/空洞/密度失衡…）
-    # —— A 不再只是 LaTeX warning 的加权和，而是真的能反映“看起来明显很差”的页面
-    a += visual.defect_penalty(visual.visual_defects(getattr(per, "visual", None)))
-    # 结构规范：要求目录/页眉/标题着色却未落实
-    if req.toc and not per.source.get("has_toc") \
-            and per.source.get("sections", 0) >= req.toc_min_sections:
-        a += 2.5
-    if req.running_header and not per.source.get("has_header"):
-        a += 2.5
-    if req.heading_color and not per.source.get("has_heading_color"):
-        a += 1.5                                 # 标题未着色（审美项）
-    return round(a, 3)
+    for d in visual.visual_defects(getattr(per, "visual", None)):
+        wt = VISUAL_DEFECT_M1.get(d.get("kind"))
+        if wt:
+            p += wt * visual.SEVERITY_FACTOR.get(d.get("severity"), 0.6)
+    return round(p, 3)
 
 
 def _as_body(s: str) -> str:
@@ -461,16 +548,33 @@ def intervention_cost(per: P.Perception, orig: P.Perception) -> float:
 
 def total_score(per: P.Perception, req: Requirement,
                 orig: P.Perception) -> dict:
-    """完整评分：返回 {l: [...], a: float, i: float, total: float, ok: bool}。"""
-    lv = l_violations(per, req, content_body(orig.src), orig.source)
-    a = aesthetic_score(per, req)
-    i = intervention_cost(per, orig)
+    """完整评分（v3 结构）：
+
+        gate : 底层逻辑违规清单（空 = 可行）
+        P    : model1 · 页面缺陷分
+        I    : model1 · 整体修改情况（I_struct + β·D_content）
+        M1   : model1 总分 = ρ·P + I
+        A    : model2 · A_soft（软性审美）
+        M2   : model2 总分 = A_soft + λ·A_profile（λ 由 shadow 侧给出）
+        total: 1e6·|gate| + M1 + M2（实现口径；建议排序为字典序 (gate, M1, M2)）
+    """
+    gv = gate_violations(per, req, content_body(orig.src), orig.source)
+    p = page_defect_score(per, req)
+    istr = intervention_cost(per, orig)
     d = 0.0 if getattr(req, "content_hard", False) \
         else content_deviation(per, req, content_body(orig.src))
-    total = L_PENALTY * len(lv) + a + i + CONTENT_PENALTY * d
-    return {"l": lv, "a": a, "i": i, "d_content": d,
-            "content_preserved": d <= 0.0,
-            "total": round(total, 3), "ok": not lv}
+    i = round(istr + CONTENT_PENALTY * d, 3)
+    m1 = round(W_PAGE_DEFECT * p + i, 3)
+    a = aesthetic_score(per, req)          # model2 · A_soft
+    m2 = a
+    total = round(GATE_PENALTY * len(gv) + m1 + m2, 3)
+    return {"l": gv, "p": p, "i_struct": istr, "d_content": d, "i": i,
+            "m1": m1, "a": a, "m2": m2, "total": total, "ok": not gv,
+            "content_preserved": d <= 0.0}
+
+
+# 旧名兼容（2026-10-14 前的调用点/文档仍可用）
+l_violations = gate_violations
 
 
 def visual_defects(per: P.Perception) -> list:

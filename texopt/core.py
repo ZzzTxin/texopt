@@ -160,6 +160,9 @@ class Optimizer:
             "iteration": self.iter, "action": note, "source": source,
             "l": list(cur["l"]) if cur else [], "a": cur["a"] if cur else None,
             "i": cur["i"] if cur else None,
+            "p": cur.get("p") if cur else None,
+            "m1": cur.get("m1") if cur else None,
+            "m2": cur.get("m2") if cur else None,
             "total": cur["total"] if cur else None,
             "pages": per.pages if per else None,
             "accepted": bool(accepted), "compile_ok": bool(compile_ok),
@@ -419,8 +422,9 @@ class Optimizer:
             if accepted:
                 self.accepted += 1
                 self._log(f"  [接受] {note_ok}（{why}）")
-                self._log(f"         L={len(ncur['l'])} A={ncur['a']} "
-                          f"I={ncur['i']} 总分 {cur['total']} -> {ncur['total']}"
+                self._log(f"         gate={len(ncur['l'])} P={ncur['p']} I={ncur['i']} "
+                          f"M1={ncur['m1']} M2={ncur['m2']} "
+                          f"总分 {cur['total']} -> {ncur['total']}"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(note_ok, nper, ncur, True, True, "rule", why)
                 self._state = (nper, ncur)
@@ -437,36 +441,58 @@ class Optimizer:
     def _accept(self, ncur: dict, cur: dict, n_pages, c_pages, cur_lv):
         """验收：全局目标是否改善。返回 (是否接受, 理由)。
 
-        优先级（lexicographic）：
-          1. L 硬约束（违规数少的更好）；
-          2. 压页阶段：双方都有页数违规时，页数不增即保留（组合收益）；
-          3. **质量优先：A 严格改善就接受**，即使 I（干预代价）上升
-             —— 旧版用 `total = A + I` 一刀切，会把「降 A 但增干预」的真修复拒掉
-             （阶段 8 E1 实测：paper-real deg3 的「[H]→[tbp]」把 A 从 17.5 降到 16.0，
-             但 I 升到 2.8 → total 18.8 > 17.5 被回滚）。
-          4. 否则退回总分口径（A 不变时用 I 做 tie-break，保留「松弛回拉」的收益）。
+        优先级（lexicographic，2026-10-14 v3 结构）：
+          0. **底层逻辑（gate）**：违规数少的更好；
+          1. 压页阶段例外：双方都有页数违规时，页数不增即保留
+             （省页可能需连续多档才兑现，避免丢失组合收益）；
+          2. **model1（M1 = ρ·P + I）严格改善即接受** —— 缺陷与干预代价
+             已在同一式子里按秤定汇率换算，不再需要旧版「A 优先」的特例
+             （阶段 8 E1 的「[H]→[tbp]」案例现在由 M1 自然接受）；
+          3. M1 变差但**总目标 M = M1 + M2 仍改善**→ 接受
+             （model2 的审美收益补偿 model1 的小幅回退；这是「两项综合衡量」
+             的体现，例如大图缩小会略增干预代价，但视觉占比显著变好）；
+          4. 否则拒绝。
         """
         n_lv, c_lv = ncur["l"], cur["l"]
         if len(n_lv) < len(c_lv):
-            return True, "L 违规减少"
+            return True, "底层逻辑（gate）违规减少"
         if len(n_lv) > len(c_lv):
-            return False, "L 违规增加"
-        # L 违规数相同：若仍在压页（双方都有页数违规），页数不增即保留
-        # （省页可能需连续多档才兑现，避免丢失组合收益 —— 旧版『组合性』保证）
+            return False, "底层逻辑（gate）违规增加"
+        # gate 相同：若仍在压页（双方都有页数违规），页数不增即保留
         if n_lv and any("页数" in x for x in n_lv) \
                 and any("页数" in x for x in c_lv):
             if n_pages is not None and n_pages <= (c_pages or 1 << 30):
                 return True, "压页阶段：页数不增"
             return False, "压页阶段：页数增加"
-        na, ca = ncur.get("a"), cur.get("a")
-        # 3. 质量优先：A 严格改善即接受（I 只做 tie-break）
-        if na is not None and ca is not None and na < ca - 1e-9:
-            di = (ncur.get("i") or 0.0) - (cur.get("i") or 0.0)
-            return True, ("A 改善 %.4g -> %.4g（I %+.4g，质量优先）" % (ca, na, di))
-        # 4. 总分口径（A 不变/变差时用 I tie-break，保留松弛回拉）
+        nm1, cm1 = ncur.get("m1"), cur.get("m1")
+        nm2, cm2 = ncur.get("m2"), cur.get("m2")
+        if nm1 is not None and cm1 is not None:
+            if nm1 < cm1 - 1e-9:
+                return True, ("model1 改善 %.4g -> %.4g（缺陷 %.3g→%.3g，"
+                              "代价 %.3g→%.3g）"
+                              % (cm1, nm1, cur.get("p", 0.0), ncur.get("p", 0.0),
+                                 cur.get("i", 0.0), ncur.get("i", 0.0)))
+            if nm1 <= cm1 + 1e-9:
+                if nm2 is not None and cm2 is not None and nm2 < cm2 - 1e-9:
+                    return True, ("model1 持平，model2（审美）改善 %.4g -> %.4g"
+                                  % (cm2, nm2))
+                return False, "model1 与 model2 均无改善"
+            if nm2 is not None and cm2 is not None \
+                    and (nm1 + nm2) < (cm1 + cm2) - 1e-9:
+                return True, ("总目标改善（M1 %.4g→%.4g 升，M2 %.4g→%.4g 降）"
+                              % (cm1, nm1, cm2, nm2))
+            return False, ("model1 变差且总目标未改善（M1 %.4g→%.4g，"
+                           "M2 %.4g→%.4g）"
+                           % (cm1, nm1, cm2 if cm2 is not None else 0.0,
+                              nm2 if nm2 is not None else 0.0))
+        # 兼容回退（旧评分字典）：总分口径
         if ncur["total"] < cur["total"] - 1e-9:
             return True, ("总分改善 %.4g -> %.4g" % (cur["total"], ncur["total"]))
-        return False, "A 与总分均无改善"
+        return False, "model1 与总分均无改善"
+        # 兼容回退（旧评分字典）：总分口径
+        if ncur["total"] < cur["total"] - 1e-9:
+            return True, ("总分改善 %.4g -> %.4g" % (cur["total"], ncur["total"]))
+        return False, "model1 与总分均无改善"
 
     # ------------------------------------------------------------- 主入口
     def run(self) -> dict:
@@ -502,7 +528,8 @@ class Optimizer:
         self.orig_per = _static_perception(self.original)  # I 基准（静态解析，不编译）
         cur = S.total_score(per, self.req, self.orig_per)
         self.baseline = {"a": cur["a"], "i": cur["i"], "pages": per.pages,
-                         "total": cur["total"], "l": len(cur["l"])}
+                         "total": cur["total"], "l": len(cur["l"]),
+                         "p": cur["p"], "m1": cur["m1"], "m2": cur["m2"]}
         self.baseline["aesthetic"] = self._shadow_eval(per, cur, "baseline")   # 阶段 4/6 影子基线
 
         self._log(f"基线：{os.path.basename(self.original)} "
@@ -510,12 +537,13 @@ class Optimizer:
                   f"边距 {per.source['geometry_margin_mm']:g}mm"
                   + ("（续跑已有工作副本）" if self.resume else ""))
         self._log(f"要求：模板/规格 -> {self._req_summary()}")
-        self._log(f"初始全局评分：L={len(cur['l'])} A={cur['a']} I={cur['i']} "
+        self._log(f"初始全局评分：gate={len(cur['l'])} P={cur['p']} I={cur['i']} "
+                  f"M1={cur['m1']} | A_soft={cur['a']} M2={cur['m2']} "
                   f"(总分 {cur['total']})")
         for v in cur["l"]:
-            self._log(f"  [L 违规] {v}")
+            self._log(f"  [底层逻辑] {v}")
         if not cur["l"]:
-            self._log("  L 达标（编译 ✓ 渲染 ✓ 内容零改动 ✓ 页数 ✓ 硬性规范 ✓）")
+            self._log("  底层逻辑全过（编译 ✓ 渲染 ✓ 页数 ✓ 图表保真 ✓ 硬性规范 ✓）")
 
         # 连续无改善轮数达标才停（避免“一轮没吃到就收敛”）
         stall = 0
@@ -595,8 +623,9 @@ class Optimizer:
             tag = f"{item.get('issue','?')}/{item.get('location','')}".strip("/")
             if accepted:
                 self.accepted += 1
-                self._log(f"  [接受·LLM] {label}  ->  L={len(ncur['l'])} "
-                          f"A={ncur['a']} I={ncur['i']} "
+                self._log(f"  [接受·LLM] {label}  ->  gate={len(ncur['l'])} "
+                          f"P={ncur['p']} I={ncur['i']} M1={ncur['m1']} "
+                          f"M2={ncur['m2']} "
                           f"({cur['total']} -> {ncur['total']})"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(f"{label} | {tag}", nper, ncur, True, True,
@@ -665,7 +694,10 @@ class Optimizer:
                 venue=getattr(self.req, "conference", None),
                 lambda_=self._lambda,
                 profile_path=(self._shadow_profile or shadow.default_profile_path()))
-            rep["a_defect"] = cur["a"]
+            rep["a_defect"] = cur["a"]        # 字段名沿用（阶段 4–8 报告消费）：现指 model2 的 A_soft
+            rep["a_model2"] = cur["a"]
+            rep["m1"] = cur.get("m1")
+            rep["p"] = cur.get("p")
             a = (rep.get("paper") or {}).get("a_profile")
             rep["a_profile"] = a
             rep["a_effective"] = round(cur["a"] + self._lambda * (a or 0.0), 6)
@@ -725,7 +757,7 @@ class Optimizer:
                 "trace": self._shadow_trace,
                 "gate": self._shadow_gate(rep, cur),
                 "note": "λ=0 影子模式：只报告，不参与任何接受/回滚判定；"
-                        "a_defect 为现行口径，与 state.json 的 scores.a 一致。",
+                        "a_defect 为现行审美口径（model2 的 A_soft），与 state.json 的 scores.a 一致。",
             }
             with open(os.path.join(self.outdir, "aesthetic_shadow.json"), "w",
                       encoding="utf-8") as f:
@@ -810,6 +842,7 @@ class Optimizer:
                 "unused": getattr(self.req, "unused_template_parts", None) or [],
             }
         return {"status": status, "l": cur["l"], "a": cur["a"], "i": cur["i"],
+                "p": cur.get("p"), "m1": cur.get("m1"), "m2": cur.get("m2"),
                 "pages": per.pages, "tex": self.work_tex,
                 "pdf": per.compile.pdf_path if per and per.ok else None,
                 "advisory_count": len(adv),

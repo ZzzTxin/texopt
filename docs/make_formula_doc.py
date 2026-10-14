@@ -25,9 +25,21 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "formula_doc_assets")
-TEMPLATE = os.path.join(HERE, "model_v2_explained_20261014.template.html")
-OUTPUT = os.path.join(HERE, "model_v2_explained_20261014.html")
-OUTPUT_SINGLE = os.path.join(HERE, "model_v2_explained_20261014_single.html")
+# 多文档：同一套公式图，不同模板
+DOCS = [
+    {
+        "template": os.path.join(HERE, "model_v2_explained_20261014.template.html"),
+        "output": os.path.join(HERE, "model_v2_explained_20261014.html"),
+        "single": os.path.join(HERE, "model_v2_explained_20261014_single.html"),
+        "note": "讲解版（记号、逐项解释、FAQ）",
+    },
+    {
+        "template": os.path.join(HERE, "model_v3_design_20261014.template.html"),
+        "output": os.path.join(HERE, "model_v3_design_20261014.html"),
+        "single": os.path.join(HERE, "model_v3_design_20261014_single.html"),
+        "note": "v3 结构设计说明（gate / model1 / model2）",
+    },
+]
 
 # 公式表：名字 -> LaTeX（英语标签，避免中文字体依赖）
 EQS = {
@@ -83,6 +95,26 @@ EQS = {
     "eq_s7": r"A_{\text{profile}}="
              r"\frac{\sum_i w_i\,\mathrm{pool}\big(\widehat{\mathrm{loss}}_i\big)"
              r"+w_M\,\mathrm{pool}\big(\widehat{D^2}\big)}{\sum_i w_i+w_M}",
+    # ---- v3 结构（2026-10-14）：底层逻辑门 + model1 + model2 ----
+    "eq_gate": r"\text{Gate}(x')=\Bigl\{\ \text{compile},\ \text{PDF},\ "
+               r"N_{\text{pages}}\le b,\ \text{fig fidelity},\ \text{font},\ "
+               r"\text{margin},\ \text{fleqn / TOC / header}\ \Bigr\}",
+    "eq_M1": r"M_1(x')=\rho\,P(x')+I(x'),\qquad \rho=2.0",
+    "eq_M2": r"M_2(x')=A_{\text{soft}}(x')+\lambda\,A_{\text{profile}}(x'),"
+             r"\qquad \lambda=0",
+    "eq_P": r"P(x')=\sum_{k} w_k\,N_k\;+\;\sum_{fe}\Bigl(0.8\,\mathbf{1}"
+            r"[\text{spec unstable}]+0.5\,\mathbf{1}[\text{spec}=H]\Bigr)"
+            r"\;+\;\sum_h w_{\text{hyg}}(h)"
+            r"\;+\;\sum_{d\in D_1} w_d\,s(d)",
+    "eq_softloss": r"\mathrm{loss}_i(p)=W_{\text{low}}\frac{\max\big(0,\ \mathrm{lo}_i-x_i(p)\big)}{N_i}"
+                   r"+W_{\text{high}}\frac{\max\big(0,\ x_i(p)-\mathrm{hi}_i\big)}{N_i},"
+                   r"\quad N_i=\mathrm{hi}_i-\mathrm{lo}_i",
+    "eq_softpool": r"A_{\text{soft}}(x')=\sum_i w_i\Bigl[\,0.5\,\mathrm{topk}_k\big(\mathrm{loss}_i\big)"
+                   r"+0.5\,\mathrm{mean}\big(\mathrm{loss}_i\big)\Bigr],"
+                   r"\quad k=\max\!\big(1,\mathrm{round}(0.05\,N_{\text{pages}})\big)",
+    "eq_order": r"\text{rank}\;:\;\big(\;|\mathrm{Gate}(x')|,\;\;M_1(x'),\;\;M_2(x')\;\big)"
+                r"\ \ \text{lexicographic},\qquad "
+                r"T(x')=\rho P+I+A_{\text{soft}}\ (\text{implementation})",
 }
 
 PREAMBLE = (r"\documentclass[border=2pt]{standalone}" "\n"
@@ -139,38 +171,38 @@ def main() -> int:
         sys.stdout.flush()
         sizes[name] = build_svg(name, EQS[name], ASSETS)
         print(f"{sizes[name][0]:.0f}x{sizes[name][1]:.0f}px")
-    tpl = open(TEMPLATE, encoding="utf-8").read()
 
-    def repl(m):
-        name = m.group(1)
-        if name not in sizes:
-            raise KeyError(f"模板引用了未定义的公式：{name}")
-        w, h = sizes[name]
-        return (f'<img class="eq" alt="{name}" '
-                f'src="formula_doc_assets/{name}.svg" '
-                f'style="width:{w * SCALE:.1f}px;max-width:100%;height:auto">')
-
-    html = re.sub(r"\{\{EQ:([A-Za-z0-9_]+)\}\}", repl, tpl)
-    with open(OUTPUT, "w", encoding="utf-8") as fh:
-        fh.write(html)
-    print(f"  写出 {OUTPUT}（{len(html)} 字节，{len(sizes)} 个公式图）")
-
-    # 单文件版：SVG 以 base64 data URI 内嵌，可直接发送/手机上打开
     import base64
 
-    def repl_single(m):
-        name = m.group(1)
+    def make_img(name, inline: bool) -> str:
         w, h = sizes[name]
-        raw = open(os.path.join(ASSETS, name + ".svg"), "rb").read()
-        b64 = base64.b64encode(raw).decode("ascii")
-        return (f'<img class="eq" alt="{name}" '
-                f'src="data:image/svg+xml;base64,{b64}" '
+        if inline:
+            raw = open(os.path.join(ASSETS, name + ".svg"), "rb").read()
+            b64 = base64.b64encode(raw).decode("ascii")
+            src = f"data:image/svg+xml;base64,{b64}"
+        else:
+            src = f"formula_doc_assets/{name}.svg"
+        return (f'<img class="eq" alt="{name}" src="{src}" '
                 f'style="width:{w * SCALE:.1f}px;max-width:100%;height:auto">')
 
-    single = re.sub(r"\{\{EQ:([A-Za-z0-9_]+)\}\}", repl_single, tpl)
-    with open(OUTPUT_SINGLE, "w", encoding="utf-8") as fh:
-        fh.write(single)
-    print(f"  写出 {OUTPUT_SINGLE}（{len(single) / 1024:.0f} KB，单文件自包含）")
+    for doc in DOCS:
+        tpl = open(doc["template"], encoding="utf-8").read()
+
+        def repl(m, _inline=False):
+            name = m.group(1)
+            if name not in sizes:
+                raise KeyError(f"模板引用了未定义的公式：{name}")
+            return make_img(name, _inline)
+
+        html = re.sub(r"\{\{EQ:([A-Za-z0-9_]+)\}\}", repl, tpl)
+        with open(doc["output"], "w", encoding="utf-8") as fh:
+            fh.write(html)
+        single = re.sub(r"\{\{EQ:([A-Za-z0-9_]+)\}\}",
+                        lambda m: repl(m, True), tpl)
+        with open(doc["single"], "w", encoding="utf-8") as fh:
+            fh.write(single)
+        print(f"  写出 {os.path.basename(doc['output'])}（{len(html) / 1024:.0f} KB，"
+              f"{doc['note']}） + 单文件版（{len(single) / 1024:.0f} KB）")
     return 0
 
 
