@@ -178,6 +178,34 @@ def unit_tests():
         ""), _req())
     check("content/L-detects-text-deletion", not d)
 
+    # 3b) 2026-10-14 用户指定：正文内容保留不再默认属于 L 硬约束
+    class _PerStub:
+        ok = True
+        src = ("\\documentclass{article}\n\\begin{document}\n"
+               "The quick brown fox jumps over the lazy dog.\n"
+               "\\end{document}\n")
+        pages = 1
+
+        class _C:
+            first_error = None
+            pdf_path = "x.pdf"
+        compile = _C()
+        source = {"font_pt": None, "fleqn": False, "figures": [], "sections": 0}
+
+    edited = _PerStub.src.replace("lazy dog", "cat")
+    per2 = _PerStub()
+    per2.src = edited
+    lv_soft = S.l_violations(per2, _req(), _PerStub.src)
+    check("content/L-no-longer-hard-by-default",
+          any("内容" in v for v in lv_soft) is False, str(lv_soft))
+    lv_hard = S.l_violations(per2, _req(content_hard=True), _PerStub.src)
+    check("content/L-hard-opt-in-still-works",
+          any("内容" in v for v in lv_hard), str(lv_hard))
+    dv = S.content_deviation(per2, _req(), _PerStub.src)
+    check("content/deviation-soft-term>0", dv > 0 and dv < 1, str(dv))
+    check("content/deviation-zero-when-identical",
+          S.content_deviation(_PerStub(), _req(), _PerStub.src) == 0.0)
+
     # 4) 提案解析（嵌套 / 扁平两种写法）
     items = proposal.parse_proposals({
         "proposals": [

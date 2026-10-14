@@ -1,0 +1,229 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1.9cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\setlist{nosep,leftmargin=1.4em}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\multiset}{\mathrm{multiset}}
+\setlength{\emergencystretch}{2.5em}
+\tolerance=1200
+\allowdisplaybreaks
+
+\title{\vspace{-2.2em}\textbf{texopt Scoring Model v2 (2026-10-14)}\\[2pt]
+\large Hard-constraint term $L$ (model 1) and aesthetic term $A$ (model 2)}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2.2em}
+
+\noindent\textbf{Notation.} $x_0$ = original manuscript; $x'$ = candidate;
+$a=(a_1,\dots,a_n)$ = action sequence; $R(x')$ = perception of $x'$ \emph{after a full
+re-compilation} (page count, log defects, rendered page images); $r$ = requirement spec;
+$b = r.\text{page\_limit}$ ($b=\varnothing$ means ``no page limit was requested'').
+Every quantity is a function of $R(x')$, i.e.\ compile-then-score globally; no per-fragment scoring.
+
+\section*{1. Model 1: feasibility $L$ + intervention cost $I$}
+
+\subsection*{1.1 Hard-constraint set $\mathcal{H}$ (all indicators are 0/1)}
+\[
+\ell_{\text{compile}}(x') = 1-\ind\!\left[R(x')\ \text{compiles}\ \wedge\ \text{PDF produced}\right]
+\]
+\[
+\ell_{\text{page}}(x')=
+\begin{cases}
+\ind\!\left[N_{\text{pages}}(x') > b\right], & b \neq \varnothing\\[2pt]
+\text{the variable does not exist}, & b = \varnothing
+\end{cases}
+\qquad\text{(directive 2: 0/1, no middle ground)}
+\]
+\[
+\ell_{\text{spec}}(x')=\frac{1}{K}\sum_{j=1}^{K}\ind\!\left[p_j(x')\neq p_j^{\text{req}}\right]
+\quad\text{(font size / margins / fleqn / TOC / header --- only the items named by $r$)}
+\]
+\[
+\ell_{\text{fig}}(x')=\ind\!\left[\text{fingerprints}(x')\neq \text{fingerprints}(x_0)\right]
+\]
+
+\subsection*{1.2 Definition of $L$ (revised)}
+\[
+\boxed{\;L(x')=\sum_{i\in\mathcal{H}} w_i\,\ell_i(x')
+= w_c\,\ell_{\text{compile}}+w_p\,\ell_{\text{page}}+w_s\,\ell_{\text{spec}}+w_f\,\ell_{\text{fig}}\;}
+\]
+Each $\ell_i\in\{0,1\}$: being 0.2 pages over the limit and being 5 pages over score identically.
+If $b=\varnothing$, $\ell_{\text{page}}$ is \emph{absent from the sum} (not zero --- undefined),
+implemented as a single guard \texttt{if req.page\_limit:}. $L=0$ is the minimum.
+
+\subsection*{1.3 Content preservation: removed from $\mathcal{H}$ (directive 1)}
+It has become a \emph{soft} term instead of a hard constraint, because the later
+\emph{semantic-polishing} stage is allowed to rewrite body text:
+\[
+\widetilde B(x)=\text{normalized body (layout commands stripped, whitespace collapsed)}
+\]
+\[
+\mathrm{Keep}(x')=\frac{\left|\multiset\!\left(\widetilde B(x')\right)\ \cap\ \multiset\!\left(\widetilde B(x_0)\right)\right|}{\left|\widetilde B(x_0)\right|},
+\qquad
+D_{\text{content}}(x')=1-\mathrm{Keep}(x')
+\]
+Weight $\beta = $ \texttt{CONTENT\_PENALTY} $=50$: a strong preference, not a prohibition.
+The semantic stage adds the hard floor $\mathrm{Keep}(x')\ge\kappa$ later.
+\\[2pt]
+\emph{Honest boundary:} $D_{\text{content}}$ is a \emph{magnitude-of-change proxy}, not a
+proof of semantic equivalence (multiset overlap flags paraphrase as change --- intentionally conservative).
+
+\subsection*{1.4 Intervention cost $I$}
+\[
+I(x')=0.5\,|\Delta m|+3.0\,|\Delta f|+0.4\,N_{\text{float}}+0.4\,N_{\text{width}}+\beta\,D_{\text{content}}(x')
+\]
+$|\Delta m|$ = margin shift in mm; $|\Delta f|$ = font-size steps dropped;
+$N_{\text{float}}$ = float-placement specs changed; $N_{\text{width}}$ = figure-width
+expressions changed. Slackening is cheap by construction, so after hitting the target the
+system relaxes margins/fonts back to the ``loosest optimal'' point.
+
+\subsection*{1.5 Feasibility gate and ordering}
+\[
+x'\ \text{feasible}\iff L(x')=0,
+\qquad
+J_1(x')=
+\begin{cases}
++\infty, & L(x')>0\\
+I(x'), & L(x')=0
+\end{cases}
+\]
+Candidates are compared \emph{lexicographically}: first $L$ (0 beats any positive value), then $I$.
+The current implementation is the hand-written form \texttt{total = 1e6*len(lv) + a + i};
+semantically equivalent, with $10^6$ standing in for $+\infty$.
+
+\subsection*{1.6 What changed vs.\ the previous ``continuized $L$''}
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Term & previous (continuized) & revised (this version)\\
+\hline
+page term & $\max(0,N-b)/b$ (has a gradient) & 0/1, over limit = infeasible\\
+content term & continuous, still inside $\mathcal{H}$ & moved out; soft $\beta D_{\text{content}}$\\
+compile / specs / figures & 0/1 & 0/1 (unchanged)\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{1.7 Trade-off to state explicitly: the objective has no gradient}
+With the page term at 0/1, $L$ carries no search signal on the page axis. Therefore:
+\begin{itemize}
+\item \textbf{objective}: strictly 0/1 (non-negotiable, as required);
+\item \textbf{search heuristic}: during page compression use the residual
+$g(x')=\max(0,N_{\text{pages}}(x')-b)$ only to \emph{choose/rank moves} and to advise the user
+(``0.3 pages to go''). $g$ never enters $L$ and never decides acceptance.
+\end{itemize}
+
+\section*{2. Model 2: aesthetic quantification $A$}
+
+\subsection*{2.1 Overall}
+\[
+\boxed{\;A(x')=A_{\text{defect}}(x')+\lambda\,A_{\text{profile}}(x')\;},\qquad
+\lambda=0\ \text{(shadow mode, current default)}
+\]
+
+\subsection*{2.2 $A_{\text{defect}}$: detectable defects (the layer currently in force)}
+\[
+\begin{aligned}
+A_{\text{defect}}=&\,1.0\,N_{\text{overfull}}+0.6\,N_{\text{underfull}}
++1.0\,N_{\text{vboxOver}}+1.4\,N_{\text{vboxUnder}}\\
+&+1.6\,N_{\text{floatwarn}}+1.2\,N_{\text{tabOverwide}}+0.3\,N_{\text{warn}}+1.0\,N_{\text{figOverwide}}\\
+&+2.0\,\ind[\text{quality macros missing}]\\
+&+\sum_{fe}\left(0.8\,\ind[\text{spec unstable}]+0.5\,\ind[\text{spec}=H]\right)
++\sum_{h}w_{\text{hyg}}(h)+D_{\text{vis}}\\
+&+2.5\,\ind[\text{TOC missing}]+2.5\,\ind[\text{running header missing}]
++1.5\,\ind[\text{headings uncolored}]
+\end{aligned}
+\]
+$w_{\text{hyg}}$ = source-hygiene weights (\texttt{HYGIENE\_WEIGHT}, set by fixability $\times$ impact);
+$D_{\text{vis}}=\sum_d \text{weight}(d)\cdot\text{severity}(d)$ over the six rendered-page defects
+(\texttt{giant\_content}, \texttt{stranded\_block}, \texttt{bottom\_blank}, \texttt{mid\_gap},
+\texttt{near\_empty}, \texttt{density\_imbalance}).
+
+\subsection*{2.3 $A_{\text{profile}}$: deviation from venue norms (shadow, $\lambda=0$)}
+For page $p$ with role $\text{role}(p)=r$, venue $v$, column count $l$, take the stratum
+$s=(v,r,l)$ profile
+\[
+\left\{m_i,\;s_i,\;[\text{lo}_i,\text{hi}_i],\;R,\;\delta,\;\text{ref}_i,\;d2_{\text{ref}}\right\}
+\]
+(median, IQR, correlation matrix):
+\begin{enumerate}[label=\arabic*.]
+\item heavy-tail transform $\tilde x_i=\log(1+x_i)$ (positive-ratio dims only);
+\item standardize $z_i=\mathrm{clip}\!\left((\tilde x_i-m_i)/s_i,-4,+4\right)$;
+\item two-sided out-of-band loss (below-lo and above-hi, asymmetric weights)
+\[
+\text{loss}_i=W_{\text{low}}\frac{\max(0,\text{lo}_i-\tilde x_i)}{s_i}
++W_{\text{high}}\frac{\max(0,\tilde x_i-\text{hi}_i)}{s_i},\qquad
+W_{\text{low}}=1.2>W_{\text{high}}=1.0;
+\]
+\item per-dim normalization $\widehat{\text{loss}}_i=\min\!\left(\text{loss}_i/\text{ref}_i,20\right)$,
+$\text{ref}_i$ = own P90 of the stratum;
+\item Mahalanobis $D^2=z^{\top}\Sigma^{-1}z$ with $\Sigma=(1-\delta)R+\delta I$, $\delta$ by Ledoit--Wolf,
+and $\widehat{D^2}=D^2/d2_{\text{ref}}$;
+\item page$\to$document aggregation (CVaR-like)
+\[
+\text{pool}(u)=0.5\cdot\text{topk}(u)+0.5\cdot\text{mean}(u),\qquad
+k=\max\!\left(1,\mathrm{round}(0.05\,N_{\text{pages}})\right);
+\]
+\item composition
+\[
+A_{\text{profile}}=\frac{\sum_i w_i\,\text{pool}(\widehat{\text{loss}}_i)+w_M\,\text{pool}(\widehat{D^2})}
+{\sum_i w_i+w_M},\qquad w_i\equiv1\ (\text{uncalibrated}),\ w_M=1.
+\]
+\end{enumerate}
+
+\subsection*{2.4 Honest boundaries}
+$A_{\text{profile}}$ is a \emph{ranking} quantity, not a human aesthetic score; it models only
+``layer 2: deviation from norms'', not subjective preference;
+$A_{\text{defect}}$ reads source $+$ rendering while $A_{\text{profile}}$ reads rendering only ---
+they measure different things and can only be added, not substituted;
+$\lambda$ stays 0 until its pre-gate calibration passes.
+
+\section*{3. Where the formulas live in code (repo root: \texttt{/mnt/d/桌面/texopt/})}
+\begin{center}\footnotesize
+\begin{tabular}{p{4.3cm}p{3.1cm}p{7.6cm}}
+\hline
+Formula part & File & Function / constant\\
+\hline
+$L$ violation list & \texttt{texopt/score.py} & \texttt{l\_violations()} L309\\
+$L$ scale / composition & \texttt{texopt/score.py} & \texttt{L\_PENALTY} L36, \texttt{total\_score()} L446\\
+Body normalization, Keep & \texttt{texopt/score.py} & \texttt{\_norm\_body()}, \texttt{body\_unchanged()} L213, \texttt{semantic\_diff()} L194\\
+$D_{\text{content}}$ soft term (new) & \texttt{texopt/score.py} & \texttt{content\_deviation()} L409, \texttt{CONTENT\_PENALTY} L39\\
+Page-limit scope/judging & \texttt{texopt/score.py} & \texttt{page\_status()}, \texttt{judge\_pages()}, \texttt{within\_limit()}\\
+$I$ intervention cost & \texttt{texopt/score.py} & \texttt{intervention\_cost()} L425\\
+$A_{\text{defect}}$ & \texttt{texopt/score.py} & \texttt{aesthetic\_score()} L368, \texttt{HYGIENE\_WEIGHT} L42\\
+$D_{\text{vis}}$ (rendered pages) & \texttt{texopt/visual.py} & \texttt{visual\_defects()} L416, \texttt{defect\_penalty()} L423, \texttt{DEFECT\_WEIGHT} L234, \texttt{analyze\_pdf()} L386, \texttt{page\_metrics()} L244\\
+$A_{\text{profile}}$ steps 1--5 & \texttt{texopt/aesthetic.py} & \texttt{class Detector} L336 (vector L376, mahalanobis L407, band\_loss L421, norm\_loss L451, norm\_d2 L457, score\_page L464)\\
+$A_{\text{profile}}$ step 6 & \texttt{texopt/aesthetic.py} & \texttt{pooled\_agg()} L105, \texttt{topk\_mean()}, \texttt{percentile()}\\
+$A_{\text{profile}}$ step 7 & \texttt{texopt/aesthetic.py} & \texttt{evaluate\_doc()} L633, \texttt{W\_LOW/W\_HIGH/W\_D2} L43--45\\
+Mahalanobis / shrinkage / $\chi^2$ & \texttt{texopt/aesthetic.py} & \texttt{corr\_from\_z()} L138, \texttt{lw\_delta()} L164, \texttt{shrink()} L194, \texttt{chi2\_sf()} L274, \texttt{chi2\_isf()} L320\\
+Profile construction & \texttt{texopt/aesthetic.py} & \texttt{build\_block()} L481, \texttt{pick\_detector()} L605\\
+Weight calibration & \texttt{texopt/weights.py} & \texttt{a\_profile\_from\_parts()} L136, \texttt{weights\_from\_trials()} L241, \texttt{ablation\_weights()} L264, \texttt{fit\_bradley\_terry()} L348, \texttt{accept\_verdict()} L318\\
+Shadow-mode wiring & \texttt{texopt/shadow.py} & \texttt{evaluate\_pdf()} L151, \texttt{snapshot()} L170, \texttt{gate\_drop\_dims()} L89\\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{4. Change list for this revision}
+\begin{enumerate}[label=\arabic*.]
+\item \texttt{Requirement.content\_hard} (default \texttt{False}) --- content-preservation policy switch.
+\item \texttt{score.py}: new \texttt{CONTENT\_PENALTY = 50.0} and \texttt{content\_deviation()};
+content check in \texttt{l\_violations()} only active when \texttt{content\_hard=True};
+\texttt{total\_score()} adds the soft term and returns \texttt{d\_content} / \texttt{content\_preserved}.
+\item \texttt{tests/run\_tests.py}: 4 new regression checks for the content policy.
+\item Page limit: \emph{no code change needed} --- existing \texttt{if req.page\_limit:} guard
+plus a 0/1 entry already matches directive 2.
+\item Known minor bug (to fix): in \texttt{aesthetic.py::evaluate\_doc()} the report fields
+\texttt{norm\_d2\_top} and \texttt{norm\_d2\_p90} hold the same value, as do
+\texttt{dim\_norm\_top} and \texttt{dim\_norm\_p90} --- currently two indistinguishable columns.
+\end{enumerate}
+
+\end{document}
