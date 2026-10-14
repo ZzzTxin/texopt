@@ -10,7 +10,6 @@
 \titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
 \setlist{nosep,leftmargin=1.4em}
 \newcommand{\ind}{\mathbf{1}}
-\newcommand{\multiset}{\mathrm{multiset}}
 \setlength{\emergencystretch}{2.5em}
 \tolerance=1200
 \allowdisplaybreaks
@@ -62,24 +61,30 @@ implemented as a single guard \texttt{if req.page\_limit:}. $L=0$ is the minimum
 
 \subsection*{1.3 Content preservation: removed from $\mathcal{H}$ (directive 1)}
 It has become a \emph{soft} term instead of a hard constraint, because the later
-\emph{semantic-polishing} stage is allowed to rewrite body text:
+\emph{semantic-polishing} stage is allowed to rewrite body text.
+``Content surface'' = body extracted $\to$ extended normalization (layout-command movable
+surface removed: float specs, figure widths, relative-length args, \texttt{\textbackslash newpage},
+\texttt{\textbackslash noindent}, font-size switches, tabular column specs, \dots) $\to$ whitespace collapsed;
+$n_c(\cdot)$ counts character $c$ on that surface:
 \[
-\widetilde B(x)=\text{normalized body (layout commands stripped, whitespace collapsed)}
-\]
-\[
-\mathrm{Keep}(x')=\frac{\left|\multiset\!\left(\widetilde B(x')\right)\ \cap\ \multiset\!\left(\widetilde B(x_0)\right)\right|}{\left|\widetilde B(x_0)\right|},
+\mathrm{Keep}(x')=\frac{\sum_{c}\min\big(n_c(x'),\,n_c(x_0)\big)}
+{\sum_{c}\max\big(n_c(x'),\,n_c(x_0)\big)},
 \qquad
 D_{\text{content}}(x')=1-\mathrm{Keep}(x')
 \]
+A character-multiset Jaccard ratio: both additions and deletions count as deviation.
 Weight $\beta = $ \texttt{CONTENT\_PENALTY} $=50$: a strong preference, not a prohibition.
 The semantic stage adds the hard floor $\mathrm{Keep}(x')\ge\kappa$ later.
-\\[2pt]
+\[2pt]
 \emph{Honest boundary:} $D_{\text{content}}$ is a \emph{magnitude-of-change proxy}, not a
 proof of semantic equivalence (multiset overlap flags paraphrase as change --- intentionally conservative).
 
 \subsection*{1.4 Intervention cost $I$}
 \[
-I(x')=0.5\,|\Delta m|+3.0\,|\Delta f|+0.4\,N_{\text{float}}+0.4\,N_{\text{width}}+\beta\,D_{\text{content}}(x')
+I_{\text{struct}}(x')=0.5\,|\Delta m|+3.0\,|\Delta f|+0.4\,N_{\text{float}}+0.4\,N_{\text{width}}
+\]
+\[
+I(x')=I_{\text{struct}}(x')+\beta\,D_{\text{content}}(x'),\qquad \beta=50
 \]
 $|\Delta m|$ = margin shift in mm; $|\Delta f|$ = font-size steps dropped;
 $N_{\text{float}}$ = float-placement specs changed; $N_{\text{width}}$ = figure-width
@@ -194,11 +199,11 @@ $\lambda$ stays 0 until its pre-gate calibration passes.
 Formula part & File & Function / constant\\
 \hline
 $L$ violation list & \texttt{texopt/score.py} & \texttt{l\_violations()} L309\\
-$L$ scale / composition & \texttt{texopt/score.py} & \texttt{L\_PENALTY} L36, \texttt{total\_score()} L446\\
+$L$ scale / composition & \texttt{texopt/score.py} & \texttt{L\_PENALTY} L36, \texttt{total\_score()} L462\\
 Body normalization, Keep & \texttt{texopt/score.py} & \texttt{\_norm\_body()}, \texttt{body\_unchanged()} L213, \texttt{semantic\_diff()} L194\\
-$D_{\text{content}}$ soft term (new) & \texttt{texopt/score.py} & \texttt{content\_deviation()} L409, \texttt{CONTENT\_PENALTY} L39\\
+$D_{\text{content}}$ soft term (new) & \texttt{texopt/score.py} & \texttt{content\_deviation()} L420, \texttt{\_content\_text()} L414, \texttt{CONTENT\_PENALTY} L39\\
 Page-limit scope/judging & \texttt{texopt/score.py} & \texttt{page\_status()}, \texttt{judge\_pages()}, \texttt{within\_limit()}\\
-$I$ intervention cost & \texttt{texopt/score.py} & \texttt{intervention\_cost()} L425\\
+$I$ intervention cost & \texttt{texopt/score.py} & \texttt{intervention\_cost()} L441\\
 $A_{\text{defect}}$ & \texttt{texopt/score.py} & \texttt{aesthetic\_score()} L368, \texttt{HYGIENE\_WEIGHT} L42\\
 $D_{\text{vis}}$ (rendered pages) & \texttt{texopt/visual.py} & \texttt{visual\_defects()} L416, \texttt{defect\_penalty()} L423, \texttt{DEFECT\_WEIGHT} L234, \texttt{analyze\_pdf()} L386, \texttt{page\_metrics()} L244\\
 $A_{\text{profile}}$ steps 1--5 & \texttt{texopt/aesthetic.py} & \texttt{class Detector} L336 (vector L376, mahalanobis L407, band\_loss L421, norm\_loss L451, norm\_d2 L457, score\_page L464)\\
@@ -215,9 +220,11 @@ Shadow-mode wiring & \texttt{texopt/shadow.py} & \texttt{evaluate\_pdf()} L151, 
 \section*{4. Change list for this revision}
 \begin{enumerate}[label=\arabic*.]
 \item \texttt{Requirement.content\_hard} (default \texttt{False}) --- content-preservation policy switch.
-\item \texttt{score.py}: new \texttt{CONTENT\_PENALTY = 50.0} and \texttt{content\_deviation()};
+\item \texttt{score.py}: new \texttt{CONTENT\_PENALTY = 50.0}, \texttt{\_content\_text()} and \texttt{content\_deviation()};
 content check in \texttt{l\_violations()} only active when \texttt{content\_hard=True};
 \texttt{total\_score()} adds the soft term and returns \texttt{d\_content} / \texttt{content\_preserved}.
+$D$ is defined on the content surface (extended normalization + whitespace collapse) as a
+character-multiset Jaccard ratio; layout-command changes do not count, additions and deletions both do.
 \item \texttt{tests/run\_tests.py}: 4 new regression checks for the content policy.
 \item Page limit: \emph{no code change needed} --- existing \texttt{if req.page\_limit:} guard
 plus a 0/1 entry already matches directive 2.
