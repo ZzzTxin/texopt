@@ -411,20 +411,31 @@ def _as_body(s: str) -> str:
     return content_body(s) if "\\begin{document}" in s else s
 
 
+def _content_text(src_or_body: str, req=None) -> str:
+    """内容面文本：抽正文 -> 扩展归一（排版命令可动面不计）-> 空白归一。"""
+    b = _as_body(src_or_body)
+    return "".join(_norm_body_ext(b, req).split())
+
+
 def content_deviation(per: P.Perception, req: Requirement, orig_body: str) -> float:
-    """D_content：正文偏差率（0 = 归一化后与原稿完全一致，越大改动越多）。
+    """D_content：正文偏差率（0 = 内容面完全一致，越大改动越多）。
 
     2026-10-14 用户指定：内容保留从 L 硬约束降级为软项，用于软性惩罚 +
     阶段报告 + 后续语义抛光阶段的「内容保留率下限 κ」约束。
-    口径：按归一化正文的字符多重集重合率算 Keep，D = 1 - Keep。
+    口径：内容面（_norm_body_ext 归一、空白折叠）字符多重集的
+    **Jaccard 重合率** Keep = Σmin/Σmax，D = 1 - Keep（增删都计偏差）；
+    排版命令可动面（浮动体参数/图宽/
+ewpage/\noindent 等）不计。
     这是**改动幅度代理**，不是语义等价证明（与项目一贯的诚实边界一致）。
     """
-    a = _norm_body(content_body(per.src), req)
-    b = _norm_body(_as_body(orig_body), req)
-    if not b:
+    a = _content_text(per.src, req)
+    b = _content_text(orig_body, req)
+    if not a and not b:
         return 0.0
-    keep = sum((Counter(a) & Counter(b)).values()) / len(b)
-    return round(max(0.0, 1.0 - keep), 6)
+    ca, cb = Counter(a), Counter(b)
+    inter = sum((ca & cb).values())
+    union = sum((ca | cb).values())
+    return round(max(0.0, 1.0 - (inter / union if union else 1.0)), 6)
 
 
 def intervention_cost(per: P.Perception, orig: P.Perception) -> float:

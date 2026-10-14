@@ -76,13 +76,16 @@ $$
 **新写法**：内容偏差变成一个**软项** $D_{\text{content}}$，进入代价侧，不进入可行性判定：
 
 $$
-\mathrm{Keep}(x') = \frac{\big|\,\mathrm{multiset}\big(\tilde B(x')\big) \cap \mathrm{multiset}\big(\tilde B(x_0)\big)\,\big|}{\big|\tilde B(x_0)\big|},
+\mathrm{Keep}(x') = \frac{\sum_{c}\min\big(n_c(x'),\,n_c(x_0)\big)}{\sum_{c}\max\big(n_c(x'),\,n_c(x_0)\big)},
 \qquad
 D_{\text{content}}(x') = 1-\mathrm{Keep}(x')
 $$
 
-其中 $\tilde B(\cdot)$ 是正文归一化（剥掉排版命令、空白折叠）后的文本。
-$D_{\text{content}}=0$ 表示「归一化后逐字符一致」，越大改动越多。
+其中 $n_c(\cdot)$ 是字符 $c$ 在「内容面文本」中的出现次数；「内容面文本」= 抽正文 →
+扩展归一（抹掉排版命令可动面：浮动体参数、图宽、依赖长度参数、`\newpage`、`\noindent`、
+字号乱标、表格列格式等）→ 空白折叠。即**只统计真正的文字内容**。
+$D_{\text{content}}=0$ 表示内容面完全一致；注意这是**字符多重集 Jaccard 重合率**，
+增删都会计入偏差（早期版本用「原文字符覆盖率」，加句会被误判为 0，已修正）。
 
 代价侧权重 $\beta=$ `CONTENT_PENALTY` $=50$（强偏好：能不动就不动，但**不是**禁止）。
 语义抛光阶段再加一道硬底线：$\mathrm{Keep}(x') \ge \kappa$（内容保留率下限，$\kappa$ 待定标）。
@@ -92,8 +95,16 @@ $D_{\text{content}}=0$ 表示「归一化后逐字符一致」，越大改动越
 
 ### 1.4 I：干预代价（最小干预原则）
 
+**结构代价**（代码 `intervention_cost()`）：
+
 $$
-I(x') = 0.5\,|\Delta m| + 3.0\,|\Delta f| + 0.4\,N_{\text{float}} + 0.4\,N_{\text{width}} + \beta\,D_{\text{content}}(x')
+I_{\text{struct}}(x') = 0.5\,|\Delta m| + 3.0\,|\Delta f| + 0.4\,N_{\text{float}} + 0.4\,N_{\text{width}}
+$$
+
+**完整代价项**（含内容软项，即总分里实际相加的量）：
+
+$$
+I(x') = I_{\text{struct}}(x') + \beta\,D_{\text{content}}(x'), \qquad \beta = \text{CONTENT\_PENALTY} = 50
 $$
 
 | 项 | 含义 | 现值 |
@@ -102,7 +113,7 @@ $$
 | $\Delta f$ | 正文字号降档数 | 系数 3.0 / 档 |
 | $N_{\text{float}}$ | 浮动体位置参数被改的处数（`[h]→[tbp]` 等） | 系数 0.4 / 处 |
 | $N_{\text{width}}$ | 图片宽度表达式被改的处数 | 系数 0.4 / 处 |
-| $\beta D_{\text{content}}$ | 正文改动幅度（第 1.3 节的软项） | 系数 50 |
+| $\beta D_{\text{content}}$ | 正文改动幅度软项 | 系数 50 |
 
 设计含义：**松弛方向天然便宜**。把参数从「压到极限」往回收，$I$ 自动下降，
 所以达标后系统会自己把边距/字号拉回「最宽松且最优」的临界点。
@@ -215,11 +226,11 @@ $$
 | 公式部件 | 文件 | 函数 / 常量 |
 |---|---|---|
 | $L$ 违规清单（硬约束判定） | `texopt/score.py` | `l_violations()` L309 |
-| $L$ 的 $10^6$ 实现 / 合成 | `texopt/score.py` | `L_PENALTY` L36、`total_score()` L446 |
+| $L$ 的 $10^6$ 实现 / 合成 | `texopt/score.py` | `L_PENALTY` L36、`total_score()` L462 |
 | 正文归一化 $\tilde B$、$\mathrm{Keep}$ | `texopt/score.py` | `_norm_body()`、`body_unchanged()` L213、`semantic_diff()` L194 |
-| $D_{\text{content}}$ 软项（**本次新增**） | `texopt/score.py` | `content_deviation()` L409、`CONTENT_PENALTY` L39 |
+| $D_{\text{content}}$ 软项（**本次新增**） | `texopt/score.py` | `content_deviation()` L420、`_content_text()` L414、`CONTENT_PENALTY` L39 |
 | 页数口径（总页/正文页、临界判定） | `texopt/score.py` | `page_status()` / `judge_pages()` / `within_limit()` |
-| $I$ 干预代价 | `texopt/score.py` | `intervention_cost()` L425 |
+| $I$ 干预代价 | `texopt/score.py` | `intervention_cost()` L441 |
 | $A_{\text{defect}}$ | `texopt/score.py` | `aesthetic_score()` L368、`HYGIENE_WEIGHT` L42 |
 | $D_{\text{vis}}$（页面图像层） | `texopt/visual.py` | `visual_defects()` L416、`defect_penalty()` L423、`DEFECT_WEIGHT` L234、`analyze_pdf()` L386、`page_metrics()` L244 |
 | $A_{\text{profile}}$ 第 1–5 步（档） | `texopt/aesthetic.py` | `class Detector` L336（`vector` L376 / `mahalanobis` L407 / `band_loss` L421 / `norm_loss` L451 / `norm_d2` L457 / `score_page` L464） |
@@ -237,9 +248,11 @@ $$
 
 1. **`Requirement.content_hard`（默认 `False`）** — 正文保留口径开关（`texopt/requirements.py`）。
 2. **`score.py`**
-   - 新增 `CONTENT_PENALTY = 50.0` 与 `content_deviation()`；
+   - 新增 `CONTENT_PENALTY = 50.0`、`_content_text()`、`content_deviation()`；
    - `l_violations()` 里的内容检查改为 `content_hard=True` 才生效；
-   - `total_score()` 增加软项并返回 `d_content` / `content_preserved`。
+   - `total_score()` 增加软项并返回 `d_content` / `content_preserved`；
+   - D 的口径定为**内容面**（`_norm_body_ext` 归一 + 空白折叠）字符多重集 Jaccard，
+     排版命令可动面不计入，增删均计偏差。
 3. **`tests/run_tests.py`** — 新增 4 条内容口径回归用例（默认不进 L / 开关可回旧口径 / 偏差率 > 0 / 一致时为 0）。
 4. 页数口径**无需改代码**：现有 `l_violations()` 里就是 `if req.page_limit:` 门 + 0/1 条目，
    已满足「有要求=不可协商、无要求=变量不存在」。
