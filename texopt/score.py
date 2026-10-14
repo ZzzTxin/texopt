@@ -27,12 +27,16 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 
 from . import perceive as P
 from . import actions, visual
 from .requirements import Requirement
 
 L_PENALTY = 1e6          # L 每项违规的权重（远大于 A/I，保证先满足硬约束）
+# 正文偏差软惩罚权重（2026-10-14 用户指定：内容保留不再是不可协商的硬约束，
+# 但仍是强偏好项；语义抛光阶段另设内容保留率下限 κ 兜底）。
+CONTENT_PENALTY = 50.0
 # 源码卫生问题在 A 分里的权重（按「能否被确定性动作修复 × 影响程度」定）：
 # 有对应动作、且直接关联页面质量的高；纯风格、无动作的低。
 HYGIENE_WEIGHT = {
@@ -310,8 +314,12 @@ def l_violations(per: P.Perception, req: Requirement,
         out.append(f"编译失败/无法渲染 PDF（{per.compile.first_error}）")
     elif per.compile.pdf_path is None:
         out.append("未生成 PDF")
-    if _norm_body(content_body(per.src), req) != _norm_body(orig_body, req):
-        out.append("正文内容被改动（违反内容完整保留）")
+    # 2026-10-14：正文内容完整保留默认**不再**是硬约束（语义抛光阶段要合法改正文）。
+    # 默认走软项 CONTENT_PENALTY·D_content（见 total_score）；
+    # 需要旧口径时把 Requirement.content_hard 置 True。
+    if getattr(req, "content_hard", False) \
+            and _norm_body(content_body(per.src), req) != _norm_body(orig_body, req):
+        out.append("正文内容被改动（content_hard=True：违反内容完整保留）")
     if req.page_limit:
         st = page_status(per, req)
         if st["over_strict"]:
@@ -398,6 +406,27 @@ def aesthetic_score(per: P.Perception, req: Requirement) -> float:
     return round(a, 3)
 
 
+def _as_body(s: str) -> str:
+    """容忍两种入参：完整源码（含 \\begin{document}）或已被 content_body 抽出的正文。"""
+    return content_body(s) if "\\begin{document}" in s else s
+
+
+def content_deviation(per: P.Perception, req: Requirement, orig_body: str) -> float:
+    """D_content：正文偏差率（0 = 归一化后与原稿完全一致，越大改动越多）。
+
+    2026-10-14 用户指定：内容保留从 L 硬约束降级为软项，用于软性惩罚 +
+    阶段报告 + 后续语义抛光阶段的「内容保留率下限 κ」约束。
+    口径：按归一化正文的字符多重集重合率算 Keep，D = 1 - Keep。
+    这是**改动幅度代理**，不是语义等价证明（与项目一贯的诚实边界一致）。
+    """
+    a = _norm_body(content_body(per.src), req)
+    b = _norm_body(_as_body(orig_body), req)
+    if not b:
+        return 0.0
+    keep = sum((Counter(a) & Counter(b)).values()) / len(b)
+    return round(max(0.0, 1.0 - keep), 6)
+
+
 def intervention_cost(per: P.Perception, orig: P.Perception) -> float:
     """I 分：干预代价（越小越好）。动作离原稿越远代价越高。"""
     cost = 0.0
@@ -425,8 +454,12 @@ def total_score(per: P.Perception, req: Requirement,
     lv = l_violations(per, req, content_body(orig.src), orig.source)
     a = aesthetic_score(per, req)
     i = intervention_cost(per, orig)
-    total = L_PENALTY * len(lv) + a + i
-    return {"l": lv, "a": a, "i": i, "total": round(total, 3), "ok": not lv}
+    d = 0.0 if getattr(req, "content_hard", False) \
+        else content_deviation(per, req, content_body(orig.src))
+    total = L_PENALTY * len(lv) + a + i + CONTENT_PENALTY * d
+    return {"l": lv, "a": a, "i": i, "d_content": d,
+            "content_preserved": d <= 0.0,
+            "total": round(total, 3), "ok": not lv}
 
 
 def visual_defects(per: P.Perception) -> list:

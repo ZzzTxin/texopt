@@ -76,6 +76,13 @@ class Requirement:
     strip_reading_aids: bool = True      # 删阅读辅助内容（START READING HERE 等）
     remove_warning_boxes: bool = True    # 删 WARNING/CAUTION/ATTENTION 告示块
     preserve_figures: bool = True        # 图形内容保真（不得重绘/修改）
+    # ---- 内容保留口径（2026-10-14 用户指定） ----
+    # 「正文内容完整保留」不再默认属于硬约束 L：后续语义抛光阶段会合法改写正文，
+    # 若把它绑成不可协商约束，任何语义动作都会直接判不可行。
+    #   content_hard=False（默认）：内容偏差进入软项 CONTENT_PENALTY·D_content，
+    #                              并由语义抛光阶段的内容保留率下限 κ 兜底；
+    #   content_hard=True：保留旧行为（正文被改动记一条 L 违规）。
+    content_hard: bool = False
     # ---- 审美 / 质量策略 ----
     enable_quality_macros: bool = True   # 注入断行质量宏（防孤行寡行/连字符堆叠）
     float_spec: str = "tbp"              # 浮动体参数规范（[h]/[h!] 不稳定写法被规范化）
