@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>texopt 模型 v3 结构设计说明（2026-10-14）</title>
+<style>
+  :root { --fg:#1b1b1b; --muted:#6b6b6b; --line:#d8d8d8; --accent:#1f4e79; --box:#f4f7fa; }
+  * { box-sizing: border-box; }
+  body { margin:0 auto; max-width:52rem; padding:2.2rem 1.6rem 5rem;
+         font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+         color:var(--fg); background:#fff; }
+  h1 { font-size:1.7rem; margin:0 0 .2rem; }
+  h2 { font-size:1.28rem; margin:2.4rem 0 .8rem; padding-bottom:.35rem;
+       border-bottom:2px solid var(--accent); }
+  h3 { font-size:1.06rem; margin:1.7rem 0 .6rem; color:var(--accent); }
+  h4 { font-size:.98rem; margin:1.2rem 0 .4rem; }
+  p, li { margin:.45rem 0; }
+  .sub { color:var(--muted); margin:0 0 1.2rem; }
+  .box { background:var(--box); border:1px solid var(--line); border-left:4px solid var(--accent);
+         border-radius:4px; padding:.7rem .9rem; margin:1rem 0; }
+  .box.warn { border-left-color:#b45309; background:#fdf7ec; }
+  .box.key  { border-left-color:#15803d; background:#f1f8f2; }
+  .box.ask  { border-left-color:#7c3aed; background:#f7f3ff; }
+  .eqbox { text-align:center; margin:1.1rem 0; overflow-x:auto; }
+  img.eq { vertical-align:middle; }
+  table { border-collapse:collapse; width:100%; margin:.9rem 0; font-size:.94rem; }
+  th, td { border:1px solid var(--line); padding:.42rem .55rem; text-align:left; vertical-align:top; }
+  th { background:#eef3f7; font-weight:600; }
+  code { background:#f2f2f2; padding:.08rem .3rem; border-radius:3px;
+         font-family:Consolas,"Courier New",monospace; font-size:.9em; }
+  .small { font-size:.9rem; color:var(--muted); }
+  hr { border:0; border-top:1px solid var(--line); margin:2.4rem 0; }
+  .gl { color:#15803d; font-weight:600; }
+  .m1 { color:#1f4e79; font-weight:600; }
+  .m2 { color:#a1550a; font-weight:600; }
+</style>
+</head>
+<body>
+
+<h1>texopt 模型 v3 结构设计说明</h1>
+<p class="sub">2026-10-14 · 依据你「model1 不应作为量化公式 / model2 只做审美」的修改意见重写 ·
+配套：<code>model_v2_explained_20261014.html</code>（记号与逐项讲解仍可复用）· <code>model_v2_formulas_20261014.pdf</code></p>
+
+<div class="box key">
+<b>一句话：</b>把原来的「L 硬约束公式 + A 审美公式」拆成三层 ——
+<b>底层逻辑门</b>（必须满足，不评分）、<b>model1</b>（页面缺陷 + 修改情况，主目标）、
+<b>model2</b>（纯审美软指标 + 与同类论文比较）。
+</div>
+
+<h2 id="s1">1. 三层结构与职责</h2>
+
+<table>
+<tr><th>层</th><th>回答什么</th><th>数学形态</th><th>是否参与打分</th></tr>
+<tr>
+  <td class="gl">底层逻辑 Gate</td>
+  <td>这份稿子<b>算不算可用</b></td>
+  <td>条件集合，每项 0/1；<b>不是公式</b></td>
+  <td>否。不满足即不可行（+∞ / 直接淘汰）</td>
+</tr>
+<tr>
+  <td class="m1">model1</td>
+  <td>页面缺陷有多少？为了改它我动了多少？</td>
+  <td>M₁ = ρ·P + I（一个式子综合衡量）</td>
+  <td>是，主目标</td>
+</tr>
+<tr>
+  <td class="m2">model2</td>
+  <td>排得好看吗？（灰度 / 留白 / 占比 / 均衡 + 与同类论文比）</td>
+  <td>M₂ = A_soft + λ·A_profile</td>
+  <td>是，次目标（λ 默认 0 → 语料比较部分仅报告）</td>
+</tr>
+</table>
+
+<div class="eqbox">{{EQ:eq_gate}}</div>
+<p class="small">Gate 的实现形式是「违规清单」（代码 <code>gate_violations()</code>）：
+清单为空 = 可行。之所以返回清单而不是布尔，是为了让报告说清楚「卡在哪一条」，
+也为了让验收判断能用「违规条数」先做一级比较。</p>
+
+<h2 id="s2">2. model1：页面缺陷 + 修改情况</h2>
+
+<div class="eqbox">{{EQ:eq_M1}}</div>
+
+<h3>2.1 P：页面缺陷分（半硬性约束，按比重累加）</h3>
+<div class="eqbox">{{EQ:eq_P}}</div>
+<table>
+<tr><th>项</th><th>比重</th><th>说明</th></tr>
+<tr><td><code>overfull</code> 行溢出</td><td>1.0</td><td>正文右侧超出版心</td></tr>
+<tr><td><code>underfull</code> 行欠满</td><td>0.6</td><td>字间距被拉稀，常批量出现</td></tr>
+<tr><td><code>vbox_over</code> 页盒溢出</td><td>1.0</td><td>页面垂直方向被撑破</td></tr>
+<tr><td><code>vbox_under</code> 页盒欠满</td><td>1.4</td><td><b>孤行寡行的 TeX 侧代理</b>，与断页质量同源</td></tr>
+<tr><td><code>floatwarn</code> 浮动体警告</td><td>1.6</td><td><b>浮动体错位</b>：位置/尺寸被 TeX 强改</td></tr>
+<tr><td><code>tab_overwide</code> 表格超宽</td><td>1.2</td><td>有 tabularx 修复动作</td></tr>
+<tr><td><code>fig_overwide</code> 图片超宽</td><td>1.0</td><td>有缩图修复动作</td></tr>
+<tr><td><code>warn</code> 其它警告</td><td>0.3</td><td>影响有限</td></tr>
+<tr><td><code>macros_missing</code> 质量宏缺失</td><td>2.0</td><td>要求开启却没注入断行质量宏</td></tr>
+<tr><td>spec 不稳定 / <code>[H]</code> 强排</td><td>0.8 / 0.5（每个）</td><td>前者会被 TeX 自行改写，后者易造成失衡与留白</td></tr>
+<tr><td>源码卫生 <code>Σ w_hyg</code></td><td>0.3 – 1.0</td><td>手动分页、行内字号乱标、下划线滥用……（按可修性 × 影响度）</td></tr>
+<tr><td>视觉结构缺陷 <code>Σ w_d</code></td><td><code>stranded_block</code> 1.2 / <code>near_empty</code> 0.6</td><td>内容孤立、几乎空白页（放置/结构错误类）</td></tr>
+</table>
+
+<h3>2.2 I：整体修改情况（越小越好）</h3>
+<div class="eqbox">{{EQ:eq_Istruct}}</div>
+<div class="eqbox">{{EQ:eq_I}}</div>
+<div class="eqbox">{{EQ:eq_keep}}</div>
+<p><code>I_struct</code> 是结构改动代价：页边距每 mm 计 0.5、字号每档 3.0、浮动体参数每处 0.4、图宽每处 0.4。
+<code>β·D_content</code> 是正文改动代价（β = 50），<code>D_content</code> 见上式（内容面字符多重集 Jaccard 的补）。
+「松弛方向天然便宜」依然成立：达标后把参数往回收会自动降 I。</p>
+
+<h3>2.3 ρ 的语义：两种量怎么换算</h3>
+<div class="box">
+<b>ρ = 2.0 是一个「秤定汇率」</b>，读法是：
+<i>消除 1 个加权缺陷（例如 1 处行溢出），我们愿意付出 2 个代价单位 ≈ 4mm 页边距改动 ≈ 5 处浮动体参数改动。</i><br>
+ρ 大 → 更愿意改版面去消灭缺陷（苛刻）；ρ 小 → 更保守（宁留缺陷也不动原稿）。
+这是<b>需要标定的一个数</b>，不是自然常数；建议后续用「人工成对比较」来定（阶段 7 的 Bradley–Terry 流程可直接用）。
+</div>
+
+<h2 id="s3">3. model2：纯审美量化</h2>
+
+<div class="eqbox">{{EQ:eq_M2}}</div>
+
+<h3>3.1 A_soft：绝对软指标（带理想区间的带外损失）</h3>
+<div class="eqbox">{{EQ:eq_softloss}}</div>
+<div class="eqbox">{{EQ:eq_softpool}}</div>
+<table>
+<tr><th>软指标 <code>x_i</code></th><th>理想带 (lo, hi)</th><th>权重</th><th>对应你的关注点</th></tr>
+<tr><td><code>ink_ratio</code> 页墨迹占比</td><td>(0.020, 0.150)</td><td>1.0</td><td><b>页面灰度</b>（整体浓淡）</td></tr>
+<tr><td><code>bottom_blank</code> 页底留白</td><td>(0.000, 0.220)</td><td>1.5</td><td><b>留白情况</b></td></tr>
+<tr><td><code>top_blank</code> 页首留白</td><td>(0.000, 0.120)</td><td>0.6</td><td>留白情况</td></tr>
+<tr><td><code>max_gap</code> 页内连续空洞</td><td>(0.000, 0.150)</td><td>1.2</td><td>留白情况</td></tr>
+<tr><td><code>band</code> 最大整块内容占页高</td><td>(0.050, 0.350)</td><td>3.0</td><td><b>图表占比</b>（整页单块过大）</td></tr>
+<tr><td><code>left_blank</code> / <code>right_blank</code></td><td>(0.000, 0.180)</td><td>0.6 / 0.6</td><td>版心左右留白</td></tr>
+<tr><td><code>top_bottom_ratio</code> 上下半页墨迹比</td><td>(0.700, 1.400)</td><td>0.8</td><td><b>均衡</b>（上重下轻）</td></tr>
+</table>
+<p class="small">鲁棒性：单页单指标损失封顶 3.0，比例类指标做 clip（例如 <code>top_bottom_ratio</code> 裁到 5.0），
+避免「下半页几乎空白 ⇒ 比值爆到几百」这种极端值主导全局。</p>
+
+<h3>3.2 A_profile：与同类论文比较（λ 默认 0，只报告）</h3>
+<p>这一部分沿用原有七步（重尾变换 → 标准化 → 带外损失 → 归一化 → 马氏距离 → CVaR 聚合 → 加权合成），
+参考系不是先验带，而是<b>同会议 × 同页面角色 × 同栏数</b>的语料档案。你这次没提意见，我保持原样不动，
+公式见速查卡与 <code>docs/stage4_aesthetic_profile.md</code>。</p>
+
+<h3>3.3 分工小结</h3>
+<table>
+<tr><th></th><th>A_soft（model2 主项）</th><th>A_profile（影子）</th></tr>
+<tr><td>参考系</td><td>先验理想带（可标定）</td><td>同档语料统计（数据驱动）</td></tr>
+<tr><td>口径</td><td>绝对：偏离「理想区间」多少</td><td>相对：与同类论文的分布差多远</td></tr>
+<tr><td>数据源</td><td>渲染页图（快，闭环内每轮可用）</td><td>extract.py 完整维度（慢，影子/评测用）</td></tr>
+<tr><td>现状</td><td>参与 M₂</td><td>λ = 0，只写报告</td></tr>
+</table>
+
+<h2 id="s4">4. 排序与验收</h2>
+<div class="eqbox">{{EQ:eq_order}}</div>
+<ol>
+<li><b>gate 优先</b>：违规条数少者胜（少一条就赢，不比其它）。</li>
+<li><b>压页阶段例外</b>：双方都还超页数时，页数不增即保留（省页常需连续多档才兑现）。</li>
+<li><b>model1 改善即接受</b>：<code>M₁</code> 严格变小就接受（缺陷与代价已按 ρ 换算，不再需要旧版「A 优先」特例）。</li>
+<li><b>M₁ 持平</b>：model2 改善才接受。</li>
+<li><b>M₁ 小幅变差但总目标</b> <code>M₁+M₂</code> <b>改善</b>：接受（审美收益补偿缺陷/代价回退）。</li>
+<li>否则拒绝并回滚。</li>
+</ol>
+
+<h2 id="s5">5. 信号归属对照表（本次最关键的改动）</h2>
+<table>
+<tr><th>信号</th><th>旧归属</th><th>v3 归属</th><th>理由</th></tr>
+<tr><td>编译 / PDF</td><td>L（0/1 项）</td><td class="gl">Gate</td><td>不满足就不可用，不是「可打分的分」</td></tr>
+<tr><td>页数上限</td><td>L</td><td class="gl">Gate</td><td>门槛而非分数（按你的第 2 条）</td></tr>
+<tr><td>图表保真</td><td>L</td><td class="gl">Gate</td><td>工具不该重画用户的图</td></tr>
+<tr><td>字号 / 边距 / fleqn / 目录 / 页眉</td><td>L（要求点名时）</td><td class="gl">Gate</td><td>同上：要求明确写了才是「必须满足」</td></tr>
+<tr><td>正文内容保留</td><td>L（0/1 硬约束）</td><td class="m1">model1 · I 的软项 β·D_content</td><td>语义抛光阶段要合法改正文（按你的第 1 条）</td></tr>
+<tr><td>行溢出 / 欠满 / vbox</td><td>A（缺陷）</td><td class="m1">model1 · P</td><td>页面缺陷，不是审美偏好</td></tr>
+<tr><td>浮动体警告 / <code>[H]</code> / spec 不稳定</td><td>A（缺陷）</td><td class="m1">model1 · P</td><td><b>浮动体错位</b>（你明确指出的）</td></tr>
+<tr><td>超宽图 / 超宽表</td><td>A（缺陷）</td><td class="m1">model1 · P</td><td>硬性版面错误</td></tr>
+<tr><td>源码卫生（手动分页 / 字号乱标 …）</td><td>A（缺陷）</td><td class="m1">model1 · P</td><td>具体缺陷，可被确定性动作修复（<span class="small">我对归属的判断，见 §6 待确认</span>）</td></tr>
+<tr><td>内容孤立 / 几乎空白页</td><td>A（视觉缺陷）</td><td class="m1">model1 · P</td><td>放置/结构错误类</td></tr>
+<tr><td>图表块过大（<code>band</code>）</td><td>A（视觉缺陷）</td><td class="m2">model2 · A_soft</td><td><b>图表占比</b>（你指定的）</td></tr>
+<tr><td>页底 / 页首 / 中部留白</td><td>A（视觉缺陷）</td><td class="m2">model2 · A_soft</td><td><b>留白情况</b>（你指定的）</td></tr>
+<tr><td>页墨迹占比、上下均衡</td><td>—（未建模）</td><td class="m2">model2 · A_soft</td><td><b>页面灰度</b>（你指定的，新增）</td></tr>
+<tr><td>与同会议论文的比较</td><td>A_profile（影子）</td><td class="m2">model2 · A_profile（λ=0）</td><td>你这次未提意见 → 保持原样</td></tr>
+<tr><td>目录 / 页眉 / 标题着色缺失</td><td>L 与 A <b>双重计分</b></td><td class="gl">仅 Gate</td><td>去重：同一件事不再既算硬约束又算审美</td></tr>
+</table>
+
+<h2 id="s6">6. 我已落地 vs 待你确认</h2>
+<h4>已落地（代码 + 测试）</h4>
+<ul>
+<li><code>score.py</code>：<code>gate_violations()</code>（旧 <code>l_violations</code> 保留为别名）、
+<code>page_defect_score()</code>（P）、<code>aesthetic_score()</code>（改为 model2 的 A_soft）、
+<code>total_score()</code> 返回 <code>gate/P/I/M1/A/M2/total</code>。</li>
+<li><code>core.py</code>：验收改为 §4 的六条；日志与报告同步显示 <code>gate / P / I / M1 / M2</code>。</li>
+<li>权重表集中在 <code>score.py</code> 顶部（<code>W_PAGE_DEFECT</code>、<code>PAGE_DEFECT_WEIGHT</code>、
+<code>VISUAL_DEFECT_M1</code>、<code>SOFT_BANDS</code>、<code>SOFT_LOSS_CAP</code>、<code>CONTENT_PENALTY</code>），改一个数就能调。</li>
+</ul>
+
+<div class="box ask">
+<b>需要你拍板的四件事：</b>
+<ol>
+<li><b>ρ = 2.0</b> 是否接受作为默认汇率？它直接决定「为消灭一个缺陷愿意改多少版面」。
+   现在取 2.0 是折中值；你若觉得应当更激进（更愿意动版面），就调大到 3–4。</li>
+<li><b>源码卫生问题是否属于 model1</b>？我倾向于是（它们是有对应修复动作的具体缺陷），
+   但它们确实不是「页面」上的东西 —— 若你认为它们该独立成第三类，我照改。</li>
+<li><b>「内容孤立 / 几乎空白页」</b>我放在了 model1（放置错误），
+   而「页底大片留白」放在 model2。两者的边界由我拍的，可能需要你确认口径。</li>
+<li><b>一个实测变化</b>：靶稿 <code>chaotic_layout</code> 的出口状态从 DONE 变成了 NEEDS_REVIEW ——
+   因为「缩小满宽图」这次被新权重判为净负收益（M₁ +1.8 代价 > M₂ 收益），
+   于是留下一项 high 的 <code>giant_content</code>（图表占比类，已按新口径归 model2）。
+   要么接受现状（如实报 NEEDS_REVIEW），要么调大 <code>band</code> 权重 / 调小图宽改动代价，
+   让这条修复重新划算。这条我需要你选。</li>
+</ol>
+</div>
+
+<h2 id="s7">7. 速查卡</h2>
+<div class="eqbox">{{EQ:eq_gate}}</div>
+<div class="eqbox">{{EQ:eq_M1}}</div>
+<div class="eqbox">{{EQ:eq_P}}</div>
+<div class="eqbox">{{EQ:eq_Istruct}}</div>
+<div class="eqbox">{{EQ:eq_I}}</div>
+<div class="eqbox">{{EQ:eq_M2}}</div>
+<div class="eqbox">{{EQ:eq_softloss}}</div>
+<div class="eqbox">{{EQ:eq_softpool}}</div>
+<div class="eqbox">{{EQ:eq_order}}</div>
+
+<h2 id="s8">8. 代码索引</h2>
+<table>
+<tr><th>部件</th><th>文件</th><th>函数 / 常量</th></tr>
+<tr><td>Gate 违规清单</td><td><code>texopt/score.py</code></td><td><code>gate_violations()</code></td></tr>
+<tr><td>P 页面缺陷分</td><td><code>texopt/score.py</code></td><td><code>page_defect_score()</code>、<code>PAGE_DEFECT_WEIGHT</code>、<code>HYGIENE_WEIGHT</code>、<code>VISUAL_DEFECT_M1</code></td></tr>
+<tr><td>I 修改情况</td><td><code>texopt/score.py</code></td><td><code>intervention_cost()</code>、<code>content_deviation()</code>、<code>CONTENT_PENALTY</code></td></tr>
+<tr><td>M1 合成与 ρ</td><td><code>texopt/score.py</code></td><td><code>total_score()</code>、<code>W_PAGE_DEFECT</code></td></tr>
+<tr><td>A_soft</td><td><code>texopt/score.py</code></td><td><code>aesthetic_score()</code>、<code>SOFT_BANDS</code>、<code>SOFT_LOSS_CAP</code>、<code>SOFT_METRIC_CLIP</code></td></tr>
+<tr><td>页面像素量 / 缺陷清单</td><td><code>texopt/visual.py</code></td><td><code>page_metrics()</code>、<code>find_defects()</code>、<code>visual_defects()</code>、<code>defect_penalty()</code></td></tr>
+<tr><td>A_profile 七步</td><td><code>texopt/aesthetic.py</code></td><td><code>class Detector</code>、<code>pooled_agg()</code>、<code>evaluate_doc()</code></td></tr>
+<tr><td>验收规则</td><td><code>texopt/core.py</code></td><td><code>Optimizer._accept()</code></td></tr>
+<tr><td>出口状态</td><td><code>texopt/core.py</code></td><td><code>Optimizer.exit_status()</code></td></tr>
+</table>
+
+<hr>
+<p class="small">本文档由 <code>docs/make_formula_doc.py</code> 生成（LaTeX standalone → PDF → SVG，离线可看）。
+改公式请改脚本里的 <code>EQS</code> 表，改文字请改 <code>docs/model_v3_design_20261014.template.html</code>。</p>
+
+</body>
+</html>
