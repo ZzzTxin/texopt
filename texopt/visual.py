@@ -208,9 +208,10 @@ def _write_visual_md(path: str, res: dict) -> None:
             pag = f"第{d['page']}页 " if d.get("page") else ""
             L.append(f"- [{d['severity']}] {pag}{d['kind']}：{d['detail']}")
         L.append("")
-    L.append("量取口径：低分辨率灰度渲染后统计行/列墨迹；`最大内容带`="
-             "行墨迹≥50%行宽的最长连续段（图/表/公式块）；`最大空白带`="
-             "行墨迹≤0.4%行宽的最长连续段。这些量取自实际编译结果，不是源码猜测。")
+    L.append("量取口径：低分辨率灰度渲染后统计行/列墨迹；`最大内容带`(v2)="
+             "「跨度≥0.85×行宽且填满≥55%」的最长连续段（单栏图/宽表/整页大图）；"
+             "`最大空白带`=行墨迹≤0.4%行宽的最长连续段。"
+             "这些量取自实际编译结果，不是源码猜测。")
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L))
@@ -225,7 +226,15 @@ def _write_visual_md(path: str, res: dict) -> None:
 # 阈值取「明显差」的粗档，避免把正常排版判成缺陷。
 # =====================================================================
 
-BAND_DARK_RATIO = 0.5      # 行墨迹 ≥ 50% 行宽 -> “实在内容带”（图/表/公式块）
+BAND_DARK_RATIO = 0.5      # 旧口径（v1，已废弃）：行墨迹 ≥ 50% **页宽**
+# 2026-10-27 Step 2 体检结论：v1 在 40 dpi 下几乎恒为 0（正文行的墨迹只占页宽
+# 20% 左右，且单栏图/表单栏宽也 <50% 页宽）。v2 改成「相对行宽 + 填满程度」：
+#   1) 行宽 W 取所有非空行墨迹跨度的 P90（也就是正文/栏宽本身）
+#   2) “实心块行” = 跨度 ≥ 0.85·W 且 该行墨迹 ≥ 0.55·跨度（整块被填满，不是两三个词）
+#   3) band = 最长连续实心块行 / 页高
+# 这样单栏图、宽表、整页大图都会被认出，纯正文页不会误报。
+BAND_SOLID_SPAN_RATIO = 0.85
+BAND_SOLID_FILL = 0.55
 ROW_EMPTY_RATIO = 0.004    # 行墨迹 ≤ 0.4% 行宽 -> 空白行
 
 SEVERITY_FACTOR = {"high": 1.0, "moderate": 0.6}
@@ -272,12 +281,27 @@ def page_metrics(pgm_path: str, ink_threshold: int = 200,
         else:
             cur = 0
 
-    # 最大「实在内容带」（图/表/公式块）：
-    bthr = max(1, int(band_dark_ratio * w))
+    # 每行墨迹跨度（首个暗像素 → 末个暗像素），用于估计正文/栏宽
+    spans = [0] * h
+    for r in range(h):
+        base = r * w
+        row = dark[base:base + w]
+        try:
+            first = row.index(1)
+        except ValueError:
+            continue
+        last = w - 1 - row[::-1].index(1)
+        spans[r] = last - first + 1
+    span_nz = sorted(v for v in spans if v >= 2)
+    w_text = span_nz[min(len(span_nz) - 1, int(0.9 * (len(span_nz) - 1)))] if span_nz else 0
+
+    # 最大「实心内容带」（宽表/图/整页大图），口径见文件头 BAND_* 注释
     band_len = band_at = 0
     cur = cur_start = 0
     for r in range(h):
-        if rows[r] >= bthr:
+        solid = (w_text > 0 and spans[r] >= BAND_SOLID_SPAN_RATIO * w_text
+                 and rows[r] >= BAND_SOLID_FILL * spans[r])
+        if solid:
             if cur == 0:
                 cur_start = r
             cur += 1
