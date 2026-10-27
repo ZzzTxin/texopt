@@ -1,0 +1,178 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>排版排序验收（20 页）</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:24px;background:#fafafa;color:#222}
+ h1{font-size:18px} p{font-size:13px;color:#555;max-width:900px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+ .card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px}
+ .card img{width:100%;display:block;border:1px solid #eee}
+ .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+ .rk{width:70px;padding:4px}
+ .meta{font-size:12px;color:#777;margin-top:6px}
+ button{padding:8px 14px;font-size:14px;margin:16px 8px 0 0}
+</style>
+<h1>排版排序验收（Step 2）</h1>
+<p>给下面 20 页按「排版好坏」排名：<b>1 = 最好，20 = 最差</b>，每页填一个不重复的数字。判断只看版面本身：
+留白是否得当、有没有大片空洞、图/表是否孤立或超宽、上下半页是否失衡。不用管内容质量、不用管颜色。
+填完点「导出答案」，把下载的 answers.json 发回给助手。</p>
+<div class="grid">
+  <div class="card" id="c1">
+    <div class="hd"><b>#1</b>
+      <input class="rk" data-id="1" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p01-1.png">
+    <div class="meta">AAAI · double · 第 4 页</div>
+  </div>
+  <div class="card" id="c2">
+    <div class="hd"><b>#2</b>
+      <input class="rk" data-id="2" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p02-1.png">
+    <div class="meta">ACMmm · single · 第 7 页</div>
+  </div>
+  <div class="card" id="c3">
+    <div class="hd"><b>#3</b>
+      <input class="rk" data-id="3" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p03-1.png">
+    <div class="meta">AAAI · double · 第 10 页</div>
+  </div>
+  <div class="card" id="c4">
+    <div class="hd"><b>#4</b>
+      <input class="rk" data-id="4" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p04-1.png">
+    <div class="meta">ICLR · single · 第 26 页</div>
+  </div>
+  <div class="card" id="c5">
+    <div class="hd"><b>#5</b>
+      <input class="rk" data-id="5" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p05-1.png">
+    <div class="meta">ICML · double · 第 4 页</div>
+  </div>
+  <div class="card" id="c6">
+    <div class="hd"><b>#6</b>
+      <input class="rk" data-id="6" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p06-1.png">
+    <div class="meta">IJCAI · single · 第 4 页</div>
+  </div>
+  <div class="card" id="c7">
+    <div class="hd"><b>#7</b>
+      <input class="rk" data-id="7" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p07-1.png">
+    <div class="meta">IJCV · single · 第 16 页</div>
+  </div>
+  <div class="card" id="c8">
+    <div class="hd"><b>#8</b>
+      <input class="rk" data-id="8" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p08-1.png">
+    <div class="meta">NeurIPS · single · 第 7 页</div>
+  </div>
+  <div class="card" id="c9">
+    <div class="hd"><b>#9</b>
+      <input class="rk" data-id="9" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p09-1.png">
+    <div class="meta">ICLR · single · 第 5 页</div>
+  </div>
+  <div class="card" id="c10">
+    <div class="hd"><b>#10</b>
+      <input class="rk" data-id="10" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p10-1.png">
+    <div class="meta">IEEE · single · 第 12 页</div>
+  </div>
+  <div class="card" id="c11">
+    <div class="hd"><b>#11</b>
+      <input class="rk" data-id="11" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p11-1.png">
+    <div class="meta">IEEE · single · 第 5 页</div>
+  </div>
+  <div class="card" id="c12">
+    <div class="hd"><b>#12</b>
+      <input class="rk" data-id="12" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p12-1.png">
+    <div class="meta">IEEE · single · 第 6 页</div>
+  </div>
+  <div class="card" id="c13">
+    <div class="hd"><b>#13</b>
+      <input class="rk" data-id="13" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p13-1.png">
+    <div class="meta">IEEE · single · 第 7 页</div>
+  </div>
+  <div class="card" id="c14">
+    <div class="hd"><b>#14</b>
+      <input class="rk" data-id="14" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p14-1.png">
+    <div class="meta">IJCV · single · 第 2 页</div>
+  </div>
+  <div class="card" id="c15">
+    <div class="hd"><b>#15</b>
+      <input class="rk" data-id="15" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p15-1.png">
+    <div class="meta">IEEE · single · 第 10 页</div>
+  </div>
+  <div class="card" id="c16">
+    <div class="hd"><b>#16</b>
+      <input class="rk" data-id="16" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p16-1.png">
+    <div class="meta">ECCV · single · 第 9 页</div>
+  </div>
+  <div class="card" id="c17">
+    <div class="hd"><b>#17</b>
+      <input class="rk" data-id="17" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p17-1.png">
+    <div class="meta">ECCV · single · 第 2 页</div>
+  </div>
+  <div class="card" id="c18">
+    <div class="hd"><b>#18</b>
+      <input class="rk" data-id="18" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p18-1.png">
+    <div class="meta">NeurIPS · double · 第 29 页</div>
+  </div>
+  <div class="card" id="c19">
+    <div class="hd"><b>#19</b>
+      <input class="rk" data-id="19" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p19-1.png">
+    <div class="meta">IJCV · single · 第 13 页</div>
+  </div>
+  <div class="card" id="c20">
+    <div class="hd"><b>#20</b>
+      <input class="rk" data-id="20" type="number" min="1" max="20"
+             placeholder="排名"> </div>
+    <img src="p20-1.png">
+    <div class="meta">NeurIPS · double · 第 23 页</div>
+  </div>
+</div>
+<button onclick="exp()">导出答案</button>
+<button onclick="show()">看看还缺哪些</button>
+<pre id="out"></pre>
+<script>
+function vals(){return [...document.querySelectorAll('.rk')].map(e=>({id:+e.dataset.id,rank:+e.value||0}))}
+function exp(){
+  const v=vals(), used=v.map(x=>x.rank).filter(r=>r>0);
+  const dup=used.filter((r,i)=>used.indexOf(r)!==i);
+  if(dup.length){alert('有重复排名：'+[...new Set(dup)].join(','));return}
+  const miss=v.filter(x=>!x.rank).map(x=>'#'+x.id);
+  const data={ranker:'user',ts:new Date().toISOString(),ranks:v};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='answers.json';a.click();
+  document.getElementById('out').textContent='已导出。未填：'+(miss.join(' ')||'无');
+}
+function show(){const v=vals();document.getElementById('out').textContent=
+  '未填：'+(v.filter(x=>!x.rank).map(x=>'#'+x.id).join(' ')||'无')}
+</script></html>
