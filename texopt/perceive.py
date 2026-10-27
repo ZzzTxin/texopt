@@ -345,12 +345,21 @@ def parse_source(src: str) -> dict:
 
 # ---------------------------------------------------------------- 日志解析
 
+# 2026-10-27（Step 2 检测器体检）：旧正则只认 "in paragraph at lines"，
+# 真实语料里另有 8.7% 的 overfull 写成 "detected at line N"（公式/盒子/表格）
+# 或 "in alignment at lines"（tabular），vbox 也有 4.6% 的 "detected at line N"。
+# 漏检率是逐篇统计出来的（200 篇原件），不是估计。
 OVERFULL_RE = re.compile(
-    r"Overfull \\hbox \(([^)]*)\) in paragraph at lines (\d+)(?:--(\d+))?")
+    r"Overfull \\hbox \(([^)]*)\) "
+    r"(?:(?:in paragraph|in alignment) at lines (\d+)(?:--(\d+))?"
+    r"|detected at line (\d+))")
 UNDERFULL_RE = re.compile(
-    r"Underfull \\hbox \(([^)]*)\) in paragraph at lines (\d+)(?:--(\d+))?")
+    r"Underfull \\hbox \(([^)]*)\) "
+    r"(?:(?:in paragraph|in alignment) at lines (\d+)(?:--(\d+))?"
+    r"|detected at line (\d+))")
 VBOX_RE = re.compile(
-    r"(Overfull|Underfull) \\vbox \(([^)]*)\) has occurred while \\output is active")
+    r"(Overfull|Underfull) \\vbox \(([^)]*)\) "
+    r"(?:has occurred while \\output is active|detected at line (\d+))")
 FLOAT_WARN_RE = re.compile(r"LaTeX Warning: ([^\n]*[Ff]loat[^\n]*)")
 
 
@@ -365,15 +374,18 @@ def parse_log(log: str) -> dict:
         "errors": [],
     }
     for m in OVERFULL_RE.finditer(log):
+        # group(2)/group(3)=区间行号；group(4)="detected at line" 的单行号
+        first = m.group(2) or m.group(4)
         issues["overfull"].append({
             "detail": m.group(1).strip(),
-            "lines": m.group(2) + ("--" + m.group(3) if m.group(3) else ""),
-            "line": int(m.group(2)),
+            "lines": (first + ("--" + m.group(3) if m.group(3) else "")),
+            "line": int(first),
         })
     for m in UNDERFULL_RE.finditer(log):
+        first = m.group(2) or m.group(4)
         issues["underfull"].append({
             "detail": m.group(1).strip(),
-            "lines": m.group(2) + ("--" + m.group(3) if m.group(3) else ""),
+            "lines": (first + ("--" + m.group(3) if m.group(3) else "")),
         })
     for m in VBOX_RE.finditer(log):
         issues["vbox"].append({"kind": m.group(1), "detail": m.group(2).strip()})

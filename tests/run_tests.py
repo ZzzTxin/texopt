@@ -1868,6 +1868,60 @@ def acceptance_tests():
     check("accept/compress-page-up-rejected", ok is False and "页数增加" in why, why)
 
 
+
+def stage9_tests():
+    """阶段 9（Step 2 检测器体检）：日志解析补漏 + band 口径 v2。
+
+    这两处都是**体检查出来的口径 bug**，不是权重调整：
+      * 日志：真实 200 篇里 8.7% 的 overfull 写成 "detected at line"、
+        1.5% 写成 "in alignment"，vbox 也有 4.6% 的 "detected at line" → 旧正则漏检；
+      * band：v1 要求「行墨迹 ≥ 50% 页宽」，40 dpi 下正文行只有 ~20% 页宽，
+        导致 94.7% 的正常页被判成 0 → v2 改成相对行宽 + 填满程度。
+    """
+    # ---- 日志：三种 overfull 形式 + 两种 vbox 形式
+    log = ("Overfull \\hbox (12.34pt too wide) in paragraph at lines 42--44\n"
+           "Overfull \\hbox (3.21pt too wide) detected at line 88\n"
+           "Overfull \\hbox (20.00pt too wide) in alignment at lines 10--20\n"
+           "Underfull \\hbox (badness 10000) in paragraph at lines 5--7\n"
+           "Overfull \\vbox (14.5pt too high) has occurred while \\output is active []\n"
+           "Overfull \\vbox (9.10pt too high) detected at line 314\n")
+    iss = P.parse_log(log)
+    check("stage9/log-overfull-forms", len(iss["overfull"]) == 3, str(iss["overfull"]))
+    check("stage9/log-overfull-line", iss["overfull"][1]["line"] == 88,
+          str(iss["overfull"][1]))
+    check("stage9/log-alignment-range",
+          iss["overfull"][2]["lines"] == "10--20", str(iss["overfull"][2]))
+    check("stage9/log-vbox-forms",
+          sum(1 for v in iss["vbox"] if v["kind"] == "Overfull") == 2, str(iss["vbox"]))
+
+    # ---- band v2：正文行（跨度 65% 页宽、填满 30%）不算实心块
+    def mk(path, w, h, draw):
+        px = bytearray([255]) * (w * h)
+        for (x0, x1, y0, y1, fill) in draw:
+            for y in range(y0, y1):
+                base = y * w
+                step = max(1, int(round(1.0 / max(fill, 0.02))))
+                for x in range(x0, x1, step):
+                    px[base + x] = 0
+        with open(path, "wb") as f:
+            f.write(b"P5\n%d %d\n255\n" % (w, h) + bytes(px))
+        return path
+
+    os.makedirs(OUT, exist_ok=True)
+    w, h = 200, 400
+    text_only = [(30, 160, y, y + 4, 0.30) for y in range(20, 380, 7)]
+    m = visual.page_metrics(mk(os.path.join(OUT, "band_text.pgm"), w, h, text_only))
+    check("stage9/band-text-not-block", m["band"] == 0.0, str(m["band"]))
+    with_fig = text_only + [(30, 160, 120, 220, 1.0)]
+    m2 = visual.page_metrics(mk(os.path.join(OUT, "band_fig.pgm"), w, h, with_fig))
+    check("stage9/band-solid-block", abs(m2["band"] - 100 / h) < 0.01, str(m2["band"]))
+    # 单栏窄页（页宽 400、文本只占 130）：v1 要求 ≥200px 墨迹永远达不到，v2 能认出
+    w2 = 400
+    col = [(40, 170, y, y + 4, 0.30) for y in range(20, 380, 7)] + [(40, 170, 150, 250, 1.0)]
+    m3 = visual.page_metrics(mk(os.path.join(OUT, "band_narrow.pgm"), w2, h, col))
+    check("stage9/band-relative-to-column", abs(m3["band"] - 100 / h) < 0.01, str(m3["band"]))
+    shutil.rmtree(OUT, ignore_errors=True)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1893,6 +1947,7 @@ def main():
     stage6_tests()
     stage7_tests()
     stage8_tests()
+    stage9_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。
