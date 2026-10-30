@@ -1,0 +1,174 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>缺陷严重度成对比较（15 题）</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:20px;background:#f6f6f7;color:#1d1d1f}
+ h1{font-size:18px;margin:0 0 6px} p.lead{font-size:13px;color:#555;max-width:900px}
+ .pair{background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;margin:14px 0}
+ .ph{font-size:12px;color:#888;margin-bottom:6px}
+ .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .card{background:#fafafa;border:1px solid #eee;border-radius:8px;padding:8px;text-align:center}
+ .card .nm{font-size:14px;font-weight:600;margin-bottom:4px}
+ .card .ds{font-size:12px;color:#555;margin-top:4px;text-align:left}
+ .opts{display:flex;gap:22px;margin-top:8px;font-size:14px}
+ .bar{position:sticky;top:0;background:#fff;border:1px solid #ddd;border-radius:8px;
+      padding:8px 10px;display:flex;align-items:center;gap:12px;z-index:9}
+ button{padding:7px 14px;font-size:14px} #prog,#msg{font-size:13px;color:#444}
+</style>
+<h1>缺陷严重度成对比较（Step 5-a）</h1>
+<p class="lead">假设这两种问题**同时出现在一篇论文里**，哪一个更影响你对该论文排版的第一印象？
+只比“看着多难受/多像没做完”，不要考虑“修起来难不难”、也不要想“哪个更常见”。
+真的分不出就选「差不多」。共 15 题。</p>
+<div class="bar"><button onclick="exp()">导出答案</button>
+  <span id="prog">已完成 0 / 15</span><span id="msg"></span></div>
+
+  <div class="pair" id="q1">
+    <div class="ph">第 1 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">行溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="114" y2="66" stroke="#c00"/></g></svg><div class="ds">正文一行超出右边线，文字压到版心外或撞到栏间</div></div><div class="card"><div class="nm">近空白页</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="14" x2="80" y2="14"/><line x1="12" y1="20" x2="60" y2="20"/></g></svg><div class="ds">整页几乎没有内容，只有一两行或一个孤立图表</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q1" value="left">左更严重</label>
+      <label><input type="radio" name="q1" value="right">右更严重</label>
+      <label><input type="radio" name="q1" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q2">
+    <div class="ph">第 2 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">行欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="30" y2="48"/><line x1="46" y1="48" x2="64" y2="48"/><line x1="80" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/></g></svg><div class="ds">一行字距被拉得很开，行内出现明显的白缝</div></div><div class="card"><div class="nm">内容孤立</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="30" y="30" width="60" height="26" fill="#dde"/><line x1="12" y1="76" x2="96" y2="76"/></g></svg><div class="ds">一个图表孤零零留在一页，周围大片空白，没有正文陪衬</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q2" value="left">左更严重</label>
+      <label><input type="radio" name="q2" value="right">右更严重</label>
+      <label><input type="radio" name="q2" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q3">
+    <div class="ph">第 3 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">页面垂直溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><line x1="12" y1="40" x2="96" y2="40"/><line x1="12" y1="46" x2="96" y2="46"/><line x1="12" y1="52" x2="96" y2="52"/><line x1="12" y1="58" x2="96" y2="58"/><line x1="12" y1="64" x2="96" y2="64"/><line x1="12" y1="70" x2="96" y2="70"/><line x1="12" y1="76" x2="96" y2="76"/><line x1="12" y1="82" x2="96" y2="82"/><line x1="10" y1="80" x2="110" y2="80" stroke="#c00"/></g></svg><div class="ds">整页内容超出版心下边界，页底文字压到页码区</div></div><div class="card"><div class="nm">强排图表（[H]）</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="50" height="26" fill="#dde"/><rect x="12" y="44" width="84" height="26" fill="#eee"/><line x1="12" y1="74" x2="96" y2="74"/></g></svg><div class="ds">图表用 [H] 强行钉在原位，导致页面被撑出大块空白或失衡</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q3" value="left">左更严重</label>
+      <label><input type="radio" name="q3" value="right">右更严重</label>
+      <label><input type="radio" name="q3" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q4">
+    <div class="ph">第 4 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">页面垂直欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><rect x="12" y="44" width="84" height="30" fill="#eee" stroke="none"/></g></svg><div class="ds">这一页没排满就断了，页底留下明显的大片空白</div></div><div class="card"><div class="nm">图片超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="12" width="88" height="34" fill="#ddd"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="96" y2="66"/><line x1="12" y1="72" x2="96" y2="72"/><line x1="104" y1="8" x2="104" y2="50" stroke="#c00"/></g></svg><div class="ds">图片宽度超出栏宽，右侧压出版心</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q4" value="left">左更严重</label>
+      <label><input type="radio" name="q4" value="right">右更严重</label>
+      <label><input type="radio" name="q4" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q5">
+    <div class="ph">第 5 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">浮动体错位</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="40" height="24" fill="#dde"/><line x1="12" y1="44" x2="96" y2="44"/><line x1="12" y1="50" x2="96" y2="50"/><line x1="12" y1="66" x2="60" y2="66" stroke="#c00"/><rect x="62" y="56" width="40" height="22" fill="#dde" stroke="#c00"/></g></svg><div class="ds">图表被挤到离正文引用处很远的位置（可能翻了好几页）</div></div><div class="card"><div class="nm">表格超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="10" y="14" width="104" height="40" fill="#f2f2f2"/><line x1="10.0" y1="14" x2="10.0" y2="54"/><line x1="27.3" y1="14" x2="27.3" y2="54"/><line x1="44.6" y1="14" x2="44.6" y2="54"/><line x1="61.900000000000006" y1="14" x2="61.900000000000006" y2="54"/><line x1="79.2" y1="14" x2="79.2" y2="54"/><line x1="96.5" y1="14" x2="96.5" y2="54"/><line x1="113.80000000000001" y1="14" x2="113.80000000000001" y2="54"/><line x1="10" y1="34" x2="114" y2="34"/><line x1="104" y1="8" x2="104" y2="60" stroke="#c00"/></g></svg><div class="ds">表格宽度超出栏宽，右侧被截断或挤进相邻栏</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q5" value="left">左更严重</label>
+      <label><input type="radio" name="q5" value="right">右更严重</label>
+      <label><input type="radio" name="q5" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q6">
+    <div class="ph">第 6 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">内容孤立</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="30" y="30" width="60" height="26" fill="#dde"/><line x1="12" y1="76" x2="96" y2="76"/></g></svg><div class="ds">一个图表孤零零留在一页，周围大片空白，没有正文陪衬</div></div><div class="card"><div class="nm">行溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="114" y2="66" stroke="#c00"/></g></svg><div class="ds">正文一行超出右边线，文字压到版心外或撞到栏间</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q6" value="left">左更严重</label>
+      <label><input type="radio" name="q6" value="right">右更严重</label>
+      <label><input type="radio" name="q6" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q7">
+    <div class="ph">第 7 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">强排图表（[H]）</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="50" height="26" fill="#dde"/><rect x="12" y="44" width="84" height="26" fill="#eee"/><line x1="12" y1="74" x2="96" y2="74"/></g></svg><div class="ds">图表用 [H] 强行钉在原位，导致页面被撑出大块空白或失衡</div></div><div class="card"><div class="nm">近空白页</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="14" x2="80" y2="14"/><line x1="12" y1="20" x2="60" y2="20"/></g></svg><div class="ds">整页几乎没有内容，只有一两行或一个孤立图表</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q7" value="left">左更严重</label>
+      <label><input type="radio" name="q7" value="right">右更严重</label>
+      <label><input type="radio" name="q7" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q8">
+    <div class="ph">第 8 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">图片超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="12" width="88" height="34" fill="#ddd"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="96" y2="66"/><line x1="12" y1="72" x2="96" y2="72"/><line x1="104" y1="8" x2="104" y2="50" stroke="#c00"/></g></svg><div class="ds">图片宽度超出栏宽，右侧压出版心</div></div><div class="card"><div class="nm">行欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="30" y2="48"/><line x1="46" y1="48" x2="64" y2="48"/><line x1="80" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/></g></svg><div class="ds">一行字距被拉得很开，行内出现明显的白缝</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q8" value="left">左更严重</label>
+      <label><input type="radio" name="q8" value="right">右更严重</label>
+      <label><input type="radio" name="q8" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q9">
+    <div class="ph">第 9 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">表格超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="10" y="14" width="104" height="40" fill="#f2f2f2"/><line x1="10.0" y1="14" x2="10.0" y2="54"/><line x1="27.3" y1="14" x2="27.3" y2="54"/><line x1="44.6" y1="14" x2="44.6" y2="54"/><line x1="61.900000000000006" y1="14" x2="61.900000000000006" y2="54"/><line x1="79.2" y1="14" x2="79.2" y2="54"/><line x1="96.5" y1="14" x2="96.5" y2="54"/><line x1="113.80000000000001" y1="14" x2="113.80000000000001" y2="54"/><line x1="10" y1="34" x2="114" y2="34"/><line x1="104" y1="8" x2="104" y2="60" stroke="#c00"/></g></svg><div class="ds">表格宽度超出栏宽，右侧被截断或挤进相邻栏</div></div><div class="card"><div class="nm">页面垂直溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><line x1="12" y1="40" x2="96" y2="40"/><line x1="12" y1="46" x2="96" y2="46"/><line x1="12" y1="52" x2="96" y2="52"/><line x1="12" y1="58" x2="96" y2="58"/><line x1="12" y1="64" x2="96" y2="64"/><line x1="12" y1="70" x2="96" y2="70"/><line x1="12" y1="76" x2="96" y2="76"/><line x1="12" y1="82" x2="96" y2="82"/><line x1="10" y1="80" x2="110" y2="80" stroke="#c00"/></g></svg><div class="ds">整页内容超出版心下边界，页底文字压到页码区</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q9" value="left">左更严重</label>
+      <label><input type="radio" name="q9" value="right">右更严重</label>
+      <label><input type="radio" name="q9" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q10">
+    <div class="ph">第 10 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">浮动体错位</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="40" height="24" fill="#dde"/><line x1="12" y1="44" x2="96" y2="44"/><line x1="12" y1="50" x2="96" y2="50"/><line x1="12" y1="66" x2="60" y2="66" stroke="#c00"/><rect x="62" y="56" width="40" height="22" fill="#dde" stroke="#c00"/></g></svg><div class="ds">图表被挤到离正文引用处很远的位置（可能翻了好几页）</div></div><div class="card"><div class="nm">页面垂直欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><rect x="12" y="44" width="84" height="30" fill="#eee" stroke="none"/></g></svg><div class="ds">这一页没排满就断了，页底留下明显的大片空白</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q10" value="left">左更严重</label>
+      <label><input type="radio" name="q10" value="right">右更严重</label>
+      <label><input type="radio" name="q10" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q11">
+    <div class="ph">第 11 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">强排图表（[H]）</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="50" height="26" fill="#dde"/><rect x="12" y="44" width="84" height="26" fill="#eee"/><line x1="12" y1="74" x2="96" y2="74"/></g></svg><div class="ds">图表用 [H] 强行钉在原位，导致页面被撑出大块空白或失衡</div></div><div class="card"><div class="nm">行溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="114" y2="66" stroke="#c00"/></g></svg><div class="ds">正文一行超出右边线，文字压到版心外或撞到栏间</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q11" value="left">左更严重</label>
+      <label><input type="radio" name="q11" value="right">右更严重</label>
+      <label><input type="radio" name="q11" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q12">
+    <div class="ph">第 12 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">内容孤立</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="30" y="30" width="60" height="26" fill="#dde"/><line x1="12" y1="76" x2="96" y2="76"/></g></svg><div class="ds">一个图表孤零零留在一页，周围大片空白，没有正文陪衬</div></div><div class="card"><div class="nm">图片超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="12" width="88" height="34" fill="#ddd"/><line x1="12" y1="54" x2="96" y2="54"/><line x1="12" y1="60" x2="96" y2="60"/><line x1="12" y1="66" x2="96" y2="66"/><line x1="12" y1="72" x2="96" y2="72"/><line x1="104" y1="8" x2="104" y2="50" stroke="#c00"/></g></svg><div class="ds">图片宽度超出栏宽，右侧压出版心</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q12" value="left">左更严重</label>
+      <label><input type="radio" name="q12" value="right">右更严重</label>
+      <label><input type="radio" name="q12" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q13">
+    <div class="ph">第 13 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">近空白页</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="14" x2="80" y2="14"/><line x1="12" y1="20" x2="60" y2="20"/></g></svg><div class="ds">整页几乎没有内容，只有一两行或一个孤立图表</div></div><div class="card"><div class="nm">表格超宽</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="10" y="14" width="104" height="40" fill="#f2f2f2"/><line x1="10.0" y1="14" x2="10.0" y2="54"/><line x1="27.3" y1="14" x2="27.3" y2="54"/><line x1="44.6" y1="14" x2="44.6" y2="54"/><line x1="61.900000000000006" y1="14" x2="61.900000000000006" y2="54"/><line x1="79.2" y1="14" x2="79.2" y2="54"/><line x1="96.5" y1="14" x2="96.5" y2="54"/><line x1="113.80000000000001" y1="14" x2="113.80000000000001" y2="54"/><line x1="10" y1="34" x2="114" y2="34"/><line x1="104" y1="8" x2="104" y2="60" stroke="#c00"/></g></svg><div class="ds">表格宽度超出栏宽，右侧被截断或挤进相邻栏</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q13" value="left">左更严重</label>
+      <label><input type="radio" name="q13" value="right">右更严重</label>
+      <label><input type="radio" name="q13" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q14">
+    <div class="ph">第 14 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">行欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="12" x2="96" y2="12"/><line x1="12" y1="18" x2="96" y2="18"/><line x1="12" y1="24" x2="96" y2="24"/><line x1="12" y1="30" x2="96" y2="30"/><line x1="12" y1="36" x2="96" y2="36"/><line x1="12" y1="42" x2="96" y2="42"/><line x1="12" y1="48" x2="30" y2="48"/><line x1="46" y1="48" x2="64" y2="48"/><line x1="80" y1="48" x2="96" y2="48"/><line x1="12" y1="54" x2="96" y2="54"/></g></svg><div class="ds">一行字距被拉得很开，行内出现明显的白缝</div></div><div class="card"><div class="nm">浮动体错位</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><rect x="12" y="10" width="40" height="24" fill="#dde"/><line x1="12" y1="44" x2="96" y2="44"/><line x1="12" y1="50" x2="96" y2="50"/><line x1="12" y1="66" x2="60" y2="66" stroke="#c00"/><rect x="62" y="56" width="40" height="22" fill="#dde" stroke="#c00"/></g></svg><div class="ds">图表被挤到离正文引用处很远的位置（可能翻了好几页）</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q14" value="left">左更严重</label>
+      <label><input type="radio" name="q14" value="right">右更严重</label>
+      <label><input type="radio" name="q14" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q15">
+    <div class="ph">第 15 题 / 共 15 题</div>
+    <div class="two"><div class="card"><div class="nm">页面垂直溢出</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><line x1="12" y1="40" x2="96" y2="40"/><line x1="12" y1="46" x2="96" y2="46"/><line x1="12" y1="52" x2="96" y2="52"/><line x1="12" y1="58" x2="96" y2="58"/><line x1="12" y1="64" x2="96" y2="64"/><line x1="12" y1="70" x2="96" y2="70"/><line x1="12" y1="76" x2="96" y2="76"/><line x1="12" y1="82" x2="96" y2="82"/><line x1="10" y1="80" x2="110" y2="80" stroke="#c00"/></g></svg><div class="ds">整页内容超出版心下边界，页底文字压到页码区</div></div><div class="card"><div class="nm">页面垂直欠满</div><svg viewBox="0 0 120 84" width="120" height="84"><rect x="6" y="4" width="108" height="76" fill="#fff" stroke="#bbb"/><g stroke="#333" stroke-width="1.6"><line x1="12" y1="10" x2="96" y2="10"/><line x1="12" y1="16" x2="96" y2="16"/><line x1="12" y1="22" x2="96" y2="22"/><line x1="12" y1="28" x2="96" y2="28"/><line x1="12" y1="34" x2="96" y2="34"/><rect x="12" y="44" width="84" height="30" fill="#eee" stroke="none"/></g></svg><div class="ds">这一页没排满就断了，页底留下明显的大片空白</div></div></div>
+    <div class="opts">
+      <label><input type="radio" name="q15" value="left">左更严重</label>
+      <label><input type="radio" name="q15" value="right">右更严重</label>
+      <label><input type="radio" name="q15" value="same">差不多</label>
+    </div>
+  </div>
+<script>
+const N=15;
+function picked(){const o={};for(let i=1;i<=N;i++){const e=document.querySelector('input[name="q'+i+'"]:checked');if(e)o[i]=e.value;}return o;}
+function upd(){document.getElementById('prog').textContent='已完成 '+Object.keys(picked()).length+' / '+N;}
+document.addEventListener('change',upd);upd();
+function exp(){
+  const o=picked(),miss=[];for(let i=1;i<=N;i++)if(!o[i])miss.push('#'+i);
+  if(miss.length){document.getElementById('msg').textContent='还缺：'+miss.join(' ');return;}
+  const data={ranker:'user',ts:new Date().toISOString(),
+    answers:Object.keys(o).map(k=>({pair:+k,choice:o[k]}))};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='answers.json';a.click();
+  document.getElementById('msg').textContent='已导出 answers.json';
+}
+</script></html>

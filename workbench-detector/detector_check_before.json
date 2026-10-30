@@ -1,0 +1,436 @@
+{
+  "synth": {
+    "cases": [
+      {
+        "name": "empty",
+        "desc": "全空白页",
+        "truth": {
+          "ink_ratio": 0.0,
+          "top_blank": 1.0,
+          "bottom_blank": 1.0,
+          "content_height": 0.0,
+          "max_gap": 1.0,
+          "left_blank": 1.0,
+          "right_blank": 1.0,
+          "top_bottom_ratio": 1.0,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0,
+          "top_blank": 1.0,
+          "bottom_blank": 1.0,
+          "content_height": 0.0,
+          "max_gap": 1.0,
+          "max_gap_at": 0.5,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 1.0,
+          "right_blank": 1.0,
+          "top_bottom_ratio": 1.0
+        },
+        "band_dir": null
+      },
+      {
+        "name": "text",
+        "desc": "正文页（页边距 17.6%/文本宽 65%）",
+        "truth": {
+          "ink_ratio": 0.08374773374773375,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.07478632478632478,
+          "content_height": 0.8611111111111112,
+          "max_gap": 0.07478632478632478,
+          "left_blank": 0.17575757575757575,
+          "right_blank": 0.17575757575757575,
+          "top_bottom_ratio": 1.013387297633873,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0837,
+          "top_blank": 0.064,
+          "bottom_blank": 0.075,
+          "content_height": 0.861,
+          "max_gap": 0.075,
+          "max_gap_at": 0.963,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.176,
+          "right_blank": 0.176,
+          "top_bottom_ratio": 1.013
+        },
+        "band_dir": null
+      },
+      {
+        "name": "text_fig",
+        "desc": "正文页 + 页高 38.5% 的实心图块",
+        "truth": {
+          "ink_ratio": 0.33785936285936286,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.07478632478632478,
+          "content_height": 0.8611111111111112,
+          "max_gap": 0.07478632478632478,
+          "left_blank": 0.12121212121212122,
+          "right_blank": 0.12121212121212122,
+          "top_bottom_ratio": 0.9081733406472847,
+          "band": 0.38461538461538464
+        },
+        "meas": {
+          "ink_ratio": 0.3379,
+          "top_blank": 0.064,
+          "bottom_blank": 0.075,
+          "content_height": 0.861,
+          "max_gap": 0.075,
+          "max_gap_at": 0.963,
+          "band": 0.385,
+          "band_at": 0.513,
+          "left_blank": 0.121,
+          "right_blank": 0.121,
+          "top_bottom_ratio": 0.908
+        },
+        "band_dir": null
+      },
+      {
+        "name": "text_short",
+        "desc": "正文提前结束（页底留白 25%）",
+        "truth": {
+          "ink_ratio": 0.06642061642061642,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.25427350427350426,
+          "content_height": 0.6816239316239316,
+          "max_gap": 0.25427350427350426,
+          "left_blank": 0.17575757575757575,
+          "right_blank": 0.17575757575757575,
+          "top_bottom_ratio": 1.7369263607257204,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0664,
+          "top_blank": 0.064,
+          "bottom_blank": 0.254,
+          "content_height": 0.682,
+          "max_gap": 0.254,
+          "max_gap_at": 0.873,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.176,
+          "right_blank": 0.176,
+          "top_bottom_ratio": 1.737
+        },
+        "band_dir": null
+      },
+      {
+        "name": "shift_right",
+        "desc": "正文整体右移（左留白 36%）",
+        "truth": {
+          "ink_ratio": 0.08149443149443149,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.07478632478632478,
+          "content_height": 0.8611111111111112,
+          "max_gap": 0.07478632478632478,
+          "left_blank": 0.36363636363636365,
+          "right_blank": 0.006060606060606061,
+          "top_bottom_ratio": 1.0134378499440089,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0815,
+          "top_blank": 0.064,
+          "bottom_blank": 0.075,
+          "content_height": 0.861,
+          "max_gap": 0.075,
+          "max_gap_at": 0.963,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.364,
+          "right_blank": 0.006,
+          "top_bottom_ratio": 1.013
+        },
+        "band_dir": null
+      },
+      {
+        "name": "two_col",
+        "desc": "双栏页（栏间空 9%）",
+        "truth": {
+          "ink_ratio": 0.09764309764309764,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.07478632478632478,
+          "content_height": 0.8611111111111112,
+          "max_gap": 0.07478632478632478,
+          "left_blank": 0.07575757575757576,
+          "right_blank": 0.07878787878787878,
+          "top_bottom_ratio": 1.0133511348464619,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0976,
+          "top_blank": 0.064,
+          "bottom_blank": 0.075,
+          "content_height": 0.861,
+          "max_gap": 0.075,
+          "max_gap_at": 0.963,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.076,
+          "right_blank": 0.079,
+          "top_bottom_ratio": 1.013
+        },
+        "band_dir": null
+      },
+      {
+        "name": "solid_full",
+        "desc": "整页实心大图",
+        "truth": {
+          "ink_ratio": 0.8036778036778037,
+          "top_blank": 0.042735042735042736,
+          "bottom_blank": 0.042735042735042736,
+          "content_height": 0.9145299145299145,
+          "max_gap": 0.042735042735042736,
+          "left_blank": 0.06060606060606061,
+          "right_blank": 0.06060606060606061,
+          "top_bottom_ratio": 1.0,
+          "band": 0.9145299145299145
+        },
+        "meas": {
+          "ink_ratio": 0.8037,
+          "top_blank": 0.043,
+          "bottom_blank": 0.043,
+          "content_height": 0.915,
+          "max_gap": 0.043,
+          "max_gap_at": 0.021,
+          "band": 0.915,
+          "band_at": 0.5,
+          "left_blank": 0.061,
+          "right_blank": 0.061,
+          "top_bottom_ratio": 1.0
+        },
+        "band_dir": null
+      },
+      {
+        "name": "top_heavy",
+        "desc": "只有上半页有正文",
+        "truth": {
+          "ink_ratio": 0.04187386687386688,
+          "top_blank": 0.0641025641025641,
+          "bottom_blank": 0.5085470085470085,
+          "content_height": 0.42735042735042733,
+          "max_gap": 0.5085470085470085,
+          "left_blank": 0.17575757575757575,
+          "right_blank": 0.17575757575757575,
+          "top_bottom_ratio": 6467.0,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0419,
+          "top_blank": 0.064,
+          "bottom_blank": 0.509,
+          "content_height": 0.427,
+          "max_gap": 0.509,
+          "max_gap_at": 0.746,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.176,
+          "right_blank": 0.176,
+          "top_bottom_ratio": 6467.0
+        },
+        "band_dir": null
+      },
+      {
+        "name": "near_empty",
+        "desc": "几乎空白（仅一行短句）",
+        "truth": {
+          "ink_ratio": 0.0005762755762755763,
+          "top_blank": 0.42735042735042733,
+          "bottom_blank": 0.5641025641025641,
+          "content_height": 0.008547008547008548,
+          "max_gap": 0.5641025641025641,
+          "left_blank": 0.30303030303030304,
+          "right_blank": 0.403030303030303,
+          "top_bottom_ratio": 89.0,
+          "band": 0.0
+        },
+        "meas": {
+          "ink_ratio": 0.0006,
+          "top_blank": 0.427,
+          "bottom_blank": 0.564,
+          "content_height": 0.009,
+          "max_gap": 0.564,
+          "max_gap_at": 0.718,
+          "band": 0.0,
+          "band_at": 0.0,
+          "left_blank": 0.303,
+          "right_blank": 0.403,
+          "top_bottom_ratio": 89.0
+        },
+        "band_dir": null
+      }
+    ],
+    "error": {
+      "ink_ratio": {
+        "max_abs_err": 0.0,
+        "mean_abs_err": 0.0,
+        "worst_case": "text",
+        "pass": true
+      },
+      "top_blank": {
+        "max_abs_err": 0.0004,
+        "mean_abs_err": 0.0001,
+        "worst_case": "near_empty",
+        "pass": true
+      },
+      "bottom_blank": {
+        "max_abs_err": 0.0005,
+        "mean_abs_err": 0.0002,
+        "worst_case": "top_heavy",
+        "pass": true
+      },
+      "content_height": {
+        "max_abs_err": 0.0005,
+        "mean_abs_err": 0.0002,
+        "worst_case": "solid_full",
+        "pass": true
+      },
+      "max_gap": {
+        "max_abs_err": 0.0005,
+        "mean_abs_err": 0.0002,
+        "worst_case": "top_heavy",
+        "pass": true
+      },
+      "left_blank": {
+        "max_abs_err": 0.0004,
+        "mean_abs_err": 0.0002,
+        "worst_case": "solid_full",
+        "pass": true
+      },
+      "right_blank": {
+        "max_abs_err": 0.0004,
+        "mean_abs_err": 0.0002,
+        "worst_case": "solid_full",
+        "pass": true
+      },
+      "top_bottom_ratio": {
+        "max_abs_err": 0.0004,
+        "mean_abs_err": 0.0002,
+        "worst_case": "shift_right",
+        "pass": true
+      },
+      "band": {
+        "max_abs_err": 0.0005,
+        "mean_abs_err": 0.0001,
+        "worst_case": "solid_full",
+        "pass": true
+      }
+    },
+    "pass": true
+  },
+  "verdict": [
+    {
+      "metric": "ink_ratio",
+      "verdict": "可用",
+      "synth_max_err": 0.0,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "top_blank",
+      "verdict": "可用",
+      "synth_max_err": 0.0004,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "bottom_blank",
+      "verdict": "可用",
+      "synth_max_err": 0.0005,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "content_height",
+      "verdict": "可用",
+      "synth_max_err": 0.0005,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "max_gap",
+      "verdict": "可用",
+      "synth_max_err": 0.0005,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "left_blank",
+      "verdict": "可用",
+      "synth_max_err": 0.0004,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "right_blank",
+      "verdict": "可用",
+      "synth_max_err": 0.0004,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "top_bottom_ratio",
+      "verdict": "可用",
+      "synth_max_err": 0.0004,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "band",
+      "verdict": "可用",
+      "synth_max_err": 0.0005,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "合成真值与语料分位均正常"
+      ]
+    },
+    {
+      "metric": "log:overfull/underfull/vbox/floatwarn",
+      "verdict": "需改口径",
+      "synth_max_err": null,
+      "cur_band": null,
+      "in_band_frac": null,
+      "suggest_band": null,
+      "reasons": [
+        "注入样例有漏检（见 log.unit）"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+<!doctype html><html lang="zh"><meta charset="utf-8">
+<title>排版成对比较（12 对）</title>
+<style>
+ body{font-family:system-ui,sans-serif;margin:20px;background:#f6f6f7;color:#1d1d1f}
+ h1{font-size:18px;margin:0 0 6px} p.lead{font-size:13px;color:#555;max-width:880px}
+ .pair{background:#fff;border:1px solid #ddd;border-radius:10px;padding:10px;margin:14px 0}
+ .ph{font-size:12px;color:#888;margin-bottom:6px}
+ .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .side{background:#fafafa;border:1px solid #eee;padding:4px}
+ .side img{width:100%;display:block}
+ .opts{display:flex;gap:22px;margin-top:8px;font-size:14px}
+ .bar{position:sticky;top:0;background:#fff;border:1px solid #ddd;border-radius:8px;
+      padding:8px 10px;display:flex;align-items:center;gap:12px;z-index:9}
+ button{padding:7px 14px;font-size:14px}
+ #prog{font-size:13px;color:#444}
+</style>
+<h1>排版成对比较（Step 2-c）</h1>
+<p class="lead">每题左右各一页，点一个即可：哪一页**排版**更好？只看版面——留白是否得当、
+有没有大片空洞、图文是否孤立或挤成一片、上下是否失衡。不用管内容质量、不用管颜色深浅、
+不用管页边距宽窄是否与别的会议不同。拿不准就选「差不多」，也算有效回答。</p>
+<div class="bar"><button onclick="exp()">导出答案</button>
+  <span id="prog">已完成 0 / 12</span><span id="msg"></span></div>
+
+  <div class="pair" id="q1">
+    <div class="ph">第 1 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q01b-1.png"></div>
+      <div class="side"><img src="q01a-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q1" value="left">左页更好</label>
+      <label><input type="radio" name="q1" value="right">右页更好</label>
+      <label><input type="radio" name="q1" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q2">
+    <div class="ph">第 2 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q02a-1.png"></div>
+      <div class="side"><img src="q02b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q2" value="left">左页更好</label>
+      <label><input type="radio" name="q2" value="right">右页更好</label>
+      <label><input type="radio" name="q2" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q3">
+    <div class="ph">第 3 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q03a-1.png"></div>
+      <div class="side"><img src="q03b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q3" value="left">左页更好</label>
+      <label><input type="radio" name="q3" value="right">右页更好</label>
+      <label><input type="radio" name="q3" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q4">
+    <div class="ph">第 4 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q04a-1.png"></div>
+      <div class="side"><img src="q04b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q4" value="left">左页更好</label>
+      <label><input type="radio" name="q4" value="right">右页更好</label>
+      <label><input type="radio" name="q4" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q5">
+    <div class="ph">第 5 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q05a-1.png"></div>
+      <div class="side"><img src="q05b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q5" value="left">左页更好</label>
+      <label><input type="radio" name="q5" value="right">右页更好</label>
+      <label><input type="radio" name="q5" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q6">
+    <div class="ph">第 6 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q06a-1.png"></div>
+      <div class="side"><img src="q06b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q6" value="left">左页更好</label>
+      <label><input type="radio" name="q6" value="right">右页更好</label>
+      <label><input type="radio" name="q6" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q7">
+    <div class="ph">第 7 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q07b-1.png"></div>
+      <div class="side"><img src="q07a-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q7" value="left">左页更好</label>
+      <label><input type="radio" name="q7" value="right">右页更好</label>
+      <label><input type="radio" name="q7" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q8">
+    <div class="ph">第 8 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q08b-1.png"></div>
+      <div class="side"><img src="q08a-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q8" value="left">左页更好</label>
+      <label><input type="radio" name="q8" value="right">右页更好</label>
+      <label><input type="radio" name="q8" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q9">
+    <div class="ph">第 9 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q09a-1.png"></div>
+      <div class="side"><img src="q09b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q9" value="left">左页更好</label>
+      <label><input type="radio" name="q9" value="right">右页更好</label>
+      <label><input type="radio" name="q9" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q10">
+    <div class="ph">第 10 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q10a-1.png"></div>
+      <div class="side"><img src="q10b-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q10" value="left">左页更好</label>
+      <label><input type="radio" name="q10" value="right">右页更好</label>
+      <label><input type="radio" name="q10" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q11">
+    <div class="ph">第 11 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q11b-1.png"></div>
+      <div class="side"><img src="q11a-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q11" value="left">左页更好</label>
+      <label><input type="radio" name="q11" value="right">右页更好</label>
+      <label><input type="radio" name="q11" value="same">差不多</label>
+    </div>
+  </div>
+  <div class="pair" id="q12">
+    <div class="ph">第 12 对 / 共 12 对</div>
+    <div class="two">
+      <div class="side"><img src="q12b-1.png"></div>
+      <div class="side"><img src="q12a-1.png"></div>
+    </div>
+    <div class="opts">
+      <label><input type="radio" name="q12" value="left">左页更好</label>
+      <label><input type="radio" name="q12" value="right">右页更好</label>
+      <label><input type="radio" name="q12" value="same">差不多</label>
+    </div>
+  </div>
+<script>
+const N=12;
+function picked(){const o={};for(let i=1;i<=N;i++){const e=document.querySelector('input[name="q'+i+'"]:checked');if(e)o[i]=e.value;}return o;}
+function upd(){document.getElementById('prog').textContent='已完成 '+Object.keys(picked()).length+' / '+N;}
+document.addEventListener('change',upd);upd();
+function exp(){
+  const o=picked(),miss=[];for(let i=1;i<=N;i++)if(!o[i])miss.push('#'+i);
+  if(miss.length){document.getElementById('msg').textContent='还缺：'+miss.join(' ');return;}
+  const data={ranker:'user',ts:new Date().toISOString(),
+    answers:Object.keys(o).map(k=>({pair:+k,choice:o[k]}))};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='answers.json';a.click();
+  document.getElementById('msg').textContent='已导出 answers.json';
+}
+</script></html>
