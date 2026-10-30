@@ -355,7 +355,7 @@ def measure_pipeline(tex_path: str, outdir: str, req, *, src_override: str | Non
     return {"status": res.get("status"), "a": res.get("a"), "l": res.get("l"),
             "a_before": res.get("a_before"), "pages": res.get("pages"),
             "pages_before": res.get("pages_before"),
-            "total": res.get("total"), "total_before": res.get("total_before"),
+            "m1": res.get("m1"), "m2": res.get("m2"),
             "accepted": res.get("accepted"), "attempts": res.get("attempts"),
             "a_profile": sh.get("a_profile"), "d2_p90": sh.get("d2_p90"),
             "n_anomalous": sh.get("n_anomalous_pages"),

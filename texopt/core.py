@@ -2,8 +2,12 @@
 """决策 + 主循环（整体排版优化闭环核心）。
 
 主线（2026-09-09 用户重对齐）：texopt 优化的是整篇论文的排版质量，
-不是『压进 N 页』。目标函数为全局量化：
-    total = L_fail * 1e6 + A + I
+不是『压进 N 页』。2026-10-30 起目标分成**并行的两条线**（不再相加）：
+    gate（一票否决）→ if 未通过: 不打分、直接退出（BLOCKED_GATE / 定向修复）
+    model1: M1 = ρ·P + I          （缺陷 + 干预代价）
+    model2: M2 = A_soft + λ·A_profile（审美；λ=0 时即 A_soft）
+    验收顺序：严格字典序 (gate, M1, M2)，M2 只在 M1 完全持平时作 tie-break
+  注：2026-10-30 之前的版本用 total = 1e6·|gate| + M1 + M2，两线相加；已废弃。
   * L（基础逻辑）：编译通过/渲染 PDF/正文零改动/页数限制（若要求）
                  + 硬性规范（要求指定的字号、页边距、公式居中）
   * A（审美量化）：正文溢出、页面垂直质量(vbox，孤行寡行代理)、
@@ -36,6 +40,16 @@ from .requirements import Requirement
 # 原因：会议模式下「页数」与「边距/字号」互相牵制——页数降下来后，
 # 之前被回滚的边距修复才能成立；审美/质量类动作保持一次性语义。
 RETRYABLE_KEYS = {"margin_spec", "font_spec", "fleqn"}
+# 任务1（2026-10-30）：gate 未过时**只允许**这些动作参与定向修复。
+# 两类：① 直接改 gate 项的（字号/边距/fleqn/目录/页眉）；
+#      ② 纯「空间类」压页动作（改版式不改内容）——压页是 gate 里最常需要修的一项，
+#         只用前一类会让「缩图/删手动分页/收行距」这些合法手段失效。
+GATE_REPAIR_KEYS = {"fleqn", "font_spec", "font_cut", "font_back",
+                    "margin_spec", "margin_cut", "margin_back",
+                    "toc", "header",
+                    "fig_norm", "fig_size", "pagebreak_rm", "vspace_rm",
+                    "list_spacing", "parskip", "heading_size", "table_width",
+                    "multicols"}
 
 
 def work_tex_path(original_tex: str, outdir: str) -> str:
@@ -163,7 +177,6 @@ class Optimizer:
             "p": cur.get("p") if cur else None,
             "m1": cur.get("m1") if cur else None,
             "m2": cur.get("m2") if cur else None,
-            "total": cur["total"] if cur else None,
             "pages": per.pages if per else None,
             "accepted": bool(accepted), "compile_ok": bool(compile_ok),
             "detail": detail,
@@ -423,8 +436,8 @@ class Optimizer:
                 self.accepted += 1
                 self._log(f"  [接受] {note_ok}（{why}）")
                 self._log(f"         gate={len(ncur['l'])} P={ncur['p']} I={ncur['i']} "
-                          f"M1={ncur['m1']} M2={ncur['m2']} "
-                          f"总分 {cur['total']} -> {ncur['total']}"
+                          f"M1 {cur['m1']} -> {ncur['m1']} | "
+                          f"M2 {cur['m2']} -> {ncur['m2']}"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(note_ok, nper, ncur, True, True, "rule", why)
                 self._state = (nper, ncur)
@@ -438,20 +451,80 @@ class Optimizer:
             self._record(note_ok, nper, ncur, False, nper.ok, "rule", why)
         return False
 
-    def _accept(self, ncur: dict, cur: dict, n_pages, c_pages, cur_lv):
-        """验收：全局目标是否改善。返回 (是否接受, 理由)。
+    # ------------------------------------------------------- gate 定向修复
+    def _gate_repair(self, per: P.Perception, cur: dict):
+        """gate 可修复项（页数/字号/边距/fleqn/目录/页眉）的定向修复。
 
-        优先级（lexicographic，2026-10-14 v3 结构）：
-          0. **底层逻辑（gate）**：违规数少的更好；
+        2026-10-30 任务1：gate 未过时**不打分**——这里只按 gate 违规数（+页数）
+        判定，不做任何 model1/model2 优化，也不因为审美变好而保留动作。
+        动作面限于 GATE_REPAIR_KEYS（改 gate 项 + 纯空间类压页动作）。
+        接受条件：gate 违规数减少，或仍在压页且页数严格减少（同样多违规时
+        页数下降是压页进展，允许继续）。
+        轮数上限 gate_repair_rounds（默认 12），防止在 gate 层空转。
+        """
+        limit = int(getattr(self.req, "gate_repair_rounds", 12) or 12)
+        rounds = 0
+        while cur["l"] and rounds < limit and self.iter < self.req.max_iterations:
+            sig = f"{len(cur['l'])}|{per.pages}"
+            src = self._read()
+            progressed = False
+            for key, apply_fn, note in self._candidates(per, cur["l"]):
+                if key not in GATE_REPAIR_KEYS:
+                    continue
+                if rounds >= limit:
+                    break
+                rounds += 1
+                stamp = f"{key}@{sig}" if key in RETRYABLE_KEYS else key
+                out = apply_fn(src)
+                if out is None or not out[1]:
+                    self._blocked.add(stamp)
+                    continue
+                new_src, note_ok = out[0], out[2]
+                self.iter += 1
+                self.attempts += 1
+                self._write(new_src)
+                nper = P.perceive(self.work_tex, self.req)
+                if not nper.ok:
+                    self._write(src)
+                    self._blocked.add(stamp)
+                    self._log(f"  [gate·回滚] {note_ok}（编译失败："
+                              f"{nper.compile.first_error}）")
+                    continue
+                ncur = S.total_score(nper, self.req, self.orig_per)
+                fewer = len(ncur["l"]) < len(cur["l"])
+                same_but_fewer_pages = (
+                    len(ncur["l"]) == len(cur["l"]) and nper.pages is not None
+                    and per.pages is not None and nper.pages < per.pages)
+                if fewer or same_but_fewer_pages:
+                    self.accepted += 1
+                    self._log(f"  [gate·接受] {note_ok}"
+                              f"（gate {len(cur['l'])}→{len(ncur['l'])}，"
+                              f"{per.pages}→{nper.pages} 页）")
+                    self._record(note_ok, nper, ncur, True, True, "rule",
+                                 "gate 定向修复")
+                    per, cur = nper, ncur
+                    progressed = True
+                    break
+                self._write(src)
+                self._blocked.add(stamp)
+                self._log(f"  [gate·回滚] {note_ok}（gate 未改善）")
+                self._record(note_ok, nper, ncur, False, nper.ok, "rule",
+                             "gate 未改善")
+            if not progressed:
+                break
+        return per, cur
+
+    def _accept(self, ncur: dict, cur: dict, n_pages, c_pages, cur_lv):
+        """验收：严格字典序 **(gate, M1, M2)**。返回 (是否接受, 理由)。
+
+        2026-10-30（任务2「两线分离」）：model1 与 model2 是**并行两条线**，
+        不相加、不互相补偿。判定顺序：
+          0. gate 未过 → 不接受（gate 未过时根本不进打分，见 run()）；
+             gate 违规数减少 > 相同 > 增加；
           1. 压页阶段例外：双方都有页数违规时，页数不增即保留
              （省页可能需连续多档才兑现，避免丢失组合收益）；
-          2. **model1（M1 = ρ·P + I）严格改善即接受** —— 缺陷与干预代价
-             已在同一式子里按秤定汇率换算，不再需要旧版「A 优先」的特例
-             （阶段 8 E1 的「[H]→[tbp]」案例现在由 M1 自然接受）；
-          3. M1 变差但**总目标 M = M1 + M2 仍改善**→ 接受
-             （model2 的审美收益补偿 model1 的小幅回退；这是「两项综合衡量」
-             的体现，例如大图缩小会略增干预代价，但视觉占比显著变好）；
-          4. 否则拒绝。
+          2. **M1 严格改善 → 接受；M1 变差 → 拒绝**（不再被 M2 的收益补偿）；
+          3. M1 完全持平 → M2 严格改善才接受（tie-break），否则拒绝。
         """
         n_lv, c_lv = ncur["l"], cur["l"]
         if len(n_lv) < len(c_lv):
@@ -464,6 +537,9 @@ class Optimizer:
             if n_pages is not None and n_pages <= (c_pages or 1 << 30):
                 return True, "压页阶段：页数不增"
             return False, "压页阶段：页数增加"
+        if ncur.get("scored") is False or n_lv:
+            # 一票否决：gate 未过 = 不进打分（model1/model2 数值仅供诊断）
+            return False, "gate 未通过：不进入打分，不回写"
         nm1, cm1 = ncur.get("m1"), cur.get("m1")
         nm2, cm2 = ncur.get("m2"), cur.get("m2")
         if nm1 is not None and cm1 is not None:
@@ -472,27 +548,15 @@ class Optimizer:
                               "代价 %.3g→%.3g）"
                               % (cm1, nm1, cur.get("p", 0.0), ncur.get("p", 0.0),
                                  cur.get("i", 0.0), ncur.get("i", 0.0)))
-            if nm1 <= cm1 + 1e-9:
-                if nm2 is not None and cm2 is not None and nm2 < cm2 - 1e-9:
-                    return True, ("model1 持平，model2（审美）改善 %.4g -> %.4g"
-                                  % (cm2, nm2))
-                return False, "model1 与 model2 均无改善"
-            if nm2 is not None and cm2 is not None \
-                    and (nm1 + nm2) < (cm1 + cm2) - 1e-9:
-                return True, ("总目标改善（M1 %.4g→%.4g 升，M2 %.4g→%.4g 降）"
-                              % (cm1, nm1, cm2, nm2))
-            return False, ("model1 变差且总目标未改善（M1 %.4g→%.4g，"
-                           "M2 %.4g→%.4g）"
-                           % (cm1, nm1, cm2 if cm2 is not None else 0.0,
-                              nm2 if nm2 is not None else 0.0))
-        # 兼容回退（旧评分字典）：总分口径
-        if ncur["total"] < cur["total"] - 1e-9:
-            return True, ("总分改善 %.4g -> %.4g" % (cur["total"], ncur["total"]))
-        return False, "model1 与总分均无改善"
-        # 兼容回退（旧评分字典）：总分口径
-        if ncur["total"] < cur["total"] - 1e-9:
-            return True, ("总分改善 %.4g -> %.4g" % (cur["total"], ncur["total"]))
-        return False, "model1 与总分均无改善"
+            if nm1 > cm1 + 1e-9:
+                return False, ("model1 变差 %.4g -> %.4g（两线分离："
+                               "model2 的改善不再补偿 model1 的回退）"
+                               % (cm1, nm1))
+            if nm2 is not None and cm2 is not None and nm2 < cm2 - 1e-9:
+                return True, ("model1 持平，model2（审美）改善 %.4g -> %.4g"
+                              % (cm2, nm2))
+            return False, "model1 与 model2 均无改善"
+        return False, "缺少 model1 分值：拒绝（两线分离后不再有总分兜底）"
 
     # ------------------------------------------------------------- 主入口
     def run(self) -> dict:
@@ -528,7 +592,7 @@ class Optimizer:
         self.orig_per = _static_perception(self.original)  # I 基准（静态解析，不编译）
         cur = S.total_score(per, self.req, self.orig_per)
         self.baseline = {"a": cur["a"], "i": cur["i"], "pages": per.pages,
-                         "total": cur["total"], "l": len(cur["l"]),
+                         "l": len(cur["l"]),
                          "p": cur["p"], "m1": cur["m1"], "m2": cur["m2"]}
         self.baseline["aesthetic"] = self._shadow_eval(per, cur, "baseline")   # 阶段 4/6 影子基线
 
@@ -537,13 +601,31 @@ class Optimizer:
                   f"边距 {per.source['geometry_margin_mm']:g}mm"
                   + ("（续跑已有工作副本）" if self.resume else ""))
         self._log(f"要求：模板/规格 -> {self._req_summary()}")
+        # ---- 任务1（2026-10-30）：gate 一票否决 → 不打分、直接退出 + 建议 ----
+        if cur["l"]:
+            self._log(f"gate 未通过（{len(cur['l'])} 项）：不进入 model1/model2 打分")
+            for d in cur["gate"]:
+                self._log(f"  [gate/{d['code']}] {d['text']}")
+                self._log(f"        建议：{d['suggestion']}")
+            unrep = [d for d in cur["gate"] if not d["repairable"]]
+            if unrep:
+                self._log("  → 含不可由排版动作修复的项：直接退出（BLOCKED_GATE）")
+                return self.finalize("BLOCKED_GATE", per, cur)
+            # 全部可修：只跑 gate 定向修复（不打分、不做审美优化）
+            self._log("  → 全部可由排版动作修复：只跑 gate 定向修复，不打分")
+            n_before = self.attempts
+            per, cur = self._gate_repair(per, cur)
+            if self.attempts == n_before:
+                self._log("  → 没有可用的 gate 修复动作（未授权版心调整或无可压空间）")
+            if cur["l"]:
+                self._log(f"gate 定向修复后仍未通过（{len(cur['l'])} 项）："
+                          "退出（BLOCKED_GATE）")
+                return self.finalize("BLOCKED_GATE", per, cur)
+
         self._log(f"初始全局评分：gate={len(cur['l'])} P={cur['p']} I={cur['i']} "
-                  f"M1={cur['m1']} | A_soft={cur['a']} M2={cur['m2']} "
-                  f"(总分 {cur['total']})")
-        for v in cur["l"]:
-            self._log(f"  [底层逻辑] {v}")
-        if not cur["l"]:
-            self._log("  底层逻辑全过（编译 ✓ 渲染 ✓ 页数 ✓ 图表保真 ✓ 硬性规范 ✓）")
+                  f"M1={cur['m1']} | A_soft={cur['a']} M2={cur['m2']}"
+                  "（两线分离：不合并总分）")
+        self._log("  底层逻辑全过（编译 ✓ 渲染 ✓ 页数 ✓ 图表保真 ✓ 硬性规范 ✓）")
 
         # 连续无改善轮数达标才停（避免“一轮没吃到就收敛”）
         stall = 0
@@ -624,9 +706,9 @@ class Optimizer:
             if accepted:
                 self.accepted += 1
                 self._log(f"  [接受·LLM] {label}  ->  gate={len(ncur['l'])} "
-                          f"P={ncur['p']} I={ncur['i']} M1={ncur['m1']} "
-                          f"M2={ncur['m2']} "
-                          f"({cur['total']} -> {ncur['total']})"
+                          f"P={ncur['p']} I={ncur['i']} "
+                          f"M1 {cur['m1']} -> {ncur['m1']} | "
+                          f"M2 {cur['m2']} -> {ncur['m2']}"
                           + (f" | {nper.pages} 页" if nper.pages else ""))
                 self._record(f"{label} | {tag}", nper, ncur, True, True,
                              "llm", res["note"])
@@ -634,7 +716,8 @@ class Optimizer:
                                           "note": res["note"],
                                           "l": ncur["l"], "a": ncur["a"],
                                           "i": ncur["i"],
-                                          "total": ncur["total"]})
+                                          "m1": ncur["m1"],
+                                          "m2": ncur["m2"]})
                 per, cur = nper, ncur
             else:
                 self._write(src)
@@ -786,7 +869,9 @@ class Optimizer:
           NO_IMPROVEMENT   L 达标、有可动候选，但没有任何一个能改善版面
                            —— 不伪造“优化成功”（未修改任何内容）
           CONVERGED        L 达标且根本没有可动候选（文档本就没问题）
-          EXHAUSTED        L 仍有违规（通常超页）且排版手段穷尽
+          EXHAUSTED        gate 可修复项已用尽排版手段仍未通过（曾尝试修复）
+          BLOCKED_GATE     gate 一票否决：未进入打分，直接退出 + 修改建议
+                           （不可修复项，或可修复项修复失败）
           FAILED           基线无法编译 / 环境缺失
         关键：不再“L=0 就 CONVERGED”——L 与 A 分开看，A 还有可修项
         却无候选可动时，会如实报 NO_IMPROVEMENT 而不是 CONVERGED。
@@ -841,7 +926,12 @@ class Optimizer:
                 else {"enabled": False},
                 "unused": getattr(self.req, "unused_template_parts", None) or [],
             }
+        gate_detail = cur.get("gate") or []
         return {"status": status, "l": cur["l"], "a": cur["a"], "i": cur["i"],
+                "scored": bool(cur.get("scored", not cur["l"])),
+                "gate": gate_detail,
+                "gate_suggestions": [f"{d['code']}: {d['suggestion']}"
+                                     for d in gate_detail],
                 "p": cur.get("p"), "m1": cur.get("m1"), "m2": cur.get("m2"),
                 "pages": per.pages, "tex": self.work_tex,
                 "pdf": per.compile.pdf_path if per and per.ok else None,
@@ -850,7 +940,7 @@ class Optimizer:
                 "visual_defects": list(self._defects),
                 "ink_mean": (per.visual or {}).get("ink_mean") if per else None,
                 "a_before": base["a"], "pages_before": base["pages"],
-                "total": cur["total"], "total_before": base.get("total"),
+                "m1_before": base.get("m1"), "m2_before": base.get("m2"),
                 "conference": conf,
                 "aesthetic_shadow": cur.get("aesthetic_shadow"),
                 # 阶段 8：退化态（**修复前**）的影子快照 —— E1 要看退化本身对 A_profile 的影响，
@@ -869,7 +959,9 @@ class Optimizer:
         仍有明显视觉缺陷时，如实报 NEEDS_REVIEW，而不是 DONE。
         """
         if cur["l"]:
-            return "EXHAUSTED"
+            # 任务1：gate 未过 = 不进打分。尝试过 gate 定向修复但仍不通过 → EXHAUSTED；
+            # 从未尝试（不可修复项）→ BLOCKED_GATE。
+            return "EXHAUSTED" if self.attempts else "BLOCKED_GATE"
         defects = self._defects if defects is None else defects
         if any(d.get("severity") == "high" for d in (defects or [])):
             return "NEEDS_REVIEW"       # 仍存在明显视觉缺陷（已尽力/或需人工）
@@ -993,9 +1085,14 @@ class Optimizer:
             "pages": per.pages if per else None,
             "scores": {
                 "l_violations": cur["l"] if cur else [],
+                "gate_detail": (cur or {}).get("gate"),
+                "scored": bool((cur or {}).get("scored", not (cur or {}).get("l"))),
                 "a": cur["a"] if cur else None,
                 "i": cur["i"] if cur else None,
-                "total": cur["total"] if cur else None,
+                "p": cur["p"] if cur else None,
+                # 两线分离（2026-10-30）：M1 / M2 并列，不再有总分
+                "m1": cur["m1"] if cur else None,
+                "m2": cur["m2"] if cur else None,
             },
             "aesthetic_profile": (cur or {}).get("a_profile_shadow"),
             "aesthetic_shadow": (cur or {}).get("aesthetic_shadow"),
@@ -1036,8 +1133,12 @@ class Optimizer:
                         "请人工/后续阶段复核（见下「视觉版面质量」与"
                         "「仍需人工处理的问题」）")
         elif status == "EXHAUSTED":
-            headline = ("⚠ EXHAUSTED：纯排版手段已穷尽，仍缺 L 硬约束"
-                        f"（L 违规 {len(cur['l'])} 项）")
+            headline = ("⚠ EXHAUSTED：gate 可修复项已用尽排版手段仍未通过"
+                        f"（gate 违规 {len(cur['l'])} 项），未进入打分")
+        elif status == "BLOCKED_GATE":
+            headline = ("⛔ BLOCKED_GATE：底层逻辑门未通过（一票否决）——"
+                        f"gate 违规 {len(cur['l'])} 项，**未进入 model1/model2 "
+                        "打分**，直接退出并给出修改建议")
         else:
             headline = f"{status}"
         L = ["# texopt 论文排版优化报告\n",
@@ -1048,8 +1149,14 @@ class Optimizer:
               f"判定口径：{S.page_status(per, r)['label']}）"
               if per and per.ok and getattr(per, "content_pages_upper", None)
               else f"- 最终页数：{per.pages if per and per.ok else '—'}"),
-             f"- 全局评分：L 违规 {len(cur['l'])} 项 | A（审美）= {cur['a']} | "
-             f"I（干预代价）= {cur['i']}",
+             ("- gate：通过（进入打分）" if not cur["l"]
+              else f"- gate：{len(cur['l'])} 项未通过 → **未进入打分**"),
+             ("- model1：M1 = ρ·P + I = "
+              f"{cur['m1']}（P 缺陷 {cur['p']}，I 干预代价 {cur['i']}）"
+              if not cur["l"] else "- model1：未计算（gate 未通过，不产生 M1）"),
+             ("- model2：M2 = "
+              f"{cur['m2']}（A_soft = {cur['a']}）　｜ 两线并行、不相加"
+              if not cur["l"] else "- model2：未计算（gate 未通过，不产生 M2）"),
              f"- 结果：**{status}**",
              f"- {headline}",
              ""]
@@ -1090,8 +1197,8 @@ class Optimizer:
         # 迭代轨迹
         L += ["## 迭代轨迹（每步 = 整篇重编译后全局重评）\n",
               "（来源 rule = 确定性闭环；llm = 模型在环提案，均过同一验收函数）\n",
-              "| # | 来源 | 动作 | L | A | I | 总分 | 结果 |",
-              "|---|------|------|---|---|---|------|------|"]
+              "| # | 来源 | 动作 | gate | P | I | M1 | M2 | 结果 |",
+              "|---|------|------|---|---|---|---|----|------|"]
         for rec in self.records:
             mark = "✅接受" if rec["accepted"] else "↩回滚"
             src = rec.get("source", "rule")
@@ -1099,8 +1206,8 @@ class Optimizer:
             if not rec["accepted"] and rec.get("detail"):
                 act += f"（{rec['detail'][:40]}）"
             L.append(f"| {rec['iteration']} | {src} | {act} | "
-                     f"{len(rec['l'])} | {rec['a']} | {rec['i']} | "
-                     f"{rec['total']} | {mark} |")
+                     f"{len(rec['l'])} | {rec.get('p')} | {rec['i']} | "
+                     f"{rec.get('m1')} | {rec.get('m2')} | {mark} |")
         L.append("")
         if self._blocked or self._llm_failed:
             L += ["### 被阻止/已失败的动作（防重复试错）\n"]
@@ -1146,6 +1253,25 @@ class Optimizer:
                          "源代码+日志+PDF+图像）；本版以 vbox 信号 + 断行质量宏"
                          "（club/widow penalty）+ \\raggedbottom 作为该维度的代理。")
                 L.append("")
+
+        if status == "BLOCKED_GATE":
+            L += ["## 修改建议（gate 可修复性 / 人工动作）\n"]
+            for d in (cur.get("gate") or []):
+                tag = "可排版修复" if d.get("repairable") else "需人工/源码修改"
+                L.append(f"- [{d['code']}·{tag}] {d['text']}")
+                L.append(f"  - 建议：{d['suggestion']}")
+            L.append("")
+            if self.attempts:
+                L.append(f"> 说明：gate 是**一票否决**的可行性门，未通过时不产生 "
+                         f"model1/model2 分值，也不做任何审美优化。闭环已先尝试"
+                         f"{self.attempts} 个纯排版修复动作（改 gate 项 + 空间类"
+                         f"压页），仍未通过才在此退出。")
+            else:
+                L.append("> 说明：gate 是**一票否决**的可行性门，未通过时不产生 "
+                         "model1/model2 分值，也不做任何审美优化。本次**没有任何"
+                         "可用的纯排版修复动作**（例如未授权版心调整、或没有可压的"
+                         "空间手段），因此直接退出并给出建议。")
+            L.append("")
 
         if status == "EXHAUSTED":
             jp = S.judge_pages(per, r) if per else None
@@ -1301,7 +1427,9 @@ def verify(work_tex: str, orig_tex: str, req: Requirement,
         "status": "OK" if ok else "L_VIOLATION",
         "ok": ok, "pages": per.pages,
         "l": lv, "a": cur["a"], "i": cur["i"],
-        "total": round(S.L_PENALTY * len(lv) + cur["a"] + cur["i"], 3),
+        "scored": bool(cur.get("scored", not lv)),
+        "m1": cur.get("m1"), "m2": cur.get("m2"),
+        "gate": cur.get("gate"),
         "content_preserved": S.body_unchanged(orig_src, per.src, req),
         "semantic": sem,
         "advisory": adv,

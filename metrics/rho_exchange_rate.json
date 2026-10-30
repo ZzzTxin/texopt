@@ -1,0 +1,398 @@
+{
+  "schema": "texopt.rho_exchange_rate.v1",
+  "definition": "等边际收益：ρ = ΔI / (−ΔP)",
+  "decision": {
+    "ok": true,
+    "rho_raw": 0.3408,
+    "rho_applied": 0.341,
+    "clipped": false,
+    "n": 6,
+    "n_free_excluded": 37,
+    "p25": 0.3039,
+    "p75": 0.3833,
+    "basis": "paid",
+    "note": "ρ = 实际付出的干预代价 / 修掉的缺陷（等边际收益）；只在 ΔI>0 的动作上取汇率（免费修复不携带汇率信息），按每次**尝试**动作统计（不因 ρ 的选择效应而失真）"
+  },
+  "per_doc": [
+    {
+      "doc": "examples/issues.tex",
+      "status": "DONE",
+      "n_actions": 6,
+      "n_repairs": 5,
+      "rho_median": 0.8,
+      "rows": [
+        {
+          "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+          "removal": 2.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "1 处浮动体位置参数不稳定（figure[H]）规范为 [tbp]",
+          "removal": 0.5,
+          "cost": 0.4,
+          "rho": 0.8,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "1 处裸 $$..$$ 改为 \\[..\\]（排版等价，规范写法）",
+          "removal": 0.4,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "删除 1 处正文手动分页（\\newpage），交回 LaTeX 全局断页",
+          "removal": 1.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 2
+        },
+        {
+          "action": "删除 1 处过大的手动垂直间距（2cm）",
+          "removal": 0.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 2
+        }
+      ]
+    },
+    {
+      "doc": "examples/aidtest.tex",
+      "status": "DONE",
+      "n_actions": 6,
+      "n_repairs": 5,
+      "rho_median": 0.3008,
+      "rows": [
+        {
+          "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+          "removal": 2.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "删除 1 处阅读辅助内容（第 [20] 行）",
+          "removal": 0.4,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "删除 2 处 WARNING 类告示（第 [24, 33] 行）",
+          "removal": 0.8,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "归一 1 处超宽图片到 \\linewidth（\\includegraphics[width=160mm]{…）",
+          "removal": 1.33,
+          "cost": 0.4,
+          "rho": 0.3007518796992481,
+          "accepted": true,
+          "pages": 3
+        },
+        {
+          "action": "删除 1 处正文手动分页（\\newpage），交回 LaTeX 全局断页",
+          "removal": 1.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 3
+        }
+      ]
+    },
+    {
+      "doc": "examples/nightmare.tex",
+      "status": "NEEDS_REVIEW",
+      "n_actions": 19,
+      "n_repairs": 17,
+      "rho_median": 0.307,
+      "rows": [
+        {
+          "action": "移除 documentclass 的 fleqn 选项（公式恢复居中）",
+          "removal": 0.3,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+          "removal": 2.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "2 处浮动体位置参数不稳定（figure[h], figure[H]）规范为 [tbp]",
+          "removal": 2.554,
+          "cost": 0.8,
+          "rho": 0.31323414252153486,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "4 处裸 $$..$$ 改为 \\[..\\]（排版等价，规范写法）",
+          "removal": 1.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "归一 1 处超宽图片到 \\linewidth（\\includegraphics[width=1.25\\linewidth]{…）",
+          "removal": 1.33,
+          "cost": 0.4,
+          "rho": 0.3007518796992481,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "删除 3 处正文手动分页（\\clearpage, \\newpage, \\pagebreak），交回 LaTeX 全局断页",
+          "removal": 3.3,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 7
+        },
+        {
+          "action": "删除 1 处过大的手动垂直间距（3cm）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "规范化 2 处标题字号（section:Huge->Large, subsection:Large->large）",
+          "removal": 1.9,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "删除正文 2 处行内字号切换（\\Large, \\tiny）",
+          "removal": 1.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "收紧列表间距 3 处（itemsep=18pt, topsep=16pt, itemsep=12pt）",
+          "removal": 1.8,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "为 1 个超长词插入 \\- 断词点（最长 111 字符）",
+          "removal": 0.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "标题字号规范化 1 处（-> \\LARGE）",
+          "removal": 0.8,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "\\parskip 16pt -> 8pt（整篇段距收敛）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        },
+        {
+          "action": "清空 1 处过长页眉（\\lhead(98字)）",
+          "removal": 0.5,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        },
+        {
+          "action": "移除 1 处正文中途双栏（内容保留，交回单栏版心）",
+          "removal": 0.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "收敛图片尺寸 1 处（height 0.55\\textheight -> 0.4\\textheight）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        },
+        {
+          "action": "1 个表格改用 tabularx（\\linewidth 自适应列宽）：p{2.0cm}p{2.0cm}p{2.0cm} -> XXX",
+          "removal": 2.238,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        }
+      ]
+    },
+    {
+      "doc": "examples/test0911/chaotic_layout_test.tex",
+      "status": "NEEDS_REVIEW",
+      "n_actions": 18,
+      "n_repairs": 16,
+      "rho_median": 0.3783,
+      "rows": [
+        {
+          "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+          "removal": 3.257,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "4 处浮动体位置参数不稳定（figure[H], table[H], figure[H], figure[H]）规范为 [tbp]",
+          "removal": 4.344,
+          "cost": 1.6,
+          "rho": 0.3683241252302026,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "归一 1 处超宽图片到 \\linewidth（\\includegraphics[width=1.18\\linewidth]{…）",
+          "removal": 1.03,
+          "cost": 0.4,
+          "rho": 0.3883495145631068,
+          "accepted": true,
+          "pages": 8
+        },
+        {
+          "action": "删除 3 处正文手动分页（\\clearpage, \\newpage），交回 LaTeX 全局断页",
+          "removal": 3.9,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "删除 2 处过大的手动垂直间距（2cm, 3cm）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "规范化 2 处标题字号（section:Huge->Large, subsection:Large->large）",
+          "removal": 1.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "删除正文 2 处行内字号切换（\\Large, \\tiny）",
+          "removal": 1.0,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "收紧列表间距 4 处（itemsep=10pt, topsep=15pt, itemsep=12pt, itemsep=18pt）",
+          "removal": 2.4,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "注入 \\usepackage{xurl}（1 个超长 URL 可在任意位置断行）",
+          "removal": 0.773,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "为 1 个超长词插入 \\- 断词点（最长 89 字符）",
+          "removal": 0.6,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "标题字号规范化 1 处（-> \\LARGE）",
+          "removal": 0.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "\\parskip 14pt -> 8pt（整篇段距收敛）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "清空 1 处过长页眉（\\lhead(91字)）",
+          "removal": 0.5,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "移除 1 处正文中途双栏（内容保留，交回单栏版心）",
+          "removal": 0.8,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 6
+        },
+        {
+          "action": "收敛图片尺寸 2 处（height 0.48\\textheight -> 0.4\\textheight; 2 子图 x0.96）",
+          "removal": 1.2,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        },
+        {
+          "action": "1 个表格改用 tabularx（\\linewidth 自适应列宽）：p{2.0cm}p{2.0cm}p{2.0cm} -> XXXX",
+          "removal": 3.33,
+          "cost": 0.0,
+          "rho": 0.0,
+          "accepted": true,
+          "pages": 5
+        }
+      ]
+    }
+  ]
+}
