@@ -381,8 +381,9 @@ def main() -> int:
             print(_json.dumps(res, ensure_ascii=False, indent=2))
             return 0 if res["ok"] else 1
         print(f"[验证] 状态={res['status']}  页数={res['pages']}  "
-              f"L={len(res['l'])} A={res['a']} I={res['i']} "
-              f"(总分 {res['total']})")
+              f"gate={len(res['l'])}  "
+              f"M1={res.get('m1', '—')}  M2={res.get('m2', '—')}"
+              "  （两线分离：不合并总分）")
         print(f"  引擎级正文零改动：{'通过' if res['content_preserved'] else '（有排版级改动——模型在环编辑属预期）'}")
         sem = res["semantic"]
         if sem["preserved"]:
@@ -465,9 +466,15 @@ def main() -> int:
         if result.get("first_error"):
             print(f"  首个错误：{result['first_error']}")
         return 1
-    print(f"[完成] 状态={result['status']}  L 违规 {len(result['l'])} 项  "
-          f"A={result['a']}  I={result['i']}  "
-          f"最终 {result['pages']} 页")
+    _scored = result.get("scored", not result["l"])
+    if _scored:
+        print(f"[完成] 状态={result['status']}  gate 通过  "
+              f"M1={result.get('m1')}（P {result.get('p')} / I {result['i']}）  "
+              f"M2={result.get('m2')}（A_soft {result['a']}）  "
+              f"最终 {result['pages']} 页  · 两线分离，不合并总分")
+    else:
+        print(f"[完成] 状态={result['status']}  gate 未通过 {len(result['l'])} 项 "
+              f"→ 未进入 model1/model2 打分  · 最终 {result['pages']} 页")
     _print_status_detail(result)
     _print_conference_detail(result.get("conference"))
     for v in result["l"]:

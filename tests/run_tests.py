@@ -494,6 +494,12 @@ def unit_tests():
     opt.attempts, opt.accepted = 0, 0
     check("exit/no-candidate-but-defect->NEEDS_REVIEW",
           opt.exit_status({"l": []}, severe) == "NEEDS_REVIEW")
+    # 2026-10-30 任务1：gate 未过且**从未尝试修复** → BLOCKED_GATE（不进打分）；
+    # 尝试过 gate 定向修复仍不通过 → EXHAUSTED。
+    opt.attempts = 0
+    check("exit/gate-unrepaired->BLOCKED_GATE",
+          opt.exit_status({"l": ["页数 9 超出限制 8"]}) == "BLOCKED_GATE")
+    opt.attempts = 3
     check("exit/L-violation->EXHAUSTED",
           opt.exit_status({"l": ["页数 9 超出限制 8"]}) == "EXHAUSTED")
 
@@ -1503,8 +1509,9 @@ def stage6_tests():
         opt = Optimizer(tex, _req(**kw), od)
         res[tag] = opt.run()
     a, b = res["on"], res["off"]
-    key = lambda r: (r.get("status"), r.get("accepted"), r.get("total"),
-                     r.get("pages"), r.get("a"), tuple(r.get("l") or []))
+    key = lambda r: (r.get("status"), r.get("accepted"), r.get("m1"),
+                     r.get("m2"), r.get("pages"), r.get("a"),
+                     tuple(r.get("l") or []))
     check("s6/no-decision-change",
           a.get("status") != "FAILED" and key(a) == key(b),
           f"{key(a)} vs {key(b)}")
@@ -1860,11 +1867,9 @@ def acceptance_tests():
         pass
 
     def acc(glv, m1, m2, clv=(), cm1=None, cm2=None, np_=None, cp_=None):
-        """构造评分字典：只给 m1/m2（若未给则从旧式 A/I 推）。"""
-        ncur = {"l": list(glv), "m1": m1, "m2": m2,
-                "total": m1 + m2}
-        cur = {"l": list(clv), "m1": cm1, "m2": cm2,
-               "total": (cm1 or 0.0) + (cm2 or 0.0)}
+        """构造评分字典：两线分离后只有 m1/m2，**没有总分**。"""
+        ncur = {"l": list(glv), "m1": m1, "m2": m2, "scored": not glv}
+        cur = {"l": list(clv), "m1": cm1, "m2": cm2, "scored": not clv}
         return Optimizer._accept(_Fake(), ncur, cur, np_, cp_, list(clv))
 
     # ← E1 的真例：「[H]→[tbp]」缺陷降 1.5 个、代价升 2.8 → M1 = 2·(-1.5)+2.8 = -0.2
@@ -1879,13 +1884,16 @@ def acceptance_tests():
     ok, why = acc([], 10.0, 9.2, [], 10.0, 9.0)
     check("accept/m1-tie-m2-worse-rejected",
           ok is False and "均无改善" in why, why)
-    # M1 小幅变差但 model2 大幅改善 → 总目标改善 → 接受（两模型综合衡量）
+    # 两线分离（2026-10-30 任务2）：M1 变差时，M2 再大也不补偿 → 一律拒绝
     ok, why = acc([], 11.0, 5.0, [], 10.0, 9.0)
-    check("accept/m1-up-m2-down-total-better",
-          ok is True and "总目标改善" in why, why)
+    check("accept/m1-worse-m2-better-rejected-no-compensation",
+          ok is False and "两线分离" in why, why)
     ok, why = acc([], 12.0, 8.8, [], 10.0, 9.0)
-    check("accept/m1-up-m2-total-worse-rejected",
-          ok is False and "总目标未改善" in why, why)
+    check("accept/m1-worse-m2-slightly-better-rejected",
+          ok is False and "model1 变差" in why, why)
+    # gate 未过 → 不进打分，任何改善都不接受
+    ok, why = acc(["缺少页眉"], 1.0, 0.0, ["缺少页眉"], 99.0, 99.0)
+    check("accept/gate-unscored-rejected", ok is False and "不进入打分" in why, why)
     ok, why = acc([], 10.0, 9.0, [], 10.0, 9.0)
     check("accept/no-change-rejected", ok is False, why)
     ok, why = acc([], 5.0, 0.0, ["x"], 9.0, 0.0)
@@ -2035,6 +2043,87 @@ def severity_sheet_tests():
     check("severity/bt-selftest", msv.selftest() == 0)
 
 
+def stage12_tests():
+    """阶段 12（2026-10-30）：gate 一票否决 / 两线分离 / P 权重回填 / ρ 标定。"""
+    print("\n== 阶段 12：gate 退出 + 两线分离 + P 权重回填 + ρ 等边际收益 ==")
+    from texopt import score as S
+    from texopt import core as C
+
+    # ---- 任务1：gate 结构化（每项都有 code / 可修复性 / 建议）----
+    missing = [c for c in S.GATE_REPAIRABLE if c not in S.GATE_SUGGEST]
+    check("s12/gate-suggest-complete", not missing, f"缺建议：{missing}")
+    check("s12/gate-repairable-flags",
+          S.GATE_REPAIRABLE["pages"] is True
+          and S.GATE_REPAIRABLE["margin"] is True
+          and S.GATE_REPAIRABLE["fleqn"] is True
+          and S.GATE_REPAIRABLE["compile"] is False
+          and S.GATE_REPAIRABLE["figures"] is False,
+          str(S.GATE_REPAIRABLE))
+    # gate 定向修复只允许 gate 相关动作，且必须是真实候选键
+    import re as _re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "texopt", "core.py"), encoding="utf-8").read()
+    cand_keys = set(_re.findall(r'add\("([a-z_]+)"', src))
+    unknown = sorted(C.GATE_REPAIR_KEYS - cand_keys)
+    check("s12/gate-repair-keys-are-real-actions", not unknown,
+          f"未在候选池出现：{unknown}")
+
+    # ---- 任务2：两线分离（评分不再有 total）----
+    import inspect as _in
+    ret_src = _in.getsource(S.total_score)
+    check("s12/no-total-key", '"total"' not in ret_src,
+          "total_score 仍返回 total（两线分离未落地）")
+    check("s12/has-scored-and-gate", '"scored"' in ret_src and '"gate"' in ret_src,
+          "缺少 scored/gate 明细")
+    acc_src = _in.getsource(C.Optimizer._accept)
+    check("s12/accept-no-compensation",
+          "总目标改善" not in acc_src and "M1 + M2" not in acc_src,
+          "验收里仍存在两线相加补偿")
+
+    # ---- 任务3：P 权重回填（artifact ↔ 代码对齐）----
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "tools"))
+    import apply_severity_weights as ASW
+    applied = ASW.build(ASW.load_result())
+    bad = ASW.check(applied)
+    check("s12/severity-weights-applied", not bad, "; ".join(bad[:3]))
+    check("s12/severity-weights-have-source",
+          applied["items"]["overfull"]["basis"] == "human×corpus"
+          and applied["items"]["floatwarn"]["new"] != applied["items"]["floatwarn"]["old"],
+          str(applied["items"]["floatwarn"]))
+    # 语料无分母的项必须保持先验（不伪造数据）
+    kept = [k for k, v in applied["items"].items() if v["basis"] == "prior_kept"]
+    check("s12/severity-prior-kept", set(kept) >= {"vbox_under", "tab_overwide",
+                                                   "fig_overwide", "spec_H"},
+          str(kept))
+
+    # ---- ρ（等边际收益）----
+    import calibrate_rho as CR
+    deltas = [{"action": "a", "accepted": True, "dP": -2.0, "dI": 1.0},
+              {"action": "b", "accepted": True, "dP": -1.0, "dI": 2.0},
+              {"action": "c", "accepted": False, "dP": 0.5, "dI": 0.0}]
+    stt = CR.rho_stats(deltas)
+    check("s12/rho-median", stt["n_repairs"] == 2
+          and abs(stt["rho_median"] - 1.25) < 1e-9, str(stt.get("rho_median")))
+    check("s12/rho-ignores-nonrepair", all(r["rho"] >= 0 for r in stt["rows"]),
+          "ΔP≥0 的动作不应进 ρ 统计")
+    d = CR.decide([stt])
+    check("s12/rho-clip", d["ok"] and CR.RHO_MIN <= d["rho_applied"] <= CR.RHO_MAX,
+          str(d))
+    # ρ 与 artifact 的漂移校验（改了代码没重跑标定 / 重跑了没回填都会被抓到）
+    art_p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "metrics", "rho_exchange_rate.json")
+    if os.path.isfile(art_p):
+        with open(art_p, encoding="utf-8") as f:
+            art = json.load(f)
+        rho_art = (art.get("decision") or {}).get("rho_applied")
+        check("s12/rho-applied-matches-artifact",
+              rho_art is not None and abs(S.W_PAGE_DEFECT - rho_art) < 1e-6,
+              f"score.W_PAGE_DEFECT={S.W_PAGE_DEFECT} artifact={rho_art}")
+    else:
+        skip("s12/rho-applied-matches-artifact", "缺 metrics/rho_exchange_rate.json")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -2063,6 +2152,7 @@ def main():
     stage9_tests()
     pair_sheet_tests()
     severity_sheet_tests()
+    stage12_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。

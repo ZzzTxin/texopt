@@ -30,27 +30,42 @@ from .requirements import Requirement
 # ============ 模型权重与比重表（2026-10-14 用户重新定义，均可标定） ============
 GATE_PENALTY = 1e6       # 底层逻辑违规的权重（远大于 M1/M2，保证 gate 优先）
 L_PENALTY = GATE_PENALTY  # 旧名兼容
-# ρ：缺陷 → 代价单位 的换算率。默认 2.0，含义是**一个量表约定**：
-#   「消除 1 个加权缺陷（如 1 处行溢出）≈ 值得付出 2 个代价单位
-#     = 4mm 页边距改动 = 5 处浮动体参数改动」。
-W_PAGE_DEFECT = 2.0
+# ρ：缺陷 → 代价单位 的换算率（model1 里 P 与 I 的汇率）。
+# 2026-10-30（用户拍定口径 = **等边际收益**）：ρ = 闭环里**实际付出**的干预代价 ÷
+#   实际修掉的缺陷，即 ΔI /(−ΔP)，只统计真的付了代价（ΔI>0）的尝试动作
+#   （免费修复不携带汇率信息；按每次尝试而非被接受动作统计，避免 ρ 自我论证）。
+#   实测 4 篇真编译闭环（43 次修复动作 / 其中 6 次付费）：
+#       ρ 中位 0.341（p25 0.304，p75 0.383），未裁剪。
+#   artifact = metrics/rho_exchange_rate.json；工具 = tools/calibrate_rho.py。
+# 含义：「修掉 1 个加权缺陷，实际换来约 0.34 个代价单位」——比原先手拍的 2.0 低，
+#   因为多数缺陷是零代价修掉的（质量宏/删手动分页/规范浮动体参数）。
+# 注意：样本小（6 次付费动作，单人/单语料），后续采到更多闭环数据应重跑。
+W_PAGE_DEFECT = 0.341
 # β：正文改动幅度的权重（内容保留不再是硬约束，但仍是强偏好；
 #   语义抛光阶段另设内容保留率下限 κ 兜底）。
 CONTENT_PENALTY = 50.0
 
-# ---- P：页面缺陷比重（半硬性约束）----
+# ---- P：页面缺陷比重（半硬性约束，2026-10-30 回填数据来源）----
+# 2026-10-30（任务3）：5 项换成**有来源**的值
+#   w = 人的严重度（15 题成对比较 → Bradley-Terry） ÷ 语料频率（200 篇/3898 页）
+#   再做 sqrt 阻尼 + 缩放到现行权重同量纲；口径见 docs/stage11_severity_sheet_20261028.md，
+#   applied artifact = metrics/severity_weights_applied.json（tools/apply_severity_weights.py）。
+#   其余 6 项仍是先验：vbox_under/spec_H/tab_overwide/fig_overwide/stranded_block/
+#   near_empty 在语料里计数为 0 或无对应字段，作不了分母（不伪造）；warn/macros_missing/
+#   unstable_spec 属人眼不可判的技术项，不进标定表。
+# 注意：ρ（W_PAGE_DEFECT）是总尺度锚点，这里只改 P 的内部相对结构。
 PAGE_DEFECT_WEIGHT = {
-    "overfull": 1.0,        # 正文行溢出（右侧超出）
-    "underfull": 0.6,       # 正文行欠满
-    "vbox_over": 1.0,       # 页面垂直盒子溢出
-    "vbox_under": 1.4,      # 页面垂直盒子欠满（孤行寡行的 TeX 侧代理）
-    "floatwarn": 1.6,       # 浮动体警告（位置/尺寸被 TeX 强改）
-    "tab_overwide": 1.2,    # 表格超宽
-    "fig_overwide": 1.0,    # 图片超宽
-    "warn": 0.3,            # 其余编译 Warning
-    "macros_missing": 2.0,  # 要求开启的断行质量宏缺失
-    "unstable_spec": 0.8,   # 浮动体位置参数不稳定（TeX 会自行改写）
-    "spec_H": 0.5,          # [H] 强排（页面失衡/大块留白常见来源）
+    "overfull": 0.33,       # 正文行溢出（右侧超出）        ← human×corpus
+    "underfull": 0.273,     # 正文行欠满                    ← human×corpus
+    "vbox_over": 2.344,     # 页面垂直盒子溢出              ← human×corpus
+    "vbox_under": 1.4,      # 页面垂直盒子欠满（孤行寡行代理）← 先验（语料计数 0）
+    "floatwarn": 1.254,     # 浮动体警告（位置/尺寸被强改）  ← human×corpus
+    "tab_overwide": 1.2,    # 表格超宽                      ← 先验（语料无字段）
+    "fig_overwide": 1.0,    # 图片超宽                      ← 先验（语料无字段）
+    "warn": 0.3,            # 其余编译 Warning              ← 先验（人不可判）
+    "macros_missing": 2.0,  # 断行质量宏缺失                ← 先验（人不可判）
+    "unstable_spec": 0.8,   # 浮动体位置参数不稳定          ← 先验（人不可判）
+    "spec_H": 0.5,          # [H] 强排                      ← 先验（语料计数 0）
 }
 # 页面图像层的缺陷归属：结构/放置类进 model1，软性审美类进 model2。
 VISUAL_DEFECT_M1 = {
@@ -371,61 +386,95 @@ def page_advisory(per: P.Perception, req: Requirement) -> str | None:
     return None
 
 
-def gate_violations(per: P.Perception, req: Requirement,
-                    orig_body: str, orig_source: dict | None = None) -> list[str]:
-    """底层逻辑（可行性门）违规清单。空列表 = 这些「必须满足」的条件全部满足。
+# ---- 底层逻辑门：结构化描述（2026-10-30 任务1：一票否决 + 直接退出 + 建议）----
+# code → 是否**可被白名单确定性动作修复**。不可修复项一旦出现，闭环不再打分、
+# 不再试动作，直接退出（BLOCKED_GATE）并给修改建议。
+GATE_REPAIRABLE = {
+    "compile": False,   # 编译错误（缺宏包/语法错误）：不在排版动作面内
+    "pdf": False,       # 产不出 PDF
+    "content": False,   # content_hard=True 时正文被改
+    "figures": False,   # 图形/表格指纹变化（保真底线）
+    "pages": True,      # 可压页（margin_cut / font_cut）
+    "font": True,       # font_spec / font_cut
+    "margin": True,     # margin_spec
+    "fleqn": True,      # drop_fleqn
+    "toc": True,        # insert_toc
+    "header": True,     # 页眉动作
+}
+GATE_SUGGEST = {
+    "compile": "先修 .tex 的编译错误（看日志第一条 Error），或换成可编译的模板/宏包组合",
+    "pdf": "确认引擎真的产出 PDF（不是只有 DVI）；缺字体/宏包先补齐",
+    "content": "content_hard=True：正文必须逐字保留，把改动的正文还原",
+    "figures": "图形/表格内容不得重绘或替换，只允许改宽度：恢复原内容",
+    "pages": "页数超限：先用纯排版压（收边距/降字号/修浮动体/缩图宽）；仍超再删减内容或换图表",
+    "font": "把 \\documentclass 字号选项改到要求档位（10/11/12pt），局部字号不算",
+    "margin": "用 geometry 把页边距调到要求值（会议模板以下限口径判）",
+    "fleqn": "去掉 \\documentclass 的 fleqn 选项，让公式回到居中",
+    "toc": "要求目录：加 \\tableofcontents，并连编两遍让页码稳定",
+    "header": "要求页眉：加 fancyhdr/pagestyle 页眉，并检查首页样式",
+}
+
+
+def gate_issues(per: P.Perception, req: Requirement,
+                orig_body: str, orig_source: dict | None = None) -> list[dict]:
+    """底层逻辑（可行性门）的结构化违规清单。空列表 = 这些「必须满足」的条件全部满足。
 
     2026-10-14 用户重新定义：这里不再是「一个可打分的模型」，而是**底层逻辑**——
     编译/产出 PDF、页数上限（有要求时）、图表保真、字号/边距/fleqn/目录/页眉
     （要求点名时）这些是「硬性必须满足」，任一项不满足即不可行，不参与打分。
 
-    实现上仍返回清单（而不是布尔），因为违反多项时的具体原因需要写进报告/
-    接受-回滚依据；调用方只需判断是否为空。
+    2026-10-30（任务1）：每项带 code / repairable / suggestion。调用方据此决定
+    「直接退出（不可修复）」还是「先跑 gate 定向修复（可修复）」。
     """
-    out: list[str] = []
+    out: list[dict] = []
+
+    def add(code: str, text: str):
+        out.append({"code": code, "text": text,
+                    "repairable": bool(GATE_REPAIRABLE.get(code, False)),
+                    "suggestion": GATE_SUGGEST.get(code, "")})
+
     if not per.ok:
-        out.append(f"编译失败/无法渲染 PDF（{per.compile.first_error}）")
+        add("compile", f"编译失败/无法渲染 PDF（{per.compile.first_error}）")
     elif per.compile.pdf_path is None:
-        out.append("未生成 PDF")
+        add("pdf", "未生成 PDF")
     # 2026-10-14：正文内容完整保留默认**不再**是硬约束（语义抛光阶段要合法改正文）。
     # 默认走软项 CONTENT_PENALTY·D_content（见 total_score）；
     # 需要旧口径时把 Requirement.content_hard 置 True。
     if getattr(req, "content_hard", False) \
             and _norm_body(content_body(per.src), req) != _norm_body(orig_body, req):
-        out.append("正文内容被改动（content_hard=True：违反内容完整保留）")
+        add("content", "正文内容被改动（content_hard=True：违反内容完整保留）")
     if req.page_limit:
         st = page_status(per, req)
         if st["over_strict"]:
             if st.get("first_ref_page"):
-                out.append(f"正文页数 {st['strict']}–{st['judge']}（参考文献之前）"
-                           f"超出限制 {req.page_limit}（PDF 共 {st['total']} 页）")
+                add("pages", f"正文页数 {st['strict']}–{st['judge']}（参考文献之前）"
+                             f"超出限制 {req.page_limit}（PDF 共 {st['total']} 页）")
             else:
-                out.append(f"页数 {st['judge']} 超出限制 {req.page_limit}")
+                add("pages", f"页数 {st['judge']} 超出限制 {req.page_limit}")
         elif st["scope"] == "content" and st["content_upper"] is None \
                 and per.pages is not None and per.pages > req.page_limit:
-            out.append(f"页数 {per.pages} 超出限制 {req.page_limit}"
-                       "（未能区分正文页，按总页数判定）")
+            add("pages", f"页数 {per.pages} 超出限制 {req.page_limit}"
+                         "（未能区分正文页，按总页数判定）")
     # 硬性规范（期刊/会议/自定义要求明确指定的，属 L 而非审美项）
     if req.font_pt and per.source["font_pt"] != req.font_pt:
-        out.append(f"字号 {per.source['font_pt']}pt 不符合要求 {req.font_pt}pt")
+        add("font", f"字号 {per.source['font_pt']}pt 不符合要求 {req.font_pt}pt")
     if req.margin_mm and per.source.get("geometry_margin_mm") is not None:
         cur_mm = per.source["geometry_margin_mm"]
         if getattr(req, "margin_is_floor", False):
             # 会议模板：官方边距是下限（模板 json 里的 margin_floor_mm）——
             # 低于下限才不合规；高于下限不干预（不得把合法的宽/不对称边距改小）。
             if cur_mm < req.margin_mm - 0.5:
-                out.append(f"页边距 {cur_mm:g}mm 低于要求下限 "
-                           f"{req.margin_mm:g}mm")
+                add("margin", f"页边距 {cur_mm:g}mm 低于要求下限 {req.margin_mm:g}mm")
         elif abs(cur_mm - req.margin_mm) > 0.5:
-            out.append(f"页边距 {cur_mm:g}mm 不符合要求 {req.margin_mm:g}mm")
+            add("margin", f"页边距 {cur_mm:g}mm 不符合要求 {req.margin_mm:g}mm")
     if req.eq_fleqn_allowed is False and per.source["fleqn"]:
-        out.append("文档类带 fleqn 选项，公式未居中")
+        add("fleqn", "文档类带 fleqn 选项，公式未居中")
     # 结构规范：目录 / 页眉（要求明确指定才算硬约束）
     if req.toc and per.source.get("sections", 0) >= req.toc_min_sections \
             and not per.source.get("has_toc"):
-        out.append("缺少目录页（要求 toc=True）")
+        add("toc", "缺少目录页（要求 toc=True）")
     if req.running_header and not per.source.get("has_header"):
-        out.append("缺少页眉（要求 running_header=True）")
+        add("header", "缺少页眉（要求 running_header=True）")
     # 图形保真：图表内容不得重绘/改写（多源判断的图像层底线）
     if req.preserve_figures and orig_source is not None:
         cur_f = [(f.get("kind"), f.get("fingerprint"))
@@ -433,9 +482,15 @@ def gate_violations(per: P.Perception, req: Requirement,
         org_f = [(f.get("kind"), f.get("fingerprint"))
                  for f in orig_source.get("figures", [])]
         if cur_f != org_f:
-            out.append(f"图形/表格内容被改动（原稿 {len(org_f)} 处，"
-                       f"现 {len(cur_f)} 处，指纹不一致）")
+            add("figures", f"图形/表格内容被改动（原稿 {len(org_f)} 处，"
+                           f"现 {len(cur_f)} 处，指纹不一致）")
     return out
+
+
+def gate_violations(per: P.Perception, req: Requirement,
+                    orig_body: str, orig_source: dict | None = None) -> list[str]:
+    """兼容接口：只返回 gate 违规的文字清单（空 = 可行）。"""
+    return [d["text"] for d in gate_issues(per, req, orig_body, orig_source)]
 
 
 def soft_metric_loss(metric: str, x) -> float | None:
@@ -595,17 +650,21 @@ def intervention_cost(per: P.Perception, orig: P.Perception) -> float:
 
 def total_score(per: P.Perception, req: Requirement,
                 orig: P.Perception) -> dict:
-    """完整评分（v3 结构）：
+    """完整评分（v4 结构，2026-10-30 起**两线分离**）：
 
-        gate : 底层逻辑违规清单（空 = 可行）
+        gate : 底层逻辑违规清单 + 结构化明细（空 = 可行，才进入打分）
         P    : model1 · 页面缺陷分
         I    : model1 · 整体修改情况（I_struct + β·D_content）
         M1   : model1 总分 = ρ·P + I
         A    : model2 · A_soft（软性审美）
         M2   : model2 总分 = A_soft + λ·A_profile（λ 由 shadow 侧给出）
-        total: 1e6·|gate| + M1 + M2（实现口径；建议排序为字典序 (gate, M1, M2)）
+
+    两条线**并行、不相加**：不再有 total。验收为严格字典序
+    (gate, M1, M2)，M2 只在 M1 完全持平时作 tie-break。
+    gate 未过时 scored=False —— M1/M2 仍算出来仅供诊断，**不参与任何判定**。
     """
-    gv = gate_violations(per, req, content_body(orig.src), orig.source)
+    gd = gate_issues(per, req, content_body(orig.src), orig.source)
+    gv = [d["text"] for d in gd]
     p = page_defect_score(per, req)
     istr = intervention_cost(per, orig)
     d = 0.0 if getattr(req, "content_hard", False) \
@@ -614,9 +673,9 @@ def total_score(per: P.Perception, req: Requirement,
     m1 = round(W_PAGE_DEFECT * p + i, 3)
     a = aesthetic_score(per, req)          # model2 · A_soft
     m2 = a
-    total = round(GATE_PENALTY * len(gv) + m1 + m2, 3)
-    return {"l": gv, "p": p, "i_struct": istr, "d_content": d, "i": i,
-            "m1": m1, "a": a, "m2": m2, "total": total, "ok": not gv,
+    return {"l": gv, "gate": gd, "scored": not gv,
+            "p": p, "i_struct": istr, "d_content": d, "i": i,
+            "m1": m1, "a": a, "m2": m2, "ok": not gv,
             "content_preserved": d <= 0.0}
 
 
