@@ -19,6 +19,7 @@
 """
 from __future__ import annotations
 
+import math
 import re
 from collections import Counter
 
@@ -57,9 +58,10 @@ VISUAL_DEFECT_M1 = {
     "near_empty": 0.6,      # 几乎空白页（孤立浮动体/手动分页等结构问题）
 }
 
-# ---- model2：A_soft 软指标理想带 (lo, hi, w) ----
-# 量来自渲染页图（visual.page_metrics）。带外损失双向非单调，
-# 尺度 N = hi - lo，权重不对称（偏空比偏满更刺眼）：W_low=1.2 > W_high=1.0。
+# ---- model2：A_soft 参考带 (lo, hi, w)（2026-10-28 起**只用于报告口径**）----
+# 打分不再用「带内=0 / 带外线性罚」，改用下面的 SOFT_SPEC 平滑目标形式：
+# 人工排序验收（workbench-detector/rank_analysis_20261028.md）显示带内=0 会制造
+# 大量并列（20 页里 8 页总分恰为 0），把排序信号抹平，且 ink_ratio 上界与人的偏好相反。
 SOFT_BANDS = {
     "ink_ratio": (0.020, 0.150, 1.0),         # 灰度 / 墨迹密度
     "bottom_blank": (0.000, 0.220, 1.5),      # 页底留白
@@ -70,12 +72,35 @@ SOFT_BANDS = {
     "right_blank": (0.000, 0.180, 0.6),       # 右侧留白
     "top_bottom_ratio": (0.700, 1.400, 0.8),  # 上下半页墨迹均衡
 }
-W_SOFT_LOW, W_SOFT_HIGH = 1.2, 1.0
-# 鲁棒性：单页单指标的损失封顶 + 指标取值 clip。
-# 目的：比例类量在极端情况下会爆掉（例如下半页几乎空白时 top_bottom_ratio 可达几百），
-# 一次封顶就能让「一个极端页」不再吃掉全部权重（同 A_profile 的 min(loss/ref, 20)）。
+W_SOFT_LOW, W_SOFT_HIGH = 1.2, 1.0   # 旧带形式的系数，仅兼容保留
+# ---- model2：A_soft 平滑目标形式（2026-10-28 起实际打分口径）----
+# 每个指标给一个**目标 t**（取已录用语料中位数，3898 页，见 detector_check.json）
+# 和两侧尺度 s（取 t 到 p5 / p95 的距离），损失为**无平台区**的平滑核：
+#
+#     d = |x - t| / s_side        loss = w · (1 - exp(-d²/2))   ≤ w
+#
+# 性质：① 目标处损失为 0、两侧严格单调增（无并列平台）；② 有界（w 封顶），
+# 极端页不吃掉全部权重；③ 单侧指标把某一侧 s 设 None 即该侧不罚。
+# 单侧设定依据人工排序结果：人偏好“更满”的页面（ink_ratio 原始值 ρ=+0.50）、
+# 不惩罚页底留白（bottom_blank ρ=+0.42），真正刺眼的是**大片空洞**与**上下失衡**。
+SOFT_SPEC = {
+    # metric            t(目标)  s_low  s_high  w     说明
+    "ink_ratio":        dict(t=0.120, s_low=0.076, s_high=None,  w=1.0,  # 只罚过空
+                             note="上侧不罚：满版/整页图不是缺陷"),
+    "bottom_blank":     dict(t=0.066, s_low=0.025, s_high=None,  w=0.8,  # 只罚贴边
+                             note="多留白不罚，失衡交给 tbr/max_gap"),
+    "top_blank":        dict(t=0.079, s_low=0.047, s_high=0.039, w=0.5),
+    "max_gap":          dict(t=0.100, s_low=None,  s_high=0.244, w=1.4,  # 只罚大洞
+                             note="小空洞无所谓，唯一人工验证有效的量"),
+    "band":             dict(t=0.004, s_low=0.030, s_high=0.051, w=0.0,  # 暂缓
+                             note="Step2 判暂缓：语料 5% 在带内，量本身不可用"),
+    "left_blank":       dict(t=0.091, s_low=0.022, s_high=0.130, w=0.4),
+    "right_blank":      dict(t=0.115, s_low=0.036, s_high=0.100, w=0.4),
+    "top_bottom_ratio": dict(t=1.031, s_low=0.515, s_high=1.292, w=1.0,  # 对数空间
+                             log=True, note="比值量取对数后对称"),
+}
 SOFT_LOSS_CAP = 3.0
-SOFT_METRIC_CLIP = {"top_bottom_ratio": (0.0, 5.0)}
+SOFT_METRIC_CLIP = {"top_bottom_ratio": (0.05, 5.0)}
 
 # 源码卫生问题在 P 里的比重（按「能否被确定性动作修复 × 影响程度」定）：
 # 有对应动作、且直接关联页面质量的高；纯风格、无动作的低。
@@ -413,6 +438,32 @@ def gate_violations(per: P.Perception, req: Requirement,
     return out
 
 
+def soft_metric_loss(metric: str, x) -> float | None:
+    """单页单指标的 A_soft 损失（平滑目标形式，无平台区、有界）。
+
+    x 为渲染层原始量；缺失返回 None。一侧 s 为 None 表示该侧不罚。
+    """
+    spec = SOFT_SPEC.get(metric)
+    if spec is None or not spec.get("w") or x is None:
+        return None
+    clip = SOFT_METRIC_CLIP.get(metric)
+    try:
+        x = float(x)
+    except (TypeError, ValueError):
+        return None
+    if clip:
+        x = min(max(x, clip[0]), clip[1])
+    t = spec["t"]
+    if spec.get("log"):
+        eps = 1e-6
+        x, t = math.log(max(x, eps)), math.log(max(t, eps))
+    s = spec["s_low"] if x < t else spec["s_high"]
+    if not s:
+        return 0.0                        # 单侧：该方向不罚
+    d = abs(x - t) / max(s, 1e-6)
+    return min(SOFT_LOSS_CAP, spec["w"] * (1.0 - math.exp(-0.5 * d * d)))
+
+
 def aesthetic_score(per: P.Perception, req: Requirement) -> float:
     """model2 · A_soft：**绝对软指标**的审美量化（越低越好）。
 
@@ -420,13 +471,16 @@ def aesthetic_score(per: P.Perception, req: Requirement) -> float:
     留白情况、图表占比、上下半页密度均衡等；而「浮动体错位/孤行寡行」这类
     页面缺陷已归入 model1 的 P（见 PAGE_DEFECT_WEIGHT / VISUAL_DEFECT_M1）。
 
-    量来自渲染页图（`per.visual` 的页级 page_metrics）。每个软指标有一个
-    **理想带** [lo, hi]，带外损失双向计罚（偏空比偏满更刺眼）：
-        loss = W_low·max(0, lo-x)/N + W_high·max(0, x-hi)/N,  N = hi - lo
+    量来自渲染页图（`per.visual` 的页级 page_metrics）。2026-10-28 起每个软指标
+    用**平滑目标形式**（见 SOFT_SPEC）：
+        d = |x - t| / s_side,   loss = w · (1 - exp(-d²/2))
+    目标 t 与尺度 s 由 3898 页已录用语料的中位数/p5/p95 定出，侧别可单侧关闭；
+    目标处为 0、两侧严格单调、有界，**没有“带内一律 0”的平台区**
+    （旧带形式导致 20 页里有 8 页总分为 0，人工排序 Spearman 只有 0.31）。
     再按 CVaR 式做「页 → 文档」聚合：0.5·前k大均值 + 0.5·全体均值，
     k = max(1, round(5%·页数))（对局部异常页敏感，又不被单页主导）。
 
-    注：这里的理想带是**先验带**（可标定），只读渲染层原始量；
+    注：这里的 t/s 是先验（语料标定，可再标），只读渲染层原始量；
     与同档语料的相对偏离由 A_profile 负责（shadow 模式，λ 默认 0）。
     无渲染信息时返回 0（与旧行为一致，报告里会标出视觉缺失）。
     """
@@ -438,24 +492,17 @@ def aesthetic_score(per: P.Perception, req: Requirement) -> float:
         return 0.0
     k = max(1, int(round(0.05 * len(pages))))
     total = 0.0
-    for metric, (lo, hi, w) in SOFT_BANDS.items():
-        n = max(1e-6, hi - lo)
-        clip = SOFT_METRIC_CLIP.get(metric, (0.0, 1.0))
-        losses = []
-        for p in pages:
-            x = p.get(metric)
-            if x is None:
-                continue
-            x = min(max(float(x), clip[0]), clip[1])
-            losses.append(min(SOFT_LOSS_CAP,
-                              W_SOFT_LOW * max(0.0, lo - x) / n
-                              + W_SOFT_HIGH * max(0.0, x - hi) / n))
+    for metric, spec in SOFT_SPEC.items():
+        if not spec.get("w"):
+            continue                      # 暂缓/停用的指标不进分
+        losses = [soft_metric_loss(metric, p.get(metric)) for p in pages]
+        losses = [x for x in losses if x is not None]
         if not losses:
             continue
         losses.sort(reverse=True)
         top = sum(losses[:k]) / k
         mean = sum(losses) / len(losses)
-        total += w * (0.5 * top + 0.5 * mean)
+        total += 0.5 * top + 0.5 * mean   # soft_metric_loss 已含权重 w
     return round(total, 3)
 
 

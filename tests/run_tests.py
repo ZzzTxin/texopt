@@ -333,12 +333,42 @@ def unit_tests():
                              _PerSoft.visual["pages"]]}
     a_bad = S.aesthetic_score(_PerSoft(), _req())
     a_ok = S.aesthetic_score(_PerSoftClean(), _req())
-    check("model2/soft-bands-penalize-bad-page", a_bad > a_ok and a_ok >= 0.0,
+    check("model2/soft-smooth-penalize-bad-page", a_bad > a_ok and a_ok > 0.0,
           f"bad={a_bad} ok={a_ok}")
     check("model2/no-visual-means-zero",
           S.aesthetic_score(_FakePer(), _req()) == 0.0)
-    check("model2/defect-not-in-soft",
-          S.aesthetic_score(_PerSoftClean(), _req()) == 0.0, f"{a_ok}")
+
+    # 9a3) 2026-10-28 新形式（平滑目标，无平台区）的性质测试
+    _l = S.soft_metric_loss
+    check("model2/loss-zero-at-target",
+          _l("ink_ratio", S.SOFT_SPEC["ink_ratio"]["t"]) == 0.0)
+    check("model2/no-plateau-ink-below-target",
+          _l("ink_ratio", 0.110) != _l("ink_ratio", 0.100)
+          and _l("ink_ratio", 0.100) > _l("ink_ratio", 0.110) > 0.0,
+          f"{_l('ink_ratio', 0.100)} vs {_l('ink_ratio', 0.110)}")
+    check("model2/one-sided-ink-upper-free",
+          _l("ink_ratio", 0.30) == 0.0 and _l("ink_ratio", 0.80) == 0.0,
+          str(_l("ink_ratio", 0.30)))
+    check("model2/one-sided-bottom-blank-free-above",
+          _l("bottom_blank", 0.18) == 0.0 and _l("bottom_blank", 0.40) == 0.0)
+    check("model2/monotone-max-gap",
+          _l("max_gap", 0.30) > _l("max_gap", 0.22) > _l("max_gap", 0.12),
+          f"{_l('max_gap', 0.12)}/{_l('max_gap', 0.22)}/{_l('max_gap', 0.30)}")
+    _tsp = S.SOFT_SPEC["top_bottom_ratio"]
+    _tbr_t = _tsp["t"]
+    # 对数空间：两侧各走 1 个自身尺度 s 时，损失应相等（尺度不等但形状一致）
+    check("model2/log-space-symmetric-scale",
+          abs(_l("top_bottom_ratio", _tbr_t * math.exp(_tsp["s_high"]))
+              - _l("top_bottom_ratio", _tbr_t * math.exp(-_tsp["s_low"]))) < 1e-6,
+          f"{_l('top_bottom_ratio', _tbr_t * math.exp(_tsp['s_high']))}/"
+          f"{_l('top_bottom_ratio', _tbr_t * math.exp(-_tsp['s_low']))}")
+    check("model2/band-metric-disabled",
+          S.SOFT_SPEC["band"]["w"] == 0.0 and _l("band", 0.80) is None)
+    check("model2/loss-bounded",
+          all(_l(m, 99.0 if m != "top_bottom_ratio" else 5.0) is None
+              or (_l(m, 99.0 if m != "top_bottom_ratio" else 5.0) <= S.SOFT_LOSS_CAP)
+              for m in S.SOFT_SPEC))
+    check("model2/missing-metric-none", _l("ink_ratio", None) is None)
 
     # 9b) Phase 2：页面级视觉量化（纯像素量，合成 PGM 校验）
     def _mk_pgm(path, w, h, rows_ink):
@@ -1922,6 +1952,89 @@ def stage9_tests():
     check("stage9/band-relative-to-column", abs(m3["band"] - 100 / h) < 0.01, str(m3["band"]))
     shutil.rmtree(OUT, ignore_errors=True)
 
+
+def pair_sheet_tests():
+    """Step 2-c：成对比较验收表的口径与结构不变量（不重编译，纯读产物 + 纯逻辑）。"""
+    print("\n== Step 2-c：成对比较表（12 对） ==")
+    proj = os.path.join(ROOT, "workbench-pairs")
+    pj_path = os.path.join(proj, "pairs.json")
+    if not os.path.isfile(pj_path):
+        skip("pairs/*", "workbench-pairs/pairs.json 不存在（先 --build）")
+        return
+    pj = json.load(open(pj_path, encoding="utf-8"))
+    pairs = pj["pairs"]
+    check("pairs/count-12", len(pairs) == 12, str(len(pairs)))
+    check("pairs/gap-above-threshold",
+          all(p["gap"] >= 0.40 for p in pairs),
+          str(min(p["gap"] for p in pairs)))
+    check("pairs/single-dim-dominance",
+          all(p["dominance"] >= 0.50 for p in pairs),
+          str(min(p["dominance"] for p in pairs)))
+    check("pairs/dim-coverage",
+          len({p["dominant_dim"] for p in pairs}) >= 5,
+          str(sorted({p["dominant_dim"] for p in pairs})))
+    check("pairs/same-column",
+          all(p["a"].get("column") == p["b"].get("column") for p in pairs),
+          str([(p["a"].get("column"), p["b"].get("column")) for p in pairs
+               if p["a"].get("column") != p["b"].get("column")]))
+    papers = [p["a"]["case_id"] for p in pairs] + [p["b"]["case_id"] for p in pairs]
+    check("pairs/no-paper-reused", len(set(papers)) == len(papers))
+    check("pairs/sides-valid",
+          all({p["left_side"], p["right_side"]} == {"a", "b"} for p in pairs))
+    html_path = os.path.join(proj, "sheet", "sheet.html")
+    if os.path.isfile(html_path):
+        import re
+        html = open(html_path, encoding="utf-8").read()
+        srcs = re.findall(r'<img src="([^"]+)"', html)
+        check("pairs/html-refs-render",
+              len(srcs) == 2 * len(pairs)
+              and all(os.path.isfile(os.path.join(proj, "sheet", f)) for f in srcs),
+              f"{len(srcs)} refs")
+    # 口径自检：模型永远对 / 永远错
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import importlib
+    mps = importlib.import_module("make_pair_sheet")
+    check("pairs/selftest-accuracy-mapping", mps.selftest() == 0)
+
+
+
+def severity_sheet_tests():
+    """Step 5-a：缺陷严重度成对表的结构不变量 + BT 口径自检。"""
+    print("\n== Step 5-a：缺陷严重度成对表（15 题） ==")
+    proj = os.path.join(ROOT, "workbench-severity")
+    pj_path = os.path.join(proj, "pairs.json")
+    if not os.path.isfile(pj_path):
+        skip("severity/*", "workbench-severity/pairs.json 不存在（先 --build）")
+        return
+    pj = json.load(open(pj_path, encoding="utf-8"))
+    pairs = pj["pairs"]
+    check("severity/count-15", len(pairs) == 15, str(len(pairs)))
+    appeared = {}
+    for p in pairs:
+        for side in ("left", "right"):
+            appeared[p[side]] = appeared.get(p[side], 0) + 1
+    check("severity/each-item-3-times",
+          set(appeared) == set(pj["items"]) and set(appeared.values()) == {3},
+          str(sorted(appeared.items())))
+    keys = [tuple(sorted((p["left"], p["right"]))) for p in pairs]
+    check("severity/no-duplicate-pair", len(keys) == len(set(keys)))
+    # 连通性：BT 只在连通图上可辨识
+    nodes = set(pj["items"])
+    comp = {next(iter(nodes))}
+    changed = True
+    while changed:
+        changed = False
+        for a, b in keys:
+            if (a in comp) != (b in comp):
+                comp |= {a, b}
+                changed = True
+    check("severity/graph-connected", comp == nodes, str(sorted(nodes - comp)))
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import importlib
+    msv = importlib.import_module("make_severity_sheet")
+    check("severity/bt-selftest", msv.selftest() == 0)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -1948,6 +2061,8 @@ def main():
     stage7_tests()
     stage8_tests()
     stage9_tests()
+    pair_sheet_tests()
+    severity_sheet_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。

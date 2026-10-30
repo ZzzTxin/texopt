@@ -33,26 +33,18 @@ PDFDIR = "/mnt/d/texopt-corpus/pdf"
 WORK = os.path.join(PROJ, "workbench-detector")
 SHEET = os.path.join(WORK, "sheet")
 N = 20
-# 人的验收只看「会进 model2 的软指标」；band 已被 Step 2 判为暂缓，不参与排序
-RANK_METRICS = [m for m in S.SOFT_BANDS if m != "band"]
+# 人的验收只看「会进 model2 的软指标」；band 已被 Step 2 判为暂缓（w=0），不参与排序
+RANK_METRICS = [m for m, sp in S.SOFT_SPEC.items() if sp.get("w")]
 
 
 def _page_loss(m: dict, metric: str) -> float:
-    """与 score.aesthetic_score 同一口径的**逐页**损失。"""
-    lo, hi, _w = S.SOFT_BANDS[metric]
-    n = max(1e-6, hi - lo)
-    x = m.get(metric)
-    if x is None:
-        return 0.0
-    clip = S.SOFT_METRIC_CLIP.get(metric, (0.0, 1.0))
-    x = min(max(float(x), clip[0]), clip[1])
-    return min(S.SOFT_LOSS_CAP,
-               S.W_SOFT_LOW * max(0.0, lo - x) / n
-               + S.W_SOFT_HIGH * max(0.0, x - hi) / n)
+    """与 score.aesthetic_score 同一口径的**逐页**损失（2026-10-28 平滑目标形式）。"""
+    v = S.soft_metric_loss(metric, m.get(metric))
+    return 0.0 if v is None else v
 
 
 def page_score(m: dict) -> float:
-    return sum(S.SOFT_BANDS[k][2] * _page_loss(m, k) for k in RANK_METRICS)
+    return sum(_page_loss(m, k) for k in RANK_METRICS)   # 损失已含权重
 
 
 def _select() -> list[dict]:
@@ -209,15 +201,18 @@ def import_answers(path: str) -> int:
         print(f"只填了 {len(use)} 页，至少要 8 页才有结论（不伪造数据）")
         return 1
     human = [rk[p["id"]] for p in use]
-    out = {"n": len(use), "rank_metrics": RANK_METRICS, "overall": {}, "per_metric": {}}
+    # 口径随 score.py 走：从 pages.json 的原始指标**重算**，不用建表时的缓存分
+    scores = [page_score(p["metrics"]) for p in use]
+    out = {"n": len(use), "rank_metrics": RANK_METRICS, "overall": {},
+           "per_metric": {}, "form": "soft_metric_loss(2026-10-28)"}
     # 人对 = 排名数字小更好；指标 = 损失小更好 → 取负号使两列“大=好”
-    out["overall"]["spearman"] = spearman([-h for h in human], [-p["score"] for p in use])
+    out["overall"]["spearman"] = spearman([-h for h in human], [-s for s in scores])
     for mt in RANK_METRICS:
         losses = [-_page_loss(p["metrics"], mt) for p in use]
         out["per_metric"][mt] = spearman([-h for h in human], losses)
-    out["raw"] = {"human": human,
-                  "metric_score": [p["score"] for p in use],
-                  "ids": [p["id"] for p in use]}
+    out["raw"] = {"human": human, "metric_score": scores,
+                  "ids": [p["id"] for p in use],
+                  "cached_score_at_build": [p["score"] for p in use]}
     with open(os.path.join(WORK, "human_rank.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(json.dumps({k: v for k, v in out.items() if k != "raw"},
