@@ -1,0 +1,74 @@
+{
+  "schema": "texopt.rho_tradeoff.v1",
+  "definition": "等边际收益：人判无差异点上的交换率 ρ = c*(代价, I 单位) / w(该缺陷的 P 权重)",
+  "method": "生成「缺陷保留(A) vs 缺陷修掉+代价(B)」版本对，人工三选一（左/右/无差异），取偏好转折点",
+  "applied": {
+    "rho": 15.0,
+    "basis": "两轮中位的中位",
+    "range": [
+      5.0,
+      32.0
+    ],
+    "n_raters": 1,
+    "n_defects": 5,
+    "note": "单人评分；每轮 5 缺陷 × 2-3 档代价；一致性复核 6/6 通过"
+  },
+  "round1": {
+    "design": "5 缺陷 × 3 档，边距 +12/+20/+30mm（I = 6/10/15）",
+    "cstar_I": {
+      "widefig": 15.0,
+      "overfull": 12.5,
+      "vspace": 10.0,
+      "narrowtable": 10.0,
+      "widetable": 8.0
+    },
+    "rho_per_defect": {
+      "widefig": 15.0,
+      "overfull": 37.88,
+      "vspace": 16.67,
+      "narrowtable": 16.67,
+      "widetable": 6.67
+    },
+    "rho_median": 16.67
+  },
+  "round2": {
+    "design": "边界加密（c*±2）+ 字号货币（+1/+2 档，I = 3/6）",
+    "cstar_I": {
+      "widefig": 13.0,
+      "overfull": 10.5,
+      "vspace": 8.0,
+      "narrowtable": 8.0,
+      "widetable": 6.0
+    },
+    "rho_per_defect": {
+      "widefig": 13.0,
+      "overfull": 31.82,
+      "vspace": 13.33,
+      "narrowtable": 13.33,
+      "widetable": 5.0
+    },
+    "rho_median": 13.33,
+    "font_check": "4 缺陷 × 2 档字号全部选“修好版”，即 2 档字号(I=6) 仍低于边距转折点(8-13)；反推 1 档字号 ≈ 4-6 I ≈ 8-12mm 边距，与代码 3.0/档(≈6mm) 同量级",
+    "consistency": {
+      "null_correct": "0/2",
+      "mirror_agree": "2/2",
+      "note": "空题 0/2 是注意力/位置偏差信号，随后 6 题复核通过"
+    }
+  },
+  "check": {
+    "design": "3 空题 + 3 明显差异（2×c*）",
+    "result": "6/6",
+    "null_correct": "3/3",
+    "extreme_correct": "3/3"
+  },
+  "conclusion": {
+    "rho_used": 15.0,
+    "supersedes": "metrics/rho_exchange_rate.json 的 0.341（闭环平均代价口径）",
+    "why_changed": "平均代价 ≠ 无差异点；旧口径只统计优化器愿意试的动作，系统性偏向“修得值”的一侧",
+    "open_items": [
+      "P 权重个体偏差（overfull 偏低约 2x、tab_overwide 偏高约 2.5x）待第二评分人复核",
+      "字号/浮动体/图宽三个 I 系数的两两比例只验证了字号-边距一组"
+    ]
+  },
+  "built_at": "2026-10-31"
+}

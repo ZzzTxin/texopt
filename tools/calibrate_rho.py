@@ -33,7 +33,7 @@ ARTIFACT = os.path.join(ROOT, "metrics", "rho_exchange_rate.json")
 SCORE = os.path.join(ROOT, "texopt", "score.py")
 
 # ρ 的可用区间：低于 0.2 等于「缺陷几乎不要紧」，高于 10 等于「改一点都不划算」
-RHO_MIN, RHO_MAX = 0.2, 10.0
+RHO_MIN, RHO_MAX = 0.2, 100.0   # 2026-10-31：人判无差异标定给出 ρ≈15，旧上限 10 会误裁
 
 
 def _deltas_from_steps(steps: list[dict]) -> list[dict]:

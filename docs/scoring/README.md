@@ -110,20 +110,25 @@ sqrt 阻尼后缩放到现行量纲；artifact `metrics/severity_weights_applied
 ### 4.2 ρ：缺陷 ↔ 代价的汇率
 
 ```
-M1 = ρ·P + I         ρ = 0.341
+M1 = ρ·P + I         ρ = 15（人判无差异点标定）
 ```
 
-- **定义（用户 2026-10-30 拍定：等边际收益）**：`ρ = ΔI / (−ΔP)`，
-  即闭环里**实际付出**的干预代价 ÷ 实际修掉的缺陷。
-- **只统计付费修复**：4 篇真编译闭环共 43 次修复动作，37 次 `ΔI = 0`（零代价：
-  删手动分页、规范浮动体参数、注质量宏…），只有 6 次付费。
-  免费修复在任何 ρ>0 下都会被接受，**不携带汇率信息**；且只统计"尝试"而非"被接受"，
-  否则就是用 ρ 论证 ρ。
-- **实测**：中位 0.341（p25 0.304 / p75 0.383），artifact `metrics/rho_exchange_rate.json`，
-  工具 `tools/calibrate_rho.py`。
-- **含义**：修掉 1 个加权缺陷，实际换来约 0.34 个代价单位；比早期手拍的 2.0 低得多，
-  因为绝大多数缺陷是免费的。
-- **局限**：付费样本 n=6，且都落在"0.4 一次浮动体参数改动"附近，只够定量级。
+- **定义（用户 2026-10-30 拍定：等边际收益）**：修 1 单位缺陷的质量收益，恰好抵消
+  1 单位干预代价的保真收益 → **ρ 是边际替代率**，在无差异点上有 `ρ·w = c*`。
+- **测量方法（2026-10-31）**：生成「缺陷保留、版心不动」vs「缺陷修掉、付出代价」的版本对，
+  人工三选一（左/右/无差异），取偏好转折点 `c*`；`ρ = c*/w`。
+  两轮：第一轮 5 缺陷 × 3 档边距（+12/20/30mm）→ 中位 **16.7**；
+  第二轮边界加密 + 字号货币 → 中位 **13.3**；随后 6 题一致性复核（3 空题 + 3 明显差异）**6/6 通过**。
+- **取值**：`ρ = 15`，区间约 [5, 32]（单人评分、5 类缺陷）。
+  artifact `metrics/rho_tradeoff_20261031.json`；
+  工具 `tools/make_tradeoff_sheet.py` / `make_tradeoff_v2.py` / `make_tradeoff_check.py`。
+- **含义**：修 1 个加权缺陷，在人眼里约值 15 个代价单位——即愿意用 30mm 级别的边距改动去换。
+- **与旧值的关系**：早期 `ρ=0.341` 来自闭环里**已发生的付费修复**取中位数
+  （`ΔI/(−ΔP)`，4 篇 / 43 次动作 / 6 次付费）。那是**平均代价**，不是无差异点：
+  它只覆盖优化器愿意试的动作，天然偏向"修得值"的一侧。旧数据保留在
+  `metrics/rho_exchange_rate.json`，不再作为当前取值。
+- **局限**：单一评分人；每缺陷只有 2–3 个代价档；两轮间转折点整体差 2 个单位（4mm），
+  说明中等代价档上判断有噪声；P 权重的个体偏差（见下）尚未复核。
 
 ### 4.3 I：干预代价
 
@@ -220,9 +225,12 @@ python3 tests/run_tests.py
 # 权重 artifact 漂移检查
 python3 tools/apply_severity_weights.py --check
 
-# ρ 重算（真跑闭环；采到更多数据后应重跑）
-python3 tools/calibrate_rho.py --run examples/demo.tex examples/issues.tex \
-    examples/aidtest.tex examples/nightmare.tex
+# ρ 的人工无差异标定（生成 15 题 → 人填 → 解 ρ）
+python3 tools/make_tradeoff_sheet.py --build
+python3 tools/make_tradeoff_sheet.py --import answers.json
+
+# ρ 的历史口径（闭环平均代价，仅作交叉参考）
+python3 tools/calibrate_rho.py --run examples/demo.tex examples/issues.tex
 
 # gate 行为验证：不可达页数 → BLOCKED_GATE（0 个动作可试 + 建议）
 python3 optimize.py examples/demo.tex --target 1
@@ -231,8 +239,8 @@ python3 optimize.py examples/demo.tex --target 3 --tune-geometry   # 修复失�
 
 ## 9. 已知局限
 
-1. **ρ 的付费样本 n=6**：只够定量级，不够定小数点后一位；且样本集中在浮动体参数改动，
-   边距/字号这类大代价动作样本缺失。
+1. **ρ 来自单个评分人、5 类缺陷**：两轮中位 16.7 / 13.3，取 15；区间 [5, 32]。
+   两轮间同一对图片出现过方向翻转，说明中等代价档的差别人眼不敏感——小数点后的精度没有意义。
 2. **P 里有 7 项仍是先验**（无频率分母或无对应字段），未标定就明确标着"先验"。
 3. **`GATE_REPAIR_KEYS` 的空间类动作只在"单步就能减页"时生效**：连续两档才减页的情形
    会被单步回滚挡住（与改动前一致）。
