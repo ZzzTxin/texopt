@@ -4,14 +4,16 @@
   "decision": {
     "ok": true,
     "rho_raw": 0.3408,
-    "rho_applied": 0.341,
+    "rho_applied": 15.0,
     "clipped": false,
     "n": 6,
     "n_free_excluded": 37,
     "p25": 0.3039,
     "p75": 0.3833,
-    "basis": "paid",
-    "note": "ρ = 实际付出的干预代价 / 修掉的缺陷（等边际收益）；只在 ΔI>0 的动作上取汇率（免费修复不携带汇率信息），按每次**尝试**动作统计（不因 ρ 的选择效应而失真）"
+    "basis": "human_tradeoff",
+    "note": "ρ = 实际付出的干预代价 / 修掉的缺陷（等边际收益）；只在 ΔI>0 的动作上取汇率（免费修复不携带汇率信息），按每次**尝试**动作统计（不因 ρ 的选择效应而失真）",
+    "superseded_by": "metrics/rho_tradeoff_20261031.json",
+    "superseded_note": "2026-10-31：该值（0.341）是闭环“平均代价”口径，已被人判无差异点标定取代（applied ρ=15）；本文件保留作历史证据"
   },
   "per_doc": [
     {
