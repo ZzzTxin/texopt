@@ -12,6 +12,7 @@
 - [要求对接接口](#要求对接接口期刊会议自定义)
 - [已覆盖的 Basic 排版模块](#已覆盖的-basic-排版模块)
 - [页面级视觉量化与版面级修复](#页面级视觉量化与版面级修复phase-22026-09-11)
+- [审美量化模型（单独 README）](docs/aesthetic/README.md)
 - [确定性排版修复动作](#确定性排版修复动作2026-09-11-新增检测必须进入-act)
 - [模型在环](#模型在环model-in-the-loopllm-真正进入优化循环)
 - [输出状态](#输出状态2026-10-31-更新)
@@ -211,6 +212,9 @@ EMNLP/CVPR/ICCV/ECCV/AAAI/IJCAI/SIGGRAPH/KDD/WWW/OSDI/SOSP/NSDI），由「官�
 | 10. 页面平衡 | 删除手动分页/过大 vspace 后交给 LaTeX 全局断页；必要时注入 \\raggedbottom 抑制“为凑满页而拉伸” |
 
 ## 页面级视觉量化与版面级修复（Phase 2，2026-09-11）
+
+> 审美量化（A_soft / A_profile）的完整口径、参数、标定与局限，单独写在
+> **[`docs/aesthetic/README.md`](docs/aesthetic/README.md)**；本节只保留闭环层面的描述。
 
 ### 为什么需要
 
