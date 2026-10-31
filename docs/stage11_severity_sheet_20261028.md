@@ -1,7 +1,8 @@
 # Step 5-a：缺陷严重度标定（2026-10-28）
 
 > 目标：给 `PAGE_DEFECT_WEIGHT` 那 11 个手拍比重找来源。
-> 方案（`weight_calibration_plan_20261016.md`）：**wᵢ = 严重度ᵢ ÷ 频率ᵢ**。
+> 方案（原 `weight_calibration_plan_20261016.md`，已并入本文与 `docs/scoring/README.md`）：
+> **wᵢ = 严重度ᵢ ÷ 频率ᵢ**。
 > 频率来自语料（已有），严重度只能问人。
 
 ---
