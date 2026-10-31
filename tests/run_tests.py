@@ -399,8 +399,6 @@ def unit_tests():
     check("visual/giant-content-detected",
           abs(m2["band"] - 0.5) < 0.03
           and any(d["kind"] == "giant_content" for d in ds2), str(m2))
-    check("visual/defect-penalty-positive",
-          visual.defect_penalty(ds2) > 0 and visual.defect_penalty([]) == 0)
     # 几乎空白页（极少墨迹）-> high 级缺陷
     _mk_pgm(pg, 20, 100, [1] + [0] * 99)
     m4 = visual.page_metrics(pg)

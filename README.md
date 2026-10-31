@@ -517,7 +517,7 @@ gate=0 不再等于“已优化”（阶段 12 起，gate 违规甚至不产生�
 | 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
 | 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
 | 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
-| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二 + **步骤三（2026-10-01 采集 8 对，成对准确率 0.875，`method=ablation+human`）**；8 对是口径下限，建议攒到 ≥30 对（`tools/make_pairs.py`） |
+| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二 + **步骤三（2026-10-01 采集 8 对，成对准确率 0.875，`method=ablation+human`）**；8 对是口径下限，建议攒到 ≥30 对（`datasets/conf-specs/tools/make_pairs.py`） |
 | 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ✅（`texopt/evalexternal.py` + `datasets/conf-specs/tools/eval_external.py`；E1 真编译闭环 / E2 双测量路径 / E3 论文级聚合，详见 `docs/stage8_eval_external.md`） |
 | **阶段 9** 检测器体检 | 指标精度 / 日志解析覆盖率 / 语料正常区间口径（band v2） | ✅（`tools/detector_check.py`，`docs/stage9_detector_check_20261027.md`；`band` 判暂缓，权重置 0） |
 | **阶段 10** A_soft 形式改造 | 「带内恒 0」→ 平滑目标损失（对数/单侧、有界、无平台区） | ✅（`docs/stage10_a_soft_smooth_form_20261028.md`；排序 Spearman 0.3146 → **0.4586**，并列 8/20 → **0/20**） |
@@ -541,7 +541,7 @@ gate=0 不再等于“已优化”（阶段 12 起，gate 违规甚至不产生�
 **λ 仍为 0**：权重只改 `A_profile` 合成口径（`Σw·v/Σw`），不参与验收；λ>0 需人类标定 + 用户审批。
 
 阶段 7 步骤三（2026-10-01）：**已采集 8 对人类成对比较**（`human/pairs.json`，工具
-`tools/make_pairs.py`），成对准确率 0.875 → `method=ablation+human`；因样本是口径下限
+`datasets/conf-specs/tools/make_pairs.py`），成对准确率 0.875 → `method=ablation+human`；因样本是口径下限
 （≥8 才给结论）且 L2 朝等权收缩，人类数据主要把上表的强权重**拉回接近 1**
 （`balance.d_mid` 2.65 → **0.70**、`alignment.center_var` 0.46 → **1.53**）。
 要稳定主张“与人类偏好一致”，建议攒到 ≥30 对再 `--apply`。
@@ -673,8 +673,8 @@ python3 tests/run_tests.py                         # 含 s6/no-decision-change�
 ```bash
 cd datasets/conf-specs
 python3 tools/calibrate_weights.py --trials 80 --bootstrap 200 --apply
-python3 tools/make_pairs.py --sheet          # 新打分表（左右随机、不显示指标）
-python3 tools/make_pairs.py --import answers.json        # 人的答案 -> human/pairs.json
+python3 datasets/conf-specs/tools/make_pairs.py --sheet   # 阶段 7 版打分表（8 对）
+python3 datasets/conf-specs/tools/make_pairs.py --import answers.json   # 答案 -> human/pairs.json
 python3 tools/calibrate_weights.py --pairs ../human/pairs.json --apply   # 步骤三（需人类数据）
 ```
 

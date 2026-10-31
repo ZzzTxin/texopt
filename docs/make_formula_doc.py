@@ -26,13 +26,9 @@ import tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "formula_doc_assets")
 # 多文档：同一套公式图，不同模板
+# 注（2026-10-31）：v2（L+A+I 单一总分）已被 v3 取代，讲解版文档整套删除；
+# 公式图资产 formula_doc_assets/ 仍由 v3 文档引用，保留。
 DOCS = [
-    {
-        "template": os.path.join(HERE, "model_v2_explained_20261014.template.html"),
-        "output": os.path.join(HERE, "model_v2_explained_20261014.html"),
-        "single": os.path.join(HERE, "model_v2_explained_20261014_single.html"),
-        "note": "讲解版（记号、逐项解释、FAQ）",
-    },
     {
         "template": os.path.join(HERE, "model_v3_design_20261014.template.html"),
         "output": os.path.join(HERE, "model_v3_design_20261014.html"),

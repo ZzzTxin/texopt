@@ -150,8 +150,9 @@ A_soft = Σ 单指标聚合
 >    走第 5 节那张 `SOFT_SPEC` 表，**不是**下面这张缺陷权重表。
 > 3. 只做**出口门控**：任何 `high` 级缺陷 → 直接 `NEEDS_REVIEW`，不判 DONE。
 >
-> `visual.DEFECT_WEIGHT`（`giant_content` 1.5 等）目前只被 `defect_penalty()` 使用，
-> 而该函数除测试外未接入评分——属历史口径，保留待重接；**不要**把它当成现行权重。
+> `visual.DEFECT_WEIGHT` / `defect_penalty()`（旧口径：giant 1.5 / mid_gap 0.8 …）已于
+> 2026-10-31 作为死代码删除：两线分离后没有任何调用路径，且它与上面的归属规则
+> 互相矛盾，留着只会误导。需要旧数字时查 git 历史。
 
 ## 7. 分层：页面角色与留白分类
 

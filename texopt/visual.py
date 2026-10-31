@@ -239,15 +239,13 @@ ROW_EMPTY_RATIO = 0.004    # 行墨迹 ≤ 0.4% 行宽 -> 空白行
 
 SEVERITY_FACTOR = {"high": 1.0, "moderate": 0.6}
 
-# A 分里各类视觉缺陷的权重（× severity 系数）
-DEFECT_WEIGHT = {
-    "giant_content": 1.5,        # 单一大块内容（巨大图/表）占据页面
-    "stranded_block": 1.2,       # 内容孤零零 + 大面积留白
-    "bottom_blank": 1.0,         # 页底大面积空白
-    "mid_gap": 0.8,              # 页面中部巨大空洞
-    "near_empty": 0.6,           # 几乎空白页
-    "density_imbalance": 1.0,    # 页间密度严重失衡
-}
+# 注（2026-10-31 清理）：这里原有一张 `DEFECT_WEIGHT`（giant 1.5 / mid_gap 0.8 …）
+# 与 `defect_penalty()`，两线分离后**没有任何代码路径使用它们**（只有测试引用过）。
+# 视觉缺陷的计分归属已在 score.py 明确：
+#   * 进 M1 的 P：VISUAL_DEFECT_M1（stranded_block / near_empty）× SEVERITY_FACTOR
+#   * 进 M2 的 A_soft：SOFT_SPEC 里的像素软指标（bottom_blank / max_gap / ink…）
+#   * 其余 high 级缺陷只做出口门控（NEEDS_REVIEW）
+# 旧表已删除，避免出现“两张互相矛盾的缺陷权重表”。
 
 
 def page_metrics(pgm_path: str, ink_threshold: int = 200,
@@ -442,10 +440,3 @@ def visual_defects(metrics: dict | None) -> list:
     if not metrics or metrics.get("error"):
         return []
     return list(metrics.get("defects") or [])
-
-
-def defect_penalty(defects: list) -> float:
-    """视觉缺陷 -> A 分惩罚（权重 × severity 系数）。"""
-    return round(sum(DEFECT_WEIGHT.get(d["kind"], 0.5)
-                     * SEVERITY_FACTOR.get(d["severity"], 0.6)
-                     for d in defects), 3)
