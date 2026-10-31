@@ -1,7 +1,8 @@
 # 审美量化模型（model2：A_soft + A_profile）
 
 > 本目录只讲**审美量化这一块**：页面怎么量、怎么打分、怎么标定、怎么验证、哪里还不靠谱。
-> 主流程（gate / model1 / 闭环优化）见仓库根目录 `README.md`。
+> 整体打分（gate / model1 / 两线验收）见 [`docs/scoring/README.md`](../scoring/README.md)；
+> 主流程（闭环动作与模板）见仓库根目录 `README.md`。
 
 ## 1. 它是什么，在系统里的位置
 
