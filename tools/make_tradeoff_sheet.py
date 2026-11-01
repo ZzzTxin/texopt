@@ -124,7 +124,7 @@ PARAS_AFTER = [
 
 MARGIN0 = 25.4                 # demo.tex 原始边距（mm）
 MM_PER_I = 2.0                 # 边距 0.5/mm  -> 1 单位 I = 2mm
-COSTS = [1.5, 3.0, 4.5]        # 单位：I（边距 +3/+6/+9mm）
+COSTS = [6.0, 10.0, 15.0]      # 单位：I（边距 +12/+20/+30mm）——第二轮：拉开代价档位
 
 # ---------------------------------------------------------------- 缺陷定义
 # 每条：id / 名称 / 插在哪（唯一锚点）/ 缺陷版片段 / 修复版片段 / 期望的编译告警
@@ -228,7 +228,7 @@ PREAMBLE = (
     "\\title{{A Manuscript Page Under Two Layout Choices}}\n"
     "\\author{{Sh Lab \\\\ Zhejiang University}}\n"
     "\\date{{}}\n"
-    "\\begin{{document}}\n"
+    "\\begin{{document}}\n\\sloppy\n"
     "\\maketitle\n"
     "\\begin{{abstract}}\n"
     "This note is a calibration page. The paragraphs around the marked position are "
