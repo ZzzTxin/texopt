@@ -49,16 +49,38 @@ widetable 偏低（5–7）——即 P 权重里这两项的个体偏差没校�
 副作用要盯：ρ 变高会让「有代价的动作」更容易被接受，需重新检查是否变成乱动版心
 （见 §4 待办第 1 条）。
 
-## 4　待办（下一步）
+## 4　重标定后的影响（A/B 实测，2026-11-01）
 
-1. **ρ=15 的端到端影响未复测**：需在 `examples/{demo,issues,aidtest,nightmare,chaos}` 上
-   对比 ρ=0.341 / 15 的 `accepted` 动作数、页数、L、M1，确认没有被校准带偏。
-2. P 权重个体偏差（overfull 偏低约 2×、tab_overwide 偏高约 2.5×）需第二评分人复核。
-3. I 的三个系数（字号 3.0/档、边距 0.5/mm、浮动体 0.4/处、图宽 0.4/处）里，
-   「字号–边距」已验证同量级，「浮动体/图宽 vs 边距」仍无证据。
-4. 单人评分（n_raters = 1）：区间 [5,32] 主要反映同一人的前后差异，不是人群方差。
+同一份靶稿分别在 ρ=0.341 / 15 下跑完整闭环（`tools/rho_ab_compare.py`，产物
+`workbench-rho-ab/`）：
 
-## 5　复现
+| 文档 | accepted | 页数 | L | 终态 P / I | 终态 M1 | 状态 |
+|---|---|---|---|---|---|---|
+| demo | 1 / 1 | 6 / 6 | 0 / 0 | 0 / 0 | 0 → 0 | DONE / DONE |
+| issues | 4 → **5** | 2 / 2 | 0 / 0 | 0.8/0 → 0.3/0.4 | 0.273 → 4.9 | DONE / DONE |
+| aidtest | 6 / 6 | 2 / 2 | 0 / 0 | 0/0.4 同 | 0.4 → 0.4 | DONE / DONE |
+| nightmare | 17 / 17 | 5 / 5 | 0 / 0 | 3.03/1.2 同 | 2.233 → 46.65 | NEEDS_REVIEW 同 |
+| chaos | 14 → **16** | 5 / 5 | 0 / 0 | 3.603/0 → 0.273/2.0 | 1.229 → 6.095 | NEEDS_REVIEW 同 |
+
+读法：
+
+- **L 与页数零变化**：重标定没把文档改坏，也没借机乱改版心（页数全部一致）。
+- **多接受的只有「本来就有代价、过去被成本卡住」的修复**：issues 多了
+  `figure[H]→[tbp]`（I=0.4，消 P 0.5）；chaos 多了浮动体规范（4 处，I=1.6）
+  与超宽图归一（I=0.4）。残余 P 3.603 → 0.273，正是「同一缺陷现在值 15 而不是 0.341」的结果。
+- **M1 数值不可跨 ρ 比较**（尺度变了），只能比 `accepted` / 页数 / 残余 P。
+- nightmare 两档动作集合完全相同，只是分数尺度不同 —— 说明变化是**闸值处**的开关，
+  不是全面放松。
+
+## 5　待办（下一步）
+
+1. P 权重个体偏差（overfull 偏低约 2×、tab_overwide 偏高约 2.5×）需第二评分人复核。
+2. I 的系数里，「字号–边距」已验证同量级，「浮动体/图宽 vs 边距」仍无证据。
+3. 单人评分（n_raters = 1）：区间 [5,32] 主要反映同一人的前后差异，不是人群方差。
+4. chaos/nightmare 仍是 NEEDS_REVIEW（残余 P 0.273 / 3.03），属未覆盖的缺陷类型，
+   需要新的确定性动作，而不是继续调 ρ。
+
+## 6　复现
 
 ```bash
 cd /mnt/d/桌面/texopt
@@ -68,6 +90,7 @@ python3 tools/make_tradeoff_v2.py --build       # 第二轮 → workbench-tradeo
 python3 tools/make_tradeoff_v2.py --import answers.json
 python3 tools/make_tradeoff_check.py --build    # 一致性复核 → workbench-tradeoff-check/
 python3 tools/make_tradeoff_check.py --import answers.json
+python3 tools/rho_ab_compare.py --rhos 0.341,15  # 重标定前后行为对照 → workbench-rho-ab/
 ```
 
 产物：`workbench-tradeoff*/{,sheet,build}`（页面图 + key.json + 作答结果）；

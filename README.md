@@ -524,7 +524,7 @@ gate=0 不再等于“已优化”（阶段 12 起，gate 违规甚至不产生�
 | **阶段 10b** 成对比较验收 | 12 对二选一，替代 20 页人工排序 | ✅（`tools/make_pair_sheet.py`，`docs/stage10b_pair_sheet_20261028.md`） |
 | **阶段 11** 严重度标定 | 15 题圆桌轮转 + Bradley-Terry + Jeffreys 先验，`w = 严重度 ÷ 频率` | ✅（`tools/make_severity_sheet.py` / `tools/apply_severity_weights.py`，`docs/stage11_severity_sheet_20261028.md`） |
 | **阶段 12** gate 退出 + 两线分离 | gate 一票否决 → 定向修复/退出；model1、model2 不相加；P 权重回填；ρ 用闭环实测 | ✅（`docs/stage12_gate_exit_two_lines_20261030.md`；当时 ρ=0.341，回归 308/0/0） |
-| **阶段 13** ρ 无差异点重标定 | 闭环「平均代价」口径 → 人工无差异点（缺陷保留 vs 修好+代价 的版本对，三选一），两轮 15 题 + 6 题一致性复核 | ✅（`docs/stage13_rho_tradeoff_20261031.md`；ρ=**0.341 → 15**，区间 [5,32]，回归 **307/0/0**） |
+| **阶段 13** ρ 无差异点重标定 | 闭环「平均代价」口径 → 人工无差异点（缺陷保留 vs 修好+代价 的版本对，三选一），两轮 15 题 + 6 题一致性复核，并做重标定前后 A/B | ✅（`docs/stage13_rho_tradeoff_20261031.md`；ρ=**0.341 → 15**，区间 [5,32]，回归 **307/0/0**；A/B：多接受 0–2 个带代价修复，页数/L 均不变） |
 
 阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
 
@@ -658,6 +658,7 @@ python3 tools/make_tradeoff_v2.py --build         # ρ 第二轮：边界加密 
 python3 tools/make_tradeoff_v2.py --import answers.json
 python3 tools/make_tradeoff_check.py --build      # 一致性复核 6 题（3 空题 + 3 明显差异）
 python3 tools/make_tradeoff_check.py --import answers.json
+python3 tools/rho_ab_compare.py --rhos 0.341,15   # ρ 重标定前后行为对照（真编译，约 40 分钟）→ workbench-rho-ab/
 ```
 
 阶段 5 评测协议（离线跑缓存指标，约 2-3 分钟；加 `--render` 额外做渲染层注入 + 重编译稳定性）：
