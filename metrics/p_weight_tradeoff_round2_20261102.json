@@ -1,0 +1,191 @@
+{
+  "schema": "texopt.p_weight_tradeoff.v1",
+  "method": "同一把尺子：c* = 人判无差异点（边距 mm），w = c* / ρ（等边际收益自洽）",
+  "rho_used": 15.0,
+  "costs_probed": [
+    8.0,
+    15.0
+  ],
+  "work_dir": "workbench-pweight2",
+  "n_answers": 17,
+  "null_questions": {
+    "n": 2,
+    "correct": 2
+  },
+  "per_defect": {
+    "floatwarn": {
+      "key": "floatwarn",
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ]
+      ],
+      "cstar": 2.0
+    },
+    "overfull": {
+      "key": "overfull",
+      "points": [
+        [
+          12.5,
+          0.0
+        ]
+      ],
+      "cstar": 12.5
+    },
+    "spec_H": {
+      "key": "spec_H",
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ]
+      ],
+      "cstar": 2.0
+    },
+    "underfull": {
+      "key": "underfull",
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.0
+        ]
+      ],
+      "cstar": 2.0
+    },
+    "vbox_over": {
+      "key": "vbox_over",
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.0
+        ]
+      ],
+      "cstar": 2.0
+    },
+    "vbox_under": {
+      "key": "vbox_under",
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ]
+      ],
+      "cstar": 2.0
+    },
+    "widetable": {
+      "key": "tab_overwide",
+      "points": [
+        [
+          8.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    }
+  },
+  "proposed_weights": {
+    "floatwarn": 0.133,
+    "overfull": 0.833,
+    "spec_H": 0.133,
+    "underfull": 0.133,
+    "vbox_over": 0.133,
+    "vbox_under": 0.133,
+    "tab_overwide": 0.533
+  },
+  "diffs": [
+    {
+      "key": "floatwarn",
+      "old": 1.254,
+      "new": 0.133,
+      "ratio": 0.106
+    },
+    {
+      "key": "overfull",
+      "old": 0.33,
+      "new": 0.833,
+      "ratio": 2.524
+    },
+    {
+      "key": "spec_H",
+      "old": 0.5,
+      "new": 0.133,
+      "ratio": 0.266
+    },
+    {
+      "key": "tab_overwide",
+      "old": 1.2,
+      "new": 0.533,
+      "ratio": 0.444
+    },
+    {
+      "key": "underfull",
+      "old": 0.273,
+      "new": 0.133,
+      "ratio": 0.487
+    },
+    {
+      "key": "vbox_over",
+      "old": 2.344,
+      "new": 0.133,
+      "ratio": 0.057
+    },
+    {
+      "key": "vbox_under",
+      "old": 1.4,
+      "new": 0.133,
+      "ratio": 0.095
+    }
+  ],
+  "untouched_priors": {
+    "fig_overwide": 1.0,
+    "warn": 0.3,
+    "macros_missing": 2.0,
+    "unstable_spec": 0.8
+  },
+  "sum_old_measured": 7.301,
+  "sum_new_measured": 2.031,
+  "warnings": [
+    "有关键缺陷在最高代价档仍偏好「修好版」：c* 只是下界"
+  ]
+}

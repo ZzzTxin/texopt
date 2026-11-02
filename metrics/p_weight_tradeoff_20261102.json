@@ -1,0 +1,314 @@
+{
+  "schema": "texopt.p_weight_tradeoff.v2",
+  "method": "两轮作答合并成一条 b(c) 曲线；c* = 翻转区间中点（见 tools/pweight_combine.py）；w = c* / ρ",
+  "rho_used": 15.0,
+  "rounds": [
+    {
+      "work": "workbench-pweight",
+      "ts": "2026-11-02T02:02:03.279Z",
+      "costs": [
+        8.0,
+        12.5,
+        15.0
+      ],
+      "nulls": {
+        "n": 2,
+        "correct": 2
+      }
+    },
+    {
+      "work": "workbench-pweight2",
+      "ts": "2026-11-02T03:16:32.895Z",
+      "costs": [
+        2.0,
+        4.0,
+        6.0,
+        8.0,
+        12.5
+      ],
+      "nulls": {
+        "n": 2,
+        "correct": 2
+      }
+    }
+  ],
+  "null_total": {
+    "n": 4,
+    "correct": 4
+  },
+  "per_defect": {
+    "floatwarn": {
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "c_lo": 6.0,
+      "c_hi": 8.0,
+      "cstar": 7.0,
+      "kind": "区间中点",
+      "prior_from_stage13": null,
+      "key": "floatwarn",
+      "rho": 15.0,
+      "w": 0.467
+    },
+    "overfull": {
+      "points": [
+        [
+          12.5,
+          0.0
+        ]
+      ],
+      "c_lo": 10.5,
+      "c_hi": 12.5,
+      "cstar": 11.5,
+      "kind": "区间中点",
+      "prior_from_stage13": [
+        10.5,
+        12.5
+      ],
+      "key": "overfull",
+      "rho": 15.0,
+      "w": 0.767
+    },
+    "spec_H": {
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "c_lo": 6.0,
+      "c_hi": 8.0,
+      "cstar": 7.0,
+      "kind": "区间中点",
+      "prior_from_stage13": null,
+      "key": "spec_H",
+      "rho": 15.0,
+      "w": 0.467
+    },
+    "underfull": {
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "c_lo": 4.0,
+      "c_hi": 6.0,
+      "cstar": 5.0,
+      "kind": "区间中点",
+      "prior_from_stage13": null,
+      "key": "underfull",
+      "rho": 15.0,
+      "w": 0.333
+    },
+    "vbox_over": {
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.0
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "c_lo": 4.0,
+      "c_hi": 6.0,
+      "cstar": 5.0,
+      "kind": "区间中点",
+      "prior_from_stage13": null,
+      "key": "vbox_over",
+      "rho": 15.0,
+      "w": 0.333
+    },
+    "vbox_under": {
+      "points": [
+        [
+          2.0,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          6.0,
+          0.5
+        ],
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "c_lo": 6.0,
+      "c_hi": 8.0,
+      "cstar": 7.0,
+      "kind": "区间中点",
+      "prior_from_stage13": null,
+      "key": "vbox_under",
+      "rho": 15.0,
+      "w": 0.467
+    },
+    "widetable": {
+      "points": [
+        [
+          8.0,
+          0.0
+        ]
+      ],
+      "c_lo": 6.0,
+      "c_hi": 8.0,
+      "cstar": 7.0,
+      "kind": "区间中点",
+      "prior_from_stage13": [
+        6.0,
+        8.0
+      ],
+      "key": "tab_overwide",
+      "rho": 15.0,
+      "w": 0.467
+    }
+  },
+  "proposed_weights_raw": {
+    "floatwarn": 0.467,
+    "overfull": 0.767,
+    "spec_H": 0.467,
+    "underfull": 0.333,
+    "vbox_over": 0.333,
+    "vbox_under": 0.467,
+    "tab_overwide": 0.467
+  },
+  "untouched_priors": {
+    "fig_overwide": 1.0,
+    "warn": 0.3,
+    "macros_missing": 2.0,
+    "unstable_spec": 0.8
+  },
+  "sum_old_measured": 7.301,
+  "sum_new_raw": 3.301,
+  "rescale_to_keep_sum": 2.2118,
+  "proposed_weights_kept_sum": {
+    "floatwarn": 1.033,
+    "overfull": 1.696,
+    "spec_H": 1.033,
+    "underfull": 0.737,
+    "vbox_over": 0.737,
+    "vbox_under": 1.033,
+    "tab_overwide": 1.033
+  },
+  "rho_if_unscaled": 33.177,
+  "diffs": [
+    {
+      "key": "floatwarn",
+      "old": 1.254,
+      "new": 0.467,
+      "ratio": 0.372
+    },
+    {
+      "key": "overfull",
+      "old": 0.33,
+      "new": 0.767,
+      "ratio": 2.324
+    },
+    {
+      "key": "spec_H",
+      "old": 0.5,
+      "new": 0.467,
+      "ratio": 0.934
+    },
+    {
+      "key": "tab_overwide",
+      "old": 1.2,
+      "new": 0.467,
+      "ratio": 0.389
+    },
+    {
+      "key": "underfull",
+      "old": 0.273,
+      "new": 0.333,
+      "ratio": 1.22
+    },
+    {
+      "key": "vbox_over",
+      "old": 2.344,
+      "new": 0.333,
+      "ratio": 0.142
+    },
+    {
+      "key": "vbox_under",
+      "old": 1.4,
+      "new": 0.467,
+      "ratio": 0.334
+    }
+  ],
+  "warnings": [
+    "六类缺陷在 4–12mm 代价带内全部判「差不多」，16mm 起翻成「缺陷更好」：只隔一档，彼此的差别低于本次阶梯的分辨率，权重只能给到同一层级。"
+  ]
+}
