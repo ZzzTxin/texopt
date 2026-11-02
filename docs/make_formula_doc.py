@@ -30,6 +30,12 @@ ASSETS = os.path.join(HERE, "formula_doc_assets")
 # 公式图资产 formula_doc_assets/ 仍由 v3 文档引用，保留。
 DOCS = [
     {
+        "template": os.path.join(HERE, "scoring_report_20261102.template.html"),
+        "output": os.path.join(HERE, "scoring_report_20261102.html"),
+        "single": os.path.join(HERE, "scoring_report_20261102_single.html"),
+        "note": "阶段汇报：打分评价体系现状（2026-11-02）",
+    },
+    {
         "template": os.path.join(HERE, "model_v3_design_20261014.template.html"),
         "output": os.path.join(HERE, "model_v3_design_20261014.html"),
         "single": os.path.join(HERE, "model_v3_design_20261014_single.html"),
@@ -108,6 +114,29 @@ EQS = {
     "eq_softpool": r"A_{\text{soft}}(x')=\sum_i w_i\Bigl[\,0.5\,\mathrm{topk}_k\big(\mathrm{loss}_i\big)"
                    r"+0.5\,\mathrm{mean}\big(\mathrm{loss}_i\big)\Bigr],"
                    r"\quad k=\max\!\big(1,\mathrm{round}(0.05\,N_{\text{pages}})\big)",
+    # ---- 阶段汇报（2026-11-02）：现行口径 ----
+    "eq_rep_m1": r"M_1(x')=\rho\,P(x')+I(x'),\qquad \rho=15"
+                 r"\ \ \text{(indifference-point calibrated)}",
+    "eq_rep_w": r"w_k=\frac{c_k^{*}}{\rho},\qquad c_k^{*}:\ \text{human indifference}"
+                r"\ \text{cost (in }I\text{ units) at which}"
+                r"\ \text{``keep the defect''}\equiv\text{``fix it''}",
+    "eq_rep_scale": r"s=\frac{\sum_{k\in\mathcal{C}} w_k^{\mathrm{before}}}"
+                    r"{\sum_{k\in\mathcal{C}} w_k^{\mathrm{raw}}},\qquad "
+                    r"w_k^{\mathrm{final}}=s\,w_k^{\mathrm{raw}}",
+    "eq_rep_loss": r"\ell_i(p)=w_i\Bigl(1-e^{-d_i(p)^2/2}\Bigr),\qquad "
+                   r"d_i(p)=\frac{\bigl|\,x_i(p)-t_i\,\bigr|}{s_i^{\pm}},\qquad "
+                   r"t_i=\text{corpus median},\ \ s_i^{\pm}=\text{dist. to }p_{5}/p_{95}",
+    "eq_rep_pool": r"A_{\mathrm{soft}}(x')=\sum_{i}w_i\Bigl[\,0.5\,\mathrm{topk}_k\big(\ell_i\big)"
+                   r"+0.5\,\mathrm{mean}\big(\ell_i\big)\Bigr],\qquad "
+                   r"k=\max\bigl(1,\mathrm{round}(0.05\,N_{\mathrm{pages}})\bigr)",
+    "eq_rep_order": r"\mathrm{rank}(x'):\;\Bigl(\;|\mathrm{Gate}(x')|,\;\;M_1(x'),\;\;M_2(x')\;\Bigr)"
+                    r"\quad\text{lexicographic (no summation)}",
+    "eq_rep_accept": r"\text{accept}\iff \Delta|\mathrm{Gate}|<0\ \ \vee\ \ "
+                     r"\bigl(\Delta|\mathrm{Gate}|=0\ \wedge\ \Delta M_1<0\bigr)\ \ \vee\ \ "
+                     r"\bigl(\Delta M_1=0\ \wedge\ \Delta M_2<0\bigr)",
+    "eq_rep_page": r"p_p=\sum_{d:\,\mathrm{page}(d)=p} w_d\,s(d),\qquad "
+                   r"\bar p=\frac{1}{N}\sum_{p}p_p,\qquad "
+                   r"\mathrm{topk}_k(p),\qquad \max_p p_p",
     "eq_order": r"\text{rank}\;:\;\big(\;|\mathrm{Gate}(x')|,\;\;M_1(x'),\;\;M_2(x')\;\big)"
                 r"\ \ \text{lexicographic},\qquad "
                 r"T(x')=\rho P+I+A_{\text{soft}}\ (\text{implementation})",

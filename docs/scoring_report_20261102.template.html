@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>texopt 打分评价体系 · 现状总结（2026-11-02 阶段汇报）</title>
+<style>
+  :root { --fg:#1b1b1b; --muted:#6b6b6b; --line:#d8d8d8; --accent:#1f4e79; --box:#f4f7fa; }
+  * { box-sizing: border-box; }
+  body { margin:0 auto; max-width:54rem; padding:2.2rem 1.6rem 5rem;
+         font:16px/1.75 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+         color:var(--fg); background:#fff; }
+  h1 { font-size:1.7rem; margin:0 0 .2rem; }
+  h2 { font-size:1.28rem; margin:2.4rem 0 .8rem; padding-bottom:.35rem;
+       border-bottom:2px solid var(--accent); }
+  h3 { font-size:1.06rem; margin:1.7rem 0 .6rem; color:var(--accent); }
+  p, li { margin:.45rem 0; }
+  .sub { color:var(--muted); margin:0 0 1.2rem; }
+  .box { background:var(--box); border:1px solid var(--line); border-left:4px solid var(--accent);
+         border-radius:4px; padding:.7rem .9rem; margin:1rem 0; }
+  .box.warn { border-left-color:#b45309; background:#fdf7ec; }
+  .box.key  { border-left-color:#15803d; background:#f1f8f2; }
+  .eqbox { text-align:center; margin:1.1rem 0; overflow-x:auto; }
+  img.eq { vertical-align:middle; }
+  table { border-collapse:collapse; width:100%; margin:.9rem 0; font-size:.93rem; }
+  th, td { border:1px solid var(--line); padding:.42rem .55rem; text-align:left; vertical-align:top; }
+  th { background:#eef3f7; font-weight:600; }
+  code { background:#f2f2f2; padding:.08rem .3rem; border-radius:3px;
+         font-family:Consolas,"Courier New",monospace; font-size:.9em; }
+  .small { font-size:.9rem; color:var(--muted); }
+  .ok { color:#15803d; font-weight:600; }
+  .warn2 { color:#b45309; font-weight:600; }
+  .m1 { color:#1f4e79; font-weight:600; }
+  .m2 { color:#a1550a; font-weight:600; }
+  hr { border:0; border-top:1px solid var(--line); margin:2.4rem 0; }
+</style>
+</head>
+<body>
+
+<h1>texopt 打分评价体系 · 现状总结</h1>
+<p class="sub">2026-11-02 · 阶段汇报版 · 承接 10-14 的 v3 结构设计说明
+（<code>model_v3_design_20261014.html</code>），补齐阶段 12–16 的标定与修正 ·
+代码与数字均可在当前仓库复现</p>
+
+<div class="box key">
+<b>一句话：</b>最终排序是<b>严格字典序</b> <code>(|Gate|, M₁, M₂)</code>——
+先用<b>逻辑门</b>判「能不能用」，再用 <b>model1</b> 判「缺陷与代价是否划算」，
+最后才用 <b>model2</b> 在完全打平时比审美。三条线<b>不相加</b>，
+因为相加允许「审美变好」去补偿「缺陷变多」。
+</div>
+
+<h2 id="s0">0. 当前状态一览</h2>
+
+<table>
+<tr><th>模块</th><th>状态</th><th>关键事实</th></tr>
+<tr><td class="gl">Gate（逻辑门）</td><td>✅ 冻结</td>
+    <td>10 项检查，分「可修 / 不可修」；页数按<b>正文页</b>判；正文改动按用户决定<b>保持软约束</b></td></tr>
+<tr><td class="m1">model1 = ρ·P + I</td><td>✅ 冻结</td>
+    <td>ρ 由人工无差异点标定为 <b>15</b>（原 0.341 是效率统计量，已废弃）；P 的 11 项里 <b>7 项</b>统一到 c* 口径，4 项仍明确标注「先验」</td></tr>
+<tr><td class="m2">model2 = A_soft + λ·A_profile</td><td class="warn2">⚠ 进行中</td>
+    <td>λ 恒为 0；体检发现 8 个指标里 <b>3 个是准常数</b>、<b>1 个是阈值型</b>；v2 指标集（3 指标）已定案，权重待人工标定</td></tr>
+<tr><td>局部 / 整体</td><td>✅ 诊断层已建</td>
+    <td>单页分 + 三种读法（页均 / 最差 5% / 峰值）；<b>不动 M1 口径</b>（用户决定不加最差页项）</td></tr>
+<tr><td>回归测试</td><td>✅ 332 通过 / 0 失败 / 0 跳过</td>
+    <td>含连档压页 A/B、归因恒等式、指标体检、权重 artifact 漂移校验</td></tr>
+</table>
+
+<h2 id="s1">1. 三层结构与职责</h2>
+
+<table>
+<tr><th>层</th><th>回答什么</th><th>数学形态</th><th>参与打分类别</th></tr>
+<tr><td class="gl">Gate</td><td>这份稿子<b>算不算可用</b></td>
+    <td>条件集合，逐项 0/1；<b>不是公式、不给分</b></td>
+    <td>一票否决，不进入 M₁/M₂</td></tr>
+<tr><td class="m1">model1</td><td>页面缺陷有多少？为了改它动了多少？</td>
+    <td>M₁ = ρ·P + I</td><td>主目标</td></tr>
+<tr><td class="m2">model2</td><td>版面观感如何？（密度 / 空洞 / 均衡，及与同类论文比）</td>
+    <td>M₂ = A_soft + λ·A_profile（λ=0）</td><td>次目标，仅作 tie-break</td></tr>
+</table>
+
+<div class="eqbox">{{EQ:eq_rep_order}}</div>
+
+<h2 id="s2">2. Gate：不可行就不打分</h2>
+
+<table>
+<tr><th>检查项</th><th>判据</th><th>可修</th><th>修复手段</th></tr>
+<tr><td><code>compile</code></td><td>编译失败 / 无 PDF</td><td>✗</td><td>—（不在排版动作面内）</td></tr>
+<tr><td><code>pdf</code></td><td>未产出 PDF</td><td>✗</td><td>—</td></tr>
+<tr><td><code>figures</code></td><td>图/表内容指纹被改</td><td>✗</td><td>—（保真底线）</td></tr>
+<tr><td><code>content</code></td><td>仅当 <code>content_hard=True</code> 才拦</td><td>—</td><td><b>当前默认软约束</b>（用户 11-02 决定保留）</td></tr>
+<tr><td><code>pages</code></td><td>正文页数超上限（参考文献之前计）</td><td>✓</td><td>边距 / 字号 / 图宽 / 删手动分页 / 收紧间距</td></tr>
+<tr><td><code>font</code> / <code>margin</code></td><td>不符要求档位 / 会议下限</td><td>✓</td><td><code>font_spec</code> / <code>margin_spec</code></td></tr>
+<tr><td><code>fleqn</code> / <code>toc</code> / <code>header</code></td><td>要求点名但缺失/异常</td><td>✓</td><td>对应确定性动作</td></tr>
+</table>
+
+<h3>2.1 门内定向修复：连档压页的「暂存链」</h3>
+
+<p>TeX 断页是<b>台阶式</b>的：收一档边距常常一页不减，要连收两三档才兑现。旧逻辑要求
+每个单步都严格减页，于是第一档就被回滚并永久拉黑——「多档才减页」的修复永远不可能发生。
+阶段 15 改为暂存链：</p>
+
+<table>
+<tr><th>单步结果</th><th>处理</th><th>目的</th></tr>
+<tr><td>兑现（违规减少 / 页数减少）</td><td>本步 + 此前所有暂存档<b>一并提交</b></td><td>不丢组合收益</td></tr>
+<tr><td>不增违规、不增页</td><td><b>暂存</b>，保留状态继续往下压</td><td>允许台阶式推进</td></tr>
+<tr><td>变差（违规变多 / 页数变多）</td><td>回滚</td><td>不倒退</td></tr>
+<tr><td>暂存达 3 档仍未兑现</td><td><b>整链回滚到链首</b></td><td>不把累计破坏留在稿子里</td></tr>
+</table>
+
+<p class="small">实测靶稿（8 段 × 6 句，A4/10pt）：25mm→2 页、23mm→2 页、21mm→1 页。
+把上限设为 1（= 旧行为）仍然 <code>BLOCKED_GATE</code>；默认 3 则压进 1 页且边距 ≤21mm；
+「怎么收都不减页」的稿子会整链回滚、边距回到 25mm。</p>
+
+<h2 id="s3">3. model1：缺陷与代价</h2>
+
+<div class="eqbox">{{EQ:eq_rep_m1}}</div>
+
+<h3>3.1 P：页面缺陷（半硬性）</h3>
+<div class="eqbox">{{EQ:eq_P}}</div>
+
+<table>
+<tr><th>缺陷</th><th>权重</th><th>来源</th><th>无差异点 c*（I 单位）</th></tr>
+<tr><td>正文行溢出 overfull</td><td>1.696</td><td>人判无差异点</td><td>11.5（+ 阶段 13 先验区间收窄）</td></tr>
+<tr><td>页面盒欠满 vbox_under（孤行寡行代理）</td><td>1.033</td><td>人判无差异点</td><td>7.0</td></tr>
+<tr><td>浮动体警告 floatwarn</td><td>1.033</td><td>人判无差异点</td><td>7.0</td></tr>
+<tr><td>表格超宽 tab_overwide</td><td>1.033</td><td>人判无差异点</td><td>7.0</td></tr>
+<tr><td><code>[H]</code> 强排 spec_H</td><td>1.033</td><td>人判无差异点</td><td>7.0</td></tr>
+<tr><td>行欠满 underfull</td><td>0.737</td><td>人判无差异点</td><td>5.0</td></tr>
+<tr><td>页面盒溢出 vbox_over</td><td>0.737</td><td>人判无差异点</td><td>5.0</td></tr>
+<tr><td>图片超宽 fig_overwide</td><td>1.0</td><td class="warn2">先验（未标定）</td><td>—</td></tr>
+<tr><td>其余编译 Warning</td><td>0.3</td><td class="warn2">先验（人不可判）</td><td>—</td></tr>
+<tr><td>断行质量宏缺失</td><td>2.0</td><td class="warn2">先验（人不可判）</td><td>—</td></tr>
+<tr><td>浮动体参数不稳定</td><td>0.8</td><td class="warn2">先验（人不可判）</td><td>—</td></tr>
+</table>
+
+<p class="small">另有源码卫生 22 项（<code>HYGIENE_WEIGHT</code> 0.3–1.0）与页面视觉缺陷
+（<code>stranded_block</code> 1.2 / <code>near_empty</code> 0.6，× 严重度系数）。
+P 目前按<b>出现次数线性累加</b>——同页 20 处溢出 = 20 次计。<b>用户 11-02 决定暂不加饱和项。</b></p>
+
+<h3>3.2 ρ：缺陷 ↔ 代价的汇率</h3>
+<div class="eqbox">{{EQ:eq_rep_w}}</div>
+
+<p>口径是<b>等边际收益</b>：修 1 单位缺陷的质量收益，恰好抵消 1 单位干预代价。
+测量方式不是从闭环里统计「已经发生的修复」（那会偏向"修得值"的一侧，
+旧值 0.341 就是这么来的），而是<b>直接问人</b>：</p>
+
+<table>
+<tr><th>轮次</th><th>设计</th><th>结果</th></tr>
+<tr><td>第一轮</td><td>5 类缺陷 × 3 档边距（+12/20/30mm）+ 空题</td><td>中位 ρ = 16.7</td></tr>
+<tr><td>第二轮</td><td>边界加密 + 字号货币 + 空题</td><td>中位 ρ = 13.3</td></tr>
+<tr><td>一致性复核</td><td>3 道空题 + 3 道明显差异题</td><td>6/6 通过</td></tr>
+<tr><td><b>取值</b></td><td>两轮中位</td><td><b>ρ = 15</b>，区间约 [5, 32]（单人评分、5 类缺陷）</td></tr>
+</table>
+
+<p class="small">含义：修 1 个加权缺陷，在人眼里约值 15 个代价单位——即愿意用 30mm 级别的
+边距改动去换。这也是「模型过去过于死守原版心」的量化解释。</p>
+
+<h3>3.3 口径统一：从 c* 到落地权重</h3>
+<div class="eqbox">{{EQ:eq_rep_scale}}</div>
+<p>7 项从两套不可比的口径（人判严重度 ÷ 语料频率；9 月手拍先验）统一到 c* 后，
+权重和从 7.301 掉到 3.301。若不同步缩放，等于偷偷放松了「最小干预」的强度；
+所以整体 ×2.212 拉回原量纲，<b>ρ=15 继续锚定</b>（口径 A）。33 题作答、空题 4/4 通过。</p>
+
+<h3>3.4 I：干预代价</h3>
+<div class="eqbox">{{EQ:eq_I}}</div>
+<table>
+<tr><th>改动</th><th>代价</th></tr>
+<tr><td>页边距每偏离原稿 1mm</td><td>0.5</td></tr>
+<tr><td>字号每偏离 1 档</td><td>3.0</td></tr>
+<tr><td>每处浮动体位置参数被规范化 / 每处图片宽度被归一</td><td>0.4</td></tr>
+<tr><td>正文改动幅度 D_content（归一化字符多重集 Jaccard 差）</td><td>× β = 50</td></tr>
+</table>
+<p class="small">内容保留是<b>强偏好</b>而不是硬约束：语义抛光阶段要允许合法改字，
+所以改正文按幅度扣分、不判死。要恢复「零改动」硬约束，把 <code>content_hard=True</code> 即可。</p>
+
+<h2 id="s4">4. model2：审美量化</h2>
+
+<div class="eqbox">{{EQ:eq_M2}}</div>
+
+<h3>4.1 A_soft：平滑目标形式（现口径）</h3>
+<div class="eqbox">{{EQ:eq_rep_loss}}</div>
+<div class="eqbox">{{EQ:eq_rep_pool}}</div>
+
+<p>目标 <code>t</code> 取已录用语料中位数，尺度 <code>s</code> 取到 p5 / p95 的距离；
+损失在目标处为 0、两侧严格单调、有界（封顶 3.0）。页 → 文档用「最差 5% 均值 + 全体均值」
+各半：既对局部异常页敏感，又不被单页主导。</p>
+
+<p class="small">这一形式是阶段 10 换掉的旧「带内恒 0」写法：旧写法会让 20 页里有 8 页总分为 0、
+排序信号被抹平，且把「过满」当缺陷（与人的偏好相反）。换形式后人工排序 Spearman
+0.3146 → <b>0.4586</b>，并列 8/20 → <b>0/20</b>。</p>
+
+<h3>4.2 体检结论：8 个指标里只有 3 个在干活</h3>
+
+<p>90 篇 / 1502 页语料 + 8 个受控坏版面变体，两套体检交叉判定：</p>
+
+<table>
+<tr><th>指标</th><th>篇内损失极差</th><th>只看正文页</th><th>坏版面敏感性</th><th>处置</th></tr>
+<tr><td>max_gap（页内大空洞）</td><td>0.283</td><td>0.000</td><td><b>1.384</b>（最强）</td>
+    <td class="ok">保留，改口径（只算页中段）</td></tr>
+<tr><td>ink_ratio（墨迹密度）</td><td>0.322</td><td>0.039</td><td>0.686</td>
+    <td class="ok">保留，按角色分层</td></tr>
+<tr><td>top_bottom_ratio（上下失衡）</td><td>0.468</td><td><b>0.297</b></td><td>0.526</td>
+    <td class="ok">保留</td></tr>
+<tr><td>top_blank（页首留白）</td><td>0.199</td><td>0.099</td><td>0.374</td>
+    <td>删（与 max_gap 正文层 ρ=0.837）</td></tr>
+<tr><td>right_blank</td><td>0.130</td><td>0.011</td><td>0.399（来自双栏）</td>
+    <td>删（与 left ρ=0.876）</td></tr>
+<tr><td>left_blank</td><td>0.005</td><td>0.005</td><td>0.002</td><td>删（死数）</td></tr>
+<tr><td>bottom_blank</td><td><b>0.000</b></td><td>0.000</td><td>0.148</td><td>删（篇内完全不变）</td></tr>
+<tr><td>band（单块内容占比）</td><td>—</td><td>—</td><td>—</td><td>保持权重 0（阈值型，≥0.40 仍作门控判据）</td></tr>
+</table>
+
+<div class="box warn">
+<b>读法要小心：</b><code>max_gap</code> 在正文页上完全不动（0.000），因为正常正文页没有大空洞——
+<b>这恰恰是它的职责</b>。只看语料会把它误判成死数；必须配「坏版面敏感性」这套体检，
+它在那里是最强的（1.384）。反过来，<code>bottom_blank</code> 两项指标都接近 0，删掉没有风险。
+</div>
+
+<p>另外查出两个口径漏洞，列入 v2：① <code>max_gap</code> 会把<b>末页自然留白</b>当成页中大洞
+（干净的合成稿就吃了 0.379 的罚分）；② <code>ink_ratio</code> 的变异 97% 来自页类型
+（整页图页密度天然低），不按角色分层就是在量「这页是不是图页」。</p>
+
+<h3>4.3 A_profile：为什么 λ 仍然是 0</h3>
+<p>A_profile 量的是「与同会议·同角色语料的偏离」，不是「缺陷」。阶段性外部验证里，
+源码级退化造成的 4 篇坏稿，它 <b>0/4</b> 与缺陷指标同向——因为 TeX 在断页处把问题吞掉了，
+渲染结果逐位不变。所以在「把缺陷敏感与常态偏离拆开」之前，λ 必须保持 0；
+代码里有 <code>assert_lambda_allowed</code> 硬拦截，防止悄悄开。</p>
+
+<h2 id="s5">5. 验收规则：严格改善才保留</h2>
+
+<div class="eqbox">{{EQ:eq_rep_accept}}</div>
+
+<table>
+<tr><th>#</th><th>条件</th><th>结果</th></tr>
+<tr><td>1</td><td>Gate 违规数减少 / 增加</td><td>接受 / 拒绝</td></tr>
+<tr><td>2</td><td>双方都还有页数违规，页数不增</td><td>接受（压页可能需连续多档才兑现）</td></tr>
+<tr><td>3</td><td>Gate 未过（不可打分）</td><td>拒绝（M₁/M₂ 仅供诊断）</td></tr>
+<tr><td>4</td><td>M₁ 严格改善</td><td>接受</td></tr>
+<tr><td>5</td><td>M₁ 变差</td><td>拒绝（M₂ 再好也不补偿）</td></tr>
+<tr><td>6</td><td>M₁ 完全持平、M₂ 严格改善</td><td>接受（唯一 tie-break）</td></tr>
+<tr><td>7</td><td>其他</td><td>拒绝</td></tr>
+</table>
+
+<p class="small">每个候选都<b>整篇重编译 + 全局重评</b>，变差即回滚；失败动作跨轮 blocked；
+连续 2 轮无改善才停。验收口径本身会改变优化器行为，所以口径可审计、有测试。
+（历史上 v1「总分相加」把真修复拒过：修 <code>[H]→[tbp]</code> 让 A 从 17.5 降到 16.0，
+但 I 升到 2.8，总分反而变高被回滚。）</p>
+
+<h2 id="s6">6. 局部 vs 整体</h2>
+
+<p>M₁ 的 P 是全文按次数求和，一个烂页会被别页的好摊平；M₂ 本来就有局部/整体聚合——
+两条线口径不一致，报告里也看不出「哪一页最差」。阶段 15 补了一层<b>只做归因、不改判定</b>的诊断：</p>
+
+<div class="eqbox">{{EQ:eq_rep_page}}</div>
+
+<table>
+<tr><th>归因对象</th><th>怎么落到页</th></tr>
+<tr><td>日志类缺陷（行溢出 / 欠满 / 表格超宽）</td><td>源码行号 → <b>SyncTeX</b> → PDF 页号</td></tr>
+<tr><td>源码卫生项、<code>[H]</code> 强排、参数不稳定</td><td>同上（扫描自带行号）</td></tr>
+<tr><td>渲染层视觉缺陷（内容孤立、近空白页）</td><td>本来就有页号</td></tr>
+<tr><td>vbox、浮动体警告、其余警告、质量宏缺失</td><td><b>归不到页</b>，单列「未归属」</td></tr>
+</table>
+
+<p>实测 <code>examples/issues.tex</code>（3 页）：P 页均 1.311、最差页 1.900、全篇 5.933
+（其中 2.0 归不到页）。第 3 页是「近空白页」，是全篇最差的一页，
+但在全篇 P 里只占 10%——这就是「整体分摊平局部病灶」的具体例子。</p>
+
+<div class="box">
+<b>边界（用户 11-02 拍定）：</b>不加最差页项（<code>ρ_peak·P_peak</code>）、不做同类缺陷饱和、
+不改 M₁ 公式。局部层只用于<b>诊断与报告</b>，不作为优化目标——因为动作面大多是全局的
+（边距、字号、浮动体参数），以单页分为目标会诱导「修好这页、害了别页」。
+</div>
+
+<h2 id="s7">7. 实测终态（现行权重，真编译）</h2>
+
+<table>
+<tr><th>文档</th><th>状态</th><th>页数</th><th>Gate</th><th>P</th><th>M₁</th><th>M₂</th><th>说明</th></tr>
+<tr><td>demo</td><td>DONE</td><td>6</td><td>0</td><td>0.00</td><td>0.00</td><td>1.197</td><td>干净稿，只注入质量宏</td></tr>
+<tr><td>issues</td><td>DONE</td><td>2</td><td>0</td><td>0.30</td><td>4.90</td><td>1.232</td><td>残余为下划线滥用</td></tr>
+<tr><td>aidtest</td><td>DONE</td><td>2</td><td>0</td><td>0.00</td><td>0.40</td><td>0.894</td><td>只花 0.4 的结构代价</td></tr>
+<tr><td>chaos</td><td>NEEDS_REVIEW</td><td>5</td><td>0</td><td>0.74</td><td>13.06</td><td>2.549</td><td>残余为整页大图类</td></tr>
+<tr><td>nightmare</td><td>NEEDS_REVIEW</td><td>5</td><td>0</td><td>4.40</td><td>67.14</td><td>1.742</td><td>overfull 变贵后暴露的正文溢出</td></tr>
+</table>
+
+<p class="small">数据来自阶段 14 的「旧权重 vs 现行权重」A/B 实跑（<code>workbench-pweight-ab/</code>）。
+<b>accepted 动作数、页数、Gate 逐个文档完全相同</b>——说明这次改的是 P 的内部结构（口径更正），
+没有在靶稿上掀起新的取舍。M₁ 不可跨权重比较（尺度变了），只能比动作集合与残余缺陷归属。</p>
+
+<h2 id="s8">8. 可信度与局限（必须写进论文）</h2>
+
+<ol>
+<li><b>ρ 是单评分人、5 类缺陷</b>标出来的，区间约 [5, 32]；两轮中位 16.7 / 13.3。
+小数点后的精度没有意义。</li>
+<li><b>P 有 4 项仍是先验</b>（fig_overwide / warn / macros_missing / unstable_spec），
+代码里逐项标注，不冒充标定结果。</li>
+<li><b>指标判定对样本量敏感</b>：27 篇样本时 `top_blank` 被判保留、`max_gap` 被判分层；
+扩到 90 篇结论才稳定。<b>这条本身就是方法学局限</b>。</li>
+<li><b>角色是像素代理</b>，不是语义角色（不知道那页是不是 references / appendix）；
+真正的 roles.py 走矢量层、成本高，闭环里跑不动。</li>
+<li><b>A_soft 不是人类审美评分</b>：与人的一致性只有 20 页排序 Spearman 0.46
+（n=20 时标准误约 ±0.2）与 12 对成对比较。</li>
+<li><b>两套口径不可混比</b>：在线是像素层、离线是矢量层，只能比方向，不能比绝对值。</li>
+<li><b>「全局最优」不声称</b>：只保证「评分可复现、方向可验证、退化会变差」。</li>
+</ol>
+
+<h2 id="s9">9. 下一步</h2>
+
+<table>
+<tr><th>序</th><th>事项</th><th>依赖</th></tr>
+<tr><td>1</td><td>A_soft v2 落地：3 指标 + max_gap 位置条件 + ink_ratio 角色门控；
+权重先用过渡值（A 量级 ×1.618 锚定）</td><td>无（可立即做）</td></tr>
+<tr><td>2</td><td>30 对成对比较做 BT 权重标定，替换过渡值</td><td><b>需人工作答 20–30 分钟</b></td></tr>
+<tr><td>3</td><td>改前/改后 A/B：成对命中率 + 负样本单调性 + Spearman 三重复核</td><td>依赖 1、2</td></tr>
+<tr><td>4</td><td>fig_overwide 构造标定（P 里唯一没标定过的项）；第二评分人复核 ρ</td><td>需人工作答</td></tr>
+<tr><td>5</td><td>A_profile 的「缺陷敏感 vs 常态偏离」拆分，之后才谈 λ&gt;0</td><td>独立议题</td></tr>
+</table>
+
+<h2 id="s10">10. 复现</h2>
+
+<pre><code>cd /mnt/d/桌面/texopt
+
+# 全量回归（含连档压页 A/B、归因恒等式、指标体检）—— 332 项
+python3 tests/run_tests.py
+
+# 权重 artifact 漂移校验（代码 ↔ 落地值）
+python3 tools/apply_severity_weights.py --check
+python3 tools/pweight_combine.py --check
+
+# 单页 / 整篇诊断（写进 state.json.page_diagnostics + report.md）
+python3 optimize.py examples/issues.tex --outdir /mnt/d/桌面/texopt/_out
+
+# model2 两套体检
+python3 tools/soft_identifiability.py --papers 90 --workers 6
+python3 tools/soft_sensitivity.py</code></pre>
+
+<hr>
+<p class="small">文档生成：<code>python3 docs/make_formula_doc.py</code>（公式在 <code>EQS</code> 表里，
+编译成 SVG 内联，离线可看）。本页对应的模板是
+<code>docs/scoring_report_20261102.template.html</code>；
+口径细节见 <code>docs/scoring/README.md</code> 与 <code>docs/stage1{2,3,4,5,6}_*.md</code>。</p>
+
+</body>
+</html>

@@ -50,6 +50,7 @@
 | 路径 | 说明 |
 |---|---|
 | `model_v3_design_20261014.html` / `_single.html` | v3 结构设计说明（带公式图，可离线打开） |
+| `scoring_report_20261102.html` / `_single.html` / `.pdf` | **阶段汇报：打分评价体系现状（2026-11-02）**——三层结构、标定链条、指标体检、实测终态、局限 |
 | `model_v3_design_20261014.template.html` | 上者的模板 |
 | `make_formula_doc.py` | 由公式表生成上面两个 HTML（需 TeX 渲染公式） |
 | `formula_doc_assets/*.svg` | 公式图资产（上面两个 HTML 引用） |
