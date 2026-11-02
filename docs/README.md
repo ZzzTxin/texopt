@@ -40,6 +40,9 @@
 | [`stage10b_pair_sheet_20261028.md`](stage10b_pair_sheet_20261028.md) | 10b：成对比较验收表（12 对） |
 | [`stage11_severity_sheet_20261028.md`](stage11_severity_sheet_20261028.md) | 11：缺陷严重度标定（BT + 频率） |
 | [`stage12_gate_exit_two_lines_20261030.md`](stage12_gate_exit_two_lines_20261030.md) | 12：gate 退出 + 两线分离 + P 权重回填 + ρ |
+| [`stage13_rho_tradeoff_20261031.md`](stage13_rho_tradeoff_20261031.md) | 13：ρ 无差异点重标定（0.341 → 15） |
+| [`stage14_pweight_unified_20261102.md`](stage14_pweight_unified_20261102.md) | 14：P 权重统一到无差异点口径（口径 A） |
+| [`stage15_local_global_20261102.md`](stage15_local_global_20261102.md) | 15：连档压页修复 + 单页打分/整篇打分的分层诊断 |
 
 ## 其他
 

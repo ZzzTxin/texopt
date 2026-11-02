@@ -133,7 +133,7 @@ def compile_tex(tex_path: str, passes: int = 1, timeout: int = 45) -> CompileRes
     cwd = os.path.dirname(tex_path)
     name = os.path.basename(tex_path)
     cmd = [xe, "-interaction=nonstopmode", "-halt-on-error",
-           "-file-line-error", name]
+           "-file-line-error", "-synctex=1", name]
 
     combined = ""
     returncode = None
@@ -206,6 +206,13 @@ PDETOTEXT_GLOBS = [
     "/mnt/c/texlive/*/bin/windows/pdftotext.exe",
     "/mnt/c/texlive/*/bin/*/pdftotext",
 ]
+
+# SyncTeX：把**源码行号**映到**PDF 页号**（单页打分用）。
+# 编译时已带 -synctex=1；这里只负责查询。
+SYNCTEX_GLOBS = [
+    "/mnt/c/texlive/*/bin/windows/synctex.exe",
+    "/mnt/c/texlive/*/bin/*/synctex",
+]
 # 参考文献标题（与 datasets 的 measure_pdf.py 同源规则：行首≤4 字符 + references/bibliography）
 REF_HEADING_RE = re.compile(
     r"(?im)^[^\n]{0,4}(?:\d+\.?\s*)?(references|bibliography)\b")
@@ -216,6 +223,58 @@ _CONTENT_CACHE: dict = {}
 def pdftotext_path() -> str | None:
     p = next((p for g in PDETOTEXT_GLOBS for p in glob.glob(g)), None)
     return p or shutil.which("pdftotext")
+
+
+@lru_cache(maxsize=1)
+def synctex_path() -> str | None:
+    p = next((p for g in SYNCTEX_GLOBS for p in glob.glob(g)), None)
+    return p or shutil.which("synctex")
+
+
+_SYNCTEX_CACHE: dict = {}
+
+
+def synctex_pages(tex_path: str, lines) -> dict:
+    """源码行号 -> PDF 页号（1 起）。返回 {line: page}，查不到的页不出现。
+
+    用途：日志里的 overfull/underfull 只给源码行，要做「单页打分」必须
+    知道它落在哪一页。查不到 synctex.gz / 工具缺失时返回空字典（调用方
+    降级为「页面未知」，不抛异常）。
+    """
+    tool = synctex_path()
+    if not tool:
+        return {}
+    tex_abs = os.path.abspath(tex_path)
+    base = os.path.splitext(tex_abs)[0]
+    if not os.path.isfile(base + ".synctex.gz") \
+            and not os.path.isfile(base + ".synctex"):
+        return {}
+    try:
+        st = os.stat(base + ".synctex.gz")
+        ckey = (tex_abs, st.st_mtime, st.st_size)
+    except OSError:
+        ckey = (tex_abs, None, None)
+    cache = _SYNCTEX_CACHE.setdefault(ckey, {})
+    out = {}
+    cwd = os.path.dirname(tex_abs)
+    name = os.path.basename(tex_abs)
+    pdf = os.path.splitext(name)[0] + ".pdf"
+    for ln in sorted({int(x) for x in lines if x}):
+        if ln in cache:
+            out[ln] = cache[ln]
+            continue
+        rc, res_b, _ = _run_with_timeout(
+            [tool, "view", "-i", f"{ln}:1:{name}", "-o", pdf], cwd, 20)
+        if rc is None or not res_b:
+            continue
+        m = re.search(rb"^Page:(-?\d+)", res_b, re.M)
+        if not m:
+            continue
+        pg = int(m.group(1))
+        if pg > 0:
+            cache[ln] = pg
+            out[ln] = pg
+    return out
 
 
 def content_pages(pdf_path: str, first_page: int = 2) -> dict | None:

@@ -2122,6 +2122,119 @@ def stage12_tests():
         skip("s12/rho-applied-matches-artifact", "缺 metrics/rho_exchange_rate.json")
 
 
+def stage14_tests():
+    """阶段 14 增补（2026-11-02）：**连档压页**（gate 定向修复的台阶问题）。
+
+    TeX 断页是台阶式的：收一档边距常常不减页，要连收两三档才兑现。
+    旧逻辑要求每个单步都严格减页 → 第一档被回滚并永久 blocked → 连档被打死。
+
+    靶稿（实测标定出来的，不是拍脑袋）：8 段 × 6 句 lorem，a4/10pt：
+        边距 25mm → 2 页     23mm → 2 页     21mm → 1 页
+    所以 25→23 是典型的“暂存档”，23→21 才兑现。
+    """
+    print("\n== 阶段 14：连档压页（暂存链）==")
+    src_c = open(os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "texopt", "core.py"), encoding="utf-8").read()
+    check("s14/plateau-branch-present", "gate·暂存" in src_c and "整链撤销" in src_c,
+          "core.py 缺暂存链分支")
+    req = _req()
+    check("s14/plateau-default",
+          getattr(req, "gate_repair_plateau", None) == 3
+          and getattr(req, "gate_repair_rounds", None) == 12,
+          f"plateau={getattr(req, 'gate_repair_plateau', None)}")
+
+    filler = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do "
+              "eiusmod tempor incididunt ut labore et dolore magna aliqua. ")
+    body = "\n\n".join(" ".join([filler] * 6) for _ in range(8))
+    tex = ("\\documentclass[10pt,a4paper]{article}\n"
+           "\\usepackage[margin=25mm]{geometry}\n"
+           "\\begin{document}\n"
+           "\\section{Step-wise Pagination Fixture}\n"
+           f"{body}\n"
+           "\\end{document}\n")
+    fixture = os.path.join(OUT, "plateau_2to1.tex")
+    os.makedirs(OUT, exist_ok=True)
+    with open(fixture, "w", encoding="utf-8") as f:
+        f.write(tex)
+
+    def run(tag, **kw):
+        outdir = os.path.join(OUT, tag)
+        _clean_dir(outdir)
+        opt = Optimizer(fixture, _req(page_limit=1, allow_geometry_tune=True,
+                                     margin_step_mm=2, visual_metrics=False, **kw),
+                        outdir)
+        res = opt.run()
+        return res, opt
+
+    # ① 旧行为（暂存上限 = 1）应当照样失败：证明这次修的是机制，不是运气
+    res1, _ = run("plateau_off", gate_repair_plateau=1)
+    check("s14/plateau-off-still-blocks", res1.get("status") == "BLOCKED_GATE",
+          str(res1.get("status")) + " " + str(res1.get("l"))[:120])
+
+    # ② 修复后：25→23 暂存，23→21 兑现，应当压进 1 页
+    res2, opt2 = run("plateau_on")
+    check("s14/plateau-on-passes", res2.get("status") != "BLOCKED_GATE",
+          str(res2.get("status")) + " " + str(res2.get("l"))[:120])
+    check("s14/plateau-on-l0", not res2.get("l"), str(res2.get("l"))[:120])
+    pages = res2.get("pages")
+    check("s14/plateau-on-1page", pages == 1, f"pages={pages}")
+    # 至少用了两档（边距从 25 降到 21 以下），说明确实走了连档
+    with open(opt2.work_tex, encoding="utf-8") as f:
+        final_src = f.read()
+    import re as _re
+    mm = _re.search(r"margin=([0-9.]+)mm", final_src)
+    check("s14/plateau-on-two-steps", bool(mm) and float(mm.group(1)) <= 21.0,
+          mm.group(0) if mm else "未找到 margin 设置")
+
+    # ③ 暂存链兑现不了时必须**整链回滚**，不能把累计破坏留在稿子里
+    #    用 9 段（25/23/21/19mm 全部 2 页）充当“怎么收都不减页”的反例
+    tex2 = tex.replace(body, "\n\n".join(" ".join([filler] * 6) for _ in range(9)))
+    fx2 = os.path.join(OUT, "plateau_never.tex")
+    with open(fx2, "w", encoding="utf-8") as f:
+        f.write(tex2)
+    outdir = os.path.join(OUT, "plateau_rollback")
+    _clean_dir(outdir)
+    opt3 = Optimizer(fx2, _req(page_limit=1, allow_geometry_tune=True,
+                               margin_step_mm=2, visual_metrics=False), outdir)
+    res3 = opt3.run()
+    check("s14/plateau-rollback-blocks", res3.get("status") == "BLOCKED_GATE",
+          str(res3.get("status")))
+    with open(opt3.work_tex, encoding="utf-8") as f:
+        src3 = f.read()
+    mm3 = _re.search(r"margin=([0-9.]+)mm", src3)
+    check("s14/plateau-rollback-restores-margin",
+          bool(mm3) and float(mm3.group(1)) >= 25.0,
+          (mm3.group(0) if mm3 else "?") + "（应回到 25mm）")
+    _clean_dir(os.path.join(OUT, "plateau_off"))
+    _clean_dir(os.path.join(OUT, "plateau_on"))
+    _clean_dir(os.path.join(OUT, "plateau_rollback"))
+
+    # ---- 单页打分 / 整篇打分（局部 vs 整体）：归因恒等式 + 三种读法 ----
+    from texopt import page_score as PS
+    from texopt import engine as E
+    # ① SyncTeX：源码行 -> PDF 页（行号取 fixture 正文里的一行）
+    lines = tex.split("\n")
+    body_line = next((i for i, ln in enumerate(lines, start=1) if "Lorem" in ln), 0)
+    per0 = P.perceive(fixture, _req(visual_metrics=True))
+    mapping = E.synctex_pages(fixture, [body_line])
+    check("s14/synctex-line-to-page", mapping.get(body_line) == 1,
+          f"line {body_line} -> {mapping}")
+    # ② 归因恒等式：可归属 + 归不到 = 全篇 P
+    diag = PS.summary(per0, _req(visual_metrics=True))
+    ok_sum = abs(diag["page_p_sum"] + diag["unattributed_p"] - diag["doc_p"]) <= 0.02
+    check("s14/page-attribution-sums-to-doc-p", ok_sum,
+          f"{diag['page_p_sum']} + {diag['unattributed_p']} != {diag['doc_p']}")
+    # ③ 三种读法都在，且 mean <= topk <= peak（同向、可解释）
+    pd = diag["p"]
+    check("s14/page-three-reads",
+          pd["mean"] <= pd["topk"] <= pd["peak"] and diag["topk"] >= 1,
+          str(pd))
+    check("s14/page-a-per-page", bool(diag.get("a")) and diag["a"]["peak"] >= diag["a"]["mean"],
+          str(diag.get("a")))
+    check("s14/page-report-section", any("逐页诊断" in ln for ln in PS.report_md(diag)),
+          "报告小节缺失")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -2151,6 +2264,7 @@ def main():
     pair_sheet_tests()
     severity_sheet_tests()
     stage12_tests()
+    stage14_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。

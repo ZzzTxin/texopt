@@ -32,8 +32,9 @@ import json
 import os
 import shutil
 
-from . import (actions, advise, conference as confmod, engine, perceive as P,
-               proposal, score as S, shadow, visual, whitelist)
+from . import (actions, advise, conference as confmod, engine,
+               page_score as PS, perceive as P, proposal, score as S, shadow,
+               visual, whitelist)
 from .requirements import Requirement
 
 # L 类硬约束修复动作：文档状态（L 数/页数）变化后允许重试。
@@ -458,12 +459,24 @@ class Optimizer:
         2026-10-30 任务1：gate 未过时**不打分**——这里只按 gate 违规数（+页数）
         判定，不做任何 model1/model2 优化，也不因为审美变好而保留动作。
         动作面限于 GATE_REPAIR_KEYS（改 gate 项 + 纯空间类压页动作）。
-        接受条件：gate 违规数减少，或仍在压页且页数严格减少（同样多违规时
-        页数下降是压页进展，允许继续）。
+        接受条件：gate 违规数减少，或页数减少。
+
+        2026-11-02 修复「连档压页」：TeX 断页是台阶式的，收一档边距常常
+        不减页，要连收两三档才兑现。旧逻辑要求**每个单步**都严格减页，于是
+        第一档就被回滚并永久记入 blocked，连档组合直接被打死（见 stage12 局限3）。
+        现在：
+          - 「不增违规、不增页」的单步 → **暂存**（provisional），保留已写入的
+            状态继续往下压；
+          - 后续任一步兑现（违规减少 / 页数减少）→ 整条链一并提交；
+          - 暂存链长到 gate_repair_plateau（默认 3）仍未兑现 → **整链回滚**到链首，
+            并 blocked 最后一步：不把累计破坏留在稿子里，也不重复空转。
         轮数上限 gate_repair_rounds（默认 12），防止在 gate 层空转。
         """
         limit = int(getattr(self.req, "gate_repair_rounds", 12) or 12)
+        cap = max(1, int(getattr(self.req, "gate_repair_plateau", 3) or 3))
         rounds = 0
+        chain_base = None      # (src, per, cur)：暂存链起点的快照
+        chain_len = 0
         while cur["l"] and rounds < limit and self.iter < self.req.max_iterations:
             sig = f"{len(cur['l'])}|{per.pages}"
             src = self._read()
@@ -491,20 +504,45 @@ class Optimizer:
                               f"{nper.compile.first_error}）")
                     continue
                 ncur = S.total_score(nper, self.req, self.orig_per)
+                both_pages = nper.pages is not None and per.pages is not None
                 fewer = len(ncur["l"]) < len(cur["l"])
-                same_but_fewer_pages = (
-                    len(ncur["l"]) == len(cur["l"]) and nper.pages is not None
-                    and per.pages is not None and nper.pages < per.pages)
-                if fewer or same_but_fewer_pages:
+                pages_down = both_pages and nper.pages < per.pages
+                pages_up = both_pages and nper.pages > per.pages
+                same_gate = len(ncur["l"]) == len(cur["l"])
+                if fewer or pages_down:
+                    # 兑现：本步 + 之前的暂存链一起提交
                     self.accepted += 1
                     self._log(f"  [gate·接受] {note_ok}"
                               f"（gate {len(cur['l'])}→{len(ncur['l'])}，"
-                              f"{per.pages}→{nper.pages} 页）")
+                              f"{per.pages}→{nper.pages} 页"
+                              + (f"，含 {chain_len} 档暂存" if chain_len else "")
+                              + "）")
                     self._record(note_ok, nper, ncur, True, True, "rule",
                                  "gate 定向修复")
                     per, cur = nper, ncur
+                    chain_base, chain_len = None, 0
                     progressed = True
                     break
+                if same_gate and not pages_up:
+                    # 暂存：本步没兑现但也没让版面变差，允许继续往下压
+                    if chain_base is None:
+                        chain_base = (src, per, cur)
+                    chain_len += 1
+                    self._log(f"  [gate·暂存] {note_ok}"
+                              f"（{nper.pages} 页，待后续档位兑现）")
+                    self._record(note_ok, nper, ncur, True, True, "rule",
+                                 "gate 压页暂存")
+                    per, cur = nper, ncur
+                    if chain_len >= cap:
+                        base_src, base_per, base_cur = chain_base
+                        self._write(base_src)
+                        self._blocked.add(stamp)
+                        self._log(f"  [gate·回滚] 压页暂存链 {chain_len} 档未减页，"
+                                  f"整链撤销")
+                        return base_per, base_cur
+                    progressed = True
+                    break
+                # 变差：违规变多或页数变多
                 self._write(src)
                 self._blocked.add(stamp)
                 self._log(f"  [gate·回滚] {note_ok}（gate 未改善）")
@@ -887,6 +925,13 @@ class Optimizer:
         cur["aesthetic_shadow"] = shadow.snapshot(sh)
         if status is None:
             status = self.exit_status(cur, self._defects)
+        # 逐页诊断（2026-11-02）：局部 vs 整体，只记录不参与验收
+        self._page_diag = None
+        try:
+            if per is not None:
+                self._page_diag = PS.summary(per, self.req)
+        except Exception as exc:          # 诊断失败绝不影响主流程
+            self._page_diag = {"error": str(exc)}
         self._save_state(status, per, cur)
         self._write_report(status, per, cur)
         self._write_shadow(sh, status, cur)
@@ -1101,6 +1146,9 @@ class Optimizer:
             "visual": (per.visual if per and per.visual else None),
             "visual_defects": (per.visual.get("defects") if per and per.visual
                                else None),
+            # 逐页诊断（2026-11-02）：单页分 / 整篇分的三种读法，
+            # **只作诊断**，不参与任何接受/回滚判定。
+            "page_diagnostics": getattr(self, "_page_diag", None),
             "steps": self.records,
             "note": "steps 中 source=rule 为确定性闭环，source=llm 为模型在环提案；"
                     "全部经整篇重编译后全局重评，accepted=false 即已回滚。",
@@ -1371,6 +1419,10 @@ class Optimizer:
         else:
             L += ["## 仍需人工/后续处理的问题\n",
                   "- 无（视觉缺陷 + 源码卫生 + 编译日志均无残余项）", ""]
+
+        diag = getattr(self, "_page_diag", None)
+        if isinstance(diag, dict) and not diag.get("error"):
+            L += PS.report_md(diag)
 
         sh = (cur or {}).get("a_profile_shadow")
         L += shadow.report_md(sh, baseline=((self.baseline or {}).get("aesthetic")),

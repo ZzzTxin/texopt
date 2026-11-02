@@ -98,6 +98,11 @@ class Requirement:
     # ---- 运行参数 ----
     max_iterations: int = 40
     verbose: bool = True
+    # ---- gate 定向修复（阶段 12；2026-11-02 增补连档压页） ----
+    gate_repair_rounds: int = 12      # gate 层动作轮数上限（防空转）
+    # 连续几档「不增页但也没减页」的步骤可以先暂存（TeX 断页是台阶式的：
+    # 收一档边距常常不减页，要连收两三档才兑现）；暂存链未兑现则整链回滚。
+    gate_repair_plateau: int = 3
     # ---- 阶段 6：审美档案影子接入（λ=0，仅报告；不影响任何接受/回滚判定） ----
     aesthetic_shadow: bool = True          # 关：不跑影子评估（省时/离线回归用）
     shadow_profile: str | None = None      # 档案路径覆盖（None=随附档案）
