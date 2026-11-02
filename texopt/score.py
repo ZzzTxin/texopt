@@ -52,27 +52,28 @@ W_PAGE_DEFECT = 15.0
 #   语义抛光阶段另设内容保留率下限 κ 兜底）。
 CONTENT_PENALTY = 50.0
 
-# ---- P：页面缺陷比重（半硬性约束，2026-10-30 回填数据来源）----
-# 2026-10-30（任务3）：5 项换成**有来源**的值
-#   w = 人的严重度（15 题成对比较 → Bradley-Terry） ÷ 语料频率（200 篇/3898 页）
-#   再做 sqrt 阻尼 + 缩放到现行权重同量纲；口径见 docs/stage11_severity_sheet_20261028.md，
-#   applied artifact = metrics/severity_weights_applied.json（tools/apply_severity_weights.py）。
-#   其余 6 项仍是先验：vbox_under/spec_H/tab_overwide/fig_overwide/stranded_block/
-#   near_empty 在语料里计数为 0 或无对应字段，作不了分母（不伪造）；warn/macros_missing/
-#   unstable_spec 属人眼不可判的技术项，不进标定表。
+# ---- P：页面缺陷比重（半硬性约束，2026-11-02 口径：同一把尺子）----
+# 2026-11-02（阶段 14）：7 项改成**人判无差异点**口径
+#   c* = 「缺陷保留 vs 缺陷修掉 + 边距 +c mm」的无差异点（I 单位）
+#   w = c* / ρ，再整体缩放到总权重和不变（口径 A，ρ=15 继续锚定）
+#   作答：两轮共 33 题（阶梯 I=8/15 与 I=2/4/6，空题 4/4 通过），c* 取翻转区间中点；
+#   overfull / tab_overwide 用阶段 13 先验区间收窄。
+#   口径见 docs/stage14_pweight_unified_20261102.md，
+#   applied artifact = metrics/pweight_applied_20261102.json（tools/pweight_combine.py）。
+#   仍为先验的项：fig_overwide（未标定）/ warn / macros_missing / unstable_spec（人不可判）。
 # 注意：ρ（W_PAGE_DEFECT）是总尺度锚点，这里只改 P 的内部相对结构。
 PAGE_DEFECT_WEIGHT = {
-    "overfull": 0.33,       # 正文行溢出（右侧超出）        ← human×corpus
-    "underfull": 0.273,     # 正文行欠满                    ← human×corpus
-    "vbox_over": 2.344,     # 页面垂直盒子溢出              ← human×corpus
-    "vbox_under": 1.4,      # 页面垂直盒子欠满（孤行寡行代理）← 先验（语料计数 0）
-    "floatwarn": 1.254,     # 浮动体警告（位置/尺寸被强改）  ← human×corpus
-    "tab_overwide": 1.2,    # 表格超宽                      ← 先验（语料无字段）
-    "fig_overwide": 1.0,    # 图片超宽                      ← 先验（语料无字段）
+    "overfull": 1.696,      # 正文行溢出（右侧超出）        ← 无差异点 c*=11.5
+    "underfull": 0.737,     # 正文行欠满                    ← 无差异点 c*=5.0
+    "vbox_over": 0.737,     # 页面垂直盒子溢出              ← 无差异点 c*=5.0
+    "vbox_under": 1.033,    # 页面垂直盒子欠满（孤行寡行代理）← 无差异点 c*=7.0
+    "floatwarn": 1.033,     # 浮动体警告（位置/尺寸被强改）  ← 无差异点 c*=7.0
+    "tab_overwide": 1.033,  # 表格超宽                      ← 无差异点 c*=7.0
+    "fig_overwide": 1.0,    # 图片超宽                      ← 先验（本表未标定）
     "warn": 0.3,            # 其余编译 Warning              ← 先验（人不可判）
     "macros_missing": 2.0,  # 断行质量宏缺失                ← 先验（人不可判）
     "unstable_spec": 0.8,   # 浮动体位置参数不稳定          ← 先验（人不可判）
-    "spec_H": 0.5,          # [H] 强排                      ← 先验（语料计数 0）
+    "spec_H": 1.033,        # [H] 强排                      ← 无差异点 c*=7.0
 }
 # 页面图像层的缺陷归属：结构/放置类进 model1，软性审美类进 model2。
 VISUAL_DEFECT_M1 = {

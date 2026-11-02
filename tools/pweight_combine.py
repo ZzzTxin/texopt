@@ -40,6 +40,7 @@ sys.path.insert(0, ROOT)
 
 # 标定表里的 defect id → score.PAGE_DEFECT_WEIGHT 的键
 KEY_MAP = {"widetable": "tab_overwide"}
+REPORT_DEFAULT = os.path.join("metrics", "p_weight_tradeoff_20261102.json")
 # 阶段 13 的旧标定（metrics/rho_tradeoff_20261031.json）里能一一对上的缺陷
 PRIOR_FROM_STAGE13 = {"overfull": (10.5, 12.5), "widetable": (6.0, 8.0)}
 
@@ -89,12 +90,66 @@ def estimate(points: list, prior: tuple | None = None) -> dict:
             "kind": kind, "prior_from_stage13": prior if prior_applied else None}
 
 
+def load_applied(path: str) -> dict | None:
+    p = os.path.join(ROOT, path) if not os.path.isabs(path) else path
+    if not os.path.isfile(p):
+        return None
+    return json.load(open(p, encoding="utf-8"))
+
+
+def write_applied(report: dict, date: str = "20261102") -> str:
+    from texopt import score as S
+
+    kept = report["proposed_weights_kept_sum"]
+    cur = dict(S.PAGE_DEFECT_WEIGHT)
+    applied = {
+        "schema": "texopt.p_weight_applied.v1",
+        "source": os.path.relpath(REPORT_DEFAULT, ROOT).replace(os.sep, "/"),
+        "method": "w = c*/ρ（两轮无差异点合并），口径 A：整体缩放使 7 项权重和与旧值相等，ρ=15 不动",
+        "rho": report["rho_used"],
+        "scale_factor": report["rescale_to_keep_sum"],
+        "sum_before": report["sum_old_measured"],
+        "sum_after": round(sum(kept.values()), 3),
+        "page_defect_weight": {k: kept[k] for k in sorted(kept)},
+        "untouched_priors": report["untouched_priors"],
+        "row_ids": [r["work"] for r in report["rounds"]],
+    }
+    p = os.path.join(ROOT, "metrics", f"pweight_applied_{date}.json")
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    json.dump(applied, open(p, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    diffs = {k: (cur.get(k), kept[k]) for k in kept}
+    return p + "\n" + "\n".join(
+        f"  {k:<14} {str(o):>8} -> {n:>8}" for k, (o, n) in diffs.items())
+
+
+def check_applied(path: str = "metrics/pweight_applied_20261102.json",
+                  tol: float = 1e-6) -> list[str]:
+    from texopt import score as S
+
+    d = load_applied(path)
+    if not d:
+        return [f"缺少 artifact：{path}"]
+    bad = []
+    for k, v in d["page_defect_weight"].items():
+        cur = S.PAGE_DEFECT_WEIGHT.get(k)
+        if cur is None or abs(cur - v) > tol:
+            bad.append(f"PAGE_DEFECT_WEIGHT[{k}] 代码={cur} artifact={v}")
+    return bad
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rounds", default="workbench-pweight,workbench-pweight2")
     ap.add_argument("--out", default="metrics/p_weight_tradeoff_20261102.json")
     ap.add_argument("--rho", type=float, default=15.0)
+    ap.add_argument("--apply", action="store_true", help="写 applied artifact")
+    ap.add_argument("--check", action="store_true", help="校验 score.py 与 artifact 一致")
     a = ap.parse_args()
+
+    if a.check:
+        bad = check_applied()
+        print("[check] " + ("OK" if not bad else "漂移:\n  " + "\n  ".join(bad)))
+        return 0 if not bad else 1
 
     from texopt import score as S
 
@@ -114,7 +169,17 @@ def main() -> int:
         if est["w"] is not None:
             proposed[est["key"]] = est["w"]
 
+    # 旧权重基线：优先取第一次 import 时记下的 old（避免二次运行把新值当旧值，形成自我迭代）
     current = dict(S.PAGE_DEFECT_WEIGHT)
+    base_f = os.path.join(ROOT, "metrics", "p_weight_tradeoff_round1_20261102.json")
+    if os.path.isfile(base_f):
+        try:
+            r1 = json.load(open(base_f, encoding="utf-8"))
+            for d in r1.get("diffs", []):
+                if d.get("old") is not None:
+                    current[d["key"]] = d["old"]
+        except Exception:
+            pass
     measured = set(proposed)
     sum_old = round(sum(current[k] for k in measured if k in current), 3)
     sum_new = round(sum(proposed.values()), 3)
@@ -154,6 +219,8 @@ def main() -> int:
     out = os.path.join(ROOT, a.out)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     json.dump(report, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    if a.apply:
+        print("[apply] " + write_applied(report))
 
     print(f"作答轮次：{', '.join(r['work'] for r in rounds)}"
           f" | 空题 {report['null_total']['correct']}/{report['null_total']['n']}")

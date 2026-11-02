@@ -97,8 +97,18 @@ def code_weights(path: str = SCORE):
 
 def check(applied: dict, tol: float = 1e-6) -> list[str]:
     page, visual = code_weights()
+    skip = set(applied.get("superseded_keys") or [])   # 已被阶段 14 重标的键
+    if not skip and os.path.isfile(ARTIFACT):
+        # 从落地 artifact 自带的历史元信息里取（阶段 14 起）
+        try:
+            with open(ARTIFACT, encoding="utf-8") as f:
+                skip = set(json.load(f).get("superseded_keys") or [])
+        except Exception:
+            skip = set()
     bad = []
     for k, v in applied["page_defect_weight"].items():
+        if k in skip:
+            continue
         cur = page.get(k)
         if cur is None or abs(cur - v) > tol:
             bad.append(f"PAGE_DEFECT_WEIGHT[{k}] 代码={cur} artifact={v}")
@@ -120,6 +130,18 @@ def main() -> int:
         print(f"缺少标定结果：{args.result}")
         return 2
     applied = build(load_result(args.result))
+    # 阶段 14 之后：被「同一把尺子」重标的键记在 artifact 里，校验时跳过
+    art = os.path.join(ROOT, "metrics", "severity_weights_applied.json")
+    if os.path.isfile(art):
+        try:
+            with open(art, encoding="utf-8") as f:
+                prev = json.load(f)
+            if prev.get("superseded_keys"):
+                applied["superseded_keys"] = prev["superseded_keys"]
+            if prev.get("superseded_by"):
+                applied["superseded_by"] = prev["superseded_by"]
+        except Exception:
+            pass
     if args.write:
         p = write(applied)
         print(f"[写] {p}")
