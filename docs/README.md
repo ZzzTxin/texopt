@@ -43,6 +43,7 @@
 | [`stage13_rho_tradeoff_20261031.md`](stage13_rho_tradeoff_20261031.md) | 13：ρ 无差异点重标定（0.341 → 15） |
 | [`stage14_pweight_unified_20261102.md`](stage14_pweight_unified_20261102.md) | 14：P 权重统一到无差异点口径（口径 A） |
 | [`stage15_local_global_20261102.md`](stage15_local_global_20261102.md) | 15：连档压页修复 + 单页打分/整篇打分的分层诊断 |
+| [`stage16_model2_metrics_20261102.md`](stage16_model2_metrics_20261102.md) | 16：model2 指标重选（可辨识性 + 敏感性 + 像素角色代理） |
 
 ## 其他
 

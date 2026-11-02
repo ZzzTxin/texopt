@@ -2235,6 +2235,70 @@ def stage14_tests():
           "报告小节缺失")
 
 
+def stage16_tests():
+    """阶段 16（2026-11-02）：model2 指标重选的体检工具 + 像素角色代理。"""
+    print("\n== 阶段 16：A_soft 指标体检（可辨识性 / 敏感性 / 角色代理）==")
+    # ① 像素角色代理：四类 + 首末页标记
+    pr = visual.pixel_role
+    check("s16/role-near-empty", pr({"ink_ratio": 0.01}, 2, 9)["role"] == "near-empty",
+          pr({"ink_ratio": 0.01}, 2, 9)["role"])
+    check("s16/role-sparse", pr({"ink_ratio": 0.05}, 2, 9, 0.12)["role"] == "sparse",
+          pr({"ink_ratio": 0.05}, 2, 9, 0.12)["role"])
+    check("s16/role-dense", pr({"ink_ratio": 0.22}, 2, 9, 0.12)["role"] == "dense",
+          pr({"ink_ratio": 0.22}, 2, 9, 0.12)["role"])
+    check("s16/role-body", pr({"ink_ratio": 0.12}, 2, 9, 0.12)["role"] == "body",
+          pr({"ink_ratio": 0.12}, 2, 9, 0.12)["role"])
+    flags = pr({"ink_ratio": 0.1}, 1, 1, 0.1)["flags"]
+    check("s16/role-first-last-flags",
+          "first-page" in flags and "last-page" in flags, str(flags))
+    check("s16/role-marked-as-proxy",
+          pr({"ink_ratio": 0.1}, 1, 2)["role_source"] == "pixel-proxy")
+
+    # ② 可辨识性工具：常数指标必须被判 drop，会动的必须 keep
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import soft_identifiability as SI
+    per_paper = {}
+    for doc in range(6):
+        rows = []
+        for pg in range(1, 9):
+            rows.append({
+                "page": pg, "role": "body", "flags": [],
+                # 常数指标：完全不变
+                "bottom_blank": 0.06,
+                "left_blank": 0.09,
+                "right_blank": 0.11,
+                # 会动的指标：跨页大幅变化
+                "ink_ratio": 0.03 + 0.03 * pg,
+                "max_gap": 0.05 + 0.04 * pg,
+                "top_blank": 0.03 + 0.01 * pg,
+                "top_bottom_ratio": 0.5 + 0.4 * pg,
+                "band": 0.005,
+            })
+        per_paper[f"doc{doc}"] = rows
+    res = SI.analyse(per_paper)
+    check("s16/ident-constant-dropped",
+          all(res["verdict"][m]["call"] == "drop"
+              for m in ("bottom_blank", "left_blank", "right_blank")),
+          str({m: res["verdict"][m]["call"] for m in
+               ("bottom_blank", "left_blank", "right_blank")}))
+    check("s16/ident-moving-kept",
+          res["verdict"]["top_bottom_ratio"]["call"] == "keep"
+          and res["verdict"]["ink_ratio"]["call"] in ("keep", "stratify", "merge"),
+          str({m: res["verdict"][m]["call"] for m in
+               ("top_bottom_ratio", "ink_ratio", "max_gap")}))
+    check("s16/ident-band-threshold-only",
+          res["verdict"]["band"]["call"] == "threshold-only",
+          res["verdict"]["band"]["call"])
+    check("s16/ident-reports-samples",
+          res["papers"] == 6 and res["pages"] == 48, f"{res['papers']}/{res['pages']}")
+
+    # ③ 敏感性工具：至少要能识别「对坏版面有反应 / 没反应」
+    import soft_sensitivity as SS
+    check("s16/sens-variants-defined",
+          {"baseline", "big-gap", "imbalanced", "full-figure"} <= set(SS.VARIANTS),
+          str(sorted(SS.VARIANTS)))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -2265,6 +2329,7 @@ def main():
     severity_sheet_tests()
     stage12_tests()
     stage14_tests()
+    stage16_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。

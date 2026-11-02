@@ -168,6 +168,9 @@ I = I_struct + β·D_content        β = 50（CONTENT_PENALTY）
 - `A_soft`：像素层软指标的**平滑目标损失**，8 个指标（`band` 权重 0），
   参数、公式、为什么废掉"带内恒 0" → 见 [`docs/aesthetic/README.md`](../aesthetic/README.md)。
 - `A_profile`：与同会议·同角色语料档案的马氏距离 + 非单调带外损失。
+- **指标集待收紧（阶段 16）**：8 个指标里 3 个是准常数、1 个是阈值型，详见
+  [`stage16_model2_metrics_20261102.md`](stage16_model2_metrics_20261102.md)；
+  v2 草案（4 指标 + 位置条件 + 角色门控）尚未落地。
 - **λ = 0**：`A_profile` 只进报告与 `state.json`，不参与判定；
   `shadow.assert_lambda_allowed` 代码级拦截 λ>0（需人类标定 + 审批）。
 

@@ -118,10 +118,18 @@ def page_rows(per, req) -> dict:
     for p in (vis.get("pages") or []):
         if isinstance(p, dict) and p.get("page") is not None:
             vis_pages[int(p["page"])] = p
+    # 像素代理角色（2026-11-02）：给逐页诊断标注页类型，便于看出「差页是不是整页图」
+    _inks = sorted(x["ink_ratio"] for x in vis_pages.values()
+                   if x.get("ink_ratio") is not None)
+    _med = _inks[len(_inks) // 2] if _inks else None
+    _roles = {n: S.visual.pixel_role(p, n, len(vis_pages), doc_median_ink=_med)
+              for n, p in vis_pages.items()}
 
     items = _log_items(per, req)
     mapping = _page_of(per, [it["line"] for it in items if it.get("line")])
-    rows: dict = {n: {"page": n, "p": 0.0, "a": 0.0, "defects": []}
+    rows: dict = {n: {"page": n, "p": 0.0, "a": 0.0, "defects": [],
+                      "role": (_roles.get(n) or {}).get("role"),
+                      "role_source": "pixel-proxy"}
                   for n in vis_pages}
     unattr_items = []
     for it in items:

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import glob
 import os
+import uuid
 import re
 import shutil
 
@@ -338,6 +339,42 @@ def page_metrics(pgm_path: str, ink_threshold: int = 200,
     }
 
 
+def pixel_role(page: dict, index: int, total: int,
+               doc_median_ink: float | None = None) -> dict:
+    """**像素层角色代理**（2026-11-02）：只靠渲染层量粗分页类型。
+
+    为什么要分层：整页图/稀疏页与正文页的密度天然不可比，A_soft 不按角色分层
+    就等于在量「这页是什么类型」而不是「这页排得好不好」。离线有 roles.py
+    （矢量/文本层，pdfminer，慢），闭环里不可能每轮跑，所以这里用像素量近似：
+
+        near-empty   ink ≤ 0.02                       （几乎空白页）
+        sparse       ink < 0.55 × 本篇页墨迹中位数      （整页图/大留白页）
+        dense        ink > 1.60 × 本篇页墨迹中位数      （图表/公式密集页）
+        body         其余
+
+    注意：这是**相对密度**代理，不是 roles.py 的语义角色（不知道那是不是
+    references / appendix）。role_source="pixel-proxy" 明确标出这是近似。
+    """
+    ink = page.get("ink_ratio")
+    flags = []
+    if index == 1:
+        flags.append("first-page")
+    if total and index == total:
+        flags.append("last-page")
+    if ink is None:
+        return {"role": "unknown", "flags": flags, "role_source": "pixel-proxy"}
+    med = doc_median_ink
+    if ink <= 0.02:
+        role = "near-empty"
+    elif med and med > 0 and ink < 0.55 * med:
+        role = "sparse"
+    elif med and med > 0 and ink > 1.60 * med:
+        role = "dense"
+    else:
+        role = "body"
+    return {"role": role, "flags": flags, "role_source": "pixel-proxy"}
+
+
 def find_defects(pages: list) -> list:
     """从页面量判定的「视觉缺陷」（带 severity）。阈值取“明显差”的粗档。"""
     ds: list = []
@@ -406,12 +443,16 @@ def summarize_metrics(pages: list) -> dict:
 
 
 def analyze_pdf(pdf_path: str, tmpdir: str, dpi: int = 50,
-                keep: bool = False) -> dict:
+                keep: bool = False, prefix: str | None = None) -> dict:
     """渲染灰度页图 -> 页面级视觉量 -> 聚合指标 + 缺陷清单。
 
     失败时返回 {"error": ...}（调用方按“无视觉信息”降级处理，不抛异常）。
     """
-    grays, err = render_gray(pdf_path, tmpdir, dpi=dpi)
+    # prefix 默认带 pid+随机后缀：**并发调用同一目录的 PDF 时不会互相覆盖**
+    # （pdftoppm 的输出写到 PDF 所在目录，固定前缀 gray 在并行渲染下会撞车）
+    if not prefix:
+        prefix = f"gray{os.getpid()}_{uuid.uuid4().hex[:6]}"
+    grays, err = render_gray(pdf_path, tmpdir, dpi=dpi, prefix=prefix)
     if err:
         return {"error": err, "pages": [], "defects": [], "n": 0}
     pages = []

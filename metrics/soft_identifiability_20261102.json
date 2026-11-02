@@ -1,0 +1,185 @@
+{
+  "papers": 90,
+  "pages": 1502,
+  "loss_range": {
+    "ink_ratio": 0.322,
+    "max_gap": 0.2831,
+    "top_bottom_ratio": 0.4681,
+    "top_blank": 0.1994,
+    "bottom_blank": 0.0,
+    "left_blank": 0.0049,
+    "right_blank": 0.1297,
+    "band": null
+  },
+  "loss_range_body": {
+    "ink_ratio": 0.0385,
+    "max_gap": 0.0,
+    "top_bottom_ratio": 0.2968,
+    "top_blank": 0.0989,
+    "bottom_blank": 0.0,
+    "left_blank": 0.0049,
+    "right_blank": 0.0106,
+    "band": null
+  },
+  "within_doc_cv": {
+    "ink_ratio": 0.2747,
+    "max_gap": 0.4304,
+    "top_bottom_ratio": 0.4668,
+    "top_blank": 0.1131,
+    "bottom_blank": 0.0775,
+    "left_blank": 0.0113,
+    "right_blank": 0.1128,
+    "band": 0.9821
+  },
+  "within_doc_range": {
+    "ink_ratio": 0.1154,
+    "max_gap": 0.184,
+    "top_bottom_ratio": 2.163,
+    "top_blank": 0.031,
+    "bottom_blank": 0.028,
+    "left_blank": 0.003,
+    "right_blank": 0.059,
+    "band": 0.024
+  },
+  "between_doc_cv": {
+    "ink_ratio": 0.2502,
+    "max_gap": 0.3125,
+    "top_bottom_ratio": 2.7541,
+    "top_blank": 0.2998,
+    "bottom_blank": 0.506,
+    "left_blank": 0.3419,
+    "right_blank": 0.2786,
+    "band": 1.3145
+  },
+  "role_hist": {
+    "body": 1297,
+    "dense": 91,
+    "sparse": 99,
+    "near-empty": 15
+  },
+  "stratified": {
+    "role": "body",
+    "within_doc_cv": {
+      "ink_ratio": 0.133,
+      "max_gap": 0.0493,
+      "top_bottom_ratio": 0.219,
+      "top_blank": 0.0956,
+      "bottom_blank": 0.0259,
+      "left_blank": 0.0092,
+      "right_blank": 0.0094,
+      "band": 0.5099
+    },
+    "pages": {
+      "ink_ratio": 1297,
+      "max_gap": 1297,
+      "top_bottom_ratio": 1297,
+      "top_blank": 1297,
+      "bottom_blank": 1297,
+      "left_blank": 1297,
+      "right_blank": 1297,
+      "band": 1297
+    }
+  },
+  "corr_all": {
+    "ink_ratio|max_gap": -0.303,
+    "ink_ratio|top_bottom_ratio": -0.08,
+    "ink_ratio|top_blank": -0.151,
+    "ink_ratio|bottom_blank": -0.362,
+    "ink_ratio|left_blank": -0.516,
+    "ink_ratio|right_blank": -0.639,
+    "ink_ratio|band": 0.272,
+    "max_gap|top_bottom_ratio": 0.12,
+    "max_gap|top_blank": 0.746,
+    "max_gap|bottom_blank": -0.056,
+    "max_gap|left_blank": 0.243,
+    "max_gap|right_blank": 0.274,
+    "max_gap|band": 0.059,
+    "top_bottom_ratio|top_blank": -0.071,
+    "top_bottom_ratio|bottom_blank": 0.193,
+    "top_bottom_ratio|left_blank": 0.03,
+    "top_bottom_ratio|right_blank": 0.145,
+    "top_bottom_ratio|band": 0.13,
+    "top_blank|bottom_blank": -0.217,
+    "top_blank|left_blank": 0.302,
+    "top_blank|right_blank": 0.253,
+    "top_blank|band": -0.012,
+    "bottom_blank|left_blank": 0.313,
+    "bottom_blank|right_blank": 0.423,
+    "bottom_blank|band": -0.186,
+    "left_blank|right_blank": 0.842,
+    "left_blank|band": -0.121,
+    "right_blank|band": -0.079
+  },
+  "corr_body": {
+    "ink_ratio|max_gap": -0.221,
+    "ink_ratio|top_bottom_ratio": -0.004,
+    "ink_ratio|top_blank": -0.177,
+    "ink_ratio|bottom_blank": -0.412,
+    "ink_ratio|left_blank": -0.586,
+    "ink_ratio|right_blank": -0.666,
+    "ink_ratio|band": 0.2,
+    "max_gap|top_bottom_ratio": -0.007,
+    "max_gap|top_blank": 0.837,
+    "max_gap|bottom_blank": -0.056,
+    "max_gap|left_blank": 0.257,
+    "max_gap|right_blank": 0.229,
+    "max_gap|band": 0.049,
+    "top_bottom_ratio|top_blank": -0.066,
+    "top_bottom_ratio|bottom_blank": 0.216,
+    "top_bottom_ratio|left_blank": 0.065,
+    "top_bottom_ratio|right_blank": 0.108,
+    "top_bottom_ratio|band": 0.066,
+    "top_blank|bottom_blank": -0.205,
+    "top_blank|left_blank": 0.289,
+    "top_blank|right_blank": 0.252,
+    "top_blank|band": -0.004,
+    "bottom_blank|left_blank": 0.344,
+    "bottom_blank|right_blank": 0.462,
+    "bottom_blank|band": -0.188,
+    "left_blank|right_blank": 0.876,
+    "left_blank|band": -0.09,
+    "right_blank|band": -0.064
+  },
+  "redundant_pairs_body": [
+    "left_blank|right_blank",
+    "max_gap|top_blank"
+  ],
+  "verdict": {
+    "ink_ratio": {
+      "call": "stratify",
+      "why": "损失极差 0.322 里大半来自页类型：只看 body 页只剩 0.0385 → 必须按角色分层"
+    },
+    "max_gap": {
+      "call": "merge",
+      "why": "与 ['top_blank'] 秩相关 ≥0.8，且分层后变异很小（CV=0.0493）→ 同一件事算两遍"
+    },
+    "top_bottom_ratio": {
+      "call": "keep",
+      "why": "篇内损失极差 0.4681（分层后 0.2968）：能真正挪动 A"
+    },
+    "top_blank": {
+      "call": "stratify",
+      "why": "损失极差 0.1994 里大半来自页类型：只看 body 页只剩 0.0989 → 必须按角色分层"
+    },
+    "bottom_blank": {
+      "call": "drop",
+      "why": "篇内损失极差仅 0.0（<0.10）→ 近似常数，同稿比较里自动抵消，只抬高 A 的绝对值"
+    },
+    "left_blank": {
+      "call": "drop",
+      "why": "篇内损失极差仅 0.0049（<0.10）→ 近似常数，同稿比较里自动抵消，只抬高 A 的绝对值"
+    },
+    "right_blank": {
+      "call": "merge",
+      "why": "与 ['left_blank'] 秩相关 ≥0.8，且分层后变异很小（CV=0.0094）→ 同一件事算两遍"
+    },
+    "band": {
+      "call": "threshold-only",
+      "why": "权重已为 0；但高值端（≥0.40）仍是 giant_content 的判据，属阈值型指标，不应做连续分"
+    }
+  },
+  "sample_papers": 90,
+  "dpi": 50,
+  "source": "/mnt/d/桌面/texopt/datasets/conf-specs/sources/raw/pdfs",
+  "role_source": "pixel-proxy"
+}
