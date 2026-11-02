@@ -321,6 +321,7 @@ def build() -> int:
                           "left": os.path.basename(a_png if left_is == "A" else b_png),
                           "right": os.path.basename(b_png if left_is == "A" else a_png),
                           "title": dfx["name"], "defect": dfx["id"],
+                          "key": dfx["key"],
                           "defect_name": dfx["name"], "cost": cost,
                           "margin_mm": mm, "left_is": left_is})
 
@@ -329,6 +330,7 @@ def build() -> int:
     for it in nulls[:2]:
         items.append({"A": it["A"], "B": it["A"], "left": it["A"],
                       "right": it["A"], "title": "对照题", "defect": "null",
+                      "key": None,
                       "defect_name": "对照题（左右同页）", "cost": 0.0,
                       "margin_mm": MARGIN0, "left_is": "B"})
 
@@ -337,7 +339,8 @@ def build() -> int:
     for i, it in enumerate(items, start=1):
         cards.append({"q": i, "left": it["left"], "right": it["right"],
                       "title": it["title"]})
-        key.append({"q": i, "defect": it["defect"], "defect_name": it["defect_name"],
+        key.append({"q": i, "defect": it["defect"], "key": it["key"],
+                    "defect_name": it["defect_name"],
                     "cost": it["cost"], "margin_mm": it["margin_mm"],
                     "left_is": it["left_is"], "A": it["A"], "B": it["B"]})
 
@@ -368,7 +371,7 @@ def build() -> int:
     return 0
 
 
-def import_answers(path: str) -> int:
+def import_answers(path: str, out_metrics: str | None = None) -> int:
     from texopt import score as S
 
     key = json.load(open(os.path.join(WORK, "key.json"), encoding="utf-8"))
@@ -427,6 +430,8 @@ def import_answers(path: str) -> int:
         "schema": "texopt.p_weight_tradeoff.v1",
         "method": "同一把尺子：c* = 人判无差异点（边距 mm），w = c* / ρ（等边际收益自洽）",
         "rho_used": rho,
+        "costs_probed": COSTS,
+        "work_dir": os.path.basename(WORK),
         "n_answers": len(rows),
         "null_questions": {"n": null_n, "correct": null_ok},
         "per_defect": per,
@@ -442,7 +447,10 @@ def import_answers(path: str) -> int:
             f"空题 {null_ok}/{null_n}：没全部选「差不多」，说明有注意力/位置偏差，结果需打折看")
     if per and any(v["cstar"] == max(p[0] for p in v["points"]) for v in per.values()):
         report["warnings"].append("有关键缺陷在最高代价档仍偏好「修好版」：c* 只是下界")
-    out = os.path.join(ROOT, "metrics", "p_weight_tradeoff_20261101.json")
+    import re as _re
+    tag = _re.sub(r"[^0-9a-zA-Z]", "", WORK.rsplit("-", 1)[-1]) or "round"
+    name = out_metrics or f"p_weight_tradeoff_{tag}.json"
+    out = os.path.join(ROOT, "metrics", name)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -454,9 +462,23 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--import", dest="imp", default=None)
+    ap.add_argument("--costs", default=None,
+                    help="代价阶梯（I 单位），逗号分隔；默认 8,15")
+    ap.add_argument("--work", default="workbench-pweight",
+                    help="产物目录（相对仓库根），默认 workbench-pweight")
+    ap.add_argument("--out-metrics", default=None,
+                    help="metrics 文件名，默认 p_weight_tradeoff_<workdir 尾巴>.json")
     a = ap.parse_args()
+
+    global WORK, BUILD, SHEET, COSTS
+    WORK = os.path.join(ROOT, a.work)
+    BUILD = os.path.join(WORK, "build")
+    SHEET = os.path.join(WORK, "sheet")
+    if a.costs:
+        COSTS = [float(x) for x in a.costs.split(",") if x.strip()]
+
     if a.imp:
-        return import_answers(a.imp)
+        return import_answers(a.imp, a.out_metrics)
     if a.build:
         return build()
     ap.print_help()

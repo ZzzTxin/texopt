@@ -1,0 +1,168 @@
+{
+  "schema": "texopt.p_weight_tradeoff.v1",
+  "method": "同一把尺子：c* = 人判无差异点（边距 mm），w = c* / ρ（等边际收益自洽）",
+  "rho_used": 15.0,
+  "n_answers": 12,
+  "null_questions": {
+    "n": 2,
+    "correct": 2
+  },
+  "per_defect": {
+    "floatwarn": {
+      "key": "floatwarn",
+      "points": [
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    },
+    "overfull": {
+      "key": "overfull",
+      "points": [
+        [
+          12.5,
+          0.0
+        ]
+      ],
+      "cstar": 12.5
+    },
+    "spec_H": {
+      "key": "spec_H",
+      "points": [
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    },
+    "underfull": {
+      "key": "underfull",
+      "points": [
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    },
+    "vbox_over": {
+      "key": "vbox_over",
+      "points": [
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    },
+    "vbox_under": {
+      "key": "vbox_under",
+      "points": [
+        [
+          8.0,
+          0.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    },
+    "widetable": {
+      "key": "tab_overwide",
+      "points": [
+        [
+          8.0,
+          0.0
+        ]
+      ],
+      "cstar": 8.0
+    }
+  },
+  "proposed_weights": {
+    "floatwarn": 0.533,
+    "overfull": 0.833,
+    "spec_H": 0.533,
+    "underfull": 0.533,
+    "vbox_over": 0.533,
+    "vbox_under": 0.533,
+    "tab_overwide": 0.533
+  },
+  "diffs": [
+    {
+      "key": "floatwarn",
+      "old": 1.254,
+      "new": 0.533,
+      "ratio": 0.425
+    },
+    {
+      "key": "overfull",
+      "old": 0.33,
+      "new": 0.833,
+      "ratio": 2.524
+    },
+    {
+      "key": "spec_H",
+      "old": 0.5,
+      "new": 0.533,
+      "ratio": 1.066
+    },
+    {
+      "key": "tab_overwide",
+      "old": 1.2,
+      "new": 0.533,
+      "ratio": 0.444
+    },
+    {
+      "key": "underfull",
+      "old": 0.273,
+      "new": 0.533,
+      "ratio": 1.952
+    },
+    {
+      "key": "vbox_over",
+      "old": 2.344,
+      "new": 0.533,
+      "ratio": 0.227
+    },
+    {
+      "key": "vbox_under",
+      "old": 1.4,
+      "new": 0.533,
+      "ratio": 0.381
+    }
+  ],
+  "untouched_priors": {
+    "fig_overwide": 1.0,
+    "warn": 0.3,
+    "macros_missing": 2.0,
+    "unstable_spec": 0.8
+  },
+  "sum_old_measured": 7.301,
+  "sum_new_measured": 4.031,
+  "warnings": [
+    "有关键缺陷在最高代价档仍偏好「修好版」：c* 只是下界"
+  ],
+  "round": "round1（阶梯 I=8,15 → 偏高，全部压在下界）",
+  "note": "所有缺陷在最低档 I=8（边距 +16mm）即判「缺陷版更好」，c*=8 只是上界；权重全部退化成 0.533，不可用。结论：真实 c* < 8，需更低的阶梯（见 round2）。"
+}
