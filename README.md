@@ -1,700 +1,452 @@
 # texopt —— 论文整体排版优化 Agent
 
-基于 **底层逻辑 gate + 两条评分线（model1 / model2）** 的 LaTeX 论文排版优化 Agent
-（SRTP 项目主线版，当前模型版本 **v3**）。
+输入一篇 `.tex` 和一份「要求规格」（期刊/会议模板、页数上限、自定义规则），
+输出一篇**门禁通过、全局评分单调不劣化、正文一字不改**的优化稿，以及可审计的报告
+（每一步的全局评分轨迹、接受/回滚理由、残余问题与建议）。
+
+> 定位（不变）：做的是**论文整体排版优化**。Page Limit 只是要求规格里的一个可选字段，
+> 不是系统主体；纯排版手段穷尽后才允许语义抛光（Phase 6，尚未实现）。
+>
+> 术语诚实性：`A_soft` 是**可复现的版面缺陷量**，不是"人类审美评分"；内容校验是
+> **严格归一化文本保持检查**，不声称"证明语义等价"；系统**不声称全局最优**，
+> 只保证"字典序单调不劣化 + 有界收敛"。
+
+模型版本 **v3**（gate + model1 + model2 两线分离），当前进度 **阶段 16**（2026-11-02）。
+
+---
 
 ## 目录
 
-- [当前状态](#当前状态2026-10-30阶段-12)
-- [设计原则：规则 / 算法 / 模型 / 编译器](#设计原则规则--算法--模型--编译器职责分离)
-- [快速开始](#快速开始)
-- [核心：gate + 两条评分线（v3）](#核心gate--两条评分线v3整篇文档级别全局重编译后计算)
-- [打分模型详解（单独 README）](docs/scoring/README.md)
-- [要求对接接口](#要求对接接口期刊会议自定义)
-- [已覆盖的 Basic 排版模块](#已覆盖的-basic-排版模块)
-- [页面级视觉量化与版面级修复](#页面级视觉量化与版面级修复phase-22026-09-11)
-- [审美量化模型（单独 README）](docs/aesthetic/README.md)
-- [确定性排版修复动作](#确定性排版修复动作2026-09-11-新增检测必须进入-act)
-- [模型在环](#模型在环model-in-the-loopllm-真正进入优化循环)
-- [输出状态](#输出状态2026-10-31-更新)
-- [环境要求与已知约束](#环境要求与已知约束)
-- [开发阶段与现状](#开发阶段与现状已实现--接口预留--未来)
-- [目录结构](#目录结构)
-- [测试](#测试)
+1. [当前状态](#1-当前状态2026-11-11阶段-16)
+2. [定位与边界](#2-定位与边界)
+3. [设计原则：规则 / 算法 / 模型 / 编译器](#3-设计原则规则--算法--模型--编译器)
+4. [打分：gate + 两条线](#4-打分gate--两条线)
+5. [闭环与验收](#5-闭环与验收)
+6. [动作体系（28 个白名单动作）](#6-动作体系28-个白名单动作)
+7. [要求对接：模板 / 会议 / 自定义](#7-要求对接模板--会议--自定义)
+8. [感知层](#8-感知层)
+9. [模型在环（Model-in-the-loop）](#9-模型在环model-in-the-loop)
+10. [单页诊断：局部 vs 整体](#10-单页诊断局部-vs-整体)
+11. [输出状态](#11-输出状态)
+12. [标定链与实验资产](#12-标定链与实验资产)
+13. [仓库结构与数据策略](#13-仓库结构与数据策略)
+14. [测试与回归](#14-测试与回归)
+15. [已知局限](#15-已知局限)
+16. [下一步](#16-下一步)
+17. [文档索引](#17-文档索引)
 
-## 当前状态（2026-10-30，阶段 12）
+---
+
+## 1 当前状态（2026-11-11，阶段 16）
 
 | 项 | 现状 |
 |---|---|
-| 模型 | **v3**：底层逻辑 gate（一票否决）+ model1（`M1 = ρ·P + I`）+ model2（`M2 = A_soft + λ·A_profile`），验收**字典序 `(\|gate\|, M1, M2)`** |
-| 关键参数 | `ρ = 15`（人工无差异点标定：两轮 15 题，中位 16.7 / 13.3，区间 [5,32]；旧值 0.341 是闭环平均代价口径，已弃用）；P 的 5 项比重由「人判严重度 ÷ 语料频率」回填；`λ` 仍为 **0**（只报告不参与验收） |
-| 闭环 | 感知 → 白名单动作 → 整篇重编译 → 全局重评 → 接受/回滚；gate 有违规时先跑**定向修复**（可修项），失败才 `BLOCKED_GATE` 退出并给建议 |
-| 回归 | `python3 tests/run_tests.py`：**308 通过 / 0 失败 / 0 跳过**（2026-10-30） |
-| 语料 | 版面档案：200 篇已录用论文 / 3898 页；评测语料：608 篇 / 10538 页 |
-| 仍未做 | `λ>0` 参与验收、语义抛光（Phase 6）、跨文档类模板迁移、历史版本存档 |
+| 模型 | **v3**：底层逻辑 gate（一票否决）+ `M1 = ρ·P + I` + `M2 = A_soft + λ·A_profile`，验收**严格字典序 `(|gate|, M1, M2)`** |
+| 关键参数 | `ρ = 15`（人工无差异点标定，区间约 [5,32]）；P 的 11 项里 **7 项**统一到 `w = c*/ρ`（口径 A），4 项仍为先验；`β = 50`；`λ = 0`（A_profile 只报告，不参与验收） |
+| 闭环 | 感知 → 候选动作 → 整篇重编译 → 全局重评 → 接受/回滚；gate 有违规先跑**定向修复**（含阶段 15 的「暂存链」），失败才 `BLOCKED_GATE` |
+| 回归 | `python3 tests/run_tests.py` → **332 通过 / 0 失败 / 0 跳过**（2026-11-11 全量实测，约 18 分钟） |
+| 代码量 | `optimize.py` + `texopt/*.py` 共 24 个文件、约 **1.31 万行**（纯标准库 + TeX 工具链） |
+| 仓库 | 跟踪 **477 个文件 / 15MB**；`paperfit-bench-originals`、`sources/raw`、`metrics/pages`、`workbench-*` **不入库**（策略见 §13） |
+| 语料 | 版面档案 200 篇已录用论文 / 3898 页；评测语料 608 篇 / 10538 页 |
+| 尚未做 | `λ>0` 参与验收、SOFT_SPEC v2 落地、语义抛光（Phase 6）、跨文档类模板迁移、历史版本存档、`fig_overwide` 权重标定、第二评分人 |
 
-> 主线定位（2026-09-09）：对论文做**整体排版优化**——满足目标期刊/会议的
-> 排版要求 + 排版质量全局最优。**Page Limit 只是要求规格里的一个可选字段**，
-> 不是系统主体；纯排版手段穷尽后才允许语义抛光（LLM 保意精简，后续阶段）。
->
-> 术语诚实性（重要）：`A_soft` 是**排版质量/审美代理**，非人类审美评分；内容校验是
-> **严格的归一化文本内容保持检查**，不声称“证明语义等价”；系统**不声称全局最优**，
-> 只保证“全局评分单调不劣化 + 有界收敛”（阶段 12 起为字典序 `(gate, M1, M2)`）。
+---
 
-输入一篇 `.tex` 与一份「要求规格」（期刊模板 / 自定义 / 页数限制等），Agent
-在「感知 → 决策 → 执行 → 验证」闭环里自动排版，正文内容一字不改，输出
-优化稿 + 可审计报告（每步全局评分轨迹）。
+## 2 定位与边界
 
-## 设计原则：规则 / 算法 / 模型 / 编译器，职责分离
+**做**
 
-> **“规则负责底线，算法负责搜索，模型负责复杂判断，编译器负责现实验证。”**
+- 按目标期刊/会议/自定义要求，把一篇能编译的论文排到"合规 + 版面更干净"。
+- 修的是**版面面**：页边距、字号档、浮动体位置参数、图宽、表格列宽、断行质量宏、
+  手动分页/过大 `\vspace`/行内字号乱标、标题字号、列表间距、页眉、目录、标题着色。
+- 每改一处都**整篇重编译**，用全局评分仲裁；变差就回滚，并把这件事写进报告。
 
-系统按三个层次处理排版问题，**不是把所有问题都交给 LLM**：
+**不做**
+
+- 不改正文文字/词序/标点/公式/引用/标签/图表内容与图文件，不改注释，不换文档类。
+- 不为了"看起来优化成功"伪造结论：修不动就 `NO_IMPROVEMENT` / `EXHAUSTED` 并给建议。
+- 不把 LLM 当万能修理工：LLM 只能提**白名单动作**，执行与验收全在程序侧。
+
+内容校验口径：正文区域**归一化后**逐字符比较；属于"排版面"的 token
+（手动分页、过硬 `\vspace`、行内字号、断词点 `\-`、列表间距选项、表格环境名/列格式、
+浮动体位置参数、插图宽度）允许被确定性动作删改，不判违规。阶段 12 起，正文硬改动
+属 gate 的**不可修复项** → 直接 `BLOCKED_GATE`。
+
+---
+
+## 3 设计原则：规则 / 算法 / 模型 / 编译器
+
+> **规则负责底线，算法负责搜索，模型负责复杂判断，编译器负责现实验证。**
 
 | 层次 | 问题类型 | 决策者 | 例子 |
 |---|---|---|---|
-| **Level 1** | 硬性约束 / 明确规则 | 确定性程序（规则） | 字号、页边距、页数、fleqn、能否编译、图表结构完整、正文是否被改 |
-| **Level 2** | 可检测+可量化的质量 | 程序感知 + 评分 + 候选搜索 | overfull/underfull、vbox（孤行寡行代理）、浮动体警告、超宽图/表、不稳定 float spec、总分变化 |
-| **Level 3** | 复杂整体布局 / 审美判断 | LLM（模型在环） | 留白是否过大、视觉重心、图该浮到哪/多大、图文关系、整体节奏 |
+| **Level 1** | 硬性约束/明确规则 | 确定性程序 | 能不能编译、页数、字号、边距下限、fleqn、正文是否被改 |
+| **Level 2** | 可检测 + 可量化 | 感知 + 评分 + 候选搜索 | overfull/underfull、vbox（孤行寡行代理）、浮动体警告、超宽图表、不稳定 float spec |
+| **Level 3** | 复杂整体布局判断 | LLM（模型在环） | 留白是否过大、视觉重心、图浮到哪/多大、图文关系 |
 
-- **Level 1**：程序直接解决（如“发现 12pt、要求 10pt → 直接改 → 重编译 → 复查”），**不调用 LLM**。
-- **Level 2**：沿用本项目的 `Perceive → Score → Candidate Actions → Compile → Verify → Accept/Reject/Rollback` 机制。
-- **Level 3**：LLM 提出**结构化候选修改（白名单动作）**，程序执行-编译-重评，变好保留、变差回滚，再把新状态交回 LLM —— 这才是 Model-in-the-loop。
+Level 1 直接改并复查，不调用 LLM；Level 2 走闭环搜索；Level 3 由 LLM 提结构化提案，
+程序执行-编译-重评，变好保留、变差回滚，再把新状态交回 LLM。
 
-### Model-in-the-loop 的正确含义
+---
 
-> 不是“让 LLM 一次性改论文”，而是让 LLM **真正进入优化循环**：
-
-```
-论文状态 → 程序感知 → LLM 判断 → LLM 提出候选修改（白名单动作）
-   → 程序执行 → XeLaTeX 编译 → 重新感知 PDF/log/source → 计算全局分
-   → 变好保留 / 变差回滚 → 新状态再交给 LLM → 下一轮
-```
-
-LLM **只提出方案，不直接改文件、不跑 shell**：提案必须命中白名单动作，
-否则 BLOCKED；执行结果一律过编译验证。详见下文「模型在环（Model-in-the-loop）」。
-
-## 快速开始
-
-```bash
-# 0) 纯质量模式：不改内容地消掉常见排版问题（演示稿埋了 4 类问题）
-python3 optimize.py examples/issues.tex
-
-# 0b) 混乱论文试验（chaos.tex 埋了 12 类问题：裸 $$/手动分页/硬换行/下划线…）
-python3 optimize.py examples/chaos.tex
-
-# 1) 页数限制（Page Limit 只是要求之一；demo 自然 6 页，目标 5）
-#    默认版心保护：不靠调边距/字号硬压，超页会诚实 EXHAUSTED 并给建议；
-#    确需授权全局版心调整时加 --tune-geometry
-python3 optimize.py examples/demo.tex --target 5 --tune-geometry
-python3 optimize.py examples/demo.tex --target 5   # 对比：不授权版心 -> EXHAUSTED
-
-# 2) 期刊模板：字号等硬性要求自动对齐
-python3 optimize.py examples/demo.tex --template ieee
-
-# 3) 自定义详细要求文件（可叠加模板）
-python3 optimize.py my_paper.tex --template acm --require my-reqs.json
-
-# 4) 你的论文（原文件只读，结果输出到 <论文目录>/workbench/）
-python3 optimize.py D:/path/to/paper.tex --template springer-llncs
-
-# 5) 全部配置走 settings.json
-python3 optimize.py paper.tex --settings settings.json
-
-# 6) 结构/版面规范（v2 新增）：目录页 + 页眉 + 彩色标题
-python3 optimize.py paper.tex --toc --header --heading-color 0,62,120
-python3 optimize.py paper.tex --template report        # 目录+页眉+彩色标题一键
-
-# 7) 元信息清理（默认为开）：阅读辅助内容 / WARNING 告示块
-python3 optimize.py paper.tex --no-strip-aids          # 保留阅读辅助内容
-python3 optimize.py paper.tex --no-warning-boxes       # 保留 WARNING 告示
-
-# 8) 图形保真：从原 PDF 裁切原图原样嵌入（不重绘、不改坐标轴）
-python3 optimize.py --extract-fig orig.pdf --page 3 \
-    --box 308,112,432,258 --out figs/fig1.png --dpi 400
-
-# 查看可用模板
-python3 optimize.py --list-templates
-
-# 9) 会议模板（16 个；硬约束转 gate，真实论文统计只作合理性参考）
-python3 optimize.py paper.tex --conference neurips
-
-# 10) gate 不通过时的行为：可修项先定向修复，失败才 BLOCKED_GATE（报告给逐项修改建议）
-python3 optimize.py examples/demo.tex --target 1
-```
-
-运行结束查看：
-- `workbench/paper.tex` —— 优化后的论文（连同 `paper.pdf`）
-- `workbench/report.md` —— 人读报告：gate 状态 / P·I·M1·M2 评分轨迹 / 残余问题清单
-- `workbench/state.json` —— 机读状态：供上层 Agent / 后续流程消费
-
-## 核心：gate + 两条评分线（v3，整篇文档级别，全局重编译后计算）
-
-> 权重来源、验收规则、`ρ` 标定、字段与已知局限，完整写在
-> **[`docs/scoring/README.md`](docs/scoring/README.md)**；本节只给最小口径。
+## 4 打分：gate + 两条线
 
 ```
 排序（严格字典序）：(|gate|, M1, M2)
 
-gate  底层逻辑：必须满足，不满足 = 不可行，不进入打分（不是分数项）
-M1 = ρ·P + I                model1（主）：缺陷量 P 与干预代价 I（越小越好）
+gate  底层逻辑：必须满足，不满足 = 不可行，不产生分数
+M1 = ρ·P + I                model1（主）：缺陷量与干预代价，越小越好
 M2 = A_soft + λ·A_profile   model2（审美）：λ 默认 0，A_profile 只报告
 ```
 
-> 旧的 `total = L_fail×1e6 + A + I` 已废弃（gate 违规不再折算成 1e6 罚分，而是直接
-> 拒绝/定向修复，见 `docs/stage12_gate_exit_two_lines_20261030.md`）。
-> 老术语对照：`L` → gate；`A` → M2（A_soft）；新的 `P`（页面缺陷）与 `I` 合成 M1。
-> 验收口径：M1 变差一律否决，M2 再小也不补偿；M1 持平时 M2 才作 tie-break。
+验收口径：**M1 变差一律否决**，M2 再小也不补偿；M1 完全持平时 M2 才作 tie-break。
+旧的 `total = L_fail×1e6 + A + I` 已废弃（见 `docs/stage12_gate_exit_two_lines_20261030.md`）；
+老术语对照：`L` → gate、`A` → M2（A_soft）、`P` 与 `I` 合成 M1。
 
-| 分量 | 含义 | 内容 |
+### 4.1 gate（一票否决）
+
+| 项 | 判据 |
+|---|---|
+| 编译 / 渲染 | 能否产出 PDF（超时强杀、错误率上限） |
+| 内容完整 | 正文归一化 diff 为空（硬改动 = 不可修复） |
+| 页数 | 有要求时按**正文页口径**（pdftotext 定位参考文献首页 k，仅 k−1 超限才判违规） |
+| 硬性规范 | 要求点名的字号、页边距下限、公式居中（fleqn）、目录/页眉 |
+| 图形保真 | 图必须来自原 PDF 裁切，不接受重绘 |
+
+### 4.2 `M1 = ρ·P + I`
+
+`P`（页面缺陷，半硬性，带逐项比重）：
+
+| 缺陷 | 权重 | 来源 |
 |---|---|---|
-| **gate** 底层逻辑门 | 一票否决，不满足 = 不可行 | 能否编译 / 能否渲染 PDF / 内容完整保留（机器 diff 校验）/ 页数限制 / 硬性规范（要求指定的字号、页边距、公式居中） |
-| **M1 = ρ·P + I** | 主评分线，越小越好 | `P`：页面缺陷（半硬性，11 项比重，5 项已由「人判严重度 ÷ 语料频率」标定）；`I`：干预代价（页边距偏离 mm、字号降档、被改的浮动体参数/图片宽度处数）+ `β·D_content` |
-| **M2 / A_soft + λ·A_profile** | 审美线，只作 tie-break（λ 默认 0） | ① LaTeX 层：overfull/underfull、vbox（孤行寡行代理）、浮动体警告、超宽图/表、其余编译 Warning；② 源码卫生/版面层（手动分页 1.0、标题字号 0.8、过大 vspace/列表间距/长词/图片过大 0.6、行内字号 0.5、页眉/段距/中途双栏…）；③ **页面视觉层（量自实际 PDF）**：巨大内容块、底部大面积空白、页面中部空洞、孤立内容、几乎空白页、页间密度失衡 |
+| overfull（正文行溢出） | 1.696 | 无差异点 c\*=11.5 |
+| vbox_under（垂直欠满，孤行寡行代理） | 1.033 | c\*=7.0 |
+| floatwarn（浮动体被强改） | 1.033 | c\*=7.0 |
+| tab_overwide（表格超宽） | 1.033 | c\*=7.0 |
+| spec_H（`[H]` 强排） | 1.033 | c\*=7.0 |
+| underfull（正文行欠满） | 0.737 | c\*=5.0 |
+| vbox_over（垂直溢出） | 0.737 | c\*=5.0 |
+| fig_overwide（图片超宽） | 1.0 | 先验（未标定） |
+| macros_missing（断行质量宏缺失） | 2.0 | 先验（人不可判） |
+| unstable_spec（浮动参数不稳定） | 0.8 | 先验（人不可判） |
+| warn（其余编译 Warning） | 0.3 | 先验（人不可判） |
 
-> 术语诚实性：`A_soft` 是**可复现的版面缺陷量**，不是人类审美评分；
-> `A_profile`（与同会议·同角色语料档案的马氏距离带外损失）在 λ=0 时**只报告不参与验收**。
->
-> 内容完整保留的口径（2026-09-11 明确）：正文区域**归一化后**逐字符比较，
-> 正文文字/词序/标点/公式/引用/图表内容一律严格；属「排版面」的 token
-> （手动分页、过硬 `\vspace`、行内字号、断词点 `\-`、列表间距选项、表格
-> 环境名/列格式、浮动体位置参数、插图宽度）可被确定性动作删/改，不判违规。
-> 阶段 12 起，正文硬改动属 gate 的**不可修复项**：直接 `BLOCKED_GATE`。
+另有源码卫生项（`HYGIENE_WEIGHT`，手动分页 1.0、标题字号 0.8、过大 vspace/列表间距/
+长词/图片过大 0.6、行内字号 0.5 等）与页面图像层缺陷中属"结构/放置"类的
+（`VISUAL_DEFECT_M1`：内容孤立 1.2、近乎空白页 0.6）。
 
-**全局性（局部最优 ≠ 全局最优）**：每个候选修复都要先**整篇重编译、全局
-重评分**，验收判据是全局目标改善——修了第 3 页孤行却弄坏第 7 页浮动体的
-改动会被判负回滚；达标后评分会自动把参数拉回「最宽松且最优」的临界点。
+`I`（干预代价，越小越好）：`I = I_struct + β·D_content`
 
-## 要求对接接口（期刊/会议/自定义）
+- `I_struct`：页边距偏离 mm（0.5/mm）、字号降档（3.0/档）、被改浮动体参数/图宽处数。
+- `D_content`：正文改动幅度（默认 0；`β = 50` 是强偏好，不是硬约束）。
 
-要求来源按优先级合并：**模板预设 < `--require` 要求文件 < settings.json < CLI 参数**。
+### 4.3 `M2 = A_soft + λ·A_profile`
 
-- 内置模板：`ieee` / `acm` / `springer-llncs` / `custom`（`templates/` 可扩展外置）
-- 每个模板 = 一组结构化 Requirement 字段（见 `templates/README.md`）：
-  字号档、页数上限、页边距、浮动体参数规范、超宽图阈值、质量开关等
-- 自定义要求文件给出任意详细规则，Agent 按要求执行
+`A_soft` 用**平滑目标形式**：每个指标给目标 `t`（已录用语料中位数）与两侧尺度 `s`，
 
-字段全部可选，缺省 = 不约束/不干预（尊重原稿）。
-
-## 会议模板（`--conference`，2026-09-12 新增）
-
-```bash
-python3 optimize.py paper.tex --conference aaai   # 按 AAAI 排版要求优化
-python3 optimize.py paper.tex --conference icml   # 按 ICML 排版要求优化
-python3 optimize.py --list-conferences            # 列出 16 个会议模板
+```
+d = |x − t| / s_side        loss = w · (1 − exp(−d²/2))    ≤ w
 ```
 
-模板来自 `datasets/conf-specs/templates-v2/<id>.json`（16 个会议：NeurIPS/ICML/ICLR/ACL/
-EMNLP/CVPR/ICCV/ECCV/AAAI/IJCAI/SIGGRAPH/KDD/WWW/OSDI/SOSP/NSDI），由「官方规范 +
-真实论文实测」数据集生成。加载与投影在 `texopt/conference.py`，**不为任何会议写单独代码**。
+目标处为 0、两侧严格单调、有平台区取消、有界封顶（`SOFT_LOSS_CAP = 3.0`）。
 
-| 模板内容 | 进入优化过程的方式 |
-|---|---|
-| `hard_constraints`（official / template-implied / inferred） | 转为 **L 硬约束**：页数上限、字号、边距下限、公式居中 → 用于判「是否违规」 |
-| 页数上限 | 默认按**正文页口径**：`texopt/engine.py` 用 pdftotext 定位参考文献首页 k，只有下界 k−1 超限才判违规（避免把恰好写到参考文献首页的合法论文误判） |
-| `geometry.margin_floor_mm` | 作**下限**使用：低于才判违规，高于不干预（不会把合法的宽/不对称边距改小） |
-| `float_policy.float_spec` / `overwide_fig_threshold_mm` | 浮动体参数目标档（`tbp`）与超宽图归一阈值 |
-| `density_targets` / `*_observed` / `position_prior`（sample-stat） | **只做「排版是否合理」的参考核对**（`conference.reasonableness`，写进报告与 state.json），不进 L、不参与 A 打分 |
-| 无对应字段/动作的项（栏数、纸张、字体族、匿名、checklist…） | **逐条记录**，不强行接入：见 `datasets/conf-specs/summary/texopt-integration-report.md` |
+| 指标 | 目标 t | 单侧 | w | 说明 |
+|---|---|---|---|---|
+| `max_gap` | 0.100 | 只罚大洞 | 1.4 | 唯一经人工验证有效的量 |
+| `ink_ratio` | 0.120 | 只罚过空 | 1.0 | 满版/整页图不是缺陷 |
+| `top_bottom_ratio` | 1.031 | 双侧（对数空间） | 1.0 | 上下失衡 |
+| `bottom_blank` | 0.066 | 只罚贴边 | 0.8 | 多留白不罚 |
+| `top_blank` | 0.079 | 双侧 | 0.5 | |
+| `left_blank` / `right_blank` | 0.091 / 0.115 | 双侧 | 0.4 / 0.4 | 阶段 16 判定为冗余项，待 v2 处理 |
+| `band` | 0.004 | 双侧 | 0.0 | 阶段 9 判暂缓（阈值型，连续分无效） |
 
-优先级：**会议模板 < `--require` < settings.json < CLI 参数**（CLI 如 `--target` 可覆盖模板页数）。
-不指定 `--conference` 时 `base=None`，代码路径与行为与以前完全一致。
+`A_profile`（与同会议·同角色·同栏数语料档案的马氏距离带外损失）在 **λ = 0** 时
+只写报告、不参与任何判定，`shadow.assert_lambda_allowed` 在代码级拦 `λ>0`。
 
-## 已覆盖的 Basic 排版模块
+阶段 16 体检结论（`docs/stage16_model2_metrics_20261102.md`）：8 项里 3 项是准常数
+（`bottom_blank`/`left_blank`/`right_blank`，占原分值 33%）、1 项阈值型（`band`）、
+4 项保留但需改口径（`ink_ratio` 按角色分层、`max_gap` 排除末页自然留白）。
+v2 草案（3 连续 + 1 阈值 + 角色门控）**尚未落地**，见 §16。
 
-| 模块 | 处理方式 |
-|---|---|
-| 1. 页数限制 | **默认不动全局版心**（边距/字号调整会改变版面分布、导致图表与正文错位）——先做版面内质量修复（浮动体/图宽/断行）；仍超页则诚实 EXHAUSTED 并给建议（作者精简/合并图表/语义抛光）。仅当 `--tune-geometry` 显式授权才启用边距/字号压缩（带下限与松弛回拉） |
-| 2. 孤行寡行 | 注入 club/widow/displaywidow penalty 等断行质量宏（缓解）；像素级检测属图像视觉层（advanced） |
-| 3. 浮动体位置 | 不稳定参数 `[h]`/`[h!]` 规范为要求档 `[tbp]`；浮动体警告计入 A 并列出 |
-| 4. 公式居中 / 表格超宽 | fleqn 选项自动移除（公式居中）；超宽表格按源行号定位后改用 tabularx（见模块 9） |
-| 5. 字体字号/间距等基础规范 | 字号档对齐要求（documentclass）、页边距对齐要求（geometry） |
-| 6. 多期刊/会议要求 | 模板库 + 自定义要求接口，见上 |
-| 7. 排版卫生（确定性修复 + 源码层检测） | 有对应动作的自动修：手动分页（删）→手动垂直间距（删过大）→行内字号乱标（删）→标题字号超限（压回上限）→列表间距过大（收紧）→超长不可断词（插 \\- 断词点）；其余（下划线/\\noindent/硬换行/center 包正文/缺题注）仍计入 A 并逐条入报告，需作者意图，不自动改 |
-| 8. 结构/版面规范（v2） | 目录页、页眉、标题着色、阅读辅助清理、WARNING 告示清理、图形保真 —— 见下节 |
-| 9. 超宽表格 | 检测（overfull 落在 tabular 区间）→ 改用 tabularx（\\linewidth 自适应列宽）；不用 \\resizebox 压缩，不改数据/顺序 |
-| 10. 页面平衡 | 删除手动分页/过大 vspace 后交给 LaTeX 全局断页；必要时注入 \\raggedbottom 抑制“为凑满页而拉伸” |
+### 4.4 标定链：每个数字从哪来
 
-## 页面级视觉量化与版面级修复（Phase 2，2026-09-11）
-
-> 审美量化（A_soft / A_profile）的完整口径、参数、标定与局限，单独写在
-> **[`docs/aesthetic/README.md`](docs/aesthetic/README.md)**；本节只保留闭环层面的描述。
-
-### 为什么需要
-
-Phase 1 之后，A 仍然主要衡量「LaTeX warning + 源码违规」：`chaotic_layout_test.tex`
-能被压到 6 页并报 DONE，但生成的 PDF 里**仍有明显的大面积空白、巨大图片、窄表格、
-中途双栏、巨大标题、异常页眉** —— 也就是说**评分没有真正衡量视觉版面质量**，
-DONE 也结束得太早。Phase 2 的目标：让优化器**根据实际编译出的 PDF 的版面质量**优化。
-
-### 视觉量化（`texopt/visual.py`，全部量自编译后的 PDF）
-
-每页渲染低分辨率灰度图（默认 50dpi，`visual_dpi` 可调），逐页量取：
-
-| 指标 | 含义 |
-|---|---|
-| `ink_ratio` | 墨迹占比（页密度） |
-| `content_height` / `top_blank` / `bottom_blank` | 内容包围盒高度、顶部/底部空白比例 |
-| `max_gap` / `max_gap_at` | 最大连续空白带大小与位置（页中空洞） |
-| `band` / `band_at` | 最大「实在内容带」（行墨迹≥50%行宽）——巨大图/表的判据 |
-| `left_blank` / `right_blank` | 左右空白（内容宽度） |
-| `top_bottom_ratio` | 上/下半页墨迹比（视觉重心偏置） |
-
-由这些量判定**视觉缺陷**（`find_defects`，带 severity，阈值取「明显差」的粗档）：
-
-| 缺陷 | 判据 | 权重（high/moderate） |
-|---|---|---|
-| `giant_content` | 单一块内容 ≥ 40% 页高（巨大图/表） | 1.5 |
-| `stranded_block` | 几乎只有一块内容 + 底部大半空白 | 1.2 |
-| `bottom_blank` | 页底空白 ≥ 35%（high）/ ≥ 25%（moderate） | 1.0 / 0.6 |
-| `mid_gap` | 页面中部 ≥ 28% 页高连续空洞 | 0.8 |
-| `near_empty` | 墨迹 ≤ 2%（几乎空白页） | 0.6 |
-| `density_imbalance` | 页间密度相差 ≥ 10 倍或 ≥ 30 个百分点 | 1.0 |
-
-这些缺陷**已并入 A**（`aesthetic_score` = LaTeX 层 + 源码层 + 视觉层），
-并写入 `report.md` 的「视觉版面质量」表与 `state.json.visual`。
-`workbench/visual.md` 仍输出页面图给视觉模型（Level-3 补充判断）。
-
-### 新增版面级动作（同样走「应用→重编译→重评→接受/回滚」）
-
-| 动作 | 触发 | 做什么 |
-|---|---|---|
-| `normalize_title` | `title_size` | `\title{\Huge ...}` 压回上限（默认 ≤ `\LARGE`） |
-| `normalize_parskip` | `parskip` | 过大的 `\parskip` 收敛（默认 ≤ 8pt；整篇段距） |
-| `normalize_header` | `header_abnormal` | 清空过长/无意义页眉内容（保留 fancyhdr） |
-| `remove_mid_multicols` | `multicols_mid` | 移除正文中途的局部双栏（内容原样保留） |
-| `reduce_oversized_figures` | `fig_oversized` / `subfig_overfull` | 图高超限压到上限；并排子图宽度之和超版心时等比缩小 |
-| `fix_table_width`（扩展） | `table_narrow` / `tables_overwide` | `p{2cm}` 这类**明显窄于版心**的表格改 tabularx 自适应列宽 |
-| `balance_pages`（扩展） | 视觉缺陷 / vbox | `\raggedbottom` + 浮动体比例调优（`\floatpagefraction` 等），不给“半空浮动页”留机会 |
-
-诚实边界：这些都是**版面层**修改（不改正文/公式/引用/图表内容/图文件），
-每条都必须通过整篇重编译后的全局评分（含视觉分）才被接受，变差即回滚。
-若某项修正让视觉变差（例如缩图后仍是大块内容却新增底部空白），会被判负并回滚，
-如实留在报告中。
-
-### 出口状态（Phase 2 历史口径）
-
-Phase 2 引入的判定口径（DONE / CONVERGED / NEEDS_REVIEW / NO_IMPROVEMENT /
-EXHAUSTED / FAILED）仍在使用；当前完整定义（含阶段 12 新增的 `BLOCKED_GATE`）
-统一维护在 **[输出状态](#输出状态2026-10-31-更新)** 一节，避免两处口径漂移。
-
-另外：连续 `min_stall_rounds`（默认 2）轮无改善才停止，避免“一轮没吃到就收敛”。
-
-## 确定性排版修复动作（2026-09-11 新增：检测必须进入 Act）
-
-修复的问题：感知层早就能报出这批卫生问题，但**过去没有任何动作能修它们**，
-于是闭环第一轮就无事可做、直接 CONVERGED，A 分永远停在原地，"优化版"与
-原版几乎一样。现在每个可安全自动修复的问题都有对应动作，仍然全部走
-「应用 → 整篇重编译 → 全局重评分 → 接受/回滚」：
-
-| 动作 | 触发（感知层） | 做什么 |
-|---|---|---|
-| `remove_manual_pagebreak` | `manual_pagebreak` | 删正文 `\newpage`/`\clearpage`/`\pagebreak`，交回 LaTeX 全局断页 |
-| `remove_excessive_vspace` | `manual_vspace` | 删正文里 ≥ 阈值的 `\vspace{...}`（默认 10mm；小值不动） |
-| `normalize_local_font_size` | `size_switch` | 删正文孤立的行内字号切换（`{\Large ...}`）；数学/表格/verbatim 内不动 |
-| `normalize_heading_size` | `heading_size` | `\titleformat`/`\xxxfont` 里超限标题字号压回上限（section ≤ `\Large`，subsection ≤ `\large`，subsubsection ≤ `\normalsize`） |
-| `reduce_list_spacing` | `list_spacing` | 收紧列表环境里过大的 `itemsep/topsep/parsep/partopsep` |
-| `add_hyphenation_points` | `unbreakable` | 给超长不可断词（默认 ≥ 80 字符）插入 `\-` 断词点（TeX 合法机制，不改语义） |
-| `break_long_urls` | `long_url` | 给 `\url{}`/`\href{}`/`\path{}` 形式的长 URL 注入 `\usepackage{xurl}`（允许任意位置断行，不改 URL 文字） |
-| `fix_table_width` | `tables_overwide` | 列格式简单的超宽表改 tabularx（自适应列宽），不用 resizebox |
-| `balance_pages` | `vbox` 问题 | 注入 `\raggedbottom`，抑制“凑满页”式垂直拉伸 |
-
-要点：
-
-- 全部幂等、可回滚；**没有任何一条能绕过全局评分**（变差即回滚）。
-- `sanitize_float_specs` 新增 `include_H`：`[H]`（float 宏包强排）会把图
-  钉死在本行，是页面失衡/大块留白的常见来源，闭环会尝试解绑为 `[tbp]`，
-  由全局分仲裁（默认仍尊重作者的 `[H]`，LLM 请求时需显式传 `include_H`）。
-- `normalize_fig_width` 现在同时认**相对超宽**：`width=1.18\linewidth` /
-  `1.2\textwidth`（系数 > 1）→ `\linewidth`；`0.92\textwidth` 这类合理尺寸不动。
-- 为支持这些动作，内容校验的「排版命令可动面」相应扩展（见下文），正文
-  文字/公式/引用/图表内容仍是逐字符严格比较。
-- 开关：`tidy_manual_pagebreaks` / `tidy_manual_vspace` / `vspace_min_mm` /
-  `normalize_heading_size` / `normalize_local_font_size` / `reduce_list_spacing` /
-  `list_spacing_max_pt` / `break_long_words` / `break_long_urls` /
-  `fix_overwide_tables` / `balance_pages` / `free_floating_H`；Phase 2：
-  `visual_metrics` / `visual_dpi` / `normalize_title` / `title_size_cap` /
-  `normalize_parskip` / `parskip_max_pt` / `normalize_header` / `header_max_chars` /
-  `remove_mid_multicols` / `reduce_oversized_figures` / `max_fig_height_frac` /
-  `subfig_max_sum` / `narrow_table_min_frac` / `tune_float_placement` /
-  `done_max_a` / `min_stall_rounds`（均为 Requirement 字段，可写在
-  `--require` / `settings.json` 里单独关闭）。
-
-## 结构 / 版面规范（2026-09-10 新增）
-
-面向「投稿规范 / 报告规范」的一组结构能力，全部为可配置字段：
-
-| 能力 | 要求字段（默认） | 动作 | 归属 |
+| 参数 | 口径 | 题量 | 产物 |
 |---|---|---|---|
-| 目录页 | `toc`（False）/`toc_min_sections`（3） | `insert_toc` | L（要求指定时）/ A |
-| 页眉 | `running_header`（False）/`header_left`/`header_right` | `add_header` | L（要求指定时）/ A |
-| 标题着色 | `heading_color`（None，如 `0,62,120`） | `color_headings` | A（审美突出） |
-| 阅读辅助清理 | `strip_reading_aids`（**True**） | `strip_reading_aids` | 元信息清理 |
-| 告示块清理 | `remove_warning_boxes`（**True**） | `remove_warning_boxes` | 元信息清理 |
-| 图形保真 | `preserve_figures`（**True**） | 图形指纹 L 校验 + `--extract-fig` | L |
+| `ρ = 15` | 人工无差异点：缺陷保留 vs 修好+代价 c（三选一含"无差异"） | 两轮 15 题 + 6 题一致性复核（6/6） | `metrics/rho_tradeoff_20261031.json` |
+| P 的 7 项权重 | `w = c*/ρ`，再按口径 A（总权重和不变）缩放 | 两轮 33 题（含 4 道空题全对） | `metrics/pweight_applied_20261102.json` |
+| 其余 5 项 | 阶段 11「人判严重度 ÷ 语料频率」或先验拍值 | 15 题圆桌轮转 + BT | `metrics/severity_weights_applied.json` |
+| `A_soft` 目标/尺度 | 已录用语料分位数（200 篇 / 3898 页） | — | `metrics/soft_identifiability_20261102.json` |
 
-要点：
+漂移校验：`python3 tools/pweight_combine.py --check`、`python3 tools/apply_severity_weights.py --check`
+（代码常量 ↔ artifact 双向比对）。
 
-- **目录页/页眉**属“前置结构”，要求开启时作为 **L 硬约束**（缺失即违规，
-  闭环必自动修复）；`insert_toc` 幂等，插在正文首节前并单独成页。
-- **标题着色**用 `sectsty` 给 section/（子）小节着色（`heading_color` 支持
-  `R,G,B` / `RGB:...` / `HTML:...` / 颜色名或表达式），已有 `titlesec` 时
-  不擅动（避免与 `\titleformat` 冲突）。
-- **阅读辅助 / 告示清理**只删已知模式（`START READING HERE`、
-  `document order was not finalized`、行首 `WARNING:/CAUTION:/ATTENTION:`），
-  绝不匹配正文句子；属“元信息定点删除”，由内容校验器的元信息归一器豁免，
-  不破坏“正文零改动”铁律。关闭：`--no-strip-aids` / `--no-warning-boxes`。
-- **图形保真**：图的唯一合法来源是原稿——禁止用 TikZ 重画、禁止换算坐标轴。
-  感知层为每个 figure/table 环境计算**内容指纹**（宽度/位置参数归一），
-  与 `--original` 对照，不一致即 L 违规“图形/表格内容被改动”，并给
-  `figure_unpreserved` 建议。重建/嵌图用 `--extract-fig` 从原 PDF 裁切
-  （400dpi，按原始 bp 尺寸嵌入）。
+---
 
-## 架构：感知-决策-执行-验证闭环
+## 5 闭环与验收
 
 ```
-                    ┌──────────────────────────────────────┐
-                    │   主循环：候选动作池，全局评分验收       │
-                    │   （每步：备份→应用→整篇重编译→全局重评） │
-                    └──────────────────────────────────────┘
-  感知 (perceive.py)        决策 (core.py + score.py)        执行 (actions.py)
-  L1 源码：类/字号/geometry/    L 硬门槛优先（编译/内容/页数/   白名单动作（只动排版面）：
-     浮动体 spec/图宽/tabular   规范）→ 质量/松弛候选按序推进；   set_margin / set_fontsize
-  L2 日志：页数/overfull/      每轮取首个全局正收益动作；       sanitize_float_specs /
-     underfull/vbox/浮动警告    失败动作记 blocked 防重复；      normalize_fig_width /
-  L3 PDF：pdfinfo 真实页数      验收失败一律回滚（正文零改动    drop_fleqn /
-     （与日志交叉验证）         由 body 归一化 diff 机器校验）    inject_quality_macros
-                              终止：DONE / CONVERGED / NEEDS_REVIEW /
-                                    NO_IMPROVEMENT / EXHAUSTED / FAILED /
-                                    BLOCKED_GATE
-                              每步写 state.json（评分轨迹：gate / P / I / M1 / M2）
-
-  （v2 新增模式：结构层——目录/页眉/标题着色/阅读辅助/WARNING/图形指纹；
-    对应动作 insert_toc / add_header / color_headings /
-    strip_reading_aids / remove_warning_boxes，以及 engine.extract_pdf_region）
+baseline 感知（源码 L1 / 日志 L2 / PDF L3）
+  └─ gate 不过 → 定向修复（只做能修 gate 的动作；单步不达标进「暂存链」）
+       └─ 达标 → 进入常规优化
+  └─ gate 过 → 枚举候选动作 → 逐个试：
+       应用 → 整篇重编译 → 全局重评 → 字典序变好才接受，否则回滚
+  └─ 连续 min_stall_rounds（默认 2）轮无改善 → 收尾、出报告
 ```
 
-### 闭环四条保证（继承自 MVP 并推广）
-1. **严格字典序（阶段 12）**：验收顺序 = **gate 违规数 → M1 → M2**——
-   gate 未过直接拒绝/定向修复；压页阶段放宽为「页数不增」以保留组合收益；
-   **M1 变差一律否决，M2 再小也不补偿**；M1 持平时 M2 严格改善才接受。
-   这套口径修掉了旧版两个颠簸：`total = A + I` 一刀切会拒掉「降 A 但增 I」的
-   真修复（阶段 8 E1：`[H]→[tbp]` 使 A 17.5→16.0 但 I→2.8，被判负回滚）；
-   而 `M1+M2` 相加则允许「审美大幅变差换 M1 小改善」，故两线不相加。
-2. **全局最优趋近**：M1 达标后，松弛动作（回放页边距/字号）因降低 I 被自动
-   接受，直到临界点 —— 最小干预与压缩质量由同一评分函数仲裁（M1 优先、M2 tie-break）；
-3. **有界性**：候选动作有限 + `max_iterations` 兜底 + 编译超时强杀重试；
-4. **可审计**：原文件只读；每步动作、gate/P/I/M1/M2、**接受/回滚理由**全量记录。
+**全局性（局部最优 ≠ 全局最优）**：每个候选修复都要先整篇重编译再全局重评——修好第 3 页
+孤行却弄坏第 7 页浮动体的改动会被判负回滚。压页阶段放宽为"页数不增"以吃组合收益，
+达标后自动把参数拉回"最宽松且最优"的临界点（松弛天然发生）。
 
-## 模型在环（Model-in-the-loop）：LLM 真正进入优化循环
+**连档压页（阶段 15 修复）**：TeX 断页是台阶式的，收一档边距常不兑现。旧逻辑要求每个
+单步都严格减页 → "连收两档才减一页"被永久挡死。现改为**暂存链**：不增页的单步可暂存，
+后续兑现则整链提交；超过 `gate_repair_plateau = 3` 档仍未兑现则整链回滚到链首。
 
-两步往返（可重复多轮）：
+---
 
-```bash
-# ① 跑确定性闭环，并输出「请求包」给 LLM（状态+残余问题+可用动作+页面图）
-python3 optimize.py paper.tex --template acme --emit-request
+## 6 动作体系（28 个白名单动作）
+
+`texopt/actions.py` 实现、`texopt/whitelist.py` 注册（动作名 + 参数校验 + level）。
+全部**幂等、可回滚**，且没有任何一条能绕过全局评分。
+
+| 类别 | 动作 |
+|---|---|
+| 版心 / 字号（仅 `--tune-geometry` 授权） | `set_margin`、`set_fontsize` |
+| 浮动体 | `sanitize_float_specs`、`set_float_spec` |
+| 图 | `normalize_fig_width`、`set_fig_width`、`reduce_oversized_figures`、`shrink_oversized_figures` |
+| 表 | `fix_table_width`（改 tabularx 自适应列宽，不 resizebox） |
+| 断行 / 间距 | `inject_quality_macros`、`add_hyphenation_points`、`break_long_urls`、`reduce_list_spacing`、`remove_excessive_vspace`、`normalize_parskip`、`balance_pages` |
+| 卫生 / 结构 | `remove_manual_pagebreak`、`normalize_local_font_size`、`normalize_heading_size`、`normalize_title`、`normalize_header`、`drop_fleqn`、`insert_toc`、`add_header`、`color_headings`、`strip_reading_aids`、`remove_warning_boxes`、`remove_mid_multicols` |
+
+查看可用动作：`python3 optimize.py --list-actions`。
+
+---
+
+## 7 要求对接：模板 / 会议 / 自定义
+
+优先级：**会议/期刊模板 < `--require` 要求文件 < `settings.json` < CLI 参数**。
+字段全部可选，缺省 = 不约束、不干预（尊重原稿）。
+
+| 来源 | 内容 |
+|---|---|
+| 内置/外置模板（`templates/`，17 个） | `ieee` / `acm` / `acm-full` / `springer-llncs` / `custom` / `report` + 数据集生成的会议风格 |
+| 会议模板（`--conference`，16 个） | NeurIPS / ICML / ICLR / ACL / EMNLP / CVPR / ICCV / ECCV / AAAI / IJCAI / SIGGRAPH / KDD / NSDI / OSDI…（`datasets/conf-specs/templates-v2/*.json`） |
+| 自定义 | `--require my-reqs.json`：任意详细规则，可叠加模板 |
+
+会议模板的投影方式（`texopt/conference.py`，不为任何会议写单独代码）：
+
+- `hard_constraints` → **gate**（页数、字号、边距下限、公式居中）
+- `geometry.margin_floor_mm` 只作**下限**：低于才判违规，高于不干预
+- `float_policy` / `overwide_fig_threshold_mm` → 浮动体目标档与超宽阈值
+- `density_targets` / `*_observed` / `position_prior`（sample-stat）→ 只做"合理性参考"
+  （写进报告与 `state.json`），**不进 gate、不进 A**
+- 消费不了的字段（栏数、纸张、字体族、匿名、checklist…）→ 逐条登记，不硬接
+
+---
+
+## 8 感知层
+
+| 层 | 模块 | 内容 |
+|---|---|---|
+| L1 源码 | `perceive.py` | documentclass/字号/geometry/双栏/fleqn/浮动体/图宽/tabular 区间 + 卫生检查（标题字号、行距、页眉、中途双栏、超大图、窄表…） |
+| L2 日志 | `perceive.py` | overfull / underfull / vbox / 浮动体警告 / 编译错误 |
+| L3 PDF | `engine.py` | 页数、SyncTeX 源码行→页归因、参考文献首页定位（正文页口径）、原图裁切 |
+| 视觉 | `visual.py` | PDF→逐页灰度图；`ink_ratio`、`top_bottom_ratio`、`bottom_blank`、`max_gap`、`band`、`left/right_blank` 等；`find_defects` 给视觉缺陷；`pixel_role()` 像素角色代理（near-empty/sparse/dense/body） |
+| 留白结构 | `whitespace.py` | 五类留白 + region 列表 + 页眉页脚识别 |
+
+`Perception` 是唯一的结构化输入，后续打分、候选、报告全部基于它。
+
+---
+
+## 9 模型在环（Model-in-the-loop）
+
+```
+# ① 跑确定性闭环，并输出请求包
+python3 optimize.py paper.tex --target 6 --emit-request
 #    -> workbench/{paper.tex, report.md, state.json, advisory.json,
 #                 llm_request.json, pages/page-*.png, visual.md}
 
 # ② LLM 读 llm_request.json，产出 proposals.json（结构化提案）
-# ③ 程序逐条执行：白名单校验 → 应用 → 编译 → 全局验收 → 变差回滚，再出下一轮
-python3 optimize.py paper.tex --proposals proposals.json --emit-request
-#    -> 更新 paper.tex/report/state + 下一轮 llm_request.json（round+1）
 
-python3 optimize.py --list-actions        # 查看可用白名单动作
+# ③ 程序逐条执行：白名单校验 → 应用 → 编译 → 全局验收 → 变差回滚 → 下一轮
+python3 optimize.py paper.tex --proposals proposals.json --round 2
 ```
 
-**提案格式**（宽松，兼容嵌套/扁平两种写法）：
+- LLM **只提方案**，不直接改文件、不跑 shell；提案命中不了白名单 → `BLOCKED`。
+- 每轮都会重新发射请求包（`round+1`），LLM 看到的是**刚编译出来的真实状态**。
+- 协议实现：`texopt/proposal.py`（`build_request` / `parse_proposals`）+ `core.apply_proposals`。
 
-```json
-{
-  "schema": "texopt.proposals/v1", "round": 1,
-  "assessment": "整体布局判断……",
-  "proposals": [
-    {"id": "p1", "issue": "page_balance", "location": "page 5",
-     "severity": "moderate", "reason": "页面下半部分空白过大",
-     "proposal": {"action": "set_float_spec", "target": "figure#2",
-                  "params": {"spec": "tbp"},
-                  "suggestion": "允许该图浮到页顶/页底以填补空白"}}
-  ]
-}
-```
+---
 
-**安全闸门（LLM 不能随意改论文）**：
+## 10 单页诊断：局部 vs 整体
 
-1. 提案里的 `action` 必须在**白名单**（`texopt/whitelist.py`）里，否则 **BLOCKED**；
-2. 每个参数做类型/取值/正则校验（禁花括号与控制序列注入）；
-3. 所有动作都只落在**排版面**（页边距/字号/浮动体位置参数/图片宽度/结构）；
-4. 执行后一律**整篇重编译 + 全局重评分**，`L` 变差或总分不改善 → **回滚**；
-5. 未知动作、非法参数、已失败过的提案 → 跨轮阻止（audit 可查）。
+`texopt/page_score.py` 把缺陷按 SyncTeX 归到具体页，给三种读法：**页均 / 最差 k 页 / 单页峰值**，
+并标注每页像素角色。写入 `state.json.page_diagnostics` 与报告的「逐页诊断」表。
 
-白名单动作（`--list-actions`）：`set_margin`、`set_fontsize`、`drop_fleqn`、
-`inject_quality_macros`、`insert_toc`、`add_header`、`color_headings`、
-`strip_reading_aids`、`remove_warning_boxes`、`sanitize_float_specs`、
-`normalize_fig_width`，确定性排版修复：`remove_manual_pagebreak`、
-`remove_excessive_vspace`、`normalize_local_font_size`、`normalize_heading_size`、
-`reduce_list_spacing`、`add_hyphenation_points`、`break_long_urls`、`fix_table_width`、
-`balance_pages`，
-以及两个 **Level-3 定点动作**：
+**它只做归因，不改判定口径**：ρ、14 项 c\*、M1/M2 聚合全部原样——所以阶段 13/14 的标定
+继续有效。目的只有一个：回答"哪一页最差、差在哪"，供人复核与 Level-3 判断。
 
-| 动作 | 作用 |
+---
+
+## 11 输出状态
+
+| 状态 | 含义 |
 |---|---|
-| `set_float_spec` | 定点让某张图/表浮到页顶(t)/页底(b)/单独页(p)：`target="figure#2"` |
-| `set_fig_width` | 定点设置某张插图宽度：`width="0.9\\linewidth", target="fig#1"` |
+| `BLOCKED_GATE` | gate 有违规（含不可修复项，或定向修复失败）；报告单列修改建议，标「可排版修复 / 需人工源码修改」 |
+| `DONE` | gate 全过，且本轮有 ≥1 个被接受的动作 |
+| `CONVERGED` | gate 全过，且没有可动的候选动作（文档本身没问题） |
+| `NEEDS_REVIEW` | gate 全过但仍有 high 级视觉缺陷（或 M2 超 `done_max_m2`） |
+| `NO_IMPROVEMENT` | gate 全过、有候选，但没有任何一个能改善评分（已全部回滚） |
+| `EXHAUSTED` | 排版手段用尽仍缺 gate（通常超页）；给差距与语义抛光建议 |
+| `FAILED` | 基线无法编译 / 环境缺失；报告给首个编译错误 |
 
-`workbench/state.json` 的 `steps` 每步带 `source`（`rule`/`llm`）与 `detail`，
-完整保留「为什么改 / 改了什么 / 编译结果 / 指标变化 / 为什么接受或回滚」。
+`gate = 0` 不等于"已优化"：阶段 12 起 gate 违规甚至不产生分数。
 
-## 视觉感知（Phase 4：给 LLM 一双眼睛）
+---
 
-`--emit-request` 会把每页 PDF 渲染成 PNG（`workbench/pages/page-*.png`），
-附在 `llm_request.json` 的 `page_images` 里，交给**具备视觉能力的模型**判断
-留白/视觉重心/图文关系等 Level-3 问题。
+## 12 标定链与实验资产
 
-同时给出**实验性像素代理**（写进 `workbench/visual.md`）：墨迹占比、上/下半
-页墨迹比、最大空白带及其位置——它们是**粗略实验量，不是人类审美评分，
-默认不并入 A 分**（不改变 `score.py` 语义），仅供参考与后续研究。
-
-> 边界（2026-10-31 更新）：视觉量化已在 Phase 5 落地并并入 **A_soft（→ M2）**，
-> 本节这套像素代理只作补充，不重复计分。`A_soft` 是**可复现的版面缺陷量**，
-> **不是人类审美评分**；与人的一致性见阶段 10（20 页排序 Spearman 0.46）与
-> 阶段 10b（12 对成对比较），口径与局限写在 `docs/stage10*.md`。
-
-## 输出状态（2026-10-31 更新）
-
-| 状态 | 含义 | 处理 |
-|---|---|---|
-| `BLOCKED_GATE` | gate 有违规且（含不可修复项，或定向修复失败） | 不进入打分；报告单列「修改建议」，标 `可排版修复 / 需人工源码修改` |
-| `DONE` | gate 全过，且本轮**应用了 ≥1 个被接受的动作** | 报告给出 `Applied N accepted actions. M1: old -> new. Pages: old -> new` |
-| `CONVERGED` | gate 全过，且**根本没有可动的候选动作**（文档本身没问题） | 报告列出残余 cosmetic 问题（如有） |
-| `NEEDS_REVIEW` | gate 全过但**仍有 high 级视觉缺陷**（或配置了 `done_max_m2` 且 M2 超限） | 明确不判 DONE，列出待人工判断项 |
-| `NO_IMPROVEMENT` | gate 全过，有可动候选，但**没有任何一个能改善评分**（已全部回滚） | 如实说“未修改任何内容”，不伪造“优化成功” |
-| `EXHAUSTED` | 排版手段用尽仍缺 gate（通常超页） | 报告给出差距与语义抛光建议，等用户决策 |
-| `FAILED` | 基线无法编译 / 环境缺失 | 报告给出首个编译错误 |
-
-判定规则：gate 有违规 → 先定向修复；仍不过 → `EXHAUSTED` / `BLOCKED_GATE`；
-否则按「是否有候选 → 是否有接受 → 是否残留 high 视觉缺陷」区分
-`DONE / NO_IMPROVEMENT / CONVERGED / NEEDS_REVIEW`。**gate 与 M1/M2 分开看**：
-gate=0 不再等于“已优化”（阶段 12 起，gate 违规甚至不产生分数）。
-
-## 环境要求与已知约束
-
-- TeX：自动探测 Windows TeX Live（`/mnt/c/texlive/*/bin/windows/`）或 PATH 中的
-  XeLaTeX；文档必须位于 `/mnt/c`、`/mnt/d` 等 Windows 真实盘符路径下
-  （Windows 引擎无法写 WSL 原生文件系统）。`--outdir` 也会被校验，不在
-  Windows 盘符下会提前报错（避免“编译成功不了”的坑）。
-- 修改面白名单：文档字号档（仅 tune-geometry 压页时）、页边距（仅 tune-geometry，有下限）、
-  断行质量宏、浮动体位置参数、超宽/定点图片宽度、documentclass 的 fleqn 选项、
-  前置结构（目录/页眉/标题着色）、**正文排版卫生命令**（手动分页/过大垂直间距/行内字号乱标/
-  标题字号/列表间距/断词点/表格列格式）；**不做**：正文
-  文字/公式/引用/标签/图表内容改动、注释改动、文档类更换、语义改写。
-- 未实现（后续阶段）：跨文档类模板迁移，LLM 语义保意缩行（Phase 6），
-  历史版本存档；`λ>0`（A_profile 参与验收）受代码级拦截，需人工审批。
-- 性能提示：仓库位于 `/mnt/d` 等 9p 盘时，`git status` 扫大语料需数十秒到数分钟，属正常；
-  大体积基准语料 `paperfit-bench-originals/`（~5.7GB）已在 `.gitignore`，不入库。
-
-## 开发阶段与现状（已实现 / 接口预留 / 未来）
-
-诚实标注每个阶段的状态（对应「不要为了满足目标而虚构不存在的功能」）：
+标定/体检阶段（每个都有 artifact 与文档，工具可复算）：
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
-| **Phase 1** 确定性优化 | Perceive→Score→Action→Compile→Verify→Rollback 闭环 | ✅ 已实现（`optimize.py` / `texopt/core.py`） |
-| **Phase 2** LLM advisory | 残余问题→结构化建议（severity/line/suggestion/suggested_actions） | ✅ 已实现（`texopt/advise.py`） |
-| **Phase 3** LLM 提案入环 | 白名单提案→程序执行→编译→验收→保留/回滚→下一轮 | ✅ 已实现（`texopt/whitelist.py` + `texopt/proposal.py` + `Optimizer.apply_proposals` + CLI `--proposals`） |
-| **Phase 4** 页面图像 | PDF→逐页 PNG + 页面级像素量化，交给视觉模型 | ✅ 已实现（`texopt/visual.py`：render + `page_metrics`） |
-| **Phase 5** 视觉审美量化 | whitespace/content density/visual balance 等并入 A | ✅ 已实现（2026-09-11 起 `page_metrics`/`find_defects` 并入 A；阈值化、可审计，仍非人类审美评分） |
-| **Phase 6** 高级语义优化 | 物理排版↔语义压缩/重构 + 更强语义保持验证 | ⬜ 尚未实现（需用户在场审批） |
+| 0-2 | 指标盘点、页级提取（608 篇/10538 页）、审美档案（venue×role 正常范围） | 完成 |
+| 3-4 | 留白结构化（`whitespace.py`）、马氏距离 + `A_profile`（λ=0 影子） | 完成 |
+| 5-6 | 评测验收协议 12.1-12.6（门槛 6/8 维通过）、影子接入 `score`/`core` | 完成 |
+| 7 | 权重校准（消融 + bootstrap CI + BT）：80 组试验，判别间隔 0.1157 → 0.1506 | 完成（人类数据 8 对，建议攒到 ≥30 对） |
+| 8 | 外部验证 E1/E2/E3（真实论文端到端退化、双测量路径、论文级聚合） | 完成（两条负面结果如实记录） |
+| 9 | 检测器体检：`band` 判暂缓、`trailing_ratio` 标 `degenerate` | 完成 |
+| 10-10b | `A_soft` 从"带内恒 0"改为平滑目标：排序 Spearman 0.31 → 0.46，并列 8/20 → 0/20 | 完成 |
+| 11 | 严重度标定：15 题圆桌轮转 + BT + Jeffreys 先验 | 完成 |
+| 12 | gate 退出 + 两线分离：`(gate, M1, M2)` 字典序，gate 违规不再折算罚分 | 完成 |
+| 13 | `ρ` 无差异点重标定：0.341 → **15**（区间 [5,32]） | 完成 |
+| 14 | P 权重"同一把尺子"：`w = c*/ρ`，7 项统一，口径 A 缩放 | 完成 |
+| 15 | 连档压页暂存链 + 单页/整篇分层诊断（`page_score.py`） | 完成 |
+| 16 | model2 指标可辨识性/敏感性双体检 + 像素角色代理 | 完成（v2 未落地） |
 
-**审美量化流水线（2026-09-28 起，独立于上面的 Phase 1-6）**：
+资产位置：`metrics/*.json`（标定结论）、`tools/*.py`（生成这些结论的脚本）、
+`docs/stage*.md`（每阶段的结论、方法与局限）。`docs/scoring/README.md` 与
+`docs/aesthetic/README.md` 分别是打分模型与审美量化的专题说明。
 
-| 阶段 | 内容 | 状态 |
-|---|---|---|
-| 阶段 0 | 指标盘点 + `page_metrics.v1` schema + 修 4 个真 bug | ✅ |
-| 阶段 1 | 页面角色标注 + 页级提取 + 全库 608 篇 / 10538 页 | ✅ |
-| 阶段 2 | 审美档案（venue×role 正常范围 + CI + 可信度）+ 去冗余 | ✅ |
-| 阶段 3 | **留白结构化识别（五类 + region 列表）+ 页眉页脚识别 + 未锚图形计入** | ✅（`texopt/whitespace.py`） |
-| 阶段 4 | 马氏距离异常检测 + 带外损失 `A_profile`（λ=0 影子模式） | ✅（`texopt/aesthetic.py` + `texopt/shadow.py`；提交 `ae741fc`） |
-| 阶段 5 | **评测与验收协议 12.1-12.6**（负样本注入 / 假阳率 / 会议可分性 / 稳定性 / 人类相关性接口 / 逐维门槛） | ✅（`texopt/evalproto.py`；门槛 6/8 维通过，`eval_gate.json` 由影子评估自动加载） |
-| 阶段 6 | 影子接入 texopt（λ=0 真正进 `score`/`core`，只报告不改判定） | ✅（`texopt/shadow.py` + `core.py` 观测钩子 + `aesthetic_shadow.md/json`；CLI `--shadow-only` / `--no-aesthetic-shadow`） |
-| 阶段 7 | **权重校准**（消融拟合 + bootstrap CI + Bradley-Terry 接口） | ✅ 步骤二 + **步骤三（2026-10-01 采集 8 对，成对准确率 0.875，`method=ablation+human`）**；8 对是口径下限，建议攒到 ≥30 对（`datasets/conf-specs/tools/make_pairs.py`） |
-| 阶段 8 | 外部验证（真实论文端到端退化 / 第二套工具链复测 / 论文级报告） | ✅（`texopt/evalexternal.py` + `datasets/conf-specs/tools/eval_external.py`；E1 真编译闭环 / E2 双测量路径 / E3 论文级聚合，详见 `docs/stage8_eval_external.md`） |
-| **阶段 9** 检测器体检 | 指标精度 / 日志解析覆盖率 / 语料正常区间口径（band v2） | ✅（`tools/detector_check.py`，`docs/stage9_detector_check_20261027.md`；`band` 判暂缓，权重置 0） |
-| **阶段 10** A_soft 形式改造 | 「带内恒 0」→ 平滑目标损失（对数/单侧、有界、无平台区） | ✅（`docs/stage10_a_soft_smooth_form_20261028.md`；排序 Spearman 0.3146 → **0.4586**，并列 8/20 → **0/20**） |
-| **阶段 10b** 成对比较验收 | 12 对二选一，替代 20 页人工排序 | ✅（`tools/make_pair_sheet.py`，`docs/stage10b_pair_sheet_20261028.md`） |
-| **阶段 11** 严重度标定 | 15 题圆桌轮转 + Bradley-Terry + Jeffreys 先验，`w = 严重度 ÷ 频率` | ✅（`tools/make_severity_sheet.py` / `tools/apply_severity_weights.py`，`docs/stage11_severity_sheet_20261028.md`） |
-| **阶段 12** gate 退出 + 两线分离 | gate 一票否决 → 定向修复/退出；model1、model2 不相加；P 权重回填；ρ 用闭环实测 | ✅（`docs/stage12_gate_exit_two_lines_20261030.md`；当时 ρ=0.341，回归 308/0/0） |
-| **阶段 13** ρ 无差异点重标定 | 闭环「平均代价」口径 → 人工无差异点（缺陷保留 vs 修好+代价 的版本对，三选一），两轮 15 题 + 6 题一致性复核，并做重标定前后 A/B | ✅（`docs/stage13_rho_tradeoff_20261031.md`；ρ=**0.341 → 15**，区间 [5,32]，回归 **307/0/0**；A/B：多接受 0–2 个带代价修复，页数/L 均不变） |
+---
 
-阶段 5 结果要点（诚实边界：检验的是实现与口径的**自洽性**，不等于「与人类审美一致」；12.5 数据未采集，如实记 null）：
-
-- 12.1 负样本注入：A 单调上升 100%（严格零回落 96.3%）、退化页定位 96.3%
-- 12.2 假阳率：卡方阈值 **15.9%**（假设不成立，重尾）→ 发布口径改用**经验校准**，仍为 **5.71%**（略高于 5% 目标，报告给了 P95/96/97 权衡表）
-- 12.3 会议可分性：1-NN 留一 0.529（随机 0.091），置换 p=0.0099
-- 12.4 稳定性：重复测量完全一致、DPI 50→200 漂移 0
-- 12.6 门槛：6/8 维通过；未过者 `readability.leading_ratio`、`density.coverage_table`（12.1 未覆盖 → 只能作报告项）
-
-阶段 7 结果要点（方案 10.3）：信号 = 该维被退化时的损失增量，噪声 = 对照试验里它在未退化页上的自发损失（P90）；
-`w = SN` 归一到均值 1、裁剪 [0.25, 4]（先归一再裁剪），CI 用按论文聚类的 bootstrap。
-80 组试验下：`balance.d_mid` **2.65**、`balance.visual_centroid_y` 1.16、`whitespace.total_ratio` 0.67、
-`density.coverage_text` 0.61、`ratio.fig_text` 0.46、`alignment.center_var` 0.46；
-验收：退化后 A 上升正向率 0.9875 不变、中位判别间隔 0.1157 → **0.1506**（严格改善）→ `applied=true`。
-**λ 仍为 0**：权重只改 `A_profile` 合成口径（`Σw·v/Σw`），不参与验收；λ>0 需人类标定 + 用户审批。
-
-阶段 7 步骤三（2026-10-01）：**已采集 8 对人类成对比较**（`human/pairs.json`，工具
-`datasets/conf-specs/tools/make_pairs.py`），成对准确率 0.875 → `method=ablation+human`；因样本是口径下限
-（≥8 才给结论）且 L2 朝等权收缩，人类数据主要把上表的强权重**拉回接近 1**
-（`balance.d_mid` 2.65 → **0.70**、`alignment.center_var` 0.46 → **1.53**）。
-要稳定主张“与人类偏好一致”，建议攒到 ≥30 对再 `--apply`。
-
-阶段 8 结果要点（详见 `docs/stage8_eval_external.md`）：
-
-- **E1**（真实文档 + 真编译闭环，4 篇：`neurips-real`/`paper-real`/`demo`/`issues`；终态=干净工作区 + 修正 (a) + 人类权重）：
-  A_defect 对退化敏感（单调 3/4、可见 3/4），闭环把退化稿 A 拉回 ≤ 干净稿（3/4），
-  且都 ≤ 自身退化态（4/4）。**两条负面结果如实记录**：
-  ① `paper-real` 退化态 A 不单调（25.88→25.4→21.9→22.9），闭环也只部分修复
-  （修正 (a) 前 3.7→6.5→**11.3→12.3**，修正后 **3.7→6.5→6.5→7.5**，仍 > 干净稿 3.1）；
-  ② **影子 A_profile 0/4 同向**（A_defect 敏感、A_profile 不敏感），
-  是 λ=0（影子不参与验收）的直接证据；人类权重把权重拉向等权后，它的分辨力**更弱**。
-  关键修正：初版只记**修复后**的 A，而源码级退化会被完全修回去 → 单调性无法被检验；
-  现改为同时记录退化态（闭环基线）的 A 与影子 A_profile（`core.run()` 新增只读字段
-  `aesthetic_shadow_baseline`）。
-- **E2**（12 篇真实论文 × 前 8 页，dpi 50）：排序一致性 —— 整页留白 ρ 中位 0.58、
-  纵向重心 0.19（最低 -0.67）；绝对值不可比（口径不同）。发现 **`whitespace.trailing_ratio`
-  在排满的正文页上无取值**（12/12 篇秩相关退化；全库 10415 页仅 6.58% 非零）——
-  是该指标自身的**可辨识性问题**，已在代码里显式标 `degenerate`。
-- **E3**（60 篇论文级聚合）：论文级 A_profile 中位 0.7664 / P90 1.3885；
-  并量化原始量覆盖率：`trailing_ratio` 6.0%、`ratio.fig_text` 41.0%、其余 ≥99%。
-- **E1 归因（`tools/profile_attr.py`）**：`neurips-real` deg1/deg2 在**渲染层完全无效**
-  （注入的 `\vspace`/`\newpage` 在分栏断页处被 TeX 丢弃 → A_profile 逐位相同），
-  而 A_defect 看**源码**所以会动；`demo` 上 `\vspace` 甚至让 A_profile **下降**。
-  → **A_defect 看源码+渲染，A_profile 只看渲染且只测“常态偏离”**；
-  要让 A_profile 参与决策（λ>0），必须先把「缺陷敏感」与「常态偏离」拆开。
-  `paper-real` 修复不完全的直接原因：`deg3` 里「[H]→[tbp]」让 A 降了（17.5→16.0）
-  但 I 升到 2.8，按 `total=L·1e6+A+I` 被回滚；`vspace_rm`/`local_font` 一直被 blocked。
-- 以上均不改变文档、不改变判定；**λ 恒为 0**，且阶段 8 的 E4 现在会**代码强制**拦下 λ>0
-  （实测 2 个维对退化无响应 → `lambda_eligible=false`）。
-- **修正 (a)**（验收口径 A 优先、I 只做 tie-break）与 **(b)**（E4 缺陷敏感门）见
-  `docs/stage8_eval_external.md` §5；修正后全量回归 258 通过 / 0 失败 / 0 跳过。
-
-文档：`docs/stage0_visual_inventory.md`、`stage1_role_and_extraction.md`、`stage2_profile.md`、`stage3_whitespace.md`、`stage4_aesthetic_profile.md`、`stage5_eval_protocol.md`、`stage6_shadow_integration.md`、`stage7_weight_calibration.md`、`stage8_eval_external.md`。
-
-阶段 6 接入要点（详见 `docs/stage6_shadow_integration.md`）：影子只在「判定完成之后」被调用（基线 / 接受分支 / 终态），λ 恒为 0；每次运行产
-`workbench/<run>/aesthetic_shadow.md`（人读，含逐轮 trace 与人工核对清单）与
-`aesthetic_shadow.json`（机器），并在 `state.json` 写**版本化快照**（13.4）。
-端到端证据：同文档开/关影子，`status`/`accepted`/`total`/`a`/`L`/页数逐项相同。
-
-**接口/placeholder（已预留但未落地）**：`Requirement.microtype`（None=不干预）；
-历史版本存档（advanced，代码侧未接）；`λ>0` 的 A_profile 验收（`shadow.assert_lambda_allowed` 代码级拦截）。
-
-## 目录结构
+## 13 仓库结构与数据策略
 
 ```text
 texopt/
-├── optimize.py            # CLI 入口（--template/--conference/--require/--target/
-│                           #   --settings/--emit-request/--proposals/--list-actions/--visual）
-├── settings.json          # 默认要求/运行参数（Agent 对接接口）
-├── templates/             # 期刊/会议要求预设库（.json，可扩展）
-├── metrics/               # 标定产物（rho_exchange_rate.json / severity_weights_applied.json）
-├── docs/                  # 阶段文档（stage0…stage12）+ 公式/模型说明
-├── datasets/conf-specs/   # 会议模板 v2、语料统计、评测工具（eval_protocol / eval_external / calibrate_*）
-├── tools/                 # 标定与体检：detector_check / make_pair_sheet / make_severity_sheet /
-│                           #   calibrate_rho / apply_severity_weights / corpus_build
+├── optimize.py              # CLI 入口（只做参数编排，不含算法）
 ├── texopt/
-│   ├── engine.py          # 编译引擎（超时强杀重试）+ PDF 图形裁切 + 输出目录校验
-│   ├── perceive.py        # 感知层 L1/L2/L3（源码+日志+PDF）+ 结构/图形指纹
-│   ├── actions.py         # 执行层白名单动作（含定点 float/图宽）
-│   ├── whitelist.py       # 动作白名单注册表（模型在环唯一可请求面 + 参数校验）
-│   ├── proposal.py        # 模型在环提案：解析/校验/请求包构造（llm_request.json）
-│   ├── visual.py          # 视觉感知层：PDF→页面图 + 页面像素指标（Phase 5 起并入 A_soft）
-│   ├── score.py           # gate + M1(ρ·P+I) + M2(A_soft+λ·A_profile)：量化与字典序验收
-│   ├── conference.py      # 会议模板加载与投影（hard_constraints→gate；统计→合理性参考）
-│   ├── requirements.py    # 要求规格模型（模板/自定义合并）
-│   ├── advise.py          # 残余问题→结构化建议（模型在环消费）
-│   ├── page_metrics.py    # page_metrics.v1 结构/校验/聚合/旧输出适配（纯 stdlib）
-│   ├── roles.py           # 页面角色规则器（title/body/references/appendix/figure-page…）
-│   ├── extract.py         # 阶段 1：PDF→page_metrics.v1（矢量/文本层为主）
-│   ├── whitespace.py      # 阶段 3：留白结构化（五类 + region 列表）
-│   ├── profile.py         # 阶段 2：审美档案（分位/聚类 bootstrap/Spearman/PCA，纯 Python）
-│   ├── aesthetic.py       # 阶段 4：马氏距离 D² + 非单调带外损失 A_profile
-│   ├── shadow.py          # 阶段 4/5：影子评估（λ=0）+ 加载 eval_gate.json 剔除未过门槛的维
-│   ├── evalproto.py       # 阶段 5：评测与验收协议 12.1-12.6
-│   ├── weights.py         # 阶段 7：权重校准（消融 + Bradley-Terry + 验收）
-│   ├── evalexternal.py    # 阶段 8：外部验证（E1 端到端退化 / E2 双测量路径 / E3 论文级）
-│   └── core.py            # 决策主循环 + 模型在环提案执行 + 请求包发射
-├── tests/run_tests.py     # 回归测试：单元 + 端到端闭环 + 模型在环往返
-├── examples/              # 靶子稿（重建脚本 + 结果一起进 git，见 examples/README.md）
-│   ├── gen_fixtures.py       # 一键重建全部靶稿（demo/issues/chaos/nightmare/aidtest/…）
-│   ├── demo.tex              # 干净稿（自然 6 页，页数限制演示用）
-│   ├── issues.tex            # 4 类可修问题（README 快速开始 0）
-│   ├── aidtest.tex           # 阅读辅助 + 告示块 + 超宽图
-│   ├── fig_violation.tex     # 图形保真反例（重绘的图 → L 违规）
-│   └── propose_target.tex    # Level-3 模型在环靶子
-├── skills/latex-opt/      # OpenClaw 技能说明（模型在环用法）
-├── AGENTS.md / SOUL.md    # Agent 身份与工作流（OpenClaw 集成）
-└── workbench/             # 运行产物（工作副本/PDF/报告/状态/请求包/页面图）
+│   ├── core.py              # 决策主循环 + gate 定向修复 + 模型在环执行
+│   ├── engine.py            # 唯一碰外部程序的模块：编译/数页/裁图/日志
+│   ├── perceive.py          # 感知层 L1/L2/L3
+│   ├── actions.py           # 28 个确定性动作（只动排版面）
+│   ├── whitelist.py         # 动作白名单 + 参数校验（LLM 唯一可请求面）
+│   ├── proposal.py          # 请求包 / 提案协议
+│   ├── score.py             # gate + M1 + M2 + 字典序验收
+│   ├── page_score.py        # 单页归因（mean/topk/peak），不改口径
+│   ├── visual.py            # PDF→页图、页面像素指标、缺陷判定、角色代理
+│   ├── whitespace.py        # 留白结构化
+│   ├── aesthetic.py / shadow.py / profile.py / weights.py / evalproto.py / evalexternal.py
+│   ├── conference.py        # 会议模板加载与投影
+│   ├── requirements.py      # 要求规格模型（模板/自定义合并）
+│   ├── advise.py            # 残余问题 → 结构化建议
+│   └── roles.py / extract.py / page_metrics.py   # 语料侧页级指标
+├── templates/               # 期刊/会议要求预设（17 个 json）
+├── settings.json            # 默认要求与运行参数
+├── metrics/                 # 标定结论（ρ / P 权重 / 严重度 / 指标体检）
+├── tools/                   # 标定与体检脚本（21 个）
+├── docs/                    # 阶段文档 + PROJECT_MAP + 专题 README + 汇报 PDF
+├── examples/                # 靶子稿（demo/issues/chaos/nightmare/…，含重建脚本）
+├── tests/run_tests.py       # 单元 + 端到端闭环 + 模型在环往返
+├── skills/latex-opt/        # OpenClaw 技能说明
+└── workbench/               # 运行产物（工作副本/PDF/报告/状态/请求包/页面图）
 ```
 
-## 测试
+**数据策略**：语料与实验产物**只在本地**，不入版本控制。原因：可重算、体积大、
+`/mnt/d` 9p 文件系统上 `git status` 会慢到分钟级。
+
+| 目录 | 体积 | 为何不入库 | 如何重建 |
+|---|---|---|---|
+| `paperfit-bench-originals/` | 5.8G | 真实论文原件（PDF） | 重新抓取 |
+| `datasets/conf-specs/sources/raw/` | 2.8G / 2111 文件 | 官方规范 HTML/TXT 快照 + PDF | 溯源记录在 `sources/fetch_log.jsonl` |
+| `datasets/conf-specs/metrics/pages/` | 64M / 608 json | 页级测量结果 | `datasets/conf-specs/tools` 里的 measure 脚本 |
+| `workbench-*/` | ~150M | 标定/实验工作区（页面图、编译产物、作答表） | 对应 `tools/make_*.py --build` |
+| `.git` 内部 | — | — | 当前仓库 34MB，跟踪 15MB / 477 文件 |
+
+`metrics/profiles`（2.4MB，运行时审美档案）与 `metrics/index.json` **保留入库**，
+否则新克隆跑不了影子评估。
+
+---
+
+## 14 测试与回归
 
 ```bash
-python3 tests/run_tests.py          # 单元 + 常用靶子闭环 + 模型在环往返（当前 308 项）
-python3 tests/run_tests.py --full   # 含 chaos/nightmare 大靶子
+python3 tests/run_tests.py            # 单元 + 常用靶子闭环 + 模型在环往返（当前 332 项）
+python3 tests/run_tests.py --full     # 含 chaos/nightmare 大靶子
+python3 tests/run_tests.py --list     # 看分组
 ```
 
-阶段 9-12 的标定与体检工具（离线，已带 artifact 落库）：
+测试只写 `_regress/`（Windows 盘符下），跑完自动清理；`examples/` 里的靶子只读。
+
+常用入口：
 
 ```bash
-cd /mnt/d/桌面/texopt
-python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖率 / 语料区间 → workbench-detector/
-python3 tools/make_pair_sheet.py --build          # 12 对成对比较表（人只点 12 次）
-python3 tools/make_pair_sheet.py --import answers.json
-python3 tools/make_severity_sheet.py --build      # 15 题严重度标定表
-python3 tools/apply_severity_weights.py --check   # 代码 ↔ metrics/severity_weights_applied.json 漂移校验
-python3 tools/calibrate_rho.py --run examples/demo.tex examples/issues.tex   # 闭环实测 ρ（旧口径，已被下列无差异点标定取代）
-python3 tools/make_tradeoff_sheet.py --build      # ρ 第一轮：5 缺陷 × 3 档代价（边距 +12/20/30mm）
-python3 tools/make_tradeoff_sheet.py --import answers.json
-python3 tools/make_tradeoff_v2.py --build         # ρ 第二轮：边界加密 + 字号货币 + 一致性自检
-python3 tools/make_tradeoff_v2.py --import answers.json
-python3 tools/make_tradeoff_check.py --build      # 一致性复核 6 题（3 空题 + 3 明显差异）
-python3 tools/make_tradeoff_check.py --import answers.json
-python3 tools/rho_ab_compare.py --rhos 0.341,15   # ρ 重标定前后行为对照（真编译，约 40 分钟）→ workbench-rho-ab/
+python3 optimize.py examples/issues.tex                  # 纯质量模式（4 类可修问题）
+python3 optimize.py examples/chaos.tex                   # 12 类埋雷
+python3 optimize.py examples/demo.tex --target 5 --tune-geometry
+python3 optimize.py paper.tex --conference neurips       # 会议模板
+python3 optimize.py paper.tex --template acm --require my-reqs.json
+python3 optimize.py --list-templates / --list-conferences / --list-actions
 ```
 
-阶段 5 评测协议（离线跑缓存指标，约 2-3 分钟；加 `--render` 额外做渲染层注入 + 重编译稳定性）：
+标定与体检工具（离线、可复算，artifact 已入库）：
 
 ```bash
-cd datasets/conf-specs
-python3 tools/eval_protocol.py --pages-n 80 --perms 100     # 12.1/12.2/12.3/12.4 → eval_gate.json
-python3 tools/eval_protocol.py --only gate                 # 只重算门槛（基于既有结果，秒级）
+python3 tools/pweight_combine.py --check          # P 权重：代码 ↔ artifact 漂移
+python3 tools/apply_severity_weights.py --check   # 严重度权重漂移
+python3 tools/rho_ab_compare.py --rhos 0.341,15   # ρ 重标定前后行为对照（真编译，约 40 分钟）
+python3 tools/soft_identifiability.py             # model2 指标可辨识性（语料侧）
+python3 tools/soft_sensitivity.py                 # model2 指标敏感性（坏版面变体）
+python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖率 / 语料区间
 ```
 
-阶段 6 影子评估（λ=0，仅报告；不改文档）：
+---
 
-```bash
-python3 optimize.py paper.tex --shadow-only        # 只出 aesthetic_shadow.md/.json
-python3 tests/run_tests.py                         # 含 s6/no-decision-change（开关影子判定一致）
-```
+## 15 已知局限
 
-阶段 7 权重校准（离线跑缓存指标，秒级；`--apply` 才挂回档案）：
+- **单人评分**：ρ、P 权重、严重度全部来自同一位评分人；每个缺陷只有 2-3 个代价档。
+- **5 项未标定**：`fig_overwide`、`warn`、`macros_missing`、`unstable_spec` 仍是先验值。
+- **model2 指标瑕疵**（阶段 16）：3 项准常数（占分值 33%）、`band` 阈值型、`ink_ratio`
+  需按角色分层、`max_gap` 需排除末页自然留白 → v2 未落地前 A_soft 有噪声。
+- **无差异带分辨率不足**：六类缺陷的 c\* 落在同一带内，阶梯只能到 [2,4,6]/[8,15]。
+- **修复手段有上限**：超宽表格只报告不自动改的情形、孤行寡行只有 vbox 代理、
+  跨文档类模板迁移未做；语义抛光（Phase 6）未实现。
+- **A_profile 不能决策**：`λ = 0` 且代码级拦截 `λ>0`（阶段 8 E4：2 个维对退化无响应）。
+- **环境绑定**：文档必须在 Windows 真实盘符路径下（`/mnt/c`、`/mnt/d`），
+  Windows TeX 引擎无法写 WSL 原生文件系统；9p 盘上 git 与大语料扫描慢属正常。
+- **不声称全局最优**：只保证"字典序单调不劣化 + 有界收敛"，收敛点依赖候选动作集。
 
-```bash
-cd datasets/conf-specs
-python3 tools/calibrate_weights.py --trials 80 --bootstrap 200 --apply
-python3 datasets/conf-specs/tools/make_pairs.py --sheet   # 阶段 7 版打分表（8 对）
-python3 datasets/conf-specs/tools/make_pairs.py --import answers.json   # 答案 -> human/pairs.json
-python3 tools/calibrate_weights.py --pairs ../human/pairs.json --apply   # 步骤三（需人类数据）
-```
+---
 
-阶段 8 外部验证（E1 真编译最慢，E2 分钟级，E3 秒级；结果合并写入 `eval_external.{json,md}`）：
+## 16 下一步
 
-```bash
-cd datasets/conf-specs
-python3 tools/eval_external.py --only e1 --e1-levels 4          # 真实文档端到端退化（真编译，约 30-60 分钟）
-python3 tools/eval_external.py --only e2 --e2-papers 12 --e2-max-pages 8 --e2-dpi 50
-python3 tools/eval_external.py --only e3 --e3-papers 60
-python3 tools/profile_attr.py demo neurips issues    # E1 归因：A_profile 逐维分解（每档只编译一次）
-python3 tools/eval_external.py --list-docs                     # 看可用文档
-```
+1. **实现 SOFT_SPEC v2**（3 个连续指标 + 1 个阈值型 + 位置条件 + 角色门控），
+   A 量级按 ×1.618 锚定（待 BT 标定替换）。
+2. **30 对配对表做 BT 权重标定**（需人工作答，约 20-30 分钟），题目围绕会打架的场景：
+   大洞 vs 排满但失衡、稀疏 vs 过密。
+3. 改前/改后命中率 **A/B + 负样本单调性 + Spearman** 三重复核。
+4. `fig_overwide` 构造与标定；引入第二评分人复核 ρ 与 P 权重。
+5. `λ>0`（A_profile 参与验收）需人类标定 + 用户审批后才解禁。
+6. Phase 6 语义抛光（受内容保留率下限约束），历史版本存档。
 
-测试只写 `_regress/`（Windows 盘符下），跑完自动清理；examples/ 里的靶子只读。
+---
+
+## 17 文档索引
+
+| 文档 | 内容 |
+|---|---|
+| `docs/PROJECT_MAP.md` | **项目地图**：每个文件/目录装什么、起什么作用、被谁用 |
+| `docs/scoring/README.md` | 打分模型完整口径（gate/M1/M2、权重来源、字段、局限） |
+| `docs/aesthetic/README.md` | 审美量化（A_soft / A_profile、标定、与人的一致性） |
+| `docs/stage0…stage16_*.md` | 每个阶段的结论、方法、负面结果 |
+| `docs/scoring_report_20261102.pdf` | 打分评价体系阶段汇报（HTML 单文件版同目录） |
+| `skills/latex-opt/SKILL.md` | 模型在环的调用方式（OpenClaw 集成） |
