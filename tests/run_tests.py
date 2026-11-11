@@ -2299,6 +2299,44 @@ def stage16_tests():
           str(sorted(SS.VARIANTS)))
 
 
+def stage17_tests():
+    """阶段 17（2026-11-11）：放弃人工标定 → SOFT_SPEC v2 权重改由客观响应导出。"""
+    print("\n== 阶段 17：无人工标定的客观权重口径 ==")
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import soft_v2_weights as SV
+
+    resp = SV.responses()
+    check("s17/retained-three-metrics",
+          set(resp) == {"max_gap", "ink_ratio", "top_bottom_ratio"}, str(sorted(resp)))
+    check("s17/response-positive",
+          all(d["response"] > 0 for d in resp.values()),
+          str({m: d["response"] for m, d in resp.items()}))
+    check("s17/worst-variant-not-baseline",
+          all(d["worst_variant"] != "baseline" for d in resp.values()),
+          str({m: d["worst_variant"] for m, d in resp.items()}))
+
+    w = SV.weights(resp, 0.5)
+    check("s17/sum-anchored", abs(sum(w.values()) - SV.TOTAL_W) < 1e-6, str(w))
+    check("s17/order-max-gap-first", w["max_gap"] == max(w.values()), str(w))
+    # 客观口径与冻结的人工先验必须同序（这是"问卷可被客观证据复现"的证据）
+    cur = {m: S.SOFT_SPEC[m]["w"] for m in resp}
+    check("s17/same-order-as-human",
+          max(cur, key=lambda m: cur[m]) == max(w, key=lambda m: w[m]),
+          f"human={cur} objective={w}")
+    # 量级不漂：任何一项的相对偏差不超过 25%
+    worst = max(abs(w[m] - cur[m]) / cur[m] for m in resp)
+    check("s17/scale-close", worst <= 0.25, f"max dev={worst:.3f}")
+
+    art = os.path.join(ROOT, "metrics", "soft_v2_weights_20261111.json")
+    check("s17/artifact-applied", os.path.exists(art))
+    if os.path.exists(art):
+        import json as _json
+        a = _json.load(open(art, encoding="utf-8"))
+        check("s17/artifact-method", a.get("method") == "objective-response", a.get("method"))
+        check("s17/artifact-gamma", abs(float(a.get("gamma", -1)) - 0.5) < 1e-9,
+              a.get("gamma"))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--full", action="store_true", help="含 chaos/nightmare 大靶子")
@@ -2330,6 +2368,7 @@ def main():
     stage12_tests()
     stage14_tests()
     stage16_tests()
+    stage17_tests()
     # 2026-09-30：靶稿重建（examples/gen_fixtures.py）后按**实测**锁定出口状态；
     # demo=干净稿（只注入质量宏）；issues/aidtest/propose_target=有可修问题→DONE；
     # nightmare 即使全部确定性修复后仍留下 high 视觉缺陷（巨大图）→ 诚实 NEEDS_REVIEW。

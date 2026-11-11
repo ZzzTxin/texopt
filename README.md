@@ -44,7 +44,7 @@
 | 模型 | **v3**：底层逻辑 gate（一票否决）+ `M1 = ρ·P + I` + `M2 = A_soft + λ·A_profile`，验收**严格字典序 `(|gate|, M1, M2)`** |
 | 关键参数 | `ρ = 15`（人工无差异点标定，区间约 [5,32]）；P 的 11 项里 **7 项**统一到 `w = c*/ρ`（口径 A），4 项仍为先验；`β = 50`；`λ = 0`（A_profile 只报告，不参与验收） |
 | 闭环 | 感知 → 候选动作 → 整篇重编译 → 全局重评 → 接受/回滚；gate 有违规先跑**定向修复**（含阶段 15 的「暂存链」），失败才 `BLOCKED_GATE` |
-| 回归 | `python3 tests/run_tests.py` → **332 通过 / 0 失败 / 0 跳过**（2026-11-11 全量实测，约 18 分钟） |
+| 回归 | `python3 tests/run_tests.py` → **342 通过 / 0 失败 / 0 跳过**（2026-11-11 全量实测；新增 s17 客观权重 10 项） |
 | 代码量 | `optimize.py` + `texopt/*.py` 共 24 个文件、约 **1.31 万行**（纯标准库 + TeX 工具链） |
 | 仓库 | 跟踪 **477 个文件 / 15MB**；`paperfit-bench-originals`、`sources/raw`、`metrics/pages`、`workbench-*` **不入库**（策略见 §13） |
 | 语料 | 版面档案 200 篇已录用论文 / 3898 页；评测语料 608 篇 / 10538 页 |
@@ -176,9 +176,15 @@ v2 草案（3 连续 + 1 阈值 + 角色门控）**尚未落地**，见 §16。
 | P 的 7 项权重 | `w = c*/ρ`，再按口径 A（总权重和不变）缩放 | 两轮 33 题（含 4 道空题全对） | `metrics/pweight_applied_20261102.json` |
 | 其余 5 项 | 阶段 11「人判严重度 ÷ 语料频率」或先验拍值 | 15 题圆桌轮转 + BT | `metrics/severity_weights_applied.json` |
 | `A_soft` 目标/尺度 | 已录用语料分位数（200 篇 / 3898 页） | — | `metrics/soft_identifiability_20261102.json` |
+| v2 的 3 项权重 | **受控退化响应**（剥掉权重后的几何损失增量，`w ∝ 响应^γ`，总量锚 3.4） | 8 个受控变体 | `metrics/soft_v2_weights_20261111.json` |
 
-漂移校验：`python3 tools/pweight_combine.py --check`、`python3 tools/apply_severity_weights.py --check`
-（代码常量 ↔ artifact 双向比对）。
+漂移校验：`python3 tools/pweight_combine.py --check`、`python3 tools/apply_severity_weights.py --check`、
+`python3 tools/soft_v2_weights.py --check`（代码常量 ↔ artifact 双向比对）。
+
+> **2026-11-11 决定：不再新增人工打分类标定**（问卷/成对比较/无差异点访谈全部停止）。
+> 已有人工结论作为**冻结先验**继续生效，但不再扩充；新参数一律走客观口径——
+> 受控退化响应定权重、可辨识性+敏感性双门控定去留、合成退化序做排序一致性。
+> 口径与影响分析见 `docs/stage17_no_human_calibration_20261111.md`。
 
 ---
 
@@ -312,7 +318,7 @@ python3 optimize.py paper.tex --proposals proposals.json --round 2
 | 0-2 | 指标盘点、页级提取（608 篇/10538 页）、审美档案（venue×role 正常范围） | 完成 |
 | 3-4 | 留白结构化（`whitespace.py`）、马氏距离 + `A_profile`（λ=0 影子） | 完成 |
 | 5-6 | 评测验收协议 12.1-12.6（门槛 6/8 维通过）、影子接入 `score`/`core` | 完成 |
-| 7 | 权重校准（消融 + bootstrap CI + BT）：80 组试验，判别间隔 0.1157 → 0.1506 | 完成（人类数据 8 对，建议攒到 ≥30 对） |
+| 7 | 权重校准（消融 + bootstrap CI + BT）：80 组试验，判别间隔 0.1157 → 0.1506 | 完成（8 对人类成对比较，已冻结） |
 | 8 | 外部验证 E1/E2/E3（真实论文端到端退化、双测量路径、论文级聚合） | 完成（两条负面结果如实记录） |
 | 9 | 检测器体检：`band` 判暂缓、`trailing_ratio` 标 `degenerate` | 完成 |
 | 10-10b | `A_soft` 从"带内恒 0"改为平滑目标：排序 Spearman 0.31 → 0.46，并列 8/20 → 0/20 | 完成 |
@@ -322,6 +328,7 @@ python3 optimize.py paper.tex --proposals proposals.json --round 2
 | 14 | P 权重"同一把尺子"：`w = c*/ρ`，7 项统一，口径 A 缩放 | 完成 |
 | 15 | 连档压页暂存链 + 单页/整篇分层诊断（`page_score.py`） | 完成 |
 | 16 | model2 指标可辨识性/敏感性双体检 + 像素角色代理 | 完成（v2 未落地） |
+| 17 | 停人工标定的客观口径（响应定权 + 合成退化序做排序）+ `soft_v2_weights.py` | 决策与工具完成；v2 未落地 |
 
 资产位置：`metrics/*.json`（标定结论）、`tools/*.py`（生成这些结论的脚本）、
 `docs/stage*.md`（每阶段的结论、方法与局限）。`docs/scoring/README.md` 与
@@ -414,6 +421,7 @@ python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖�
 ## 15 已知局限
 
 - **单人评分**：ρ、P 权重、严重度全部来自同一位评分人；每个缺陷只有 2-3 个代价档。
+  2026-11-11 起这些值**冻结为先验**、不再扩充（改为客观口径，见 §16）；不再主张"与人类偏好一致"。
 - **5 项未标定**：`fig_overwide`、`warn`、`macros_missing`、`unstable_spec` 仍是先验值。
 - **model2 指标瑕疵**（阶段 16）：3 项准常数（占分值 33%）、`band` 阈值型、`ink_ratio`
   需按角色分层、`max_gap` 需排除末页自然留白 → v2 未落地前 A_soft 有噪声。
@@ -429,14 +437,19 @@ python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖�
 
 ## 16 下一步
 
-1. **实现 SOFT_SPEC v2**（3 个连续指标 + 1 个阈值型 + 位置条件 + 角色门控），
-   A 量级按 ×1.618 锚定（待 BT 标定替换）。
-2. **30 对配对表做 BT 权重标定**（需人工作答，约 20-30 分钟），题目围绕会打架的场景：
-   大洞 vs 排满但失衡、稀疏 vs 过密。
-3. 改前/改后命中率 **A/B + 负样本单调性 + Spearman** 三重复核。
-4. `fig_overwide` 构造与标定；引入第二评分人复核 ρ 与 P 权重。
-5. `λ>0`（A_profile 参与验收）需人类标定 + 用户审批后才解禁。
-6. Phase 6 语义抛光（受内容保留率下限约束），历史版本存档。
+> 2026-11-11 决定：**不再引入人工打分标定**。原计划的「30 对配对表 + BT 权重标定」取消，
+> 改由客观响应定权（见 `docs/stage17_no_human_calibration_20261111.md`）。
+
+1. **实现 SOFT_SPEC v2**（3 个连续指标 + 1 个阈值型 + 位置条件 + 角色门控）：
+   `max_gap` 只计页中段空洞（`0.15 < max_gap_at < 0.85`）、`ink_ratio` 只在 body/dense 页
+   计分、`top_bottom_ratio` 不变；删 `top_blank`/`bottom_blank`/`left_blank`/`right_blank`。
+2. **权重取客观响应值**（`tools/soft_v2_weights.py`，γ=0.5，总量 3.4）：
+   `max_gap 1.257` / `ink_ratio 1.168` / `top_bottom_ratio 0.975`——与人工标定值同序同量级。
+   口径改完后重跑一次刷新（响应幅度随口径变化）。
+3. **三重复核（全自动，不需要人作答）**：改前/改后 A/B 命中率、负样本单调性、
+   对已知退化严重度序的 Spearman。
+4. `fig_overwide` 的权重：用同类客观口径补（构造超宽图变体 → 响应），不再做无差异点问答。
+5. `λ>0`（A_profile 参与验收）仍需人工审批解禁；Phase 6 语义抛光、历史版本存档。
 
 ---
 
@@ -447,6 +460,6 @@ python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖�
 | `docs/PROJECT_MAP.md` | **项目地图**：每个文件/目录装什么、起什么作用、被谁用 |
 | `docs/scoring/README.md` | 打分模型完整口径（gate/M1/M2、权重来源、字段、局限） |
 | `docs/aesthetic/README.md` | 审美量化（A_soft / A_profile、标定、与人的一致性） |
-| `docs/stage0…stage16_*.md` | 每个阶段的结论、方法、负面结果 |
+| `docs/stage0…stage17_*.md` | 每个阶段的结论、方法、负面结果 |
 | `docs/scoring_report_20261102.pdf` | 打分评价体系阶段汇报（HTML 单文件版同目录） |
 | `skills/latex-opt/SKILL.md` | 模型在环的调用方式（OpenClaw 集成） |
