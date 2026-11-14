@@ -202,15 +202,7 @@
 
 | 目录 | 是什么 | 建议 |
 |---|---|---|
-| `workbench-demo/`（43） | demo 靶稿的历史运行产物（run/run2/run3） | 可删 |
-| `workbench-detector/`（63） | 检测器体检运行目录（含人工排序 json） | 保留 human_rank.json，其余可删 |
-| `workbench-pairs/`（31） | 成对比较问卷与作答（round1/2） | 保留 result*.json |
-| `workbench-severity/`（3） | 严重度 15 题作答 + 结果 | `metrics/severity_weights_applied.json` 的来源，可归档 |
-| `workbench-tradeoff/`、`-tradeoff2/`、`-tradeoff-check/`（215+233+20） | ρ 第一轮/第二轮/一致性复核的问卷、build 目录、作答 | 保留 answers*/result，build 可删 |
-| `workbench-pweight/`、`-pweight2/`（406+244） | P 权重阶梯两轮的问卷与 build | 同上 |
-| `workbench-rho-ab/`、`-pweight-ab/`（403+403） | A/B 闭环运行完整产物（每靶稿每口径一份） | 可删（结论已在 metrics + docs） |
-| `workbench-pweight_build.log` | 构建日志 | 可删 |
-| `_probe2/`（13） | 单篇论文工程的手工探针（含 main.tex/PDF） | 可删 |
+| （已删除）顶层 `workbench-*` | 2026-11-14 按用户要求清理：demo/detector/pairs/severity/tradeoff*/pweight*/rho-ab/pweight-ab 共 11 个目录 + 构建日志 | 已归档到 `~/桌面/texopt-calib-archive-20261114/`（979 个小文件 11MB：作答/结果/key/报告）；需要时用 `tools/make_*.py --build` 重新生成 |
 | `datasets/conf-specs/workbench-eval/render/`、各 `workbench-*` | 页图与中间 json | 大，可删 |
 
 ---
@@ -254,5 +246,5 @@ tools/make_*_sheet ──> 人作答 ──> tools/combine ──> metrics/*.jso
 
 - **必须保留**（模型本体）：`texopt/*.py`、`optimize.py`、`settings.json`、`templates/*.json`、`tests/run_tests.py`、`examples/*.tex` + `gen_fixtures.py`、`docs/scoring`、`docs/aesthetic`、`skills/latex-opt/SKILL.md`、`AGENTS.md`/`SOUL.md`、`README.md`、`metrics/*.json`（标定结论，很轻）。
 - **数据资产**（大但必要，可外部存储）：`datasets/conf-specs/{conferences,samples,metrics,sources,templates-v2}`、`paperfit-bench-originals/`。重建成本高，建议移到仓库外的数据集目录并用环境变量指向（代码里已有 `TEXOPT_TOOLS` 之类的外部路径习惯）。
-- **可再生产物**（可删/可归档）：全部 `workbench-*`、`datasets/conf-specs/workbench-eval/`、`workbench-soft/`、`examples/*.{aux,log,pdf,synctex.gz}`、`_probe2/`、`__pycache__`。
+- **可再生产物**（可删/可归档）：顶层 `workbench-*` 已于 2026-11-14 清理（小文件归档在 `~/桌面/texopt-calib-archive-20261114/`）、`datasets/conf-specs/workbench-eval/`、`workbench-soft/`、`examples/*.{aux,log,pdf,synctex.gz}`、`_probe2/`、`__pycache__`。
 - **建议的单一入口文档**：本文件（`docs/PROJECT_MAP.md`）讲"有什么"，`README.md` 讲"怎么用"，`docs/scoring/README.md` 讲"怎么打分"，`docs/aesthetic/README.md` 讲"审美怎么量"。四份之外的历史 stage 文档按需查，不必通读。

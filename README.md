@@ -376,7 +376,7 @@ texopt/
 | `paperfit-bench-originals/` | 5.8G | 真实论文原件（PDF） | 重新抓取 |
 | `datasets/conf-specs/sources/raw/` | 2.8G / 2111 文件 | 官方规范 HTML/TXT 快照 + PDF | 溯源记录在 `sources/fetch_log.jsonl` |
 | `datasets/conf-specs/metrics/pages/` | 64M / 608 json | 页级测量结果 | `datasets/conf-specs/tools` 里的 measure 脚本 |
-| `workbench-*/` | ~150M | 标定/实验工作区（页面图、编译产物、作答表） | 对应 `tools/make_*.py --build` |
+| `workbench-*/` | 0（已清理） | 标定/实验工作区（页面图、编译产物、作答表） | 2026-11-14 删除，小文件归档在 `~/桌面/texopt-calib-archive-20261114/`；需要时用 `tools/make_*.py --build` 重建 |
 | `.git` 内部 | — | — | 当前仓库 34MB，跟踪 15MB / 477 文件 |
 
 `metrics/profiles`（2.4MB，运行时审美档案）与 `metrics/index.json` **保留入库**，
