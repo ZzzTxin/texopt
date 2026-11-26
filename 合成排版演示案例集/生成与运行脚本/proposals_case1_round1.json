@@ -1,0 +1,8 @@
+{
+  "schema": "texopt.proposals/v1",
+  "round": 1,
+  "assessment": "规则输出已去除误插入的正文分页、30mm/26mm大vspace、超大标题及列表间距，原稿三页变为两页。末页自然留白不作为必须填满的问题。继续尝试让流程图更靠近处理流程说明，若全局验收无收益则保留当前输出。",
+  "proposals": [
+    {"id": "M1-flow-context", "issue": "figure_text_relation", "location": "流程图，混合浮动体序号1", "severity": "moderate", "reason": "图的源码位于处理流程段落之后，但规则输出把它放到下一页。尝试含here并带稳定回退的!htbp，保持图文邻接；不为填满末页而改正文或版心。", "proposal": {"action": "set_float_spec", "target": 1, "params": {"spec": "!htbp"}}}
+  ]
+}

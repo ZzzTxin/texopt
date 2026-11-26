@@ -1,0 +1,329 @@
+{
+  "pages": 2,
+  "score": {
+    "l": [],
+    "gate": [],
+    "scored": true,
+    "p": 0.737,
+    "i_struct": 0.4,
+    "d_content": 0.0,
+    "i": 0.4,
+    "m1": 11.455,
+    "a": 1.667,
+    "m2": 1.667,
+    "ok": true,
+    "content_preserved": true
+  },
+  "counts": {
+    "overfull": 0,
+    "underfull": 1,
+    "vbox": 0,
+    "floats": 0,
+    "tables_overwide": 0,
+    "warnings": 0
+  },
+  "issues": {
+    "overfull": [],
+    "underfull": [
+      {
+        "detail": "badness 10000",
+        "lines": "55--56"
+      }
+    ],
+    "vbox": [],
+    "floats": [],
+    "tables_overwide": [],
+    "warnings": [],
+    "errors": [],
+    "hygiene": []
+  },
+  "visual": {
+    "n": 2,
+    "pages": [
+      {
+        "ink_ratio": 0.0581,
+        "top_blank": 0.137,
+        "bottom_blank": 0.085,
+        "content_height": 0.778,
+        "max_gap": 0.137,
+        "max_gap_at": 0.068,
+        "band": 0.002,
+        "band_at": 0.536,
+        "left_blank": 0.121,
+        "right_blank": 0.123,
+        "top_bottom_ratio": 0.718,
+        "page": 1
+      },
+      {
+        "ink_ratio": 0.0394,
+        "top_blank": 0.046,
+        "bottom_blank": 0.415,
+        "content_height": 0.538,
+        "max_gap": 0.415,
+        "max_gap_at": 0.792,
+        "band": 0.002,
+        "band_at": 0.121,
+        "left_blank": 0.121,
+        "right_blank": 0.123,
+        "top_bottom_ratio": 4.162,
+        "page": 2
+      }
+    ],
+    "ink_mean": 0.0488,
+    "ink_min": 0.0394,
+    "ink_max": 0.0581,
+    "defects": [
+      {
+        "kind": "bottom_blank",
+        "page": 2,
+        "severity": "high",
+        "metric": 0.415,
+        "detail": "第2页底部空白达 42%"
+      },
+      {
+        "kind": "mid_gap",
+        "page": 2,
+        "severity": "moderate",
+        "metric": 0.415,
+        "detail": "第2页中部有 42% 页高的连续空洞（位置 0.79）"
+      }
+    ],
+    "severity_max": "high"
+  },
+  "source_summary": {
+    "documentclass": "ctexart",
+    "class_options": [
+      "UTF8",
+      "10pt",
+      "a4paper",
+      "fontset=windows"
+    ],
+    "font_pt": 10,
+    "geometry": "\\usepackage[margin=25.4mm]{geometry}",
+    "geometry_margin_mm": 25.4,
+    "geometry_explicit": true,
+    "has_microtype": false,
+    "has_ctex": true,
+    "floats": {
+      "figure": 0,
+      "table": 1
+    },
+    "float_envs": [
+      {
+        "kind": "table",
+        "starred": false,
+        "spec": "!htbp",
+        "line": 33
+      }
+    ],
+    "graphics_width_expr": [],
+    "tabular_spans": [
+      [
+        37,
+        46
+      ]
+    ],
+    "twocolumn": false,
+    "fleqn": false,
+    "body_start": 540,
+    "abstract": true,
+    "sections": 3,
+    "lines": 78,
+    "has_toc": false,
+    "has_header": false,
+    "has_heading_color": false,
+    "figures": [
+      {
+        "kind": "table",
+        "fingerprint": "\\begin{table} \\centering \\caption{人工构造的任务记录，单元格内容在优化前后保持一致。} \\label{tab:wide} \\begin{TAB}{COLS} \\toprule 任务说明 & 窗口数 & 示例值 & 状态 \\\\ \\midrule 跨通道输入登记与时间戳顺序核验及缺失位置记录任务 & 12 & 0.35 & 已登记 \\\\ 多窗口边界检查与重复条目排除及结果归档说明任务 & 18 & 0.42 & 已登记 \\\\ 不同设备输入模式统一与异常状态标记及汇总任务 & 15 & 0.38 & 待核对 \\\\ 固定处理流程的可重复运行与输出位置比对演示任务 & 20 & 0.51 & 已登记 \\\\ \\bottomrule \\end{TAB} \\end{table}"
+      }
+    ]
+  },
+  "compile_ok": true,
+  "visual_defects": [
+    {
+      "kind": "bottom_blank",
+      "page": 2,
+      "severity": "high",
+      "metric": 0.415,
+      "detail": "第2页底部空白达 42%"
+    },
+    {
+      "kind": "mid_gap",
+      "page": 2,
+      "severity": "moderate",
+      "metric": 0.415,
+      "detail": "第2页中部有 42% 页高的连续空洞（位置 0.79）"
+    }
+  ],
+  "records": [
+    {
+      "iteration": 1,
+      "action": "[LLM] M3-quality inject_quality_macros {} | line_break_quality/导言区",
+      "source": "llm",
+      "l": [],
+      "a": 1.439,
+      "i": 0.0,
+      "p": 7.692,
+      "m1": 115.38,
+      "m2": 1.439,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）"
+    },
+    {
+      "iteration": 2,
+      "action": "[LLM] M3-hyphenation add_hyphenation_points {'min_chars': 80, 'step': 4} | unbreakable_identifier/追溯信息中的120字符编号",
+      "source": "llm",
+      "l": [],
+      "a": 1.3,
+      "i": 0.0,
+      "p": 6.133,
+      "m1": 91.995,
+      "m2": 1.3,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "为 1 个超长词插入 \\- 断词点（最长 120 字符）"
+    },
+    {
+      "iteration": 3,
+      "action": "[LLM] M3-url break_long_urls {} | long_url/追溯信息中的example.org演示链接",
+      "source": "llm",
+      "l": [],
+      "a": 1.086,
+      "i": 0.0,
+      "p": 3.937,
+      "m1": 59.055,
+      "m2": 1.086,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "注入 \\usepackage{xurl}（1 个超长 URL 可在任意位置断行）"
+    },
+    {
+      "iteration": 4,
+      "action": "[LLM] M3-vspace remove_excessive_vspace {} | injected_large_gap/列表前24mm显式空白",
+      "source": "llm",
+      "l": [],
+      "a": 1.239,
+      "i": 0.0,
+      "p": 3.337,
+      "m1": 50.055,
+      "m2": 1.239,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "删除 1 处过大的手动垂直间距（24mm）"
+    },
+    {
+      "iteration": 5,
+      "action": "[LLM] M3-list reduce_list_spacing {} | list_spacing/核对列表",
+      "source": "llm",
+      "l": [],
+      "a": 1.399,
+      "i": 0.0,
+      "p": 2.137,
+      "m1": 32.055,
+      "m2": 1.399,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "收紧列表间距 2 处（itemsep=20pt, topsep=20pt）"
+    },
+    {
+      "iteration": 6,
+      "action": "[LLM] M3-table-placement set_float_spec {'spec': '!htbp', 'target': 1} | unstable_float_spec/唯一的表格，混合浮动体序号1",
+      "source": "llm",
+      "l": [],
+      "a": 1.399,
+      "i": 0.4,
+      "p": 1.337,
+      "m1": 20.455,
+      "m2": 1.399,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!htbp]（table#1[h!]）"
+    },
+    {
+      "iteration": 7,
+      "action": "[LLM] M3-parskip normalize_parskip {'max_pt': 8} | paragraph_spacing/导言区12pt段距",
+      "source": "llm",
+      "l": [],
+      "a": 1.667,
+      "i": 0.4,
+      "p": 0.737,
+      "m1": 11.455,
+      "m2": 1.667,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "\\parskip 12pt -> 8pt（整篇段距收敛）"
+    }
+  ],
+  "stable_recompile": true,
+  "stability_checks": [
+    {
+      "pages": 2,
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 0.737,
+        "i_struct": 0.4,
+        "d_content": 0.0,
+        "i": 0.4,
+        "m1": 11.455,
+        "a": 1.667,
+        "m2": 1.667,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 1,
+        "vbox": 0,
+        "floats": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "pages": 2,
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 0.737,
+        "i_struct": 0.4,
+        "d_content": 0.0,
+        "i": 0.4,
+        "m1": 11.455,
+        "a": 1.667,
+        "m2": 1.667,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 1,
+        "vbox": 0,
+        "floats": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      }
+    }
+  ],
+  "integrity": {
+    "synthetic": true,
+    "original_unchanged": true,
+    "normalized_main_text_preserved": true,
+    "display_math_contents_preserved": true,
+    "figure_files_unchanged": true,
+    "figure_fingerprints_preserved": true,
+    "pass": true
+  },
+  "program_status": "NEEDS_REVIEW"
+}

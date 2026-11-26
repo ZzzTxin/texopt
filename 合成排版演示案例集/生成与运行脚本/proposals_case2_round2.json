@@ -1,0 +1,9 @@
+{
+  "schema": "texopt.proposals/v1",
+  "round": 2,
+  "assessment": "第一轮已消除两张图的跨栏溢出。完整页面检查发现规则的通用tbp把图放到了摘要之前，虽然没有遮挡但阅读顺序不合适。继续用定点页底参数恢复摘要和说明在前的顺序，保留缩放后的图宽及全部内容。",
+  "proposals": [
+    {"id": "M2-flow-order", "issue": "abstract_before_figure", "location": "流程图，混合浮动体序号1", "severity": "high", "reason": "图1应在摘要和观察任务说明之后，尝试!b使其处于正文页底；必须重新编译并接受或回滚。", "proposal": {"action": "set_float_spec", "target": 1, "params": {"spec": "!b"}}},
+    {"id": "M2-curves-order", "issue": "abstract_before_figure", "location": "示意曲线图，混合浮动体序号2", "severity": "high", "reason": "图2不应先于摘要出现，尝试!b保持正文先行，避免将去掉溢出误当成全部布局已完成。", "proposal": {"action": "set_float_spec", "target": 2, "params": {"spec": "!b"}}}
+  ]
+}

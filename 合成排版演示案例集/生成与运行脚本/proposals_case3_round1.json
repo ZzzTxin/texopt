@@ -1,0 +1,14 @@
+{
+  "schema": "texopt.proposals/v1",
+  "round": 1,
+  "assessment": "原稿有120字符连续标识符溢出和长URL、24mm大间距、列表过疏。规则试排默认每12字符加断词点仍有37pt溢出。已归档该尝试，从相同冻结原稿重开模型分支。保留表格所有单元格、编号、链接与正文；表格本身能放进版心，不为展示强行改写它。",
+  "proposals": [
+    {"id": "M3-quality", "issue": "line_break_quality", "location": "导言区", "severity": "moderate", "reason": "注入现有白名单断行质量宏，作为实际编译验证的基线修复。", "proposal": {"action": "inject_quality_macros", "params": {}}},
+    {"id": "M3-hyphenation", "issue": "unbreakable_identifier", "location": "追溯信息中的120字符编号", "severity": "high", "reason": "默认12字符步长仍溢出。改为每4字符插入可选断词点，保持编号字母顺序和内容完整；用实际日志判断是否修复。", "proposal": {"action": "add_hyphenation_points", "params": {"min_chars": 80, "step": 4}}},
+    {"id": "M3-url", "issue": "long_url", "location": "追溯信息中的example.org演示链接", "severity": "high", "reason": "加载xurl允许链接在合法位置断行，不删改URL字符。", "proposal": {"action": "break_long_urls", "params": {}}},
+    {"id": "M3-vspace", "issue": "injected_large_gap", "location": "列表前24mm显式空白", "severity": "moderate", "reason": "这是生成原稿时明确注入的无结构用途大空白，不是章节边界或图表冲刷。按默认阈值删除。", "proposal": {"action": "remove_excessive_vspace", "params": {}}},
+    {"id": "M3-list", "issue": "list_spacing", "location": "核对列表", "severity": "moderate", "reason": "20pt条目间距过大，回到列表默认间距，条目内容保持不变。", "proposal": {"action": "reduce_list_spacing", "params": {}}},
+    {"id": "M3-table-placement", "issue": "unstable_float_spec", "location": "唯一的表格，混合浮动体序号1", "severity": "moderate", "reason": "由不稳定h!改为含here且有稳定回退的!htbp，尽量让表格贴近记录约定，保留所有表格内容。", "proposal": {"action": "set_float_spec", "target": 1, "params": {"spec": "!htbp"}}},
+    {"id": "M3-parskip", "issue": "paragraph_spacing", "location": "导言区12pt段距", "severity": "moderate", "reason": "仅收敛生成时设置过大的段距，保留8pt间隔，不追求填满末页。", "proposal": {"action": "normalize_parskip", "params": {"max_pt": 8}}}
+  ]
+}

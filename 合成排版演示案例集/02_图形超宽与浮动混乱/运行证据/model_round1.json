@@ -1,0 +1,62 @@
+{
+  "proposals": {
+    "schema": "texopt.proposals/v1",
+    "round": 1,
+    "assessment": "原稿和规则输出均为双栏。两张图使用112mm和108mm的绝对宽度，显著大于约76mm栏宽，图形与邻栏文字重叠；这些宽度低于规则的150mm固定阈值，属于模型结合栏宽识别后应定点修复的问题。保持图形原文件、题注和正文不变。",
+    "proposals": [
+      {
+        "id": "M2-fig1",
+        "issue": "column_figure_overflow",
+        "location": "第1张插图（fig#1）",
+        "severity": "high",
+        "reason": "图1为112mm宽，跨入邻栏并遮挡文字。定点改为当前栏宽的95%，保留原图所有内容。",
+        "proposal": {
+          "action": "set_fig_width",
+          "target": 1,
+          "params": {
+            "width": "0.95\\linewidth"
+          }
+        }
+      },
+      {
+        "id": "M2-fig2",
+        "issue": "column_figure_overflow",
+        "location": "第2张插图（fig#2）",
+        "severity": "high",
+        "reason": "图2为108mm宽，超出当前单栏。定点改为当前栏宽的95%，避免裁切或覆盖邻栏。",
+        "proposal": {
+          "action": "set_fig_width",
+          "target": 2,
+          "params": {
+            "width": "0.95\\linewidth"
+          }
+        }
+      }
+    ]
+  },
+  "outcome": {
+    "applied": [
+      {
+        "id": "M2-fig1",
+        "note": "定点插图宽度（#1:112mm->0.95\\linewidth）",
+        "l": [],
+        "a": 1.654,
+        "i": 1.2,
+        "m1": 35.64,
+        "m2": 1.654
+      },
+      {
+        "id": "M2-fig2",
+        "note": "定点插图宽度（#2:108mm->0.95\\linewidth）",
+        "l": [],
+        "a": 1.729,
+        "i": 1.6,
+        "m1": 10.6,
+        "m2": 1.729
+      }
+    ],
+    "rejected": [],
+    "blocked": [],
+    "skipped": []
+  }
+}

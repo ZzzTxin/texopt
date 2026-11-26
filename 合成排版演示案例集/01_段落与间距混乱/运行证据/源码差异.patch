@@ -1,0 +1,63 @@
+--- 原稿/main.tex
++++ 模型处理后/main.tex
+@@ -5,12 +5,22 @@
+ \usepackage[hidelinks]{hyperref}
+ 
+ \usepackage{titlesec}
+-\titleformat{\section}{\Huge\bfseries}{\thesection}{0.6em}{}
+-\setlength{\parskip}{20pt}
++\titleformat{\section}{\Large\bfseries}{\thesection}{0.6em}{}
++\setlength{\parskip}{8pt}
+ 
+-\title{\Huge 合成案例一：城市传感器数据处理流程}
++\title{\LARGE 合成案例一：城市传感器数据处理流程}
+ \author{texopt 合成排版演示}
+ \date{}
++
++% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
++\emergencystretch=1.5em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\doublehyphendemerits=5000
++\finalhyphendemerits=5000
++% ===== texopt end =====
++
+ \begin{document}
+ \maketitle
+ \begin{abstract}
+@@ -23,28 +33,28 @@
+ 数据记录包含时间、通道名称和一个示意读数。相邻窗口可以共享边界样本，但汇总时不重复计算。缺失位置只保留占位标记，不使用虚构观测填补。本文列出的数字都是为了形成可重复的表格和图形而构造的演示数值，不来自设备、受试者或公开实验。
+ 
+ % 注入的无结构用途错误分页：位于同一小节连续正文之间
+-\newpage
++
+ 
+ 处理流程先验证各列的类型，再检查同一窗口内的时间顺序。如果检查失败，窗口保持原样并附加状态标记。只有通过检查的窗口进入后续汇总。这样的约定使每个输出都能追溯到输入，也让排版前后的内容核对有明确依据。
+ 
+-\vspace{30mm}
++
+ 
+ 展示页面应让标题、说明和图表形成连续的阅读路径。必要的章节分隔、图表内部留白和图注间距应被保留。孤立的大空洞、越过版心的对象以及相互冲突的局部格式则需要单独判断，不能仅凭页面是否填满来评价质量。
+ 
+ \section{处理流程}
+-{\Large 比较采用相同的纸张、版心和正文基础字号。两份文档的区别只允许落在已声明的排版命令上。表格数据、图形文件、公式内容和交叉引用在原稿生成后冻结，因此读者可以把注意力放在布局的变化，而不用猜测内容是否也被修改。}
++{ 比较采用相同的纸张、版心和正文基础字号。两份文档的区别只允许落在已声明的排版命令上。表格数据、图形文件、公式内容和交叉引用在原稿生成后冻结，因此读者可以把注意力放在布局的变化，而不用猜测内容是否也被修改。}
+ 
+ 结果记录分成处理状态和阅读检查两部分。处理状态说明文件能否编译、对象是否完整以及当前仍有哪些日志提示。阅读检查则关注图文距离、标题层次和是否出现遮挡。前者可以重复测量，后者需要结合整页图像检查，不能互相替代。
+ 
+-\vspace{26mm}
+ 
+-\begin{figure}[H]
++
++\begin{figure}[tbp]
+ \centering
+ \includegraphics[width=0.90\linewidth]{figs/flow.pdf}
+ \caption{固定的四步处理流程；图形文件在两份稿件中保持一致。}
+ \label{fig:flow}
+ \end{figure}
+-\begin{itemize}[itemsep=22pt,topsep=20pt,parsep=15pt]
++\begin{itemize}
+ \item 输入登记：只记录已有字段，不改写观测。
+ \item 类型检查：对异常窗口附加状态标记。
+ \item 结果汇总：每个窗口保留可追溯的编号。

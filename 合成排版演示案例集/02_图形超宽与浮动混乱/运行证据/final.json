@@ -1,0 +1,369 @@
+{
+  "pages": 2,
+  "score": {
+    "l": [],
+    "gate": [],
+    "scored": true,
+    "p": 0.6,
+    "i_struct": 1.6,
+    "d_content": 0.0,
+    "i": 1.6,
+    "m1": 10.6,
+    "a": 1.245,
+    "m2": 1.245,
+    "ok": true,
+    "content_preserved": true
+  },
+  "counts": {
+    "overfull": 0,
+    "underfull": 0,
+    "vbox": 0,
+    "floats": 0,
+    "tables_overwide": 0,
+    "warnings": 0
+  },
+  "issues": {
+    "overfull": [],
+    "underfull": [],
+    "vbox": [],
+    "floats": [],
+    "tables_overwide": [],
+    "warnings": [],
+    "errors": [],
+    "hygiene": [
+      {
+        "kind": "parskip",
+        "line": 6,
+        "detail": "\\parskip=11pt（11.0pt）过大，整篇段落间距失衡"
+      }
+    ]
+  },
+  "visual": {
+    "n": 2,
+    "pages": [
+      {
+        "ink_ratio": 0.068,
+        "top_blank": 0.125,
+        "bottom_blank": 0.097,
+        "content_height": 0.778,
+        "max_gap": 0.125,
+        "max_gap_at": 0.062,
+        "band": 0.0,
+        "band_at": 0.0,
+        "left_blank": 0.121,
+        "right_blank": 0.123,
+        "top_bottom_ratio": 0.8,
+        "page": 1
+      },
+      {
+        "ink_ratio": 0.0319,
+        "top_blank": 0.046,
+        "bottom_blank": 0.356,
+        "content_height": 0.598,
+        "max_gap": 0.356,
+        "max_gap_at": 0.822,
+        "band": 0.0,
+        "band_at": 0.0,
+        "left_blank": 0.121,
+        "right_blank": 0.123,
+        "top_bottom_ratio": 2.24,
+        "page": 2
+      }
+    ],
+    "ink_mean": 0.05,
+    "ink_min": 0.0319,
+    "ink_max": 0.068,
+    "defects": [
+      {
+        "kind": "bottom_blank",
+        "page": 2,
+        "severity": "high",
+        "metric": 0.356,
+        "detail": "第2页底部空白达 36%"
+      },
+      {
+        "kind": "mid_gap",
+        "page": 2,
+        "severity": "moderate",
+        "metric": 0.356,
+        "detail": "第2页中部有 36% 页高的连续空洞（位置 0.82）"
+      }
+    ],
+    "severity_max": "high"
+  },
+  "source_summary": {
+    "documentclass": "ctexart",
+    "class_options": [
+      "UTF8",
+      "10pt",
+      "a4paper",
+      "fontset=windows",
+      "twocolumn"
+    ],
+    "font_pt": 10,
+    "geometry": "\\usepackage[margin=25.4mm]{geometry}",
+    "geometry_margin_mm": 25.4,
+    "geometry_explicit": true,
+    "has_microtype": false,
+    "has_ctex": true,
+    "floats": {
+      "figure": 2,
+      "table": 0
+    },
+    "float_envs": [
+      {
+        "kind": "figure",
+        "starred": false,
+        "spec": "!b",
+        "line": 43
+      },
+      {
+        "kind": "figure",
+        "starred": false,
+        "spec": "!b",
+        "line": 57
+      }
+    ],
+    "graphics_width_expr": [
+      "0.95\\linewidth",
+      "0.95\\linewidth"
+    ],
+    "tabular_spans": [],
+    "twocolumn": true,
+    "fleqn": false,
+    "body_start": 834,
+    "abstract": true,
+    "sections": 3,
+    "lines": 82,
+    "has_toc": false,
+    "has_header": false,
+    "has_heading_color": false,
+    "figures": [
+      {
+        "kind": "figure",
+        "fingerprint": "\\begin{figure} \\centering \\includegraphics[LEN=W]{figs/flow.pdf} \\caption{输入检查与汇总流程。图宽的错误设置不改变图中的流程内容。} \\label{fig:wideflow} \\end{figure}"
+      },
+      {
+        "kind": "figure",
+        "fingerprint": "\\begin{figure} \\centering \\includegraphics[LEN=W]{figs/curves.pdf} \\caption{三组人工构造的示意数值，仅用于保持排版前后的图形内容一致。} \\label{fig:widecurves} \\end{figure}"
+      }
+    ]
+  },
+  "compile_ok": true,
+  "visual_defects": [
+    {
+      "kind": "bottom_blank",
+      "page": 2,
+      "severity": "high",
+      "metric": 0.356,
+      "detail": "第2页底部空白达 36%"
+    },
+    {
+      "kind": "mid_gap",
+      "page": 2,
+      "severity": "moderate",
+      "metric": 0.356,
+      "detail": "第2页中部有 36% 页高的连续空洞（位置 0.82）"
+    }
+  ],
+  "records": [
+    {
+      "iteration": 1,
+      "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+      "source": "rule",
+      "l": [],
+      "a": 1.059,
+      "i": 0.0,
+      "p": 7.258,
+      "m1": 108.87,
+      "m2": 1.059,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 138.9 -> 108.9（缺陷 9.26→7.26，代价 0→0）"
+    },
+    {
+      "iteration": 2,
+      "action": "2 处浮动体位置参数不稳定（figure[H], figure[H]）规范为 [tbp]",
+      "source": "rule",
+      "l": [],
+      "a": 1.383,
+      "i": 0.8,
+      "p": 5.192,
+      "m1": 78.68,
+      "m2": 1.383,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 108.9 -> 78.68（缺陷 7.26→5.19，代价 0→0.8）"
+    },
+    {
+      "iteration": 3,
+      "action": "收紧列表间距 2 处（itemsep=18pt, topsep=18pt）",
+      "source": "rule",
+      "l": [],
+      "a": 1.487,
+      "i": 0.8,
+      "p": 3.992,
+      "m1": 60.68,
+      "m2": 1.487,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 78.68 -> 60.68（缺陷 5.19→3.99，代价 0.8→0.8）"
+    },
+    {
+      "iteration": 4,
+      "action": "\\parskip 11pt -> 8pt（整篇段距收敛）",
+      "source": "rule",
+      "l": [],
+      "a": 1.604,
+      "i": 0.8,
+      "p": 4.425,
+      "m1": 67.175,
+      "m2": 1.604,
+      "pages": 2,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 变差 60.68 -> 67.17（两线分离：model2 的改善不再补偿 model1 的回退）"
+    },
+    {
+      "iteration": 5,
+      "action": "注入 \\raggedbottom（页面底部自然收底，减少留白/拉伸）",
+      "source": "rule",
+      "l": [],
+      "a": 1.444,
+      "i": 0.8,
+      "p": 3.992,
+      "m1": 60.68,
+      "m2": 1.444,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 持平，model2（审美）改善 1.487 -> 1.444"
+    },
+    {
+      "iteration": 6,
+      "action": "[LLM] M2-fig1 set_fig_width {'width': '0.95\\\\linewidth', 'target': 1} | column_figure_overflow/第1张插图（fig#1）",
+      "source": "llm",
+      "l": [],
+      "a": 1.654,
+      "i": 1.2,
+      "p": 2.296,
+      "m1": 35.64,
+      "m2": 1.654,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点插图宽度（#1:112mm->0.95\\linewidth）"
+    },
+    {
+      "iteration": 7,
+      "action": "[LLM] M2-fig2 set_fig_width {'width': '0.95\\\\linewidth', 'target': 2} | column_figure_overflow/第2张插图（fig#2）",
+      "source": "llm",
+      "l": [],
+      "a": 1.729,
+      "i": 1.6,
+      "p": 0.6,
+      "m1": 10.6,
+      "m2": 1.729,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点插图宽度（#2:108mm->0.95\\linewidth）"
+    },
+    {
+      "iteration": 8,
+      "action": "[LLM] M2-flow-order set_float_spec {'spec': '!b', 'target': 1} | abstract_before_figure/流程图，混合浮动体序号1",
+      "source": "llm",
+      "l": [],
+      "a": 1.289,
+      "i": 1.6,
+      "p": 0.6,
+      "m1": 10.6,
+      "m2": 1.289,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#1[tbp]）"
+    },
+    {
+      "iteration": 9,
+      "action": "[LLM] M2-curves-order set_float_spec {'spec': '!b', 'target': 2} | abstract_before_figure/示意曲线图，混合浮动体序号2",
+      "source": "llm",
+      "l": [],
+      "a": 1.245,
+      "i": 1.6,
+      "p": 0.6,
+      "m1": 10.6,
+      "m2": 1.245,
+      "pages": 2,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#2[tbp]）"
+    }
+  ],
+  "stable_recompile": true,
+  "stability_checks": [
+    {
+      "pages": 2,
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 0.6,
+        "i_struct": 1.6,
+        "d_content": 0.0,
+        "i": 1.6,
+        "m1": 10.6,
+        "a": 1.245,
+        "m2": 1.245,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 0,
+        "vbox": 0,
+        "floats": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      }
+    },
+    {
+      "pages": 2,
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 0.6,
+        "i_struct": 1.6,
+        "d_content": 0.0,
+        "i": 1.6,
+        "m1": 10.6,
+        "a": 1.245,
+        "m2": 1.245,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 0,
+        "vbox": 0,
+        "floats": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      }
+    }
+  ],
+  "integrity": {
+    "synthetic": true,
+    "original_unchanged": true,
+    "normalized_main_text_preserved": true,
+    "display_math_contents_preserved": true,
+    "figure_files_unchanged": true,
+    "figure_fingerprints_preserved": true,
+    "pass": true
+  },
+  "program_status": "NEEDS_REVIEW"
+}

@@ -1,0 +1,88 @@
+% 主稿需使用XeLaTeX并支持中文，加载graphicx/booktabs/hyperref。
+% 放入主稿附录时可先定义 \syntheticAssetRoot 指向本目录。
+\providecommand{\syntheticAssetRoot}{}
+\providecommand{\syntheticCaseBreak}{}
+\section{合成原稿的受控排版演示}
+\label{app:synthetic-layout-cases}
+
+本节使用三份明确标注的合成原稿展示排版修复。它们不是已发表论文，
+正文、图形和表格数值均由程序构造，不代表真实实验结果。
+原稿生成后冻结，处理阶段仅执行白名单排版动作，正文、编号、链接、
+表格内容和原图文件均保持不变。因此，这些案例证明的是对已构造排版问题的处理能力，
+不用于估计真实论文上的平均收益或成功率。
+
+所有版本使用相同纸张、版心和基础字号；没有设置压页目标，也没有调小全局字号或页边距。
+程序按 gate、$M_1=15P+I$、$M_2=A_{\mathrm{soft}}$ 依次验收，评分和权重未针对案例修改。
+所有修改实际编译验证，失败候选回滚，末页正常留白保留。
+
+\begin{table*}[!htbp]
+\centering\small
+\caption{合成案例的原稿与最终输出。分数越低越好，但主评分改善不代表软视觉分必然改善。}
+\label{tab:synthetic-case-results}
+\begin{tabular}{lrrrr}
+\toprule
+案例 & 页数 & 行溢出条数 & $M_1$ & $M_2$ \\
+\midrule
+段落与间距 & $3\to2$ & $0\to0$ & $145.995\to0.400$ & $1.375\to1.331$ \\
+双栏图形 & $2\to2$ & $2\to0$ & $138.870\to10.600$ & $1.059\to1.245$ \\
+长标识符与链接 & $2\to2$ & $2\to0$ & $145.380\to11.455$ & $1.439\to1.667$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\syntheticCaseBreak
+\subsection{案例一：段落间距与字号层次混乱}
+原稿刻意设置了同一小节正文之间的误分页、30\,mm与26\,mm正向大间距、
+超大的标题和章节字号、局部字号切换及过疏的列表。规则闭环实际接受九项操作，
+将原稿由三页重排为两页，并恢复一致的文字层次。这里删除的是预先注明用途的受控缺陷，
+不是对结构分页的一般性删除。
+
+模型在完整页复核后另外尝试了流程图位置提案，因全局分无改善而回滚，
+最终保留规则输出。第二页仍有自然尾白，程序保留\texttt{NEEDS\_REVIEW}提示；
+本例没有为了填满页面继续压缩排版。
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{\syntheticAssetRoot 01_段落与间距混乱/页面对比/关键页面比较.pdf}
+\caption{合成案例一的实际页面比较。原稿的大间距、误分页和字号混杂被修复，
+但正常段落间隔和末页尾白保留。完整原稿与处理稿分别提供，可逐页核对。}
+\end{figure*}
+
+\syntheticCaseBreak
+\subsection{案例二：跨栏插图与模型定点修复}
+双栏原稿将两张图设为112\,mm和108\,mm，低于规则的150\,mm固定阈值，
+却明显大于实际单栏宽度，造成约97.187\,pt和85.806\,pt溢出，并覆盖邻栏文字。
+模型根据实际页面提出两条定点图宽提案，将宽度设为\verb|0.95\linewidth|，
+两处溢出均消除。完整页复核又发现通用浮动参数将图放到了摘要之前，
+第二轮模型提案将两图设为\texttt{!b}，恢复摘要和正文先行的阅读顺序。
+
+四条模型提案均经过实际编译和程序验收。原图二进制、题注和正文保持不变，
+页数仍为两页。$M_2$高于原稿，原有11\,pt段距的归一化也曾被回滚，
+因此本例主张的是跨栏遮挡修复，不能声称所有布局指标均改善。
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{\syntheticAssetRoot 02_图形超宽与浮动混乱/页面对比/关键页面比较.pdf}
+\caption{合成案例二。左侧原图跨入邻栏，右侧定点修复后回到各自栏内。
+最终图形位于正文页底，未通过更换图文件或改写正文获得效果。}
+\end{figure*}
+
+\syntheticCaseBreak
+\subsection{案例三：长标识符与链接的可选断行}
+原稿包含120字符的连续标识符和长URL，另有24\,mm显式空白与过大列表间距。
+默认每12字符添加断词点的规则试排仍有37.012\,pt溢出。
+该尝试已归档，模型从同一冻结原稿重开分支，提出步长4的可选断词、加载\texttt{xurl}、
+删除受控大间距、规范列表和段距等七条白名单提案，全部经过编译验收。
+最终行溢出由两条降为零，编号和URL的字符内容没有改变。
+
+本例原有表格可以放进版心，未将它虚构成超宽问题。最终仍有一条\texttt{underfull}
+提示和自然末页余白，程序状态如实保留为\texttt{NEEDS\_REVIEW}。
+受控溢出修复与未决提示分别报告。
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{\syntheticAssetRoot 03_长标识符与链接溢出/页面对比/关键页面比较.pdf}
+\caption{合成案例三。内容因重排改变所在页，面板分别标明实际页码；
+长标识符通过增加可选断词点回到版心内，链接通过合法断行保留原文。
+此处不是删除字符或缩小全局字号。}
+\end{figure*}

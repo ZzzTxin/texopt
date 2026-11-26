@@ -1,0 +1,463 @@
+{
+  "schema": "texopt.llm_request/v1",
+  "round": 2,
+  "objective": "在保证正文内容零改动与编译/要求达标（L）的前提下，让整篇论文排版质量/布局更优（A↓，I 最小干预）。",
+  "document": {
+    "original_tex": "D:\\桌面\\texopt\\合成排版演示案例集\\02_图形超宽与浮动混乱\\原始源码\\main.tex",
+    "work_tex": "D:\\桌面\\texopt\\workbench\\synthetic_showcase\\runs\\02_图形超宽与浮动混乱\\after\\main.tex",
+    "pdf": "D:\\桌面\\texopt\\workbench\\synthetic_showcase\\runs\\02_图形超宽与浮动混乱\\after\\main.pdf",
+    "outdir": "D:\\桌面\\texopt\\workbench\\synthetic_showcase\\runs\\02_图形超宽与浮动混乱\\after"
+  },
+  "state": {
+    "pages": 2,
+    "l_violations": [],
+    "A_quality_proxy": 1.729,
+    "I_intervention": 1.6,
+    "m1": 10.6,
+    "m2": 1.729,
+    "note": "A 是排版质量/审美代理指标，不是人类审美评分；total 越小越好。所有提案都会整篇重编译后全局重评，变差即回滚。"
+  },
+  "residual_issues": [
+    {
+      "id": "parskip-6",
+      "kind": "parskip",
+      "line": 6,
+      "severity": "moderate",
+      "location": "",
+      "issue": "\\parskip=11pt（11.0pt）过大，整篇段落间距失衡",
+      "suggestion": "\\parskip 过大（整篇段距）——每页都会显得松散、留白偏多；建议收敛到 ≤ 8pt 或交给文档类默认（闭环已自动收敛）",
+      "edit_hint": "",
+      "suggested_actions": [
+        "normalize_parskip"
+      ],
+      "source_line": "\\setlength{\\parskip}{11pt}"
+    }
+  ],
+  "page_images": [
+    "D:\\桌面\\texopt\\workbench\\synthetic_showcase\\runs\\02_图形超宽与浮动混乱\\after\\pages\\page-1.png",
+    "D:\\桌面\\texopt\\workbench\\synthetic_showcase\\runs\\02_图形超宽与浮动混乱\\after\\pages\\page-2.png"
+  ],
+  "page_images_note": "每页 PDF 渲染图（如模型具备视觉能力可据此判断留白/视觉重心/图与正文关系；本版尚未做视觉量化）。",
+  "allowed_actions": [
+    {
+      "action": "inject_quality_macros",
+      "level": 2,
+      "category": "A",
+      "doc": "注入断行/孤行寡行质量宏（club/widow penalty 等），全局生效，无损",
+      "params": []
+    },
+    {
+      "action": "drop_fleqn",
+      "level": 1,
+      "category": "L",
+      "doc": "移除 documentclass 的 fleqn 选项，公式恢复居中（硬性规范）",
+      "params": []
+    },
+    {
+      "action": "set_fontsize",
+      "level": 1,
+      "category": "L",
+      "doc": "把文档正文字号设为 10/11/12 之一（硬性规范）",
+      "params": [
+        {
+          "name": "pt",
+          "type": "int",
+          "required": true,
+          "default": null,
+          "doc": "目标字号档（10/11/12）"
+        }
+      ]
+    },
+    {
+      "action": "set_margin",
+      "level": 1,
+      "category": "L",
+      "doc": "把等效单边页边距设为 mm（会改变版面分布，慎用；程序夹在安全下限内）",
+      "params": [
+        {
+          "name": "mm",
+          "type": "float",
+          "required": true,
+          "default": null,
+          "doc": "目标等效单边页边距（mm，建议 15-40）"
+        }
+      ]
+    },
+    {
+      "action": "insert_toc",
+      "level": 1,
+      "category": "structure",
+      "doc": "在正文首节前插入目录页（\\tableofcontents，单独成页）；幂等",
+      "params": []
+    },
+    {
+      "action": "add_header",
+      "level": 1,
+      "category": "structure",
+      "doc": "注入页眉（fancyhdr）；left/right 为纯文本，可用 \\thepage、\\texopttitle",
+      "params": [
+        {
+          "name": "left",
+          "type": "str",
+          "required": false,
+          "default": null,
+          "doc": "页眉左文本（省略则用标题）"
+        },
+        {
+          "name": "right",
+          "type": "str",
+          "required": false,
+          "default": null,
+          "doc": "页眉右文本（省略则用页码）"
+        }
+      ]
+    },
+    {
+      "action": "color_headings",
+      "level": 2,
+      "category": "A",
+      "doc": "给 section/subsection 标题着色以建立层级突出（审美项）",
+      "params": [
+        {
+          "name": "color",
+          "type": "str",
+          "required": false,
+          "default": "0,62,120",
+          "doc": "颜色：'0,62,120' / 'RGB:...' / 'HTML:...' / 颜色名"
+        }
+      ]
+    },
+    {
+      "action": "strip_reading_aids",
+      "level": 2,
+      "category": "meta",
+      "doc": "删除阅读辅助内容（START READING HERE 等已知非正文模式）",
+      "params": []
+    },
+    {
+      "action": "remove_warning_boxes",
+      "level": 2,
+      "category": "meta",
+      "doc": "删除 WARNING/CAUTION/ATTENTION 类告示块（编辑性提示，非正文）",
+      "params": []
+    },
+    {
+      "action": "sanitize_float_specs",
+      "level": 2,
+      "category": "A",
+      "doc": "把所有不稳定的浮动体位置参数（[h]/[h!] 等）规范为含 t/b/p 的稳定档；include_H=true 时连 [H] 强排也一并规范",
+      "params": [
+        {
+          "name": "spec",
+          "type": "str",
+          "required": false,
+          "default": "tbp",
+          "doc": "目标位置参数，如 tbp/htbp/tb"
+        },
+        {
+          "name": "include_H",
+          "type": "bool",
+          "required": false,
+          "default": false,
+          "doc": "是否也规范 [H] 强排（默认 false）"
+        }
+      ]
+    },
+    {
+      "action": "remove_manual_pagebreak",
+      "level": 2,
+      "category": "A",
+      "doc": "每次仅尝试删除一处普通连续正文中的 newpage/pagebreak；保留 clearpage、章节/附录/参考文献边界及可能受图表/input影响的分页；编译后全局评分不改善则回滚",
+      "params": []
+    },
+    {
+      "action": "remove_excessive_vspace",
+      "level": 2,
+      "category": "A",
+      "doc": "删除明显过大的手动垂直间距 \\vspace{...}（默认 ≥ 10mm）",
+      "params": [
+        {
+          "name": "min_pt",
+          "type": "float",
+          "required": false,
+          "default": 28.35,
+          "doc": "视为“过大”的下限（pt，默认 28.35=10mm）"
+        }
+      ]
+    },
+    {
+      "action": "normalize_local_font_size",
+      "level": 2,
+      "category": "A",
+      "doc": "删除正文里孤立的行内字号切换（{\\Large ...} / {\\tiny ...}），把字号交回全局样式；数学/表格/verbatim 内的不处理",
+      "params": []
+    },
+    {
+      "action": "normalize_heading_size",
+      "level": 2,
+      "category": "A",
+      "doc": "把超出层级上限的标题字号压回上限（section ≤ \\Large，subsection ≤ \\large，subsubsection ≤ \\normalsize），只动 \\titleformat/\\xxxfont",
+      "params": []
+    },
+    {
+      "action": "reduce_list_spacing",
+      "level": 2,
+      "category": "A",
+      "doc": "收紧列表环境里过大的垂直间距选项（itemsep/topsep/parsep/partopsep），回到文档类默认；列表结构与条目内容不动",
+      "params": [
+        {
+          "name": "max_pt",
+          "type": "float",
+          "required": false,
+          "default": 8.0,
+          "doc": "视为“过大”的上限（pt，默认 8）"
+        }
+      ]
+    },
+    {
+      "action": "add_hyphenation_points",
+      "level": 2,
+      "category": "A",
+      "doc": "给超长不可断词（默认 ≥ 80 字符）插入 \\- 断词点（TeX 合法机制，零宽可选断点，不改语义）",
+      "params": [
+        {
+          "name": "min_chars",
+          "type": "int",
+          "required": false,
+          "default": 80,
+          "doc": "触发阈值（字符数，默认 80）"
+        },
+        {
+          "name": "step",
+          "type": "int",
+          "required": false,
+          "default": 12,
+          "doc": "断点间隔（字符数，默认 12）"
+        }
+      ]
+    },
+    {
+      "action": "normalize_title",
+      "level": 2,
+      "category": "A",
+      "doc": "把 \\title{...} 里超限的字号压回上限（如 \\Huge -> \\LARGE）；只改字号命令",
+      "params": [
+        {
+          "name": "cap",
+          "type": "str",
+          "required": false,
+          "default": "LARGE",
+          "doc": "标题允许的最大字号（默认 LARGE）"
+        }
+      ]
+    },
+    {
+      "action": "normalize_parskip",
+      "level": 2,
+      "category": "A",
+      "doc": "把过大的 \\parskip 收敛到合理值（默认上限 8pt）——整篇段距过大会让每页都松散",
+      "params": [
+        {
+          "name": "max_pt",
+          "type": "float",
+          "required": false,
+          "default": 8.0,
+          "doc": "允许的最大段间距（pt，默认 8）"
+        }
+      ]
+    },
+    {
+      "action": "normalize_header",
+      "level": 2,
+      "category": "A",
+      "doc": "清空过长/无意义的页眉内容（超过 max_chars，如整句说明文字），保留 fancyhdr 设置",
+      "params": [
+        {
+          "name": "max_chars",
+          "type": "int",
+          "required": false,
+          "default": 40,
+          "doc": "页眉允许的最大字符数（默认 40）"
+        }
+      ]
+    },
+    {
+      "action": "remove_mid_multicols",
+      "level": 2,
+      "category": "A",
+      "doc": "移除正文中途的局部双栏（\\begin{multicols}），内容原样保留，交回单栏版心",
+      "params": []
+    },
+    {
+      "action": "reduce_oversized_figures",
+      "level": 2,
+      "category": "A",
+      "doc": "收敛过大图片：height 超过比例上限压到上限；多个子图宽度之和超版心时等比缩小",
+      "params": [
+        {
+          "name": "max_height_frac",
+          "type": "float",
+          "required": false,
+          "default": 0.4,
+          "doc": "图片高度占版心上限（默认 0.4）"
+        },
+        {
+          "name": "subfig_max_sum",
+          "type": "float",
+          "required": false,
+          "default": 0.95,
+          "doc": "子图宽度之和上限（默认 0.95）"
+        }
+      ]
+    },
+    {
+      "action": "shrink_oversized_figures",
+      "level": 3,
+      "category": "A",
+      "doc": "按页面视觉信号缩小「满宽且无高度约束」的图片（width 降一档），用于消除“巨大图片占据整页”这类视觉缺陷",
+      "params": [
+        {
+          "name": "factor",
+          "type": "float",
+          "required": false,
+          "default": 0.85,
+          "doc": "缩放系数（默认 0.85）"
+        },
+        {
+          "name": "min_frac",
+          "type": "float",
+          "required": false,
+          "default": 0.5,
+          "doc": "可缩到的最小相对宽度（默认 0.5）"
+        }
+      ]
+    },
+    {
+      "action": "break_long_urls",
+      "level": 2,
+      "category": "A",
+      "doc": "给超长 URL（\\url/\\href/\\path 形式）注入 \\usepackage{xurl}，允许在任意位置断行；不改动 URL 文字",
+      "params": []
+    },
+    {
+      "action": "fix_table_width",
+      "level": 2,
+      "category": "A",
+      "doc": "把超宽 / 明显窄于版心的 tabular 改为 tabularx（\\linewidth 自适应列宽）；不使用 \\resizebox 压缩，不改表格数据/顺序/内容",
+      "params": []
+    },
+    {
+      "action": "balance_pages",
+      "level": 2,
+      "category": "A",
+      "doc": "注入 \\raggedbottom，抑制“为凑满页而拉伸页面”造成的过大留白/垂直质量问题；不删内容、不手动分页凑页",
+      "params": []
+    },
+    {
+      "action": "set_float_spec",
+      "level": 3,
+      "category": "A",
+      "doc": "【Level-3】定点设置某一个浮动体的位置参数：让指定图/表浮到页顶(t)/页底(b)/单独页(p)。target 形如 'figure#2' / 'table#1' / 1（1-based），省略=全部",
+      "params": [
+        {
+          "name": "spec",
+          "type": "str",
+          "required": true,
+          "default": null,
+          "doc": "目标位置参数，如 tbp/htbp/tb"
+        },
+        {
+          "name": "target",
+          "type": "target",
+          "required": false,
+          "default": null,
+          "doc": "目标浮动体：'figure#2' / 'table#1' / 1 / 省略"
+        }
+      ]
+    },
+    {
+      "action": "normalize_fig_width",
+      "level": 2,
+      "category": "A",
+      "doc": "把所有数值宽度超过阈值的插图归一化到 \\linewidth（修 overfull）",
+      "params": [
+        {
+          "name": "threshold_mm",
+          "type": "float",
+          "required": false,
+          "default": 150.0,
+          "doc": "超宽阈值 mm（默认 150）"
+        }
+      ]
+    },
+    {
+      "action": "set_fig_width",
+      "level": 3,
+      "category": "A",
+      "doc": "【Level-3】定点设置某一张插图宽度（如缩到 0.8\\linewidth）；只改 width= 值，不动图片文件与内容。target 省略=全部",
+      "params": [
+        {
+          "name": "width",
+          "type": "str",
+          "required": true,
+          "default": null,
+          "doc": "宽度表达式：\\linewidth / 0.8\\linewidth / 120mm"
+        },
+        {
+          "name": "target",
+          "type": "target",
+          "required": false,
+          "default": null,
+          "doc": "目标插图：'fig#2' / 2 / 省略"
+        }
+      ]
+    }
+  ],
+  "constraints": {
+    "protect": [
+      "正文文字",
+      "数学公式",
+      "引用/citation",
+      "label/reference",
+      "图表内容",
+      "图表文件",
+      "章节结构"
+    ],
+    "rule": "只能请求 allowed_actions 中的动作；未知动作一律 BLOCKED。程序执行后编译验证，gate 变差或 model1 不改善一律回滚（model2 与 model1 不合并比较）。",
+    "do_not": [
+      "改写正文语义",
+      "重绘/换算图形",
+      "虚构题注/引用/数据",
+      "执行任意 shell 或文件操作"
+    ]
+  },
+  "proposal_schema": {
+    "schema": "texopt.proposals/v1",
+    "round": 2,
+    "assessment": "对整篇布局的整体判断（一句话）",
+    "proposals": [
+      {
+        "id": "p1",
+        "issue": "page_balance",
+        "location": "page 5",
+        "severity": "moderate",
+        "reason": "页面下半部分存在明显空白",
+        "proposal": {
+          "action": "set_float_spec",
+          "target": "figure#2",
+          "params": {
+            "spec": "tbp"
+          },
+          "suggestion": "允许该图浮到页顶/页底以填补空白"
+        }
+      }
+    ]
+  },
+  "instructions": [
+    "1) 阅读 state 与 residual_issues，必要时查看 page_images。",
+    "2) 只针对难以用规则决定的问题（留白/视觉重心/图文关系/整体节奏）提出提案；硬约束问题由程序闭环处理，无需重复提。",
+    "3) 每条提案给出 issue/location/severity/reason 与 action/target/params。",
+    "4) 输出严格符合 proposal_schema 的 JSON（保存为 proposals.json）。",
+    "5) 不确定或需改动正文内容的，不要提（留给作者）；宁少勿滥。"
+  ]
+}
