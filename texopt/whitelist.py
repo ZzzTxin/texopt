@@ -323,8 +323,9 @@ _reg(ActionSpec(
            False, _v_bool))))
 _reg(ActionSpec(
     "remove_manual_pagebreak", 2, "A",
-    "删除正文里的手动分页（\\newpage/\\clearpage/\\pagebreak），交回 "
-    "LaTeX 全局断页；编译后全局评分不改善则回滚",
+    "每次仅尝试删除一处普通连续正文中的 newpage/pagebreak；保留 "
+    "clearpage、章节/附录/参考文献边界及可能受图表/input影响的分页；"
+    "编译后全局评分不改善则回滚",
     _wrap_pagebreak_rm))
 _reg(ActionSpec(
     "remove_excessive_vspace", 2, "A",

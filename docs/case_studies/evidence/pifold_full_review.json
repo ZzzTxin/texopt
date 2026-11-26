@@ -1,0 +1,682 @@
+{
+  "date": "2026-11-25",
+  "scope": "完整审阅14页，在旧第二次排版之后执行3轮全文提案。",
+  "previous_scope_correction": "旧第二次排版仅修正首页，第2—14页文字及位置未改变，不能作为整篇问题均已修复的证据。",
+  "program_status": "DONE",
+  "visual_review_status": "NEEDS_REVIEW",
+  "status_note": "程序评分仍判DONE，但模型逐页复核确认存在标题重叠等残余问题，案例展示按需复核报告。",
+  "pages": 14,
+  "score_before_full_review": {
+    "l": [],
+    "gate": [],
+    "scored": true,
+    "p": 38.248,
+    "i_struct": 4.4,
+    "d_content": 0.0,
+    "i": 4.4,
+    "m1": 578.12,
+    "a": 1.574,
+    "m2": 1.574,
+    "ok": true,
+    "content_preserved": true
+  },
+  "score_after_full_review": {
+    "l": [],
+    "gate": [],
+    "scored": true,
+    "p": 38.248,
+    "i_struct": 4.4,
+    "d_content": 0.0,
+    "i": 4.4,
+    "m1": 578.12,
+    "a": 1.308,
+    "m2": 1.308,
+    "ok": true,
+    "content_preserved": true
+  },
+  "new_accepted": 4,
+  "new_rejected": 4,
+  "new_skipped": 1,
+  "steps": [
+    {
+      "iteration": 1,
+      "action": "[LLM] R2-appendix-table set_float_spec {'spec': '!b', 'target': 11} | appendix_float_before_heading/PDF第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.574,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.574,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 2
+    },
+    {
+      "iteration": 2,
+      "action": "[LLM] R2-model-table set_float_spec {'spec': '!b', 'target': 7} | ablation_float_cluster/PDF第8页，混合浮动体序号7，表3",
+      "source": "llm",
+      "l": [],
+      "a": 1.56,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.56,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（table#7[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 3,
+      "action": "[LLM] R2-example-figure set_float_spec {'spec': '!b', 'target': 10} | generalization_crowded_page/PDF第9页，混合浮动体序号10，图5",
+      "source": "llm",
+      "l": [],
+      "a": 1.559,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.559,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#10[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 4,
+      "action": "[LLM] R2-training-figure set_float_spec {'spec': '!b', 'target': 5} | table_figure_spacing/PDF第7页，混合浮动体序号5，图4",
+      "source": "llm",
+      "l": [],
+      "a": 1.322,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.322,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#5[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 1,
+      "action": "[LLM] R3-appendix-here set_float_spec {'spec': '!htbp', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.326,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.326,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 3
+    },
+    {
+      "iteration": 2,
+      "action": "[LLM] R3-generalization-table set_float_spec {'spec': '!b', 'target': 9} | generalization_float_cluster/第9页，混合浮动体序号9，表5",
+      "source": "llm",
+      "l": [],
+      "a": 1.308,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.308,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（table#9[tbp]）",
+      "review_round": 3
+    },
+    {
+      "iteration": 3,
+      "action": "[LLM] R3-autoregressive-table set_float_spec {'spec': '!htbp', 'target': 8} | ablation_float_context/第9页，混合浮动体序号8，表4",
+      "source": "llm",
+      "l": [],
+      "a": 1.308,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.308,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 3
+    },
+    {
+      "iteration": 1,
+      "action": "[LLM] R4-appendix-H set_float_spec {'spec': 'H', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.304,
+      "i": 4.4,
+      "p": 39.281,
+      "m1": 593.615,
+      "m2": 1.304,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 变差 578.1 -> 593.6（两线分离：model2 的改善不再补偿 model1 的回退）",
+      "review_round": 4
+    }
+  ],
+  "proposals": [
+    {
+      "schema": "texopt.proposals/v1",
+      "round": 2,
+      "assessment": "完整审阅14页。第2—14页在旧第二次排版中未发生任何位置变化。优先处理第14页附录表格出现在附录标题之前、第8页两个消融表挤在页顶、第9页表图聚集和小节标题重叠。负vspace当前不能由白名单动作删除，先验证定点浮动参数和图宽能否改善实际布局。",
+      "proposals": [
+        {
+          "id": "R2-appendix-table",
+          "issue": "appendix_float_before_heading",
+          "location": "PDF第14页，混合浮动体序号11，表6",
+          "severity": "high",
+          "reason": "附录表6位于附录标题之前。改为页底放置，使读者先看到附录标题和说明，再看到对应表格。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 11,
+            "params": {
+              "spec": "!b"
+            }
+          }
+        },
+        {
+          "id": "R2-model-table",
+          "issue": "ablation_float_cluster",
+          "location": "PDF第8页，混合浮动体序号7，表3",
+          "severity": "moderate",
+          "reason": "表2和表3连续挤在页顶；尝试将表3放在正文页底，使模型消融的说明与表格关系更清楚。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 7,
+            "params": {
+              "spec": "!b"
+            }
+          }
+        },
+        {
+          "id": "R2-example-figure",
+          "issue": "generalization_crowded_page",
+          "location": "PDF第9页，混合浮动体序号10，图5",
+          "severity": "moderate",
+          "reason": "第9页表4、表5和图5聚集，后面的Generalization标题与正文过挤。尝试图5置于页底，释放正文区。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 10,
+            "params": {
+              "spec": "!b"
+            }
+          }
+        },
+        {
+          "id": "R2-training-figure",
+          "issue": "table_figure_spacing",
+          "location": "PDF第7页，混合浮动体序号5，图4",
+          "severity": "moderate",
+          "reason": "表1与训练曲线图几乎相接，尝试将曲线图放到页底，避免两者形成一整块。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 5,
+            "params": {
+              "spec": "!b"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "schema": "texopt.proposals/v1",
+      "round": 3,
+      "assessment": "上一轮对第7—9页接受了3条定点提案，M2由1.574降为1.322，且M1持平。但第9页Generalization标题重叠及第14页表6先于附录标题的问题仍存在。继续优先尝试附录表的当前位置策略及第9页相关表格分散，不能将重排影响到参考文献视为参考文献本身被修复。",
+      "proposals": [
+        {
+          "id": "R3-appendix-here",
+          "issue": "appendix_float_before_heading",
+          "location": "第14页，混合浮动体序号11，表6",
+          "severity": "high",
+          "reason": "页底参数未使全局分改善，改用含here的稳定参数!htbp，尝试让表6留在附录标题和Distance ablation说明之后。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 11,
+            "params": {
+              "spec": "!htbp"
+            }
+          }
+        },
+        {
+          "id": "R3-generalization-table",
+          "issue": "generalization_float_cluster",
+          "location": "第9页，混合浮动体序号9，表5",
+          "severity": "moderate",
+          "reason": "第9页仍有两个表格位于页顶，尝试表5置于页底，使其靠近Generalization说明，并减少正文拥挤。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 9,
+            "params": {
+              "spec": "!b"
+            }
+          }
+        },
+        {
+          "id": "R3-autoregressive-table",
+          "issue": "ablation_float_context",
+          "location": "第9页，混合浮动体序号8，表4",
+          "severity": "moderate",
+          "reason": "自回归消融表4与说明段可能跨页，尝试稳定的!htbp让表尽可能靠近相应正文。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 8,
+            "params": {
+              "spec": "!htbp"
+            }
+          }
+        },
+        {
+          "id": "R3-negative-spacing-coverage",
+          "issue": "heading_text_overlap",
+          "location": "第9页，Generalization标题与Objective段落",
+          "severity": "high",
+          "reason": "正文含负vspace导致标题行挤压。用当前动作允许的最低阈值验证其覆盖能力；若动作返回无改动，明确记录为白名单动作能力缺口。",
+          "proposal": {
+            "action": "remove_excessive_vspace",
+            "params": {
+              "min_pt": 1.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "schema": "texopt.proposals/v1",
+      "round": 4,
+      "assessment": "第7—9页完成四项已验收的重排。第14页附录表仍在标题之前，页底及稳定here参数均未改变实际排布。最后验证H强制当前位置能否修正该问题，并记录验收与实际页面是否一致。第9页负间距导致的重叠已确认超出当前可执行动作覆盖范围，不伪造修复。",
+      "proposals": [
+        {
+          "id": "R4-appendix-H",
+          "issue": "appendix_float_before_heading",
+          "location": "第14页，混合浮动体序号11，表6",
+          "severity": "high",
+          "reason": "此前稳定浮动参数没有修正表格先于附录标题的问题，尝试H让表6保留在源码中的附录标题及说明之后。若评分因H强排惩罚拒绝，保留候选页证据并如实报告。",
+          "proposal": {
+            "action": "set_float_spec",
+            "target": 11,
+            "params": {
+              "spec": "H"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "history": {
+    "rounds": [
+      {
+        "round": 2,
+        "before": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.574,
+          "m2": 1.574,
+          "ok": true,
+          "content_preserved": true
+        },
+        "after": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.322,
+          "m2": 1.322,
+          "ok": true,
+          "content_preserved": true
+        },
+        "pages": 14,
+        "outcome": {
+          "applied": [
+            {
+              "id": "R2-model-table",
+              "note": "定点浮动体参数 -> [!b]（table#7[tbp]）",
+              "l": [],
+              "a": 1.56,
+              "i": 4.4,
+              "m1": 578.12,
+              "m2": 1.56
+            },
+            {
+              "id": "R2-example-figure",
+              "note": "定点浮动体参数 -> [!b]（figure#10[tbp]）",
+              "l": [],
+              "a": 1.559,
+              "i": 4.4,
+              "m1": 578.12,
+              "m2": 1.559
+            },
+            {
+              "id": "R2-training-figure",
+              "note": "定点浮动体参数 -> [!b]（figure#5[tbp]）",
+              "l": [],
+              "a": 1.322,
+              "i": 4.4,
+              "m1": 578.12,
+              "m2": 1.322
+            }
+          ],
+          "rejected": [
+            {
+              "id": "R2-appendix-table",
+              "reason": "model1 与 model2 均无改善"
+            }
+          ],
+          "blocked": [],
+          "skipped": []
+        }
+      },
+      {
+        "round": 3,
+        "before": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.322,
+          "m2": 1.322,
+          "ok": true,
+          "content_preserved": true
+        },
+        "after": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "pages": 14,
+        "outcome": {
+          "applied": [
+            {
+              "id": "R3-generalization-table",
+              "note": "定点浮动体参数 -> [!b]（table#9[tbp]）",
+              "l": [],
+              "a": 1.308,
+              "i": 4.4,
+              "m1": 578.12,
+              "m2": 1.308
+            }
+          ],
+          "rejected": [
+            {
+              "id": "R3-appendix-here",
+              "reason": "model1 与 model2 均无改善"
+            },
+            {
+              "id": "R3-autoregressive-table",
+              "reason": "model1 与 model2 均无改善"
+            }
+          ],
+          "blocked": [],
+          "skipped": [
+            {
+              "id": "R3-negative-spacing-coverage",
+              "reason": "无异常过大的手动垂直间距，跳过"
+            }
+          ]
+        }
+      },
+      {
+        "round": 4,
+        "before": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "after": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "pages": 14,
+        "outcome": {
+          "applied": [],
+          "rejected": [
+            {
+              "id": "R4-appendix-H",
+              "reason": "model1 变差 578.1 -> 593.6（两线分离：model2 的改善不再补偿 model1 的回退）"
+            }
+          ],
+          "blocked": [],
+          "skipped": []
+        }
+      }
+    ],
+    "failed_proposals": [
+      "[\"set_float_spec\", {\"spec\": \"!b\", \"target\": 11}]",
+      "[\"set_float_spec\", {\"spec\": \"!htbp\", \"target\": 11}]",
+      "[\"set_float_spec\", {\"spec\": \"!htbp\", \"target\": 8}]",
+      "[\"set_float_spec\", {\"spec\": \"H\", \"target\": 11}]"
+    ]
+  },
+  "page_comparison": [
+    {
+      "page": 1,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 2,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 3,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 4,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 5,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 6,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    },
+    {
+      "page": 7,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 8,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 9,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 10,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 11,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 12,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 13,
+      "text_and_positions_equal_to_old_round2": false,
+      "interpretation": "发生排布变化，不等于本页存在独立修复"
+    },
+    {
+      "page": 14,
+      "text_and_positions_equal_to_old_round2": true,
+      "interpretation": "相同"
+    }
+  ],
+  "directly_adjusted_pages": [
+    7,
+    8,
+    9
+  ],
+  "flow_affected_pages": [
+    10,
+    11,
+    12,
+    13
+  ],
+  "remaining_issues": [
+    {
+      "page": 9,
+      "kind": "heading_text_overlap",
+      "severity": "high",
+      "detail": "Generalization标题与Objective正文行框重叠，实际页面仍明显拥挤。",
+      "line_box_overlap_pt": 3.704,
+      "cause": "源码中的负vspace；现有remove_excessive_vspace只删除正向过大间距，即使min_pt=1也无改动。",
+      "status": "未修复；当前白名单动作覆盖不足，程序评分未检测该重叠。"
+    },
+    {
+      "page": 14,
+      "kind": "appendix_table_before_heading",
+      "severity": "moderate",
+      "detail": "表6仍浮到附录标题之前，末页留白仍存在。",
+      "cause": "!b及!htbp未改善评分而回滚；H确实修正顺序，但H惩罚使M1从578.120升为593.615，因此被拒绝。",
+      "rejected_candidate_m2": 1.304,
+      "status": "未修复；保留评分拒绝的实际候选证据。"
+    },
+    {
+      "page": null,
+      "kind": "underfull_hbox",
+      "count": 4,
+      "severity": "moderate",
+      "detail": "仍有4条underfull日志，不能将版面重排表述为消除全部断行问题。",
+      "status": "未修复"
+    }
+  ],
+  "integrity": {
+    "original_tree_unchanged": true,
+    "normalized_main_text_preserved": true,
+    "display_math_contents_preserved": true,
+    "non_main_original_files_unchanged": true,
+    "changed_files": [],
+    "pass": true
+  },
+  "stable_recompile": true,
+  "stability_checks": [
+    {
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 38.248,
+        "i_struct": 4.4,
+        "d_content": 0.0,
+        "i": 4.4,
+        "m1": 578.12,
+        "a": 1.308,
+        "m2": 1.308,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 4,
+        "vbox": 0,
+        "float_warnings": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      },
+      "pages": 14
+    },
+    {
+      "score": {
+        "l": [],
+        "gate": [],
+        "scored": true,
+        "p": 38.248,
+        "i_struct": 4.4,
+        "d_content": 0.0,
+        "i": 4.4,
+        "m1": 578.12,
+        "a": 1.308,
+        "m2": 1.308,
+        "ok": true,
+        "content_preserved": true
+      },
+      "counts": {
+        "overfull": 0,
+        "underfull": 4,
+        "vbox": 0,
+        "float_warnings": 0,
+        "tables_overwide": 0,
+        "warnings": 0
+      },
+      "pages": 14
+    }
+  ],
+  "pdf": "comparisons/pifold_full_review.pdf",
+  "pdf_sha256": "f89c66a169c7e50856cf9c016d775611585c66fd3ddb1007267faea9bfa9741e",
+  "old_pdfs_unchanged": {
+    "round1": true,
+    "round2": true
+  }
+}

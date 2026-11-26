@@ -6,7 +6,7 @@ r"""执行层：白名单动作集。
      图片宽度、documentclass 选项）；
   2. 正文文字 / 公式 / 引用 / 标签 / 图表内容 一律不碰（core 用 body diff
      机器校验）；
-  3. 全部动作幂等、可回滚（core 在应用前备份）。
+  3. 动作可回滚（core 在应用前备份）；分步动作每次重判上下文并单独验收。
 
 动作（参数化、双向，或一次性规范化）：
   set_margin             把等效单边页边距设为指定值（可收可放，带下限保护）
@@ -567,24 +567,123 @@ def _apply(src: str, edits: list) -> str:
 
 # ---------------------------------------------------------------- 1) 手动分页
 
-_PAGEBREAK_RE = re.compile(r"\\(?:newpage|clearpage|pagebreak)\*?"
-                           r"(?:\s*\[[^\]]*\])?")
+_PAGEBREAK_RE = re.compile(r"\\(newpage|clearpage|cleardoublepage|pagebreak)\b\*?"
+                           r"(?:\s*\[([^\]]*)\])?")
+_PAGEBREAK_FLOW_RE = re.compile(
+    r"\\begin\s*\{\s*(?:figure|table|wrapfigure|wraptable|sidewaysfigure|"
+    r"sidewaystable|longtable)\*?\s*\}"
+    r"|\\(?:includegraphics|input|include|subfile|import|subimport|inputfrom|"
+    r"includefrom)\b")
+_PAGEBREAK_BACKMATTER_RE = re.compile(
+    r"\\(?:appendix|backmatter|bibliography|printbibliography)\b"
+    r"|\\begin\s*\{\s*(?:thebibliography|appendices)\s*\}")
+_PAGEBREAK_INLINE_COMMANDS = {
+    "emph", "textbf", "textit", "textrm", "textsf", "texttt", "textnormal",
+    "underline", "cite", "citep", "citet", "ref", "eqref", "pageref", "url",
+    "href", "footnote",
+}
+_PAGEBREAK_KNOWN_PREFIX_COMMANDS = _PAGEBREAK_INLINE_COMMANDS | {
+    "section", "subsection", "subsubsection", "chapter", "part", "paragraph",
+    "subparagraph", "label", "maketitle", "par", "noindent", "begin", "end",
+    "newpage", "pagebreak", "clearpage", "cleardoublepage",
+}
+
+
+def _pagebreak_protection(m, mask: str, body_start: int, body_end: int,
+                          environments: list) -> str | None:
+    """只把已知普通正文中的单处分页交给验收；上下文不明时保留。
+
+    源码不能确定某个先前浮动体是否仍在等待队列，因此有浮动体或外部
+    input 出现在前时保守保留，而不假装已证明可以安全取消分页。
+    """
+    if m.group(1) in {"clearpage", "cleardoublepage"}:
+        return "保留图表冲刷/左右页语义"
+    if m.group(2) is not None and (m.group(1) != "pagebreak"
+                                 or m.group(2).strip() != "4"):
+        return "保留非强制分页建议或未知参数"
+    if any(a <= m.start() < b for a, b in environments):
+        return "保留环境内部的分页"
+    before = mask[body_start:m.start()]
+    after = mask[m.end():body_end]
+    # 宏定义或分组内的命令不是一个可独立删除的正文分页。
+    depth = 0
+    for token in re.finditer(r"\\[A-Za-z@]+|\\.|[{}]", before):
+        if token.group() == "{":
+            depth += 1
+        elif token.group() == "}":
+            depth -= 1
+        if depth < 0:
+            return "保留无法确定作用域的分页"
+    if depth:
+        return "保留分组/宏参数内部的分页"
+    # 未闭合环境或条件分支不尝试推断其运行时布局。
+    scope = []
+    for env in re.finditer(r"\\(begin|end)\s*\{([^{}]+)\}", before):
+        if env.group(1) == "begin":
+            scope.append(env.group(2))
+        elif scope and scope[-1] == env.group(2):
+            scope.pop()
+        else:
+            return "保留无法确定作用域的分页"
+    if scope or re.search(r"\\(?:if[A-Za-z@]*|else|fi|begingroup|endgroup|bgroup|egroup)\b", before):
+        return "保留环境或条件分支内部的分页"
+    if _PAGEBREAK_BACKMATTER_RE.search(before):
+        return "保留附录/参考文献区域的分页"
+    if _PAGEBREAK_FLOW_RE.search(before):
+        return "前方有图表或外部内容，保留分页边界"
+    if any(name not in _PAGEBREAK_KNOWN_PREFIX_COMMANDS
+           for name in re.findall(r"\\([A-Za-z@]+)", before)):
+        return "前方含未知宏，无法确认浮动队列，保留分页"
+    # 仅处理独占一行的命令，不改行内文字、verbatim 示例或组合命令。
+    if before.rsplit("\n", 1)[-1].strip() or after.split("\n", 1)[0].strip():
+        return "保留行内或组合命令中的分页"
+    left = re.split(r"\n[ \t]*\n", before.rstrip())[-1].strip()
+    right = re.split(r"\n[ \t]*\n", after.lstrip())[0].strip()
+    if not left or not right:
+        return "保留正文首尾边界"
+    # 标题、目录、bibliography、浮动体、输入文件及未知宏只要落在邻接
+    # 段落中都不自动改；无须靠有限的字符窗口猜测章节边界。
+    for paragraph in (left, right):
+        commands = re.findall(r"\\([A-Za-z@]+)", paragraph)
+        if any(name not in _PAGEBREAK_INLINE_COMMANDS for name in commands):
+            return "邻接段落包含结构或未知命令，保留分页"
+        if not re.search(r"[^\W\d_]", paragraph, re.UNICODE):
+            return "邻接内容不是可确认的普通正文"
+    return None
 
 
 def remove_manual_pagebreak(src: str) -> tuple[str | None, bool, str]:
-    """删除正文里的手动分页（\\newpage/\\clearpage/\\pagebreak）。
+    """一次只删除普通连续正文中的一处独立 newpage/pagebreak。
 
-    手动分页会把图/表与正文钉死在作者猜的位置，是页面失衡与大块留白的
-    首要来源（参见 chaos 靶稿的“最后一页只剩两行”）。交给 LaTeX 全局
-    最优断页；是否真的变好由整篇重编译后的全局评分决定（变差即回滚）。
+    clearpage/cleardoublepage、章节/附录/参考文献边界、环境与宏参数中的
+    命令一律保留；先前有图表或外部 input 时无法确定浮动队列，保留分页。
+    动作自身执行保护，规则闭环和 LLM 白名单调用均不能绕过。
+    其他符合条件的分页要等下一次调用重判上下文，逐处编译验收。
     """
-    hits, _mask = _sub_body(src, _PAGEBREAK_RE)
+    hits, mask = _sub_body(src, _PAGEBREAK_RE)
     if not hits:
         return src, False, "正文无手动分页，跳过"
-    new = _apply(src, [(m.start(), m.end(), "") for m in hits])
-    kinds = ", ".join(sorted({m.group(0).split("[")[0] for m in hits}))
-    return new, True, \
-        f"删除 {len(hits)} 处正文手动分页（{kinds}），交回 LaTeX 全局断页"
+    b0, b1 = _body_span(mask)
+    if b0 < 0:
+        return src, False, "无法确认正文作用域，保留分页"
+    names = set(re.findall(r"\\begin\s*\{([^{}]+)\}", mask)) - {"document"}
+    environments = _env_ranges(mask, names)
+    environments.extend((m.start(), m.end()) for m in re.finditer(
+        r"(?<!\\)\$\$.*?(?<!\\)\$\$|(?<!\\)\$.*?(?<!\\)\$", mask, re.S))
+    reasons = []
+    for m in hits:
+        if not (b0 <= m.start() < b1):
+            continue
+        reason = _pagebreak_protection(m, mask, b0, b1, environments)
+        if reason:
+            reasons.append(reason)
+            continue
+        line = src.count("\n", 0, m.start()) + 1
+        new = _apply(src, [(m.start(), m.end(), "")])
+        return new, True, (f"删除第 {line} 行 1 处连续正文分页（{m.group(0)}）；"
+                           "结构/图表分页保留，整篇重编译验收")
+    return src, False, (f"保留 {len(hits)} 处结构或上下文不明的分页（"
+                        + "；".join(dict.fromkeys(reasons)) + "）")
 
 
 # ---------------------------------------------------------------- 2) 过大垂直间距

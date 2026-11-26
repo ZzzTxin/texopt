@@ -65,8 +65,10 @@ SUGGESTED_ACTIONS = {
 HYGIENE_ADVICE = {
     "dollar_math": ("cosmetic",
                     "裸 $$..$$ 数学应使用 \\[\\] 或 equation 环境；闭环已自动修复，如仍存在说明成对异常，请人工检查"),
-    "manual_pagebreak": ("cosmetic",
-                         "删除该处手动分页（\\newpage/\\clearpage），让浮动体与断页交给 LaTeX 全局最优放置；若删除后某图表位置明显变差，再考虑用浮动体参数而非硬分页"),
+    "manual_pagebreak": ("moderate",
+                         "先确认分页用途：章节/附录另起页与 clearpage 图表冲刷应保留。"
+                         "白名单动作仅逐处尝试普通连续正文分页；上下文不明时不删除，"
+                         "不能仅凭留白面积或页数减少判断收益。"),
     "manual_vspace": ("cosmetic",
                       "删除或收敛该处手动垂直间距；若确需段落间距，应在 preamble 统一定义 \\parskip 而不是逐处 \\vspace"),
     "underline_abuse": ("cosmetic",

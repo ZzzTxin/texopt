@@ -1,0 +1,139 @@
+--- before/iclr2022_conference.tex
++++ full_review/iclr2022_conference.tex
+@@ -77,6 +77,28 @@
+ \renewcommand{\thefootnote}{}
+ 
+ \iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
++
++% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
++\emergencystretch=1.5em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\doublehyphendemerits=5000
++\finalhyphendemerits=5000
++% ===== texopt end =====
++
++% ===== texopt: 页面平衡 ====
++% 浮动体放置与页面平衡调优（只影响浮动体分配/底部对齐，不改内容）
++\raggedbottom
++\setcounter{topnumber}{3}
++\setcounter{bottomnumber}{2}
++\setcounter{totalnumber}{4}
++\renewcommand{\topfraction}{0.8}
++\renewcommand{\bottomfraction}{0.7}
++\renewcommand{\textfraction}{0.08}
++\renewcommand{\floatpagefraction}{0.7}
++% ===== texopt end ====
++
+ \begin{document}
+ \maketitle
+ 
+@@ -87,7 +109,7 @@
+ \end{abstract}
+ 
+ \vspace{-5mm}
+-\begin{figure}[h]
++\begin{figure}[!b]
+    \centering
+    \includegraphics[width=4.8in]{fig/acc_speed.pdf}
+    \caption{Performance comparison with other graph-based protein design methods. The recovery scores,  the inference time costs, and the perplexities are shown in the Y-axis direction, the X-axis direction, and the circle size, respectively. Note that the recovery and perplexity results in the CATH dataset are reported without using any other training data. The inference time is averaged over 100 long protein sequences of average length 1632 on an NVIDIA V100. }
+@@ -186,7 +208,7 @@
+ 
+ 
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=5.5in]{fig/framework.pdf}
+    \caption{The overall framework of PiFold. The featurizer module extracts comprehensive residue features from the fixed real atoms and learnable virtual atoms. We stack ten layers of PiGNNs, considering node-level, edge-level, and global-level residue interactions, to learn expressive residue representations. PiFold generates protein sequences in a one-shot manner, without autoregressive or iterative decoding schemas. }
+@@ -223,7 +245,7 @@
+ 
+ where $x_k, y_k, z_k$ are learnable parameters.
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=4.6in]{fig/features.pdf}
+    \caption{PiFold featurizer. We construct distance, angle, and direction features for single or paired residues, all invariant to rotation and translation. Learnable virtual atoms are used for additional distance features.}
+@@ -324,7 +346,7 @@
+ 
+ % We plan to further reproduce other important methods in the future and provide researchers with a comprehensive view.
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+    \centering
+    \caption{Results comparison on the CATH dataset. All baselines are reproduced under the same code framework, except ones marked with $\dagger$. We copy results of GVP-large and ESM-IF from their manuscripts \citep{hsu2022learning}. The \textbf{best} and \underline{suboptimal} results are labeled with bold and underline.}
+    \label{tab:results_cath}
+@@ -349,7 +371,7 @@
+ \paragraph{Recovery} We report the perplexity and recovery score in Table.\ref{tab:results_cath}, where two subsets of the full test set are also considered, following previous works \citep{ingraham2019generative, jing2020learning,tan2022generative, hsu2022learning}. The "Short" set contains proteins up to length 100, and the "Single chain" contains proteins recorded as single chains in the Protein Data Bank. We observe that the proposed PiFold could consistently improve the perplexity (lower is better) and recovery score (higher is better) across different test sets. On the "Short" and "All" datasets, PiFold achieves the best perplexities and recovery scores, where the recovery improvement are 3.49\% and 1.94\%, respectively. On the "Single-chain" dataset, PiFold is the best model when trained on CATH 4.2.
+ 
+ 
+-\begin{figure}[H]
++\begin{figure}[!b]
+    \centering
+    \includegraphics[width=5in]{fig/Curve.pdf}
+    \vspace{-3mm}
+@@ -371,7 +393,7 @@
+ 
+ 
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+    \small
+    \centering
+    \caption{Ablation studies of feature types. The lower the ranking number, the higher the recovery rate and the model performs better.}
+@@ -408,7 +430,7 @@
+ 
+ 
+ \vspace{-3mm}
+-\begin{table}[H]
++\begin{table}[!b]
+    \small
+    \centering
+    \caption{Ablation of PiGNN modules.}
+@@ -434,7 +456,7 @@
+ 
+ \paragraph{Model ablation} We conduct systematic experiments to determine whether modules of PiGNN are effective and reveal their relative importance. At to the node message passing module, we compare the node message passing layer (AttMLP) against GCN \citep{kipf2016semi}, GAT \citep{velivckovic2017graph} and QKV-based attention layer \citep{ingraham2019generative, tan2022generative, dauparas2022robust}. We also investigate whether the edge updating operation and global context attention could contribute to the model performance. As shown in Table.\ref{tab:ablation_model}, we find that the AttMLP-based messaging mechanism can improve the recovery by at least 0.9\%. In addition, the global context attention and edge updating could improve the recovery by 0.44\% and 1.22\%, respectively.
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+    \centering
+    \small
+    % \captionsetup{font={footnotesize}}
+@@ -461,7 +483,7 @@
+ \label{sec:generalization}
+ 
+ \vspace{-3mm}
+-\begin{table}[H]
++\begin{table}[!b]
+    \small
+    \caption{Results on TS50 and TS500. All baselines are reproduced under the same code framework, except ones marked with $\dagger$, whose results are copied from their manuscripts. The \textbf{best} and \underline{suboptimal} results are labeled with bold and underline.}
+    \label{tab:TS_results}
+@@ -497,7 +519,7 @@
+ % In Figure.~\ref{fig:examples}, we show the potential of PiFold in real applications, i.e., designing all-alpha, all-beta, and mixed proteins.  We use AlphaFold2 to predict the structures of designed sequences. 
+ 
+ \vspace{-3mm}
+-\begin{figure}[h]
++\begin{figure}[!b]
+    \centering
+    \includegraphics[width=4.5in]{fig/PiFold_examples.pdf}
+    \caption{ Visual examples. For native structures, we color Helix, Sheet, and Loop with cyan, magenta, and orange, respectively. We use AlphaFold2 to predict the structures of designed sequences, marked in green. We provide the recovery score and structural RMSD relative to the ground truth proteins. }
+@@ -529,7 +551,7 @@
+ \bibliographystyle{iclr2022_conference}
+ 
+ 
+-\clearpage
++
+ \appendix
+ \section{Appendix}
+ \paragraph{Distance ablation} We further analyze the role of each edge distance in Table.\ref{tab:ablation_dist}, where the $C_{\alpha}$-O" and "C-N" distances are the most significant ones. Last but not least, we find that the distances between learnable virtual atoms significantly improve the recovery, suggesting that the model can automatically discover critical residual points.
+@@ -539,7 +561,7 @@
+ 
+ 
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+    \centering
+    \caption{Ablation of edge distance features}
+    \label{tab:ablation_dist}

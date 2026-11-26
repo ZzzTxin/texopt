@@ -1,0 +1,38 @@
+--- old_round2/iclr2022_conference.tex
++++ full_review/iclr2022_conference.tex
+@@ -371,7 +371,7 @@
+ \paragraph{Recovery} We report the perplexity and recovery score in Table.\ref{tab:results_cath}, where two subsets of the full test set are also considered, following previous works \citep{ingraham2019generative, jing2020learning,tan2022generative, hsu2022learning}. The "Short" set contains proteins up to length 100, and the "Single chain" contains proteins recorded as single chains in the Protein Data Bank. We observe that the proposed PiFold could consistently improve the perplexity (lower is better) and recovery score (higher is better) across different test sets. On the "Short" and "All" datasets, PiFold achieves the best perplexities and recovery scores, where the recovery improvement are 3.49\% and 1.94\%, respectively. On the "Single-chain" dataset, PiFold is the best model when trained on CATH 4.2.
+ 
+ 
+-\begin{figure}[tbp]
++\begin{figure}[!b]
+    \centering
+    \includegraphics[width=5in]{fig/Curve.pdf}
+    \vspace{-3mm}
+@@ -430,7 +430,7 @@
+ 
+ 
+ \vspace{-3mm}
+-\begin{table}[tbp]
++\begin{table}[!b]
+    \small
+    \centering
+    \caption{Ablation of PiGNN modules.}
+@@ -483,7 +483,7 @@
+ \label{sec:generalization}
+ 
+ \vspace{-3mm}
+-\begin{table}[tbp]
++\begin{table}[!b]
+    \small
+    \caption{Results on TS50 and TS500. All baselines are reproduced under the same code framework, except ones marked with $\dagger$, whose results are copied from their manuscripts. The \textbf{best} and \underline{suboptimal} results are labeled with bold and underline.}
+    \label{tab:TS_results}
+@@ -519,7 +519,7 @@
+ % In Figure.~\ref{fig:examples}, we show the potential of PiFold in real applications, i.e., designing all-alpha, all-beta, and mixed proteins.  We use AlphaFold2 to predict the structures of designed sequences. 
+ 
+ \vspace{-3mm}
+-\begin{figure}[tbp]
++\begin{figure}[!b]
+    \centering
+    \includegraphics[width=4.5in]{fig/PiFold_examples.pdf}
+    \caption{ Visual examples. For native structures, we color Helix, Sheet, and Loop with cyan, magenta, and orange, respectively. We use AlphaFold2 to predict the structures of designed sequences, marked in green. We provide the recovery score and structural RMSD relative to the ground truth proteins. }

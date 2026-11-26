@@ -1,0 +1,199 @@
+--- before/openstl.tex
++++ after/openstl.tex
+@@ -89,6 +89,28 @@
+   % \texttt{email} \\
+ }
+ 
++
++% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
++\emergencystretch=1.5em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\doublehyphendemerits=5000
++\finalhyphendemerits=5000
++% ===== texopt end =====
++
++% ===== texopt: 页面平衡 ====
++% 浮动体放置与页面平衡调优（只影响浮动体分配/底部对齐，不改内容）
++\raggedbottom
++\setcounter{topnumber}{3}
++\setcounter{bottomnumber}{2}
++\setcounter{totalnumber}{4}
++\renewcommand{\topfraction}{0.8}
++\renewcommand{\bottomfraction}{0.7}
++\renewcommand{\textfraction}{0.08}
++\renewcommand{\floatpagefraction}{0.7}
++% ===== texopt end ====
++
+ \begin{document}
+ 
+ \maketitle
+@@ -622,7 +644,7 @@
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+-\newpage
++
+ 
+ \appendix
+ 
+@@ -841,23 +863,23 @@
+ \label{tab:mmnistcifar}
+ \end{table}
+ 
+-\clearpage
++
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=1.0\textwidth]{figs/visual_mfmnist.pdf}
+   \caption{The qualitative visualization on Moving Fashion MNIST. For the convenience of formatting, we arrange the frames vertically from bottom to top.}
+   \label{fig:visual_mfmnist}
+ \end{figure}
+-\clearpage
+-
+-\clearpage
++
++
++
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=1.0\textwidth]{figs/visual_mmnist_cifar.pdf}
+   \caption{The qualitative visualization on Moving MNIST-CIFAR. For the convenience of formatting, we arrange the frames vertically from bottom to top.}
+   \label{fig:visual_mmnist_cifar}
+ \end{figure}
+-\clearpage
++
+ 
+ \subsection{Real-world Video Prediction}
+ \label{app:realworld}
+@@ -941,7 +963,7 @@
+   \vspace{-2mm}
+ \end{table}
+ 
+-\clearpage
++
+ \begin{figure}[ht]
+   \vspace{-6mm}
+   \centering
+@@ -949,7 +971,7 @@
+   \caption{The qualitative visualization on KTH.}
+   \label{fig:visual_kth}
+ \end{figure}
+-\clearpage
++
+ 
+ 
+ \noindent{\textbf{Human3.6M}} The quantitative results are presented in Table~\ref{tab:human}, and the qualitative visualization is depicted in Figure~\ref{fig:visual_human}. In this task, human motion exhibits subtle changes between adjacent frames, resulting in a low-frequency signal of overall dynamics. Consequently, recurrent-free models, which excel at spatial learning, can efficiently and accurately predict future frames.
+@@ -1089,7 +1111,7 @@
+   \vspace{-2mm}
+ \end{table}
+ 
+-\clearpage
++
+ \begin{figure}[ht]
+   \vspace{8mm}
+   \centering
+@@ -1098,9 +1120,9 @@
+   \label{fig:visual_human}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
+-
+-\clearpage
++
++
++
+ \begin{figure}[ht]
+   \vspace{-4mm}
+   \centering
+@@ -1109,7 +1131,7 @@
+   \label{fig:visual_taxibj}
+   \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ \subsubsection{WeatherBench}
+ \label{app:weatherbench}
+@@ -1242,7 +1264,7 @@
+   \label{fig:visual_weather_t2m}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ \begin{figure}[ht]
+   % \vspace{-4mm}
+@@ -1252,7 +1274,7 @@
+   \label{fig:visual_weather_r}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ \noindent{\textbf{Single-variable Wind Component Forecasting}} The quantitative results are presented in Table~\ref{tab:single_wind}. The qualitative visualizations of latitude and longitude wind are shown in Figure~\ref{fig:visual_weather_u} and Figure~\ref{fig:visual_weather_v}. Most recurrent-free models outperform the recurrent-based models.
+ 
+@@ -1317,7 +1339,7 @@
+ 
+ \noindent{\textbf{Single-variable Cloud Cover Forecasting}} The quantitative results and visualization are presented in Table~\ref{tab:single_cloud} and Figure~\ref{fig:visual_weather_tcc}. All the recurrent-free models perform better than their counterparts.
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+ \small
+ \centering
+ % \vspace{-2mm}
+@@ -1375,7 +1397,7 @@
+ \end{table}
+ 
+ 
+-\clearpage
++
+ \begin{figure}[ht]
+   % \vspace{-4mm}
+   \centering
+@@ -1384,7 +1406,7 @@
+   \label{fig:visual_weather_u}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ 
+ \begin{figure}[ht]
+@@ -1395,7 +1417,7 @@
+   \label{fig:visual_weather_v}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ 
+ \begin{figure}[ht]
+@@ -1406,7 +1428,7 @@
+   \label{fig:visual_weather_tcc}
+   % \vspace{-4mm}
+ \end{figure}
+-\clearpage
++
+ 
+ \noindent{\textbf{Single-variable Temperature Forecasting with High Resolution}} We perform experiments on high-resolution ($128 \times 256$) temperature forecasting. The quantitative results are presented in Table~\ref{tab:single_temp_high}. SimVPv2 achieves remarkable performance, surpassing the recurrent-based models by large margins.
+ 
+@@ -1469,7 +1491,7 @@
+ 
+ \noindent{\textbf{Multiple-variable Forecasting}} This task focuses on multi-factor climate prediction. We include temperature, humidity, latitude wind, and longitude factors in the forecasting process. The comprehensive results can be found in Table~\ref{tab:multi_temp} to Table~\ref{tab:wind_lon}. We also show a comparison in Figure~\ref{fig:weatherbench_mutli}. MogaNet achieves significant leading performance across various metrics in predicting climatic factors.
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   % \vspace{-2mm}
+   \centering
+   \includegraphics[width=1.0\textwidth]{figs/weatherbench_multi.pdf}
+@@ -1479,7 +1501,7 @@
+   \vspace{-1mm}
+ \end{figure}
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+ \small
+ \centering
+ \renewcommand\arraystretch{1.2}

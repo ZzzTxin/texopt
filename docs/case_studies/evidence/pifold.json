@@ -1,0 +1,1631 @@
+{
+  "id": "pifold",
+  "label": "PiFold",
+  "title": "PiFold: Toward Effective and Efficient Protein Inverse Folding",
+  "source_url": "https://arxiv.org/abs/2209.12643v4",
+  "arxiv_version": "2209.12643v4",
+  "input_was_perturbed": false,
+  "provenance": {
+    "case": "pifold",
+    "source": "paperfit-bench-originals/paperfit-bench-originals/ICLR/arXiv-2209.12643v4/iclr2022_conference.tex",
+    "origin": "ICLR/arXiv-2209.12643v4",
+    "perturbations_injected": false,
+    "input_hashes": {
+      "fancyhdr.sty": "b2fe599152ac8018b4fb9fd15d23a2a4333edc43b6289200afa3199b13048f54",
+      "fig/Curve.pdf": "1fe89367431246f40f7f1e891bc4e02f26f8ac82c1b0314292ef3606438e6236",
+      "fig/Decoder.pdf": "fc68c1e59d4f18396f260eb463f678538cfc3f7679927cb5322a7bf1a57f09ac",
+      "fig/PiFold_examples.pdf": "925e938ff1479f13bed66438c6b93bfaabb095180336193f3aac3c2a8c015dbc",
+      "fig/acc_speed.pdf": "8bb3e4d9e60ffd7cda101c8aee8a4fb5b4a8de9ccf934892d82620f3c687bc21",
+      "fig/features.pdf": "07e44b7c7b959f69b8f0aa8609d2fba4978997f09a1f522c7d49504276673f9a",
+      "fig/framework.pdf": "e3cfe69f2e1441bd64a9c25700d7e56f1e48b3e17435e9232bb90f9e842c89af",
+      "iclr2022_conference.bbl": "556f03f41782059c237f747c051ba443fa887086a3c0d7960692b73ac26f88ed",
+      "iclr2022_conference.bib": "f3987d76640cfde197ec4de7c87caf6a1f28ccee72411db706abc4ee66785e59",
+      "iclr2022_conference.bst": "91a25a51863e7b31268db238119013fe6c4ba2a461834ff1320294e1fb3bb3f2",
+      "iclr2022_conference.sty": "48d9ec808c15515c6fdede8de3389413e3276d1a1007587f3035de73c787fb5d",
+      "iclr2022_conference.synctex": "19b368fef04fc21d377315fd1c4f6b50cfa0308c0cb26900326cc6ddcb131c28",
+      "iclr2022_conference.tex": "9e5dd0225929a473663e42d8afd8afbda19527f88a5ca92fcf9590f789b336e2",
+      "math_commands.tex": "90473c4d0542070db244cea73ef962d6cddc5b2a746757e6a40ddf5fdfb90ba9",
+      "natbib.sty": "88bc70c0e48461934cab5b2accef06b74a8b3ac45ad03ccd3f2a6b7e0d6d530d",
+      "source.eprint": "f6af39c91b911d63aa9d8c47312ea1453aeed79eacc17622ae479bc09b2ba9c2"
+    },
+    "requirements": {
+      "page_limit": null,
+      "font_pt": null,
+      "margin_mm": null,
+      "margin_is_floor": false,
+      "eq_fleqn_allowed": false,
+      "toc": false,
+      "toc_min_sections": 3,
+      "running_header": false,
+      "header_left": null,
+      "header_right": null,
+      "heading_color": null,
+      "strip_reading_aids": false,
+      "remove_warning_boxes": false,
+      "preserve_figures": true,
+      "content_hard": true,
+      "enable_quality_macros": true,
+      "float_spec": "tbp",
+      "microtype": null,
+      "overwide_fig_threshold_mm": 150.0,
+      "overwide_table_report": true,
+      "allow_geometry_tune": false,
+      "margin_min_mm": 20.0,
+      "margin_step_mm": 2.0,
+      "allow_fontsize_step": true,
+      "max_iterations": 24,
+      "verbose": true,
+      "gate_repair_rounds": 12,
+      "gate_repair_plateau": 3,
+      "aesthetic_shadow": false,
+      "shadow_profile": null,
+      "aesthetic_lambda": 0.0,
+      "tidy_manual_pagebreaks": true,
+      "tidy_manual_vspace": true,
+      "vspace_min_mm": 10.0,
+      "normalize_heading_size": true,
+      "normalize_local_font_size": true,
+      "reduce_list_spacing": true,
+      "list_spacing_max_pt": 8.0,
+      "break_long_words": true,
+      "break_long_urls": true,
+      "fix_overwide_tables": true,
+      "balance_pages": true,
+      "free_floating_H": true,
+      "visual_metrics": true,
+      "visual_dpi": 50,
+      "normalize_title": true,
+      "title_size_cap": "LARGE",
+      "normalize_parskip": true,
+      "parskip_max_pt": 8.0,
+      "normalize_header": true,
+      "header_max_chars": 40,
+      "remove_mid_multicols": true,
+      "reduce_oversized_figures": true,
+      "max_fig_height_frac": 0.4,
+      "subfig_max_sum": 0.95,
+      "narrow_table_min_frac": 0.6,
+      "tune_float_placement": true,
+      "shrink_oversized_figures": true,
+      "fig_shrink_factor": 0.85,
+      "done_max_a": null,
+      "min_stall_rounds": 2,
+      "conference": null,
+      "page_limit_scope": "total",
+      "official_constraints": null,
+      "soft_targets": null,
+      "unused_template_parts": null
+    },
+    "engine": {
+      "xelatex": "/mnt/c/texlive/2024/bin/windows/pdflatex.exe",
+      "pdfinfo": "/mnt/c/texlive/2024/bin/windows/pdfinfo.exe"
+    },
+    "created_at": "2026-11-24T09:18:37+0800",
+    "compiler_adapter": "pdfLaTeX selected for author sources; same engine before/after"
+  },
+  "before": {
+    "compile_ok": true,
+    "pages": 14,
+    "score": {
+      "l": [],
+      "gate": [],
+      "scored": true,
+      "p": 51.78,
+      "i_struct": 0.0,
+      "d_content": 0.0,
+      "i": 0.0,
+      "m1": 776.7,
+      "a": 1.407,
+      "m2": 1.407,
+      "ok": true,
+      "content_preserved": true
+    },
+    "counts": {
+      "overfull": 0,
+      "underfull": 4,
+      "vbox": 0,
+      "float_warnings": 1,
+      "tables_overwide": 0,
+      "warnings": 0
+    },
+    "hygiene": {
+      "manual_pagebreak": 1,
+      "manual_vspace": 46,
+      "underline_abuse": 14,
+      "size_switch": 4,
+      "hard_linebreak": 5
+    },
+    "visual_pages": [
+      {
+        "ink_ratio": 0.0613,
+        "top_blank": 0.035,
+        "bottom_blank": 0.076,
+        "content_height": 0.889,
+        "max_gap": 0.076,
+        "max_gap_at": 0.962,
+        "band": 0.005,
+        "band_at": 0.774,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.798,
+        "page": 1
+      },
+      {
+        "ink_ratio": 0.1551,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.437,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.166,
+        "page": 2
+      },
+      {
+        "ink_ratio": 0.1347,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.005,
+        "band_at": 0.821,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.655,
+        "page": 3
+      },
+      {
+        "ink_ratio": 0.0943,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.617,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.104,
+        "page": 4
+      },
+      {
+        "ink_ratio": 0.0812,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.646,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 0.849,
+        "page": 5
+      },
+      {
+        "ink_ratio": 0.0959,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.303,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.916,
+        "page": 6
+      },
+      {
+        "ink_ratio": 0.1007,
+        "top_blank": 0.035,
+        "bottom_blank": 0.049,
+        "content_height": 0.916,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.417,
+        "page": 7
+      },
+      {
+        "ink_ratio": 0.1088,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.212,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.786,
+        "page": 8
+      },
+      {
+        "ink_ratio": 0.0957,
+        "top_blank": 0.035,
+        "bottom_blank": 0.044,
+        "content_height": 0.922,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.005,
+        "band_at": 0.255,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 0.561,
+        "page": 9
+      },
+      {
+        "ink_ratio": 0.1001,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.987,
+        "page": 10
+      },
+      {
+        "ink_ratio": 0.1118,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.132,
+        "page": 11
+      },
+      {
+        "ink_ratio": 0.1015,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.815,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.05,
+        "page": 12
+      },
+      {
+        "ink_ratio": 0.0978,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.096,
+        "max_gap_at": 0.901,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.019,
+        "page": 13
+      },
+      {
+        "ink_ratio": 0.051,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.349,
+        "max_gap_at": 0.775,
+        "band": 0.005,
+        "band_at": 0.47,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.939,
+        "page": 14
+      }
+    ],
+    "visual_defects": [
+      {
+        "kind": "mid_gap",
+        "page": 14,
+        "severity": "moderate",
+        "metric": 0.349,
+        "detail": "第14页中部有 35% 页高的连续空洞（位置 0.78）"
+      }
+    ]
+  },
+  "after": {
+    "compile_ok": true,
+    "pages": 14,
+    "score": {
+      "l": [],
+      "gate": [],
+      "scored": true,
+      "p": 38.248,
+      "i_struct": 4.4,
+      "d_content": 0.0,
+      "i": 4.4,
+      "m1": 578.12,
+      "a": 1.308,
+      "m2": 1.308,
+      "ok": true,
+      "content_preserved": true
+    },
+    "counts": {
+      "overfull": 0,
+      "underfull": 4,
+      "vbox": 0,
+      "float_warnings": 0,
+      "tables_overwide": 0,
+      "warnings": 0
+    },
+    "hygiene": {
+      "manual_vspace": 46,
+      "underline_abuse": 14,
+      "size_switch": 4,
+      "hard_linebreak": 5
+    },
+    "visual_pages": [
+      {
+        "ink_ratio": 0.0613,
+        "top_blank": 0.035,
+        "bottom_blank": 0.073,
+        "content_height": 0.893,
+        "max_gap": 0.073,
+        "max_gap_at": 0.964,
+        "band": 0.005,
+        "band_at": 0.875,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 2.186,
+        "page": 1
+      },
+      {
+        "ink_ratio": 0.1545,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.437,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.177,
+        "page": 2
+      },
+      {
+        "ink_ratio": 0.1347,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.005,
+        "band_at": 0.821,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.655,
+        "page": 3
+      },
+      {
+        "ink_ratio": 0.0946,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.317,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.753,
+        "page": 4
+      },
+      {
+        "ink_ratio": 0.0809,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.412,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 0.785,
+        "page": 5
+      },
+      {
+        "ink_ratio": 0.096,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.303,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.919,
+        "page": 6
+      },
+      {
+        "ink_ratio": 0.0984,
+        "top_blank": 0.035,
+        "bottom_blank": 0.049,
+        "content_height": 0.916,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 1.51,
+        "page": 7
+      },
+      {
+        "ink_ratio": 0.1076,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.005,
+        "band_at": 0.108,
+        "left_blank": 0.174,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.802,
+        "page": 8
+      },
+      {
+        "ink_ratio": 0.0947,
+        "top_blank": 0.035,
+        "bottom_blank": 0.044,
+        "content_height": 0.922,
+        "max_gap": 0.053,
+        "max_gap_at": 0.077,
+        "band": 0.005,
+        "band_at": 0.277,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 0.968,
+        "page": 9
+      },
+      {
+        "ink_ratio": 0.1001,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.91,
+        "page": 10
+      },
+      {
+        "ink_ratio": 0.1104,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.121,
+        "page": 11
+      },
+      {
+        "ink_ratio": 0.098,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.005,
+        "band_at": 0.868,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.03,
+        "page": 12
+      },
+      {
+        "ink_ratio": 0.1073,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.055,
+        "max_gap_at": 0.078,
+        "band": 0.002,
+        "band_at": 0.05,
+        "left_blank": 0.176,
+        "right_blank": 0.174,
+        "top_bottom_ratio": 0.851,
+        "page": 13
+      },
+      {
+        "ink_ratio": 0.051,
+        "top_blank": 0.035,
+        "bottom_blank": 0.042,
+        "content_height": 0.924,
+        "max_gap": 0.347,
+        "max_gap_at": 0.775,
+        "band": 0.005,
+        "band_at": 0.472,
+        "left_blank": 0.176,
+        "right_blank": 0.176,
+        "top_bottom_ratio": 1.813,
+        "page": 14
+      }
+    ],
+    "visual_defects": [
+      {
+        "kind": "mid_gap",
+        "page": 14,
+        "severity": "moderate",
+        "metric": 0.347,
+        "detail": "第14页中部有 35% 页高的连续空洞（位置 0.78）"
+      }
+    ]
+  },
+  "status": "NEEDS_REVIEW",
+  "program_status": "DONE",
+  "accepted_actions": [
+    {
+      "iteration": 1,
+      "action": "注入断行质量宏（禁孤行寡行/连字符堆叠/紧急伸缩）",
+      "source": "rule",
+      "l": [],
+      "a": 1.407,
+      "i": 0.0,
+      "p": 49.78,
+      "m1": 746.7,
+      "m2": 1.407,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 776.7 -> 746.7（缺陷 51.8→49.8，代价 0→0）"
+    },
+    {
+      "iteration": 2,
+      "action": "11 处浮动体位置参数不稳定（table[h], figure[h], table[H], table[h], table[H], table[h], figure[H], table[h], figure[h], figure[h], figure[h]）规范为 [tbp]",
+      "source": "rule",
+      "l": [],
+      "a": 1.589,
+      "i": 4.4,
+      "p": 39.248,
+      "m1": 593.12,
+      "m2": 1.589,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 746.7 -> 593.1（缺陷 49.8→39.2，代价 0→4.4）"
+    },
+    {
+      "iteration": 3,
+      "action": "删除 1 处正文手动分页（\\clearpage），交回 LaTeX 全局断页",
+      "source": "rule",
+      "l": [],
+      "a": 1.59,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.59,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 改善 593.1 -> 578.1（缺陷 39.2→38.2，代价 4.4→4.4）"
+    },
+    {
+      "iteration": 5,
+      "action": "注入 \\raggedbottom（页面底部自然收底，减少留白/拉伸）",
+      "source": "rule",
+      "l": [],
+      "a": 1.588,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.588,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "model1 持平，model2（审美）改善 1.59 -> 1.588"
+    },
+    {
+      "iteration": 6,
+      "action": "[LLM] P1 set_float_spec {'spec': '!b', 'target': 1} | opening_page_float_placement/PDF page 1 / first figure",
+      "source": "llm",
+      "l": [],
+      "a": 1.574,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.574,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#1[tbp]）"
+    },
+    {
+      "iteration": 8,
+      "action": "[LLM] R2-model-table set_float_spec {'spec': '!b', 'target': 7} | ablation_float_cluster/PDF第8页，混合浮动体序号7，表3",
+      "source": "llm",
+      "l": [],
+      "a": 1.56,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.56,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（table#7[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 9,
+      "action": "[LLM] R2-example-figure set_float_spec {'spec': '!b', 'target': 10} | generalization_crowded_page/PDF第9页，混合浮动体序号10，图5",
+      "source": "llm",
+      "l": [],
+      "a": 1.559,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.559,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#10[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 10,
+      "action": "[LLM] R2-training-figure set_float_spec {'spec': '!b', 'target': 5} | table_figure_spacing/PDF第7页，混合浮动体序号5，图4",
+      "source": "llm",
+      "l": [],
+      "a": 1.322,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.322,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（figure#5[tbp]）",
+      "review_round": 2
+    },
+    {
+      "iteration": 12,
+      "action": "[LLM] R3-generalization-table set_float_spec {'spec': '!b', 'target': 9} | generalization_float_cluster/第9页，混合浮动体序号9，表5",
+      "source": "llm",
+      "l": [],
+      "a": 1.308,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.308,
+      "pages": 14,
+      "accepted": true,
+      "compile_ok": true,
+      "detail": "定点浮动体参数 -> [!b]（table#9[tbp]）",
+      "review_round": 3
+    }
+  ],
+  "rolled_back_actions": [
+    {
+      "iteration": 4,
+      "action": "删除正文 4 处行内字号切换（\\small）",
+      "source": "rule",
+      "l": [
+        "图形/表格内容被改动（原稿 11 处，现 11 处，指纹不一致）"
+      ],
+      "a": 1.588,
+      "i": 4.4,
+      "p": 36.248,
+      "m1": 548.12,
+      "m2": 1.588,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "底层逻辑（gate）违规增加"
+    },
+    {
+      "iteration": 7,
+      "action": "[LLM] R2-appendix-table set_float_spec {'spec': '!b', 'target': 11} | appendix_float_before_heading/PDF第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.574,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.574,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 2
+    },
+    {
+      "iteration": 11,
+      "action": "[LLM] R3-appendix-here set_float_spec {'spec': '!htbp', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.326,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.326,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 3
+    },
+    {
+      "iteration": 13,
+      "action": "[LLM] R3-autoregressive-table set_float_spec {'spec': '!htbp', 'target': 8} | ablation_float_context/第9页，混合浮动体序号8，表4",
+      "source": "llm",
+      "l": [],
+      "a": 1.308,
+      "i": 4.4,
+      "p": 38.248,
+      "m1": 578.12,
+      "m2": 1.308,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 与 model2 均无改善",
+      "review_round": 3
+    },
+    {
+      "iteration": 14,
+      "action": "[LLM] R4-appendix-H set_float_spec {'spec': 'H', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+      "source": "llm",
+      "l": [],
+      "a": 1.304,
+      "i": 4.4,
+      "p": 39.281,
+      "m1": 593.615,
+      "m2": 1.304,
+      "pages": 14,
+      "accepted": false,
+      "compile_ok": true,
+      "detail": "model1 变差 578.1 -> 593.6（两线分离：model2 的改善不再补偿 model1 的回退）",
+      "review_round": 4
+    }
+  ],
+  "integrity": {
+    "original_tree_unchanged": true,
+    "normalized_main_text_preserved": true,
+    "display_math_contents_preserved": true,
+    "non_main_original_files_unchanged": true,
+    "changed_files": [],
+    "pass": true
+  },
+  "style_comparison": {
+    "documentclass": {
+      "before": "article",
+      "after": "article"
+    },
+    "font_pt": {
+      "before": 10,
+      "after": 10
+    },
+    "class_options": {
+      "before": [],
+      "after": []
+    },
+    "geometry_margin_mm": {
+      "before": 25.4,
+      "after": 25.4
+    }
+  },
+  "stability": {
+    "stable": true,
+    "checks": [
+      {
+        "score": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "counts": {
+          "overfull": 0,
+          "underfull": 4,
+          "vbox": 0,
+          "float_warnings": 0,
+          "tables_overwide": 0,
+          "warnings": 0
+        },
+        "pages": 14
+      },
+      {
+        "score": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "counts": {
+          "overfull": 0,
+          "underfull": 4,
+          "vbox": 0,
+          "float_warnings": 0,
+          "tables_overwide": 0,
+          "warnings": 0
+        },
+        "pages": 14
+      }
+    ]
+  },
+  "pdf_sha256": {
+    "before": "cdc8c3cb4d624d0888fb64580b4063ab6f8988f8aea6cce9c1cad806166712db",
+    "after": "f89c66a169c7e50856cf9c016d775611585c66fd3ddb1007267faea9bfa9741e",
+    "rule_only": "e762ac7a683085b695602885a8772c6de977e97ee717bc2f67b5e1f9b5604b56"
+  },
+  "full_review": {
+    "date": "2026-11-25",
+    "scope": "完整审阅14页，在旧第二次排版之后执行3轮全文提案。",
+    "previous_scope_correction": "旧第二次排版仅修正首页，第2—14页文字及位置未改变，不能作为整篇问题均已修复的证据。",
+    "program_status": "DONE",
+    "visual_review_status": "NEEDS_REVIEW",
+    "status_note": "程序评分仍判DONE，但模型逐页复核确认存在标题重叠等残余问题，案例展示按需复核报告。",
+    "pages": 14,
+    "score_before_full_review": {
+      "l": [],
+      "gate": [],
+      "scored": true,
+      "p": 38.248,
+      "i_struct": 4.4,
+      "d_content": 0.0,
+      "i": 4.4,
+      "m1": 578.12,
+      "a": 1.574,
+      "m2": 1.574,
+      "ok": true,
+      "content_preserved": true
+    },
+    "score_after_full_review": {
+      "l": [],
+      "gate": [],
+      "scored": true,
+      "p": 38.248,
+      "i_struct": 4.4,
+      "d_content": 0.0,
+      "i": 4.4,
+      "m1": 578.12,
+      "a": 1.308,
+      "m2": 1.308,
+      "ok": true,
+      "content_preserved": true
+    },
+    "new_accepted": 4,
+    "new_rejected": 4,
+    "new_skipped": 1,
+    "steps": [
+      {
+        "iteration": 1,
+        "action": "[LLM] R2-appendix-table set_float_spec {'spec': '!b', 'target': 11} | appendix_float_before_heading/PDF第14页，混合浮动体序号11，表6",
+        "source": "llm",
+        "l": [],
+        "a": 1.574,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.574,
+        "pages": 14,
+        "accepted": false,
+        "compile_ok": true,
+        "detail": "model1 与 model2 均无改善",
+        "review_round": 2
+      },
+      {
+        "iteration": 2,
+        "action": "[LLM] R2-model-table set_float_spec {'spec': '!b', 'target': 7} | ablation_float_cluster/PDF第8页，混合浮动体序号7，表3",
+        "source": "llm",
+        "l": [],
+        "a": 1.56,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.56,
+        "pages": 14,
+        "accepted": true,
+        "compile_ok": true,
+        "detail": "定点浮动体参数 -> [!b]（table#7[tbp]）",
+        "review_round": 2
+      },
+      {
+        "iteration": 3,
+        "action": "[LLM] R2-example-figure set_float_spec {'spec': '!b', 'target': 10} | generalization_crowded_page/PDF第9页，混合浮动体序号10，图5",
+        "source": "llm",
+        "l": [],
+        "a": 1.559,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.559,
+        "pages": 14,
+        "accepted": true,
+        "compile_ok": true,
+        "detail": "定点浮动体参数 -> [!b]（figure#10[tbp]）",
+        "review_round": 2
+      },
+      {
+        "iteration": 4,
+        "action": "[LLM] R2-training-figure set_float_spec {'spec': '!b', 'target': 5} | table_figure_spacing/PDF第7页，混合浮动体序号5，图4",
+        "source": "llm",
+        "l": [],
+        "a": 1.322,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.322,
+        "pages": 14,
+        "accepted": true,
+        "compile_ok": true,
+        "detail": "定点浮动体参数 -> [!b]（figure#5[tbp]）",
+        "review_round": 2
+      },
+      {
+        "iteration": 1,
+        "action": "[LLM] R3-appendix-here set_float_spec {'spec': '!htbp', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+        "source": "llm",
+        "l": [],
+        "a": 1.326,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.326,
+        "pages": 14,
+        "accepted": false,
+        "compile_ok": true,
+        "detail": "model1 与 model2 均无改善",
+        "review_round": 3
+      },
+      {
+        "iteration": 2,
+        "action": "[LLM] R3-generalization-table set_float_spec {'spec': '!b', 'target': 9} | generalization_float_cluster/第9页，混合浮动体序号9，表5",
+        "source": "llm",
+        "l": [],
+        "a": 1.308,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.308,
+        "pages": 14,
+        "accepted": true,
+        "compile_ok": true,
+        "detail": "定点浮动体参数 -> [!b]（table#9[tbp]）",
+        "review_round": 3
+      },
+      {
+        "iteration": 3,
+        "action": "[LLM] R3-autoregressive-table set_float_spec {'spec': '!htbp', 'target': 8} | ablation_float_context/第9页，混合浮动体序号8，表4",
+        "source": "llm",
+        "l": [],
+        "a": 1.308,
+        "i": 4.4,
+        "p": 38.248,
+        "m1": 578.12,
+        "m2": 1.308,
+        "pages": 14,
+        "accepted": false,
+        "compile_ok": true,
+        "detail": "model1 与 model2 均无改善",
+        "review_round": 3
+      },
+      {
+        "iteration": 1,
+        "action": "[LLM] R4-appendix-H set_float_spec {'spec': 'H', 'target': 11} | appendix_float_before_heading/第14页，混合浮动体序号11，表6",
+        "source": "llm",
+        "l": [],
+        "a": 1.304,
+        "i": 4.4,
+        "p": 39.281,
+        "m1": 593.615,
+        "m2": 1.304,
+        "pages": 14,
+        "accepted": false,
+        "compile_ok": true,
+        "detail": "model1 变差 578.1 -> 593.6（两线分离：model2 的改善不再补偿 model1 的回退）",
+        "review_round": 4
+      }
+    ],
+    "proposals": [
+      {
+        "schema": "texopt.proposals/v1",
+        "round": 2,
+        "assessment": "完整审阅14页。第2—14页在旧第二次排版中未发生任何位置变化。优先处理第14页附录表格出现在附录标题之前、第8页两个消融表挤在页顶、第9页表图聚集和小节标题重叠。负vspace当前不能由白名单动作删除，先验证定点浮动参数和图宽能否改善实际布局。",
+        "proposals": [
+          {
+            "id": "R2-appendix-table",
+            "issue": "appendix_float_before_heading",
+            "location": "PDF第14页，混合浮动体序号11，表6",
+            "severity": "high",
+            "reason": "附录表6位于附录标题之前。改为页底放置，使读者先看到附录标题和说明，再看到对应表格。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 11,
+              "params": {
+                "spec": "!b"
+              }
+            }
+          },
+          {
+            "id": "R2-model-table",
+            "issue": "ablation_float_cluster",
+            "location": "PDF第8页，混合浮动体序号7，表3",
+            "severity": "moderate",
+            "reason": "表2和表3连续挤在页顶；尝试将表3放在正文页底，使模型消融的说明与表格关系更清楚。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 7,
+              "params": {
+                "spec": "!b"
+              }
+            }
+          },
+          {
+            "id": "R2-example-figure",
+            "issue": "generalization_crowded_page",
+            "location": "PDF第9页，混合浮动体序号10，图5",
+            "severity": "moderate",
+            "reason": "第9页表4、表5和图5聚集，后面的Generalization标题与正文过挤。尝试图5置于页底，释放正文区。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 10,
+              "params": {
+                "spec": "!b"
+              }
+            }
+          },
+          {
+            "id": "R2-training-figure",
+            "issue": "table_figure_spacing",
+            "location": "PDF第7页，混合浮动体序号5，图4",
+            "severity": "moderate",
+            "reason": "表1与训练曲线图几乎相接，尝试将曲线图放到页底，避免两者形成一整块。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 5,
+              "params": {
+                "spec": "!b"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "schema": "texopt.proposals/v1",
+        "round": 3,
+        "assessment": "上一轮对第7—9页接受了3条定点提案，M2由1.574降为1.322，且M1持平。但第9页Generalization标题重叠及第14页表6先于附录标题的问题仍存在。继续优先尝试附录表的当前位置策略及第9页相关表格分散，不能将重排影响到参考文献视为参考文献本身被修复。",
+        "proposals": [
+          {
+            "id": "R3-appendix-here",
+            "issue": "appendix_float_before_heading",
+            "location": "第14页，混合浮动体序号11，表6",
+            "severity": "high",
+            "reason": "页底参数未使全局分改善，改用含here的稳定参数!htbp，尝试让表6留在附录标题和Distance ablation说明之后。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 11,
+              "params": {
+                "spec": "!htbp"
+              }
+            }
+          },
+          {
+            "id": "R3-generalization-table",
+            "issue": "generalization_float_cluster",
+            "location": "第9页，混合浮动体序号9，表5",
+            "severity": "moderate",
+            "reason": "第9页仍有两个表格位于页顶，尝试表5置于页底，使其靠近Generalization说明，并减少正文拥挤。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 9,
+              "params": {
+                "spec": "!b"
+              }
+            }
+          },
+          {
+            "id": "R3-autoregressive-table",
+            "issue": "ablation_float_context",
+            "location": "第9页，混合浮动体序号8，表4",
+            "severity": "moderate",
+            "reason": "自回归消融表4与说明段可能跨页，尝试稳定的!htbp让表尽可能靠近相应正文。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 8,
+              "params": {
+                "spec": "!htbp"
+              }
+            }
+          },
+          {
+            "id": "R3-negative-spacing-coverage",
+            "issue": "heading_text_overlap",
+            "location": "第9页，Generalization标题与Objective段落",
+            "severity": "high",
+            "reason": "正文含负vspace导致标题行挤压。用当前动作允许的最低阈值验证其覆盖能力；若动作返回无改动，明确记录为白名单动作能力缺口。",
+            "proposal": {
+              "action": "remove_excessive_vspace",
+              "params": {
+                "min_pt": 1.0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "schema": "texopt.proposals/v1",
+        "round": 4,
+        "assessment": "第7—9页完成四项已验收的重排。第14页附录表仍在标题之前，页底及稳定here参数均未改变实际排布。最后验证H强制当前位置能否修正该问题，并记录验收与实际页面是否一致。第9页负间距导致的重叠已确认超出当前可执行动作覆盖范围，不伪造修复。",
+        "proposals": [
+          {
+            "id": "R4-appendix-H",
+            "issue": "appendix_float_before_heading",
+            "location": "第14页，混合浮动体序号11，表6",
+            "severity": "high",
+            "reason": "此前稳定浮动参数没有修正表格先于附录标题的问题，尝试H让表6保留在源码中的附录标题及说明之后。若评分因H强排惩罚拒绝，保留候选页证据并如实报告。",
+            "proposal": {
+              "action": "set_float_spec",
+              "target": 11,
+              "params": {
+                "spec": "H"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "history": {
+      "rounds": [
+        {
+          "round": 2,
+          "before": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.574,
+            "m2": 1.574,
+            "ok": true,
+            "content_preserved": true
+          },
+          "after": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.322,
+            "m2": 1.322,
+            "ok": true,
+            "content_preserved": true
+          },
+          "pages": 14,
+          "outcome": {
+            "applied": [
+              {
+                "id": "R2-model-table",
+                "note": "定点浮动体参数 -> [!b]（table#7[tbp]）",
+                "l": [],
+                "a": 1.56,
+                "i": 4.4,
+                "m1": 578.12,
+                "m2": 1.56
+              },
+              {
+                "id": "R2-example-figure",
+                "note": "定点浮动体参数 -> [!b]（figure#10[tbp]）",
+                "l": [],
+                "a": 1.559,
+                "i": 4.4,
+                "m1": 578.12,
+                "m2": 1.559
+              },
+              {
+                "id": "R2-training-figure",
+                "note": "定点浮动体参数 -> [!b]（figure#5[tbp]）",
+                "l": [],
+                "a": 1.322,
+                "i": 4.4,
+                "m1": 578.12,
+                "m2": 1.322
+              }
+            ],
+            "rejected": [
+              {
+                "id": "R2-appendix-table",
+                "reason": "model1 与 model2 均无改善"
+              }
+            ],
+            "blocked": [],
+            "skipped": []
+          }
+        },
+        {
+          "round": 3,
+          "before": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.322,
+            "m2": 1.322,
+            "ok": true,
+            "content_preserved": true
+          },
+          "after": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.308,
+            "m2": 1.308,
+            "ok": true,
+            "content_preserved": true
+          },
+          "pages": 14,
+          "outcome": {
+            "applied": [
+              {
+                "id": "R3-generalization-table",
+                "note": "定点浮动体参数 -> [!b]（table#9[tbp]）",
+                "l": [],
+                "a": 1.308,
+                "i": 4.4,
+                "m1": 578.12,
+                "m2": 1.308
+              }
+            ],
+            "rejected": [
+              {
+                "id": "R3-appendix-here",
+                "reason": "model1 与 model2 均无改善"
+              },
+              {
+                "id": "R3-autoregressive-table",
+                "reason": "model1 与 model2 均无改善"
+              }
+            ],
+            "blocked": [],
+            "skipped": [
+              {
+                "id": "R3-negative-spacing-coverage",
+                "reason": "无异常过大的手动垂直间距，跳过"
+              }
+            ]
+          }
+        },
+        {
+          "round": 4,
+          "before": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.308,
+            "m2": 1.308,
+            "ok": true,
+            "content_preserved": true
+          },
+          "after": {
+            "l": [],
+            "gate": [],
+            "scored": true,
+            "p": 38.248,
+            "i_struct": 4.4,
+            "d_content": 0.0,
+            "i": 4.4,
+            "m1": 578.12,
+            "a": 1.308,
+            "m2": 1.308,
+            "ok": true,
+            "content_preserved": true
+          },
+          "pages": 14,
+          "outcome": {
+            "applied": [],
+            "rejected": [
+              {
+                "id": "R4-appendix-H",
+                "reason": "model1 变差 578.1 -> 593.6（两线分离：model2 的改善不再补偿 model1 的回退）"
+              }
+            ],
+            "blocked": [],
+            "skipped": []
+          }
+        }
+      ],
+      "failed_proposals": [
+        "[\"set_float_spec\", {\"spec\": \"!b\", \"target\": 11}]",
+        "[\"set_float_spec\", {\"spec\": \"!htbp\", \"target\": 11}]",
+        "[\"set_float_spec\", {\"spec\": \"!htbp\", \"target\": 8}]",
+        "[\"set_float_spec\", {\"spec\": \"H\", \"target\": 11}]"
+      ]
+    },
+    "page_comparison": [
+      {
+        "page": 1,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 2,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 3,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 4,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 5,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 6,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      },
+      {
+        "page": 7,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 8,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 9,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 10,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 11,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 12,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 13,
+        "text_and_positions_equal_to_old_round2": false,
+        "interpretation": "发生排布变化，不等于本页存在独立修复"
+      },
+      {
+        "page": 14,
+        "text_and_positions_equal_to_old_round2": true,
+        "interpretation": "相同"
+      }
+    ],
+    "directly_adjusted_pages": [
+      7,
+      8,
+      9
+    ],
+    "flow_affected_pages": [
+      10,
+      11,
+      12,
+      13
+    ],
+    "remaining_issues": [
+      {
+        "page": 9,
+        "kind": "heading_text_overlap",
+        "severity": "high",
+        "detail": "Generalization标题与Objective正文行框重叠，实际页面仍明显拥挤。",
+        "line_box_overlap_pt": 3.704,
+        "cause": "源码中的负vspace；现有remove_excessive_vspace只删除正向过大间距，即使min_pt=1也无改动。",
+        "status": "未修复；当前白名单动作覆盖不足，程序评分未检测该重叠。"
+      },
+      {
+        "page": 14,
+        "kind": "appendix_table_before_heading",
+        "severity": "moderate",
+        "detail": "表6仍浮到附录标题之前，末页留白仍存在。",
+        "cause": "!b及!htbp未改善评分而回滚；H确实修正顺序，但H惩罚使M1从578.120升为593.615，因此被拒绝。",
+        "rejected_candidate_m2": 1.304,
+        "status": "未修复；保留评分拒绝的实际候选证据。"
+      },
+      {
+        "page": null,
+        "kind": "underfull_hbox",
+        "count": 4,
+        "severity": "moderate",
+        "detail": "仍有4条underfull日志，不能将版面重排表述为消除全部断行问题。",
+        "status": "未修复"
+      }
+    ],
+    "integrity": {
+      "original_tree_unchanged": true,
+      "normalized_main_text_preserved": true,
+      "display_math_contents_preserved": true,
+      "non_main_original_files_unchanged": true,
+      "changed_files": [],
+      "pass": true
+    },
+    "stable_recompile": true,
+    "stability_checks": [
+      {
+        "score": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "counts": {
+          "overfull": 0,
+          "underfull": 4,
+          "vbox": 0,
+          "float_warnings": 0,
+          "tables_overwide": 0,
+          "warnings": 0
+        },
+        "pages": 14
+      },
+      {
+        "score": {
+          "l": [],
+          "gate": [],
+          "scored": true,
+          "p": 38.248,
+          "i_struct": 4.4,
+          "d_content": 0.0,
+          "i": 4.4,
+          "m1": 578.12,
+          "a": 1.308,
+          "m2": 1.308,
+          "ok": true,
+          "content_preserved": true
+        },
+        "counts": {
+          "overfull": 0,
+          "underfull": 4,
+          "vbox": 0,
+          "float_warnings": 0,
+          "tables_overwide": 0,
+          "warnings": 0
+        },
+        "pages": 14
+      }
+    ],
+    "pdf": "comparisons/pifold_full_review.pdf",
+    "pdf_sha256": "f89c66a169c7e50856cf9c016d775611585c66fd3ddb1007267faea9bfa9741e",
+    "old_pdfs_unchanged": {
+      "round1": true,
+      "round2": true
+    }
+  },
+  "status_basis": "案例状态采用模型全文复核结论；程序原始状态为DONE，尚未检测到第9页标题重叠。",
+  "visual_proposals": {
+    "schema": "texopt.proposals/v1",
+    "round": 1,
+    "assessment": "The rule-only output moves the first figure above the paper title. The title and abstract should precede that figure.",
+    "proposals": [
+      {
+        "id": "P1",
+        "issue": "opening_page_float_placement",
+        "location": "PDF page 1 / first figure",
+        "severity": "high",
+        "reason": "Actual page inspection shows the first figure above the title after generic float normalization. Restrict this figure to the bottom of a text page while preserving its original pixels and caption.",
+        "proposal": {
+          "action": "set_float_spec",
+          "target": 1,
+          "params": {
+            "spec": "!b"
+          }
+        }
+      }
+    ]
+  },
+  "visual_proposal_result": {
+    "applied": [
+      {
+        "id": "P1",
+        "note": "定点浮动体参数 -> [!b]（figure#1[tbp]）",
+        "l": [],
+        "a": 1.574,
+        "i": 4.4,
+        "m1": 578.12,
+        "m2": 1.574
+      }
+    ],
+    "rejected": [],
+    "blocked": [],
+    "skipped": []
+  },
+  "rule_only_score": {
+    "l": [],
+    "gate": [],
+    "scored": true,
+    "p": 38.248,
+    "i_struct": 4.4,
+    "d_content": 0.0,
+    "i": 4.4,
+    "m1": 578.12,
+    "a": 1.588,
+    "m2": 1.588,
+    "ok": true,
+    "content_preserved": true
+  }
+}

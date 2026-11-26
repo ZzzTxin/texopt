@@ -212,7 +212,7 @@ baseline 感知（源码 L1 / 日志 L2 / PDF L3）
 ## 6 动作体系（28 个白名单动作）
 
 `texopt/actions.py` 实现、`texopt/whitelist.py` 注册（动作名 + 参数校验 + level）。
-全部**幂等、可回滚**，且没有任何一条能绕过全局评分。
+动作均可回滚，每一步都经过全局评分；分步动作会在下一次调用时重新判断上下文。
 
 | 类别 | 动作 |
 |---|---|
@@ -224,6 +224,12 @@ baseline 感知（源码 L1 / 日志 L2 / PDF L3）
 | 卫生 / 结构 | `remove_manual_pagebreak`、`normalize_local_font_size`、`normalize_heading_size`、`normalize_title`、`normalize_header`、`drop_fleqn`、`insert_toc`、`add_header`、`color_headings`、`strip_reading_aids`、`remove_warning_boxes`、`remove_mid_multicols` |
 
 查看可用动作：`python3 optimize.py --list-actions`。
+
+`remove_manual_pagebreak` 在修改层保护有用途的分页：保留
+`\clearpage` / `\cleardoublepage`、章节/附录/参考文献边界；前方出现图表或
+外部 `\input` 时，因无法确定待排浮动体队列，也保留分页。只对可确认的普通连续正文，
+每次尝试删除一处独立 `\newpage` / 强制 `\pagebreak`，再交给整篇编译验收。
+规则与模型白名单调用共享此保护；上下文不明不自动删除，不再批量取消结构留白。
 
 ---
 
@@ -461,5 +467,5 @@ python3 tools/detector_check.py --only all        # 指标精度 / 日志覆盖�
 | `docs/scoring/README.md` | 打分模型完整口径（gate/M1/M2、权重来源、字段、局限） |
 | `docs/aesthetic/README.md` | 审美量化（A_soft / A_profile、标定、与人的一致性） |
 | `docs/stage0…stage17_*.md` | 每个阶段的结论、方法、负面结果 |
-| `docs/scoring_report_20261102.pdf` | 打分评价体系阶段汇报（HTML 单文件版同目录） |
+| `docs/scoring_report_20261102.pdf` | 打分评价体系阶段汇报（普通 HTML 与公式图同目录，内嵌副本按需生成） |
 | `skills/latex-opt/SKILL.md` | 模型在环的调用方式（OpenClaw 集成） |

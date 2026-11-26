@@ -239,7 +239,6 @@ def unit_tests():
 
     # 7) 新增动作：生效 + 幂等 + 内容归一后不变（L 级）
     cases = [
-        ("remove_manual_pagebreak", lambda s: actions.remove_manual_pagebreak(s)),
         ("remove_excessive_vspace", lambda s: actions.remove_excessive_vspace(s)),
         ("normalize_local_font_size", lambda s: actions.normalize_local_font_size(s)),
         ("normalize_heading_size", lambda s: actions.normalize_heading_size(s)),
@@ -284,6 +283,9 @@ def unit_tests():
     check("action/hyphenation-keeps-word",
           "pseudopseudohypoparathyroidismcounterrevolutionarieselectroencephalographicallyincomprehensibilities"
           in actions.add_hyphenation_points(src)[0].replace("\\-", ""))
+    check("action/pagebreak-keeps-structural-fixture",
+          actions.remove_manual_pagebreak(src)[0] == src
+          and not actions.remove_manual_pagebreak(src)[1])
 
     # 8) 表格：超宽 tabular -> tabularx（自适应，不压缩）
     tabsrc = ("\\documentclass{article}\\begin{document}\n"
@@ -2299,6 +2301,97 @@ def stage16_tests():
           str(sorted(SS.VARIANTS)))
 
 
+def pagebreak_safety_tests():
+    """修改层保留结构分页；规则和LLM共享保护，不能靠评分放行破坏结构。"""
+    print("\n== 修改层：结构分页保护 ==")
+
+    def wrap(body):
+        return "\\documentclass{article}\n\\begin{document}\n" + body + "\n\\end{document}\n"
+
+    def kept(name, body):
+        src = wrap(body)
+        result = whitelist.apply("remove_manual_pagebreak", src, {})
+        check("pagebreak/protect-" + name, result["ok"] and not result["applied"]
+              and result["new_src"] is None, result.get("note"))
+
+    kept("clearpage", "Alpha.\n\n\\clearpage\n\nBeta.")
+    kept("cleardoublepage", "Alpha.\n\n\\cleardoublepage\n\nBeta.")
+    kept("appendix-boundary", "Alpha.\n\n\\newpage % leave appendix separate\n\n"
+         "\\appendix\n\\section{Details}\nBeta.")
+    kept("later-appendix-prose", "\\appendix\n\\section{Details}\n\nAlpha.\n\n"
+         "\\newpage\n\nBeta.")
+    kept("section-boundary", "Alpha.\n\n\\newpage\n\n\\vspace{1pt}\n"
+         "\\label{next}\n\\section{Method}\nBeta.")
+    kept("previous-heading", "\\section{Method}\n\n\\newpage\n\nBeta.")
+    kept("references-boundary", "Alpha.\n\n\\newpage\n\n\\bibliography{refs}")
+    kept("title-boundary", "\\maketitle\n\n\\newpage\n\nAlpha.")
+    kept("toc-boundary", "\\tableofcontents\n\n\\newpage\n\nAlpha.")
+    kept("pending-float", "\\begin{figure}[p]Image.\\end{figure}\n\n"
+         "Alpha.\n\n\\newpage\n\nBeta.")
+    kept("following-float", "Alpha.\n\n\\newpage\n\n"
+         "\\begin{figure}[p]Image.\\end{figure}")
+    kept("external-input", "\\input{earlier}\n\nAlpha.\n\n\\newpage\n\nBeta.")
+    kept("list-environment", "\\begin{itemize}\n\\item Alpha.\n\n"
+         "\\newpage\n\nBeta.\n\\end{itemize}")
+    kept("macro-body", "\\newcommand{\\example}{\n\nAlpha.\n\n"
+         "\\newpage\n\nBeta.\n\n}")
+    kept("unknown-inline-macro", "Alpha \\custom{thing}.\n\n\\newpage\n\nBeta.")
+    kept("earlier-unknown-macro", "\\customfigure\n\nAlpha.\n\n\\newpage\n\nBeta.")
+    kept("conditional", "\\iftrue\n\nAlpha.\n\n\\newpage\n\nBeta.\n\\fi")
+    kept("inline-math", "$Alpha.\n\n\\newpage\n\nBeta.$")
+    kept("display-math", "$$Alpha.\n\n\\newpage\n\nBeta.$$")
+    kept("literal-environment", "\\begin{verbatim}\nAlpha.\n\n"
+         "\\newpage\n\nBeta.\n\\end{verbatim}")
+    kept("pagebreak-hint", "Alpha.\n\n\\pagebreak[2]\n\nBeta.")
+    kept("multiline-pagebreak-hint", "Alpha.\n\n\\pagebreak\n[2]\n\nBeta.")
+    kept("inline-command", "Alpha. \\newpage Beta.")
+    kept("comment-only", "Alpha.\n\n% \\newpage\n\nBeta.")
+    kept("command-name-prefix", "Alpha.\n\n\\newpagestyle{style}\n\nBeta.")
+
+    for command in (r"\newpage", r"\pagebreak[4]", "\\pagebreak\n[4]"):
+        src = wrap("Alpha \\emph{body} text.\n\n" + command + "\n\nBeta body text.")
+        result = whitelist.apply("remove_manual_pagebreak", src, {})
+        new = result["new_src"]
+        check("pagebreak/remove-prose-" + command.replace("\n", " "),
+              result["applied"] and new == src.replace(command, "", 1)
+              and S.body_unchanged(src, new, _req())
+              and not actions.remove_manual_pagebreak(new)[1], result.get("note"))
+
+    src = wrap("Alpha.\n\n\\newpage\n\nBeta.\n\n\\newpage\n\nGamma.")
+    first, ok, note = actions.remove_manual_pagebreak(src)
+    second, ok2, _ = actions.remove_manual_pagebreak(first)
+    check("pagebreak/one-edit-per-call", ok and ok2 and first.count(r"\newpage") == 1
+          and r"\newpage" not in second and S.body_unchanged(src, second, _req()), note)
+    src = wrap("\\section{Text}\n\nAlpha.\n\n\\newpage\n\nBeta.")
+    check("pagebreak/prose-after-section-still-eligible",
+          actions.remove_manual_pagebreak(src)[1])
+
+    # 即使默认候选开关开启、残余清单包含分页，不能经规则调用绕过保护。
+    src = wrap("Alpha.\n\n\\newpage\n\n\\appendix\n\\section{Details}\nBeta.")
+    from texopt.core import _static_perception
+    with tempfile.TemporaryDirectory(prefix="texopt_pagebreak_") as td:
+        path = os.path.join(td, "paper.tex")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(src)
+        per = _static_perception(path)
+        per.issues = P.parse_log("")
+        per.issues["hygiene"] = P.scan_hygiene(src)
+        opt = Optimizer(path, _req(), td)
+        opt.orig_per = per
+        candidates = [(key, fn) for key, fn, _ in opt._candidates(per, [])
+                      if key == "pagebreak_rm"]
+        check("pagebreak/rule-path-protected", len(candidates) == 1
+              and candidates[0][1](src)[1] is False)
+
+    # 真实稿件只读回归：OpenSTL 的17处结构分页全部保留。
+    paper = os.path.join(ROOT, "真实稿件排版案例集", "01_OpenSTL", "源码工程", "openstl.tex")
+    if os.path.isfile(paper):
+        with open(paper, encoding="utf-8") as f:
+            src = f.read()
+        new, applied, note = actions.remove_manual_pagebreak(src)
+        check("pagebreak/openstl-original-unchanged", not applied and new == src, note)
+
+
 def stage17_tests():
     """阶段 17（2026-11-11）：放弃人工标定 → SOFT_SPEC v2 权重改由客观响应导出。"""
     print("\n== 阶段 17：无人工标定的客观权重口径 ==")
@@ -2344,13 +2437,14 @@ def main():
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
     if args.list:
-        print("unit_tests, stage0..5, closure:{demo,issues,aidtest,propose_target,"
+        print("unit_tests, pagebreak_safety_tests, stage0..5, closure:{demo,issues,aidtest,propose_target,"
               "test0911/chaotic_layout_test}, mitl, figure_violation"
               + (", closure:{chaos,nightmare}" if args.full else ""))
         return 0
 
     os.makedirs(OUT, exist_ok=True)
     unit_tests()
+    pagebreak_safety_tests()
     acceptance_tests()
     stage0_tests()
     stage0_fixes()

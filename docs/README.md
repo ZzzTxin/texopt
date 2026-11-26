@@ -49,11 +49,15 @@
 
 | 路径 | 说明 |
 |---|---|
-| `model_v3_design_20261014.html` / `_single.html` | v3 结构设计说明（带公式图，可离线打开） |
-| `scoring_report_20261102.html` / `_single.html` / `.pdf` | **阶段汇报：打分评价体系现状（2026-11-02）**——三层结构、标定链条、指标体检、实测终态、局限 |
+| `model_v3_design_20261014.html` | v3 结构设计说明（带公式图，与 formula_doc_assets 同目录可离线打开） |
+| `scoring_report_20261102.html` / `.pdf` | **阶段汇报：打分评价体系现状（2026-11-02）**——三层结构、标定链条、指标体检、实测终态、局限 |
+| [`case_studies/README.md`](case_studies/README.md) | 四个真实作者稿件的附录案例：前后 PDF 页面、实际修改与回滚、评分和完整性证据；补充 PiFold 全文复核与残余问题，附 6 页中文预览 |
+| [`pagebreak_action_safety_20261125.md`](pagebreak_action_safety_20261125.md) | 修改层分页保护：保留结构留白和图表冲刷，每次仅尝试一处普通正文分页，附 OpenSTL 回归证据 |
+| [`../合成排版演示案例集/README.md`](../合成排版演示案例集/README.md) | 最终三个合成演示样本：明确非真实论文，完整前后PDF、中文Word、真实模型提案与4页附录预览 |
 | `model_v3_design_20261014.template.html` | 上者的模板 |
 | `make_formula_doc.py` | 由公式表生成上面两个 HTML（需 TeX 渲染公式） |
 | `formula_doc_assets/*.svg` | 公式图资产（上面两个 HTML 引用） |
+| [`CLEANUP_RESULT_20261119.md`](CLEANUP_RESULT_20261119.md) | 2026-11-19 保守清理的实际范围、释放空间和验证结果 |
 | `notes/frequency_weighting_idea_20261016.md` | 早期想法记录：按"频率 × 严重度"定权重（已落地为阶段 11） |
 
 ## 已删除（2026-10-31 清理，可从 git 历史取回）

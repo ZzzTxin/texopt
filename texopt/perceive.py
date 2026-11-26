@@ -763,7 +763,7 @@ def scan_hygiene(src: str, *, title_cap: str = "LARGE",
     for m in re.finditer(r"\\(?:newpage|clearpage|pagebreak)\b", code):
         out.append({"kind": "manual_pagebreak", "line": _line(m.start()),
                     "detail": "手动分页 \\" + m.group(0)[1:] +
-                              "（破坏浮动体全局最优放置，压缩页数时会挡路）"})
+                              "（需区分结构分隔与连续正文分页；有用途的边界保留）"})
     # 3) 手动垂直间距
     for m in re.finditer(r"\\vspace\*?\s*\{|\\medskip\b|\\bigskip\b|\\smallskip\b",
                          code):

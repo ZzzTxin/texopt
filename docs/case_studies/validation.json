@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-25",
+  "status": "pass",
+  "language": "zh-CN",
+  "preview_file": "preview_full_review.pdf",
+  "preview_pages": 6,
+  "preview_pdf_sha256": "52d69d5f85701bf674079bd21bd145abce8ce2de1fc3f0d2ca8678605ee45843",
+  "preview_compile_warnings": 0,
+  "preview_overfull_underfull_vbox": 0,
+  "missing_chinese_glyphs": false,
+  "unresolved_references": false,
+  "vector_figures_verified": 5,
+  "case_evidence_verified": [
+    {
+      "id": "openstl",
+      "status": "NEEDS_REVIEW",
+      "program_status": "DONE",
+      "accepted": 4,
+      "rolled_back": 1,
+      "integrity_pass": true,
+      "stable": true,
+      "adoption_decision": "REJECTED_VISUAL"
+    },
+    {
+      "id": "simvp",
+      "status": "DONE",
+      "program_status": "DONE",
+      "accepted": 3,
+      "rolled_back": 1,
+      "integrity_pass": true,
+      "stable": true
+    },
+    {
+      "id": "pifold",
+      "status": "NEEDS_REVIEW",
+      "program_status": "DONE",
+      "accepted": 9,
+      "rolled_back": 5,
+      "integrity_pass": true,
+      "stable": true
+    },
+    {
+      "id": "omniview",
+      "status": "NEEDS_REVIEW",
+      "program_status": "NEEDS_REVIEW",
+      "accepted": 2,
+      "rolled_back": 5,
+      "integrity_pass": true,
+      "stable": true
+    }
+  ],
+  "pifold_followup": {
+    "new_accepted": 4,
+    "new_rejected": 4,
+    "new_skipped": 1,
+    "complete_pdf_pages": 14,
+    "visual_review_status": "NEEDS_REVIEW",
+    "program_status": "DONE",
+    "old_pdfs_unchanged": true,
+    "unresolved_issue_pages": [
+      9,
+      14
+    ],
+    "regressions_confirmed_against_original": [
+      {
+        "page": 9,
+        "issue": "标题重叠为优化新引入，原稿未重叠"
+      },
+      {
+        "page": 14,
+        "issue": "原稿附录标题在表格之前，输出顺序倒置"
+      }
+    ]
+  },
+  "scope": "交付证据、源码哈希、完整PDF、中文Word与附录一致性验证。OpenSTL结构留白复核不通过、不采用；技术核验通过不代表排版成功。",
+  "openstl_whitespace_review": {
+    "adoption_decision": "REJECTED_VISUAL",
+    "original_preferred": true,
+    "references_appendix_boundary_removed": true,
+    "figure5_explanation_after_page": 16,
+    "figure5_after_page": 21,
+    "historical_pdf_bytes_unchanged": true,
+    "review_documents_updated": true
+  }
+}

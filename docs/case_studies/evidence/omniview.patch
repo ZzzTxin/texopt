@@ -1,0 +1,31 @@
+--- before/arxiv_version.tex
++++ after/arxiv_version.tex
+@@ -60,6 +60,28 @@
+ % Support for ORCID icon
+ \usepackage{orcidlink}
+ 
++
++
++% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
++\emergencystretch=1.5em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\doublehyphendemerits=5000
++\finalhyphendemerits=5000
++% ===== texopt end =====
++
++% ===== texopt: 页面平衡 ====
++% 浮动体放置与页面平衡调优（只影响浮动体分配/底部对齐，不改内容）
++\raggedbottom
++\setcounter{topnumber}{3}
++\setcounter{bottomnumber}{2}
++\setcounter{totalnumber}{4}
++\renewcommand{\topfraction}{0.8}
++\renewcommand{\bottomfraction}{0.7}
++\renewcommand{\textfraction}{0.08}
++\renewcommand{\floatpagefraction}{0.7}
++% ===== texopt end ====
+ 
+ \begin{document}
+ 

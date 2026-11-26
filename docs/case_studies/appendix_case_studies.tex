@@ -1,0 +1,178 @@
+% 主稿需要中文排版支持，以及 graphicx、booktabs、hyperref 宏包。
+% 本文件是附录章节，不是独立文档。主稿应在 \input 之前使用 \appendix。
+% 可将本目录复制为文章工程中的 case_studies/，或预先设置图表路径宏。
+\providecommand{\texoptCaseAssetPath}{case_studies/figures/}
+\providecommand{\texoptCaseBreak}{}
+
+\section{真实作者稿件的排版优化案例}
+\label{app:real-manuscript-cases}
+
+本节选取四份公开的真实作者稿件，展示原稿中的排版现象、Agent 实际执行的修改、
+编译后的效果，以及未被接受的修复尝试。输入均为下文列明版本的 arXiv 原始源码，
+没有人为注入排版缺陷。这些案例用于说明系统的具体行为与能力边界，
+不代表整个测试集上的平均收益。另有一份本地稿件因缺少原始图文件、
+基线无法编译而未纳入展示。
+
+\paragraph{实验设置。}
+所有稿件使用 TeX Live 2024 编译，每个案例的前后版本使用相同的编译器：
+OpenSTL 使用 XeLaTeX，其余三份稿件因源码或宏包依赖 pdfTeX 原生命令，使用 pdfLaTeX。
+编译器由案例脚本选择。本轮未设置页数目标，也未启用全局页边距或字号调整。
+所有修改均在工作副本中进行，并开启正文硬约束与图表指纹校验。
+此外，独立核对归一化正文、显示公式内容、其他源码和图文件的字节哈希；
+原始输入工程的哈希也保持一致。再生成的编译辅助文件不计入源码与图文件的比较。
+最终结果经过重编译，直至连续两次测量一致。
+
+\paragraph{结果解读。}
+当前策略先检查可行性门禁，再比较主评分 $M_1=15P+I$；
+仅当 $M_1$ 持平时，才用软视觉评分 $M_2=A_{\mathrm{soft}}$ 决定取舍。
+两项评分均越低越好，但被接受的修改可能同时使 $M_1$ 下降、$M_2$ 上升。
+因此，\texttt{DONE} 表示门禁通过且实际接受了修改，并不意味着每项视觉指标都改善。
+PiFold 的后续全文复核还发现了程序未检测出的标题重叠，因此按“需复核”报告，
+并在证据中保留程序的原始状态。
+表~\ref{tab:real-case-outcomes} 同时列出两条评分线。
+OpenSTL 的原处理还破坏了必要的结构留白和图文邻接，本例撤回成功评价，不采用处理稿。
+比较图直接导入实际编译 PDF 的页面，保留原有文字与图形；页码均指本地编译版本。
+
+\input{\texoptCaseAssetPath../case_metrics_table.tex}
+
+\texoptCaseBreak
+\subsection{OpenSTL：误删必要结构留白的失败案例}
+\label{app:case-openstl}
+
+\paragraph{原稿现象。}
+\emph{OpenSTL: A Comprehensive Benchmark of Spatio-Temporal Predictive Learning}
+的作者源码\footnote{原稿来源：\url{https://arxiv.org/abs/2306.11249v2}。}
+包含 17 处手动分页和三处候选浮动体位置参数。
+基线编译为 37 页，有两条垂直盒子警告（vbox）和三条浮动体警告。
+第 14 页参考文献末尾的留白用于让附录在第 15 页独立开始；
+多处 \verb|\clearpage| 用于排出待排图表并分隔实验结果，不能仅凭命令存在或空白面积大就判为缺陷。
+
+\paragraph{实际修改。}
+Agent 接受四步操作：注入断行质量宏、规范三处浮动参数、删除 17 处手动分页，
+以及执行 \texttt{balance\_pages}，设置 \verb|\raggedbottom| 和浮动体分配参数。
+一次局部字号归一化触发门禁，已回滚。
+
+\paragraph{实际退化。}
+原处理得到 36 页，vbox 警告由两条降为零，浮动体警告由三条降为一条，
+$M_1$、$M_2$ 也下降，但阅读结构变差：附录进入参考文献末页，原有独立分隔被取消。
+Moving MNIST 的说明和图 5 原本都在第 17 页，处理后分别位于第 16、21 页；
+Moving FashionMNIST 的说明和图 6 原本在第 18、19 页，处理后分别位于第 16、22 页。
+删除 \verb|\clearpage| 同时取消了冲刷待排浮动体的边界，造成图表延后。
+
+\paragraph{复核结论。}
+不采用该处理稿，保留作者原稿版式。此前将最大空白带从 64.5\% 降为 9.3\%
+解释成优化收益不成立，这里记录为失败结果。手动分页按次计入缺陷分，
+却没有对应的结构保护或图文距离约束，使评分可以奖励一项破坏阅读质量的修改。
+无页数目标时，填满页面和减少页数本身不构成收益。
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{\texoptCaseAssetPath openstl_page14.pdf}
+  \caption{OpenSTL 第 14 页原稿与失败处理尝试。右侧将附录挤入参考文献末页，
+  破坏了原稿用于分隔的必要留白；空白带由 64.5\% 降至 9.3\% 不代表版式改善。
+  此处理稿不采用。正文与图形内容仍保持不变，但阅读结构已经退化。}
+  \label{fig:case-openstl}
+\end{figure*}
+
+\texoptCaseBreak
+\subsection{SimVP：减少浮动体警告，并记录视觉评分的取舍}
+\label{app:case-simvp}
+
+\paragraph{原稿现象与实际修改。}
+\emph{SimVP: Simpler yet Better Video Prediction} 的作者源码\footnote{原稿来源：
+\url{https://arxiv.org/abs/2206.05099v1}。}
+编译为 12 页，有八条浮动体警告和一处正文行溢出（overfull hbox）。
+Agent 接受了质量宏注入、13 处浮动参数规范化和两处手动分页删除，
+局部字号归一化则因门禁违规而回滚。
+图~\ref{fig:case-simvp} 展示了第 7 页表格与定性结果图的位置变化。
+
+\paragraph{优化效果与残余问题。}
+最终仍为 12 页，浮动体警告降为一条，原有行溢出尚未解决。
+$M_1$ 从 952.890 降至 630.130，但 $M_2$ 从 0.687 升至 0.791。
+本例能够证明浮动体放置问题减少，同时也暴露了当前字典序验收策略允许的取舍：
+主评分改善，并不代表整篇的软视觉评分也改善。
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{\texoptCaseAssetPath simvp_page7.pdf}
+  \caption{SimVP 第 7 页优化前后比较。浮动参数规范化后，表格与定性结果图重新分配位置。
+  全篇浮动体警告由八条降至一条，仍保留一处行溢出；
+  软视觉评分略有上升，具体数值见表~\ref{tab:real-case-outcomes}。}
+  \label{fig:case-simvp}
+\end{figure*}
+
+\texoptCaseBreak
+\subsection{PiFold：从首页单点修正到全文复核}
+\label{app:case-pifold}
+
+\paragraph{原稿现象与规则输出。}
+\emph{PiFold: Toward Effective and Efficient Protein Inverse Folding}
+的作者源码\footnote{原稿来源：\url{https://arxiv.org/abs/2209.12643v4}。}
+编译为 14 页，有一条浮动体警告。规则闭环接受了质量宏、11 处浮动参数规范化、
+一处手动分页删除和页面平衡，消除了浮动体警告；
+但检查实际页面后发现新的首页问题：首图被移到了论文标题上方。
+
+\paragraph{初次提案的局限。}
+视觉 Agent 提出白名单动作
+\texttt{set\_float\_spec(target=1, spec=!b)}，将首个浮动体限制在正文页底部。
+程序重新编译后，$M_1$ 保持 578.120，$M_2$ 从 1.588 降至 1.574，因此接受该提案。
+标题、摘要重新位于首图之前，页数仍为 14。
+但逐页核对表明，第 2---14 页的文字与位置都未改变。
+这一阶段仅能证明修正了首页问题，不能作为整篇排版已经充分处理的证据。
+
+\paragraph{继续全文复核。}
+完整审阅 14 页后，继续执行三轮白名单提案，新增接受四项浮动参数调整：
+将第 7 页训练曲线图、第 8 页模型消融表，以及第 9 页的泛化结果表和示例图调整为页底放置。
+图~\ref{fig:case-pifold} 展示第 7 页表、图从聚集排列变为由说明文字分隔的实际结果。
+$M_1$ 保持 578.120，$M_2$ 从旧第二版的 1.574 降为 1.308；页数仍为 14。
+第 7---9 页直接重排，第 10---13 页随正文流动发生变化，不能将后者计为独立修复。
+
+\paragraph{仍需复核的原因。}
+第 9 页小节标题与正文仍有重叠，源码中的负 \verb|\vspace| 未被当前动作覆盖；
+即使将删除过大间距的阈值降到 1\,pt，动作仍返回无改动。
+与原稿比较，这处重叠和第 14 页表格先于附录标题的现象都是优化引入的回归，
+不能仅视为原稿已有问题未被消除。
+第 14 页表格仍位于附录标题之前：设置 \texttt{H} 确实修正了顺序，
+但强排惩罚使 $M_1$ 升为 593.615，因此被评分拒绝并回滚。
+程序仍给出 \texttt{DONE}，全文视觉复核则判为 \texttt{NEEDS\_REVIEW}。
+本例同时揭示了此前复核范围不足、动作覆盖不足与评分无法表达部分视觉问题的限制。
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{\texoptCaseAssetPath pifold_page7_full_review.pdf}
+  \caption{PiFold 第 7 页，旧第二次排版与继续全文复核后的比较。
+  训练曲线图从表格下方移到页底，相关说明文字置于两者之间。
+  后续复核实际接受四项调整，但第 9 页标题重叠及第 14 页附录顺序仍未解决，
+  因此本案例保留“需复核”结论。}
+  \label{fig:case-pifold}
+\end{figure*}
+
+\texoptCaseBreak
+\subsection{Omniview-Tuning：保守回滚与明确报告未决问题}
+\label{app:case-omniview}
+
+\paragraph{原稿现象与保留的修改。}
+\emph{Omniview-Tuning: Boosting Viewpoint Invariance of Vision-Language Pre-training Models}
+的作者源码\footnote{原稿来源：\url{https://arxiv.org/abs/2404.12139v1}。}
+编译为 24 页，有三条 vbox 警告，第 15 页存在大块空白。
+Agent 最终保留质量宏和页面平衡，vbox 警告降为零。
+
+\paragraph{回滚的尝试。}
+其余五个候选均被回滚：浮动参数规范化、删除手动分页，以及将一张高 10.3\,cm 的图
+缩为 \verb|0.4\textheight|，都会使 $M_1$ 变差；
+显示公式定界符归一化和局部字号归一化则在该模板中导致编译错误。
+
+\paragraph{最终效果与未决问题。}
+文档仍为 24 页，第 15 页的空白仍占页高的 60.5\%。检测器给出的两个高严重度标签
+指向同一块空白，不能视为两处独立问题。最终状态为 \texttt{NEEDS\_REVIEW}（需复核）。
+本例展示了可保留的局部改善、可审计的拒绝与回滚，同时明确呈现尚未解决的布局问题。
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{\texoptCaseAssetPath omniview_page15.pdf}
+  \caption{Omniview-Tuning 第 15 页优化前后比较。虽然其他位置的 vbox 警告已消除，
+  本页的大块空白仍保留。Agent 如实报告 \texttt{NEEDS\_REVIEW}，
+  并记录失败候选的回滚，没有将其计为已应用的改进。}
+  \label{fig:case-omniview}
+\end{figure*}
+

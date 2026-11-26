@@ -111,7 +111,7 @@ class Requirement:
     aesthetic_lambda: float = 0.0
     # ---- 确定性排版修复策略（2026-09-11 新增；默认开，均可单独关闭） ----
     # 这些是「检测 -> 动作」补齐后新增的白名单动作开关；关闭即不生成候选。
-    tidy_manual_pagebreaks: bool = True    # 删正文 \newpage/\clearpage
+    tidy_manual_pagebreaks: bool = True    # 逐处试删连续正文分页；保留结构/图表边界
     tidy_manual_vspace: bool = True        # 删过大的 \vspace{...}
     vspace_min_mm: float = 10.0            # “过大”垂直间距阈值（mm）
     normalize_heading_size: bool = True    # 标题字号压回层级上限

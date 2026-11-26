@@ -329,7 +329,7 @@ class Optimizer:
         hyg_kinds = {h["kind"] for h in per.issues.get("hygiene", [])}
         if req.tidy_manual_pagebreaks and "manual_pagebreak" in hyg_kinds:
             add("pagebreak_rm", actions.remove_manual_pagebreak,
-                "删除正文手动分页（\\newpage/\\clearpage），交回 LaTeX 全局断页")
+                "逐处检查连续正文分页；保留章节、附录和图表冲刷边界")
         if req.tidy_manual_vspace and "manual_vspace" in hyg_kinds:
             add("vspace_rm",
                 lambda s, m=req.vspace_min_mm: actions.remove_excessive_vspace(

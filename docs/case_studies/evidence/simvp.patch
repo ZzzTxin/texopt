@@ -1,0 +1,153 @@
+--- before/arxiv.tex
++++ after/arxiv.tex
+@@ -52,6 +52,16 @@
+ \def\confYear{2022}
+ 
+ 
++
++% ===== texopt: 排版质量宏（自动注入，仅影响断行质量，不改内容） =====
++\emergencystretch=1.5em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\doublehyphendemerits=5000
++\finalhyphendemerits=5000
++% ===== texopt end =====
++
+ \begin{document}
+ 
+ %%%%%%%%% TITLE - PLEASE UPDATE
+@@ -73,7 +83,7 @@
+ 
+ \end{abstract}
+ 
+-\begin{table*}[h]
++\begin{table*}[tbp]
+   \centering
+   \setlength{\tabcolsep}{5.5mm}{
+   \begin{tabular}{ccccc}
+@@ -104,7 +114,7 @@
+ 
+ Deep video prediction has made incredible progress in the last few years. We divide primary methods into four categories in Figure.~\ref{fig:cmp_archi}, i.e., (1) RNN-RNN-RNN (2) CNN-RNN-CNN (3) CNN-ViT-CNN, and (4) CNN-CNN-CNN. Some representative works are collected in Table.~\ref{tab:previous_works}, from which we observe that RNN models have been favored since 2014. 
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   \centering
+       \includegraphics[width=0.47\textwidth]{fig/cmp_archi.pdf}
+     \caption{Different architectures for video prediction. Red and blue lines help to learn the temporal evolution and spatial dependency. SimVP belongs to the framework of CNN-CNN-CNN, which can outperform other state-of-the-art methods.}
+@@ -120,7 +130,7 @@
+ 
+ We aim to provide a simpler yet better video prediction model, namely SimVP. This model is fully based on CNN and trained by the MSE loss end-to-end. Without introducing any additional tricks and complex strategies, SimVP can achieve state-of-the-art performance on five benchmark datasets. The simplicity makes it easy to understand and use as a common baseline. The better performance provides a solid foundation for further improvements. We hope this study will shed light on future research.
+ 
+-\begin{figure*}[h]
++\begin{figure*}[tbp]
+   \centering
+       \includegraphics[width=0.9\textwidth]{fig/overall_framework.pdf}
+     \caption{The overall framework of SimVP. Both the Encoder, Translator, and Decoder are built upon CNN. The encoder stacks $N_s$ ConvNormReLU block to extract spatial features, i.e., convoluting $C$ channels on $(H,W)$. The translator employs $N_t$ Inception modules to learn temporal evolution, i.e., convoluting $T \times C$ channels on $(H,W)$. The decoder utilizes $N_s$ unConvNormReLU blocks to reconstruct the ground truth frames, which convolutes $C$ channels on $(H,W)$. } % 需要解释N_{enc}, N_{dec}, N_{hid}
+@@ -198,7 +208,7 @@
+ 
+ \paragraph{Datasets} We conduct experiments on five datasets for evaluation. The statistics are summarized in Table.~\ref{Table:dataset}, including the number of training samples $n_{train}$, number of testing samples $n_{test}$, image resolution $(C,H,W)$, input sequence length $T$ and forecasting sequence length $T'$. The detailed dataset description can be found in the appendix.
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+   \centering
+   \caption{The statistics of datasets. The training or testing set has $N_{train}$ or $N_{test}$ samples, each of which consists $T$ or $T'$ images with the shape $(C,H, W)$.}
+   \resizebox{\columnwidth}{!}{
+@@ -271,7 +281,7 @@
+ % \end{table}
+ 
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+   \small
+   \centering
+   \caption{Performance comparision of various methods on Moving MNIST. The source code of SimVP will be released soon.}
+@@ -300,7 +310,7 @@
+ \vspace{-5mm}
+ \paragraph{Simplicity leads to efficiency.} Another benefit that comes from simplicity is good computational efficiency. In Table.~\ref{tab:cmp_computation_mmnist}, we compare GPU memory (per sample), FLOPs (per image) and training time of SOTA methods on Moving MNIST. As CNN has good computational optimization and avoids iterative calculation, the training process of SimVP is much faster than others, which means that SimVP can be used and extended more easily. 
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+   \small
+   \centering
+   \caption{Computation comparision on Moving MNIST. We report the per sample memory overhead, per frame FLOPs, and total training time. For methods marked with $*$, we report the results reproduced by their official codes. Other results refer to \cite{yu2019efficient}. }
+@@ -339,7 +349,7 @@
+ 
+ % \paragraph{Results and Discoveries} In Figure.~\ref{fig:cmp_translators_mmnist} and Figure.~\ref{fig:cmp_translators_human}, we show the training dynamics using various translators on MMNIST and Human, respectively. In Figure.~\ref{fig:cmp_translators_lr}, we show the training status of different methods under large learning rate. On Moving MNIST (Figure.~\ref{fig:cmp_translators_mmnist}), CrevNet looks like a good solution because of its inherent simplicity, while our SimVP is suboptimal. However, this does not always hold true when it comes to real-world datasets. For example, on Human dataset (Figure.~\ref{fig:cmp_translators_human}), SimVP significantly outperforms other methods. As to the training stability, CNN performs better than RNN (Figure.~\ref{fig:cmp_translators_lr}), and will not fluctuate violently under large learning rate. In short, our discoveries are:
+ 
+-\begin{table*}[h]
++\begin{table*}[tbp]
+   \small
+   \centering
+       \caption{ SimVP vs SOTA. The optimal(or suboptimal) results are marked by \textbf{bold}(or \underline{underlined}).}
+@@ -364,7 +374,7 @@
+ \end{table*}
+ 
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   \centering
+     \includegraphics[width=0.47\textwidth]{fig/cmp_translators_merge.pdf}
+     \caption{Training dynamics of translators on Moving MNIST and Human3.6. The x-axis is the training epochs and the y-axis is the evaluated MSE. SimVP converges faster than other methods in the early training phase, but CrevNet performs better in the long run.}
+@@ -421,7 +431,7 @@
+ \vspace{-5mm}
+ \paragraph{Setting of Q1} Reporting the widely used metrics on standard benchmark datasets is the key to advancing the research progress. We evaluate SimVP on three common used benchmarks, i.e., Moving MNIST, TrafficBJ and Human3.6.  Moving MNIST \cite{srivastava2015unsupervised} consists of two digits independently moving within the 64 $\times$ 64 grid and bounced off the boundary. By assigning different initial locations and velocities to each digit, we can get an infinite number of sequences, and predict the future 10 frames from previous 10 frames. TrafficBJ contains the trajectory data in Beijing collected from taxicab GPS with two channels, i.e. inflow or outflow defined in \cite{zhang2017deep}.  Following \cite{wang2019memory}, we transform the data into $[0, 1]$ via max-min normalization. Since the original data is between -1 and 1, the reported MSE and MAE are 1/4 and 1/2 of the original ones, consistent with previous literature \cite{guen2020disentangling,wang2019memory}. Models are trained to predict 4 next frames by observing prioring 4 frames. Human3.6 \cite{ionescu2013human3} is a complex human pose dataset with 3.6 million samples, recording different activities. Similar to \cite{srivastava2015unsupervised,wang2019memory,guen2020disentangling}, only videos with "walking" scenario are used, and 4 future frames are generated by feeding previous 4 RGB frames. Following \cite{guen2020disentangling}, we report the MSE, MAE and SSIM of SimVP in Table. \ref{table:basic_sota}. Six state-of-the-art RNN baselines are chosen for comparison, including ConvLSTM \cite{xingjian2015convolutional}, PredRNN \cite{wang2017predrnn}, CausalLSTM \cite{wang2018predrnn++}, MIM \cite{wang2019memory}, E3D-LSTM \cite{wang2018eidetic} and PhyDNet \cite{guen2020disentangling}. We train SimVP on Moving MNIST, Human3.6, and TrafficBJ for 2k, 100 and 80 epochs, respectively. We use Adam optimizer and the learning rate is 0.01.
+ 
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   \centering
+       \includegraphics[width=3in]{fig/mmnist_8317.pdf}
+     \caption{ Visualization of Moving MNIST.}
+@@ -437,7 +447,7 @@
+ \vspace{-2mm}
+ \paragraph{Setting of Q2} Generalizing the knowledge across different datasets, especially under the unsupervised setting, is the core research point of machine learning. To investigate the generalization ability of SimVP, we train the model for 50 epochs on KITTI and evaluate it on Caltech Pedestrian. KITTI \cite{geiger2013vision} is one of the most popular datasets for mobile robotics and autonomous driving. It includes hours of traffic scenarios recorded with high-resolution RGB images. CalTech Pedestrian \cite{dollarCVPR09peds} is a driving dataset focused on detecting pedestrians. It is conformed of approximately 10 hours of $640 \times 480$ 30 FPS video taken from a vehicle driving through regular traffic in an urban environment. Models are trained on KITTI dataset to predict the next frame after 10-frame warm-up and are evaluated on Caltech Pedestrian. Compared with the previous experiments, carmounted camera videos dataset and the distinct training-evaluating data present another level of difficulty for video prediction as it describes various nonlinear three-dimensional dynamics of multiple moving objects including backgrounds. Following \cite{lotter2016deep,yu2019efficient,oprea2020review}, we center-crop  Sixteen baselines are selected for comparision, including BeyondMSE \cite{mathieu2015deep}, MCnet\cite{villegas2017decomposing}, DVF\cite{liu2017video}, Dual-GAN\cite{liang2017dual}, CtrlGen\cite{hao2018controllable},PredNet \cite{lotter2016deep}, ContextVP\cite{byeon2018contextvp}, GAN-VGG, G-VGG, G-MAE, GAN-MAE\cite{shouno2020photo}, SDC-Net \cite{reda2018sdc}, rCycleGan \cite{kwon2019predicting},  DPG \cite{gao2019disentangling}, CrevNet \cite{yu2019efficient} and STMFANet \cite{jin2020exploring}. 
+ 
+-\begin{table}[h]
++\begin{table}[tbp]
+   \small
+   \centering
+   \caption{Results on Caltech Pedestrian dataset.}
+@@ -471,7 +481,7 @@
+ \end{table}
+ 
+ \vspace{-8mm}
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   \centering
+       \includegraphics[width=3in]{fig/Caltech.pdf}
+     \caption{ Visualization of Caltech $(10 \rightarrow 1)$.}
+@@ -530,7 +540,7 @@
+ \vspace{-2mm}
+ \paragraph{Setting of Q3} A possible limitation of CNN-based methods is that it may be diffifcult to scale to prediction with flexible length. We handle this problem by imitating RNN, that is taking previous predictions as recent inputs to recursively produce long-term predictions. Following \cite{wang2018eidetic,oprea2020review}, we compare the PSNR and SSIM of SimVP with other baselines on KTH, seeing Table.\ref{table:KTH}, where we train SimVP for 100 epochs. The KTH dataset \cite{schuldt2004recognizing} contains 25 individuals performing 6 types of actions, i.e., walking, jogging, running, boxing, hand waving and hand clapping. Following \cite{villegas2017decomposing,wang2018eidetic}, we use person 1-16 for training and 17-25 for testing. Models are trained to predict next 20 or 40 frames from the previous 10 observations. Sixteen baselines are included, such as MCnet\cite{villegas2017decomposing}, ConvLSTM \cite{xingjian2015convolutional}, SAVP, SAVP-VAE\cite{lee2018stochastic}, VPN \cite{kalchbrenner2017video}, DFN \cite{jia2016dynamic}, fRNN \cite{oliu2018folded}, Znet \cite{zhang2019z}, SV2P \cite{babaeizadeh2017stochastic}, PredRNN \cite{wang2017predrnn}, VarNet \cite{jin2018varnet}, PredRNN++ \cite{wang2018predrnn++}, MSNET \cite{lee2018mutual}, E3d-LSTM \cite{wang2018eidetic} and STMFANet \cite{jin2020exploring}. 
+ 
+-\begin{table}[H]
++\begin{table}[tbp]
+   \small
+   \centering
+       \caption{Results on KTH dataset. }
+@@ -611,7 +621,7 @@
+ \paragraph{Answer of Q3} As shown in Figure.~\ref{fig:ablation}, we conduct that the translator mainly focus on predict the position and content of the objects. The decoder is responsible for optimizing the shape of the foreground objects. The encoder can erase the background error by means of spatial UNet connection.
+ 
+ \vspace{-2mm}
+-\begin{figure}[h]
++\begin{figure}[tbp]
+   \centering
+       \includegraphics[width=2.7in]{fig/ablation.pdf}
+ 
+@@ -695,14 +705,14 @@
+ % \paragraph{Static background leads to lazy translator.}
+ 
+ 
+-\clearpage
++
+ %%%%%%%%% REFERENCES
+ {\small
+ \bibliographystyle{ieee_fullname}
+ \bibliography{video}
+ }
+ 
+-\clearpage
++
+ \input{appendix.tex}
+ 
+ \end{document}
